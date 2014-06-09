@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>JustEat.StatsDMonitoring.Common</id>
+        <version>1.0.0</version>
+        <title>StatsD Monitoring Common</title>
+        <authors>kate.richardson</authors>
+        <owners>JUSTEAT PLC</owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Add this to your project to easily monitor common statistics using StatsD</description>
+        <dependencies>
+            <dependency id="JE.Api.ClientBase" version="1.0.0.56" />
+			<dependency id="Newtonsoft.Json" version="6.0.3" targetFramework="net45" />
+        </dependencies>
+    </metadata>
+  <files>
+    <file src="lib\**" target="lib" />
+  </files>
+</package>
