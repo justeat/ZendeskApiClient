@@ -8,20 +8,16 @@ namespace JustEat.ZendeskApi.Contracts.Models
     [DataContract]
     public class Ticket : IZendeskEntity
     {
-        // ReSharper disable InconsistentNaming
         [DataMember(EmitDefaultValue = false)]
         public long? Id { get; set; }
 
         [DataMember(Name = "created_at", EmitDefaultValue = false)]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? Created { get; set; }
 
         [DataMember(Name = "updated_at", EmitDefaultValue = false)]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? Updated { get; set; }
 
         [DataMember(Name = "due_at", EmitDefaultValue = false)]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? Due { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
@@ -37,15 +33,12 @@ namespace JustEat.ZendeskApi.Contracts.Models
         public TicketStatus? Status { get; set; }
 
         [DataMember(Name = "requester_id", EmitDefaultValue = false)]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public long? RequesterId { get; set; }
 
         [DataMember(Name = "submitter_id", EmitDefaultValue = false)]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public long? SubmitterId { get; set; }
 
         [DataMember(Name = "assignee_id", EmitDefaultValue = false)]
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public long? AssigneeId { get; set; }
 
         [DataMember(Name = "organization_id", EmitDefaultValue = false)]
@@ -57,12 +50,13 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(EmitDefaultValue = false)]
         public string Priority { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public object recipient { get; set; }
+        [DataMember(Name = "recipient", EmitDefaultValue = false)]
+        public object Recipient { get; set; }
 
         [DataMember(Name = "group_id", EmitDefaultValue = false)]
         public int? GroupId { get; set; }
 
+// ReSharper disable InconsistentNaming
         [IgnoreDataMember]
         public long? External_Id { get; set; }
 
@@ -104,6 +98,6 @@ namespace JustEat.ZendeskApi.Contracts.Models
 
         [IgnoreDataMember]
         public List<long> followup_ids { get; set; }
-        // ReSharper enable InconsistentNaming
+// ReSharper restore InconsistentNaming
     }
 }

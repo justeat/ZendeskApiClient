@@ -2,7 +2,7 @@
 
 namespace JustEat.ZendeskApi.Contracts.Models
 {
-    public interface IZendeskEntity 
+    public interface IZendeskEntity
     {
     }
 }

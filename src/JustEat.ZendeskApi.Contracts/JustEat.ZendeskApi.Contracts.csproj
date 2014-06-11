@@ -71,9 +71,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\IZendeskEntity.cs" />
-    <Compile Include="Responses\IListRequest.cs" />
+    <Compile Include="Models\Organization.cs" />
+    <Compile Include="Models\ZendeskType.cs" />
     <Compile Include="Responses\IRequest.cs" />
     <Compile Include="Responses\IListResponse.cs" />
+    <Compile Include="Responses\ListResponse.cs" />
     <Compile Include="Responses\TicketRequest.cs" />
     <Compile Include="Responses\TicketResponse.cs" />
     <Compile Include="Models\Ticket.cs" />
@@ -81,8 +83,6 @@
     <Compile Include="Models\TicketType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Responses\IResponse.cs" />
-    <Compile Include="Responses\TicketsRequest.cs" />
-    <Compile Include="Responses\TicketsResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

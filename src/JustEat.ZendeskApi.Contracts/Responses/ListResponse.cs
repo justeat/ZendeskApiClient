@@ -6,10 +6,10 @@ using JustEat.ZendeskApi.Contracts.Models;
 namespace JustEat.ZendeskApi.Contracts.Responses
 {
     [DataContract]
-    public class TicketsRequest : IListResponse<Ticket> 
+    public class ListResponse<T> : IListResponse<T> where T : IZendeskEntity
     {
         [DataMember(Name = "results")]
-        public IEnumerable<Ticket> Entity { get; set; }
+        public IEnumerable<T> Results { get; set; }
 
         [DataMember(Name = "count")]
         public int TotalCount { get; set; }
