@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\SearchResource.cs" />
     <Compile Include="Resources\TicketResource.cs" />
     <Compile Include="ZendeskDefaultConfiguration.cs" />
   </ItemGroup>

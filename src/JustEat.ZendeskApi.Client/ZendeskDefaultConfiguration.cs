@@ -1,4 +1,7 @@
-﻿using JE.Api.ClientBase;
+﻿using System.Globalization;
+using JE.Api.ClientBase;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace JustEat.ZendeskApi.Client
 {
@@ -9,6 +12,7 @@ namespace JustEat.ZendeskApi.Client
             Headers.AddHeader("Accept", "application/json");
             Headers.AddHeader("Content-Type", "application/json");
         }
+
         public string Authorization
         {
             get

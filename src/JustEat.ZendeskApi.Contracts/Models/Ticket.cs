@@ -1,65 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
+using Newtonsoft.Json;
 
 namespace JustEat.ZendeskApi.Contracts.Models
 {
     [DataContract]
-    public class Ticket
+    public class Ticket : IZendeskEntity
     {
         // ReSharper disable InconsistentNaming
-        [DataMember]
-        public long Id { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public long? Id { get; set; }
 
-        [DataMember(Name = "created_at")]
-        public DateTime Created { get; set; }
+        [DataMember(Name = "created_at", EmitDefaultValue = false)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? Created { get; set; }
 
-        [DataMember(Name = "updated_at")]
+        [DataMember(Name = "updated_at", EmitDefaultValue = false)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? Updated { get; set; }
 
-        [DataMember(Name = "due_at")]
+        [DataMember(Name = "due_at", EmitDefaultValue = false)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? Due { get; set; }
 
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public TicketType? Type { get; set; }
 
-        [DataMember]
+        [DataMember(Name = "subject")]
         public string Subject { get; set; }
 
-        [DataMember]
+        [DataMember(Name = "description")]
         public string Description { get; set; }
 
-        [DataMember]
-        public TicketStatus Status { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public TicketStatus? Status { get; set; }
 
-        [DataMember(Name = "requester_id")]
-        public long RequesterId { get; set; }
+        [DataMember(Name = "requester_id", EmitDefaultValue = false)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public long? RequesterId { get; set; }
 
-        [DataMember(Name = "submitter_id")]
-        public long SubmitterId { get; set; }
+        [DataMember(Name = "submitter_id", EmitDefaultValue = false)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public long? SubmitterId { get; set; }
 
-        [DataMember(Name = "assignee_id")]
+        [DataMember(Name = "assignee_id", EmitDefaultValue = false)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public long? AssigneeId { get; set; }
 
-        [DataMember(Name = "organization_id")]
+        [DataMember(Name = "organization_id", EmitDefaultValue = false)]
         public long? OrganisationId { get; set; }
 
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public Uri Url { get; set; }
 
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public string Priority { get; set; }
 
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public object recipient { get; set; }
 
-        [DataMember(Name = "group_id")]
-        public int GroupId { get; set; }
+        [DataMember(Name = "group_id", EmitDefaultValue = false)]
+        public int? GroupId { get; set; }
 
         [IgnoreDataMember]
-        public long External_Id { get; set; }
+        public long? External_Id { get; set; }
 
         [IgnoreDataMember]
         public object via { get; set; }
