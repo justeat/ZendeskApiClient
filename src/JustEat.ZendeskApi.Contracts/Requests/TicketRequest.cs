@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using JustEat.ZendeskApi.Contracts.Models;
 
-namespace JustEat.ZendeskApi.Contracts.Responses
+namespace JustEat.ZendeskApi.Contracts.Requests
 {
     [DataContract]
     public class TicketRequest : IRequest<Ticket>

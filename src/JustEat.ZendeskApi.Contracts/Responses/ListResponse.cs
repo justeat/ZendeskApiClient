@@ -9,7 +9,7 @@ namespace JustEat.ZendeskApi.Contracts.Responses
     public class ListResponse<T> : IListResponse<T> where T : IZendeskEntity
     {
         [DataMember(Name = "results")]
-        public IEnumerable<T> Results { get; set; }
+        public virtual IEnumerable<T> Results { get; set; }
 
         [DataMember(Name = "count")]
         public int TotalCount { get; set; }

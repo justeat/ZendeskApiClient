@@ -4,6 +4,7 @@
     {
         Ticket,
         Organization,
-        User
+        User,
+        Groups
     }
 }

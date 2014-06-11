@@ -74,7 +74,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\QueryFactoryFixture.cs" />
+    <Compile Include="Formatters\ZendeskFormatterFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\AssignableGroupResourceFixture.cs" />
+    <Compile Include="Resources\GroupResourceFixture.cs" />
     <Compile Include="Resources\SearchResourceFixture.cs" />
     <Compile Include="Resources\TicketResourceFixture.cs" />
   </ItemGroup>

@@ -4,6 +4,7 @@ using System.Text;
 using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Client.Resources;
 using JustEat.ZendeskApi.Contracts.Models;
+using JustEat.ZendeskApi.Contracts.Requests;
 using JustEat.ZendeskApi.Contracts.Responses;
 using Moq;
 using NUnit.Framework;
@@ -44,6 +45,35 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 
             // When
             var result = ticketResource.Get(321);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void GetAll_Called_CallsBuildUriWithFieldId()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            var ticketResource = new TicketResource(_client.Object);
+
+            // When
+            ticketResource.GetAll(new List<int> { 321, 456, 789 } );
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
+        }
+
+        [Test]
+        public void GetAll_Called_ReturnsTicketResponse()
+        {
+            // Given
+            var response = new TicketListResponse { Results = new List<Ticket> { new Ticket { Id = 1 } } };
+            _client.Setup(b => b.Get<TicketListResponse>(It.IsAny<Uri>())).Returns(response);
+            var ticketResource = new TicketResource(_client.Object);
+
+            // When
+            var result = ticketResource.GetAll(new List<int> { 321, 456, 789 });
 
             // Then
             Assert.That(result, Is.EqualTo(response));

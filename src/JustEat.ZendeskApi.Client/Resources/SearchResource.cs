@@ -1,10 +1,13 @@
-﻿using JE.Api.ClientBase;
+﻿using System.Text;
+using JE.Api.ClientBase;
+using JustEat.ZendeskApi.Client.Factories;
 using JustEat.ZendeskApi.Contracts.Models;
+using JustEat.ZendeskApi.Contracts.Queries;
 using JustEat.ZendeskApi.Contracts.Responses;
 
 namespace JustEat.ZendeskApi.Client.Resources
 {
-    public class SearchResource
+    public class SearchResource : ISearchResource
     {
         private const string SearchUri = @"/api/v2/search";
 
@@ -15,11 +18,13 @@ namespace JustEat.ZendeskApi.Client.Resources
             _client = client;
         }
 
-        public IListResponse<T> Get<T>(ZendeskType type, string customField, int fieldValue) where T : IZendeskEntity
+        public IListResponse<T> Get<T>(IQueryFactory queryFactory) where T : IZendeskEntity
         {
-            var requestUri = _client.BuildUri(SearchUri, string.Format("query=type:{0}&{1}={2}", type, customField, fieldValue));
+            var requestUri = _client.BuildUri(SearchUri, queryFactory.BuildQuery());
 
             return _client.Get<ListResponse<T>>(requestUri);
         }
+
+
     }
 }
