@@ -59,7 +59,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\JustEat.ZendeskApi.Contracts\JustEat.ZendeskApi.Contracts.csproj">
+    <ProjectReference Include="..\JustEat.ZendeskApi.Contracts\JustEat.ZendeskApi.Contracts.csproj">
       <Project>{bea9e134-91ff-40d6-9b5d-bd57006dbbc6}</Project>
       <Name>JustEat.ZendeskApi.Contracts</Name>
     </ProjectReference>
