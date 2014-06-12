@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace JustEat.ZendeskApi.Contracts.Models
 {
@@ -20,6 +21,7 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(Name = "due_at", EmitDefaultValue = false)]
         public DateTime? Due { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         [DataMember(EmitDefaultValue = false)]
         public TicketType? Type { get; set; }
 
@@ -29,8 +31,9 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(Name = "description")]
         public string Description { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public TicketStatus? Status { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        [DataMember(Name = "status", EmitDefaultValue = false)]
+        public TicketStatus Status { get; set; }
 
         [DataMember(Name = "requester_id", EmitDefaultValue = false)]
         public long? RequesterId { get; set; }

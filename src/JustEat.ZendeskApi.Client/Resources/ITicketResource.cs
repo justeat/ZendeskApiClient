@@ -10,5 +10,7 @@ namespace JustEat.ZendeskApi.Client.Resources
         TicketResponse Get(long ticketId);
         ListResponse<Ticket> GetAll(List<long> ticketIds);
         TicketResponse Post(TicketRequest ticket);
+        TicketResponse Put(TicketRequest ticket);
+        void Delete(long ticketId);
     }
 }

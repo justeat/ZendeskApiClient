@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Client.Formatters;
 using JustEat.ZendeskApi.Contracts.Models;
@@ -33,11 +34,28 @@ namespace JustEat.ZendeskApi.Client.Resources
             return _client.Get<TicketListResponse>(requestUri);
         }
 
+        public TicketResponse Put(TicketRequest ticket)
+        {
+            if (!ticket.Ticket.Id.HasValue || ticket.Ticket.Id <= 0)
+                throw new ArgumentException("Ticket must exist in Zendesk");
+
+            var requestUri = _client.BuildUri(string.Format("{0}/{1}", TicketUri, ticket.Ticket.Id));
+
+            return _client.Put<TicketResponse>(requestUri, ticket);
+        }
+
         public TicketResponse Post(TicketRequest ticket)
         {
             var requestUri = _client.BuildUri(TicketUri);
 
             return _client.Post<TicketResponse>(requestUri, ticket);
+        }
+
+        public void Delete(long ticketId)
+        {
+            var requestUri = _client.BuildUri(string.Format("{0}/{1}", TicketUri, ticketId));
+
+            _client.Delete(requestUri);
         }
     }
 }

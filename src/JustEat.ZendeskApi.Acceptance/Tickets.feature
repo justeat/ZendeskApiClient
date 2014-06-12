@@ -18,3 +18,20 @@ Scenario: When I call GetAll, I am returned a list of tickets
 		| Subject                       | Description                       |
 		| I've swallowed my mouse cable | It's a bit of a problem           |
 		| The coffee machiene is broken | I can't work in these conditions! |
+
+Scenario: When I call Post I am able to add a ticket
+	Given a ticket in Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem'
+	When I call get by id on the ZendeskApiClient
+	Then I get a ticket from Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem'
+
+Scenario: When I call Put I am able to update a ticket
+	Given a ticket in Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem'
+	When I update the ticket with the status 'closed'
+	And I call get by id on the ZendeskApiClient
+	Then I get a ticket from Zendesk with the status 'closed'
+
+Scenario: When I call Delete the ticket is deleted from zendesk
+	Given a ticket in Zendesk with the subject 'The coffee machiene is broken' and description 'I can't work in these conditions!'
+	When I call delete by id on the ZendeskApiClient
+	Then the ticket is no longer in zendesk
+

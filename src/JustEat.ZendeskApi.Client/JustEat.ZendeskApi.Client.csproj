@@ -79,6 +79,7 @@
     <Compile Include="Resources\TicketResource.cs" />
     <Compile Include="ZendeskClient.cs" />
     <Compile Include="ZendeskDefaultConfiguration.cs" />
+    <Compile Include="ZendeskJsonSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

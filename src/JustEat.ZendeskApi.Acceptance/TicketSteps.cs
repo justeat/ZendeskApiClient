@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Web;
 using JustEat.ZendeskApi.Client;
 using JustEat.ZendeskApi.Contracts.Models;
 using JustEat.ZendeskApi.Contracts.Requests;
@@ -29,6 +30,7 @@ namespace JustEat.ZendeskApi.Acceptance
         }
 
         [Given(@"the following tickets in Zendesk")]
+        [Given(@"I post the following tickets")]
         public void GivenTheFollowingTicketsInZendesk(Table table)
         {
             var tickets = table.Rows.Select(row => new Ticket{ Subject = row["Subject"], Description = row["Description"]}).ToList();
@@ -61,6 +63,13 @@ namespace JustEat.ZendeskApi.Acceptance
             _multipleTicketResponse.AddRange(_client.Ticket.GetAll(_savedMultipleTicket.Select(t => t.Id.Value).ToList()).Results);
         }
 
+        [When(@"I update the ticket with the status '(.*)'")]
+        public void WhenIUpdateTheTicketWithTheSubjectAndDescriptionTWorkInTheseConditions(TicketStatus status)
+        {
+            _savedSingleTicket.Status = status;
+
+            _client.Ticket.Put(new TicketRequest { Ticket = _savedSingleTicket });
+        }
 
         [Then(@"I get a ticket from Zendesk with the subject '(.*)' and description '(.*)'")]
         public void ThenIGetATicketFromZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description)
@@ -69,6 +78,13 @@ namespace JustEat.ZendeskApi.Acceptance
             Assert.That(_singleTicketResponse.Description, Is.EqualTo(description));
             Assert.That(_singleTicketResponse.Created, Is.GreaterThan(DateTime.UtcNow.AddMinutes(-2)));
         }
+
+        [Then(@"I get a ticket from Zendesk with the status '(.*)'")]
+        public void ThenIGetATicketFromZendeskWithTheStatus(TicketStatus status)
+        {
+            Assert.That(_singleTicketResponse.Status, Is.EqualTo(status));
+        }
+
 
         [Then(@"I get a ticket from Zendesk with the following values")]
         public void ThenIGetATicketFromZendeskWithTheFollowingValues(Table table)
@@ -79,6 +95,35 @@ namespace JustEat.ZendeskApi.Acceptance
             }
         }
 
+        [When(@"I call delete by id on the ZendeskApiClient")]
+        public void WhenICallDeleteByIdOnTheZendeskApiClient()
+        {
+            _client.Ticket.Delete((long)_savedSingleTicket.Id);
+        }
 
+        [Then(@"the ticket is no longer in zendesk")]
+        public void ThenTheTicketIsNoLongerInZendesk()
+        {
+            Assert.Throws<HttpException>(() => _client.Ticket.Get((long) _savedSingleTicket.Id), "Ticket not in Zendesk");
+        }
+
+  /*      [AfterFeature]
+        public void AfterFeature()
+        {
+            try
+            {
+                if (_savedSingleTicket != null)
+                    _client.Ticket.Delete((long)_savedSingleTicket.Id);
+
+                _savedMultipleTicket.ForEach(t => _client.Ticket.Delete((long)t.Id));
+
+            }
+            catch (HttpException)
+            {
+                
+            }
+            
+        }
+        */
     }
 }

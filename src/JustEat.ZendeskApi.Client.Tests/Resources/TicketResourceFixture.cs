@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Client.Resources;
 using JustEat.ZendeskApi.Contracts.Models;
@@ -80,6 +79,49 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public void Put_Called_BuildsUri()
+        {
+            // Given
+            var request = new TicketRequest { Ticket = new Ticket { Subject = "blah blah", Id = 123 } };
+            var ticketResource = new TicketResource(_client.Object);
+
+            // When
+            ticketResource.Put(request);
+
+            // Then
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        }
+
+        [Test]
+        public void Put_CalledWithTicket_ReturnsTicketReponse()
+        {
+            // Given
+            var response = new TicketResponse { Ticket = new Ticket { Subject = "blah blah" } };
+            var request = new TicketRequest { Ticket = new Ticket { Subject = "blah blah", Id = 123 } };
+            _client.Setup(b => b.Put<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var ticketResource = new TicketResource(_client.Object);
+
+            // When
+            var result = ticketResource.Put(request);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void Put_TicketHasNoId_ThrowsException()
+        {
+            // Given
+            var response = new TicketResponse { Ticket = new Ticket { Subject = "blah blah" } };
+            var request = new TicketRequest { Ticket = new Ticket { Subject = "blah blah"} };
+            _client.Setup(b => b.Put<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var ticketResource = new TicketResource(_client.Object);
+
+            // When, Then
+            Assert.Throws<ArgumentException>(() => ticketResource.Put(request));
+        }
+
+        [Test]
         public void Post_Called_BuildsUri()
         {
             // Given
@@ -107,6 +149,35 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 
             // Then
             Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void Delete_Called_CallsBuildUriWithFieldId()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+            var ticketResource = new TicketResource(_client.Object);
+
+            // When
+            ticketResource.Delete(321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+        }
+
+        [Test]
+        public void Delete_Called_CallsDeleteOnClient()
+        {
+            // Given
+            var response = new TicketResponse { Ticket = new Ticket { Id = 1 } };
+            _client.Setup(b => b.Get<TicketResponse>(It.IsAny<Uri>())).Returns(response);
+            var ticketResource = new TicketResource(_client.Object);
+
+            // When
+            ticketResource.Delete(321);
+
+            // Then
+            _client.Verify(c => c.Delete(It.IsAny<Uri>()));
         }
     }
 }

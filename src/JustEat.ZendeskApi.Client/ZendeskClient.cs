@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Reflection;
+using System.Runtime.Serialization;
 using JE.Api.ClientBase;
 using JE.Api.ClientBase.Http;
-using JE.Api.ClientBase.Serialization;
 using JustEat.ZendeskApi.Client.Resources;
 
 namespace JustEat.ZendeskApi.Client
@@ -13,8 +14,8 @@ namespace JustEat.ZendeskApi.Client
         public IGroupResource Group { get; private set; }
         public IGroupResource AssigableGroup { get; private set; }
 
-        public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, IHttpChannel httpChannel = null, ISerializer serializer = null, ILogAdapter logger = null)
-            : base(baseUri, configuration, httpChannel, serializer, logger)
+        public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, IHttpChannel httpChannel = null, ILogAdapter logger = null)
+            : base(baseUri, configuration, httpChannel, new ZendeskJsonSerializer(), logger)
         {
             Ticket = new TicketResource(this);
             Search = new SearchResource(this);
