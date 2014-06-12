@@ -39,7 +39,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Get_Called_ReturnsTicketResponse()
         {
             // Given
-            var response = new TicketResponse { Entity = new Ticket { Id = 1 }};
+            var response = new TicketResponse { Ticket = new Ticket { Id = 1 }};
             _client.Setup(b => b.Get<TicketResponse>(It.IsAny<Uri>())).Returns(response);
             var ticketResource = new TicketResource(_client.Object);
 
@@ -58,7 +58,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             var ticketResource = new TicketResource(_client.Object);
 
             // When
-            ticketResource.GetAll(new List<int> { 321, 456, 789 } );
+            ticketResource.GetAll(new List<long> { 321, 456, 789 });
 
             // Then
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
@@ -73,7 +73,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             var ticketResource = new TicketResource(_client.Object);
 
             // When
-            var result = ticketResource.GetAll(new List<int> { 321, 456, 789 });
+            var result = ticketResource.GetAll(new List<long> { 321, 456, 789 });
 
             // Then
             Assert.That(result, Is.EqualTo(response));
@@ -83,7 +83,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Post_Called_BuildsUri()
         {
             // Given
-            var request = new TicketRequest { Entity = new Ticket  {Subject = "blah blah"}};
+            var request = new TicketRequest { Ticket = new Ticket  {Subject = "blah blah"}};
             var ticketResource = new TicketResource(_client.Object);
             
             // When
@@ -97,8 +97,8 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Post_CalledWithTicket_ReturnsTicketReponse()
         {
             // Given
-            var response = new TicketResponse { Entity = new Ticket  {Subject = "blah blah"}};
-            var request = new TicketRequest { Entity = new Ticket { Subject = "blah blah" } };
+            var response = new TicketResponse { Ticket = new Ticket  {Subject = "blah blah"}};
+            var request = new TicketRequest { Ticket = new Ticket { Subject = "blah blah" } };
             _client.Setup(b => b.Post<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
             var ticketResource = new TicketResource(_client.Object);
 

@@ -68,6 +68,7 @@
     <Compile Include="Factories\IQueryFactory.cs" />
     <Compile Include="Factories\QueryFactory.cs" />
     <Compile Include="Formatters\ZendeskFormatter.cs" />
+    <Compile Include="IZendeskClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\GroupsResource.cs" />
     <Compile Include="Resources\IAssignableGroupResource.cs" />

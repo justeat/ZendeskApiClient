@@ -19,14 +19,14 @@ namespace JustEat.ZendeskApi.Client.Resources
             _client = client;
         }
 
-        public TicketResponse Get(int ticketId)
+        public TicketResponse Get(long ticketId)
         {
             var requestUri = _client.BuildUri(string.Format("{0}/{1}", TicketUri, ticketId));
 
             return _client.Get<TicketResponse>(requestUri);
         }
 
-        public ListResponse<Ticket> GetAll(List<int> ticketIds)
+        public ListResponse<Ticket> GetAll(List<long> ticketIds)
         {
             var requestUri = _client.BuildUri(string.Format("{0}/{1}", TicketUri, ShowMany), string.Format("ids={0}", ZendeskFormatter.ToCsv(ticketIds)));
 

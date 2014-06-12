@@ -10,7 +10,7 @@ namespace JustEat.ZendeskApi.Client.Formatters
             return string.Join(",", items.Select(i => i.Trim()));
         }
 
-        public static string ToCsv(List<int> items)
+        public static string ToCsv(List<long> items)
         {
             return string.Join(",", items.Select(i => i.ToString().Trim()));
         }

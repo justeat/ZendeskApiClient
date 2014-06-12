@@ -80,7 +80,6 @@
     <Compile Include="Queries\PagingQuery.cs" />
     <Compile Include="Queries\TypeQuery.cs" />
     <Compile Include="Queries\ZendeskQueryItem.cs" />
-    <Compile Include="Requests\IRequest.cs" />
     <Compile Include="Responses\IListResponse.cs" />
     <Compile Include="Responses\GroupListResponse.cs" />
     <Compile Include="Responses\TicketListResponse.cs" />
@@ -91,7 +90,6 @@
     <Compile Include="Models\TicketStatus.cs" />
     <Compile Include="Models\TicketType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Responses\IResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

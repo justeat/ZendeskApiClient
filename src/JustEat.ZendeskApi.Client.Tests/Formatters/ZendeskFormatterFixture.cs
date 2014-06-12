@@ -36,7 +36,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Formatters
         public void ToCsv_Called_ReturnsNumericItemsAsZendeskCompliantCsv()
         {
             // Given
-            var list = new List<int> { 1, 22, 333 };
+            var list = new List<long> { 1, 22, 333 };
 
             // When
             var result = ZendeskFormatter.ToCsv(list);

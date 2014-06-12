@@ -1,28 +1,18 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Text;
 using JE.Api.ClientBase;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace JustEat.ZendeskApi.Client
 {
     public class ZendeskDefaultConfiguration : DefaultConfiguration
     {
-        public ZendeskDefaultConfiguration()
+        public ZendeskDefaultConfiguration(string username, string token)
         {
+            var auth = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}/token:{1}", username, token)));
+
+            Headers.AddHeader("Authorization", string.Format("Basic {0}", auth));
             Headers.AddHeader("Accept", "application/json");
             Headers.AddHeader("Content-Type", "application/json");
-        }
-
-        public string Authorization
-        {
-            get
-            {
-                return Headers.GetHeader("Authorization");
-            }
-            set
-            {
-                Headers.AddHeader("Authorization", value);
-            }
         }
     }
 }

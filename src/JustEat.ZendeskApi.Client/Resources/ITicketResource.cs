@@ -7,8 +7,8 @@ namespace JustEat.ZendeskApi.Client.Resources
 {
     public interface ITicketResource
     {
-        TicketResponse Get(int ticketId);
-        ListResponse<Ticket> GetAll(List<int> ticketIds);
+        TicketResponse Get(long ticketId);
+        ListResponse<Ticket> GetAll(List<long> ticketIds);
         TicketResponse Post(TicketRequest ticket);
     }
 }

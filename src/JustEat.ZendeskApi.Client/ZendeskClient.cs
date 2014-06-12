@@ -6,7 +6,7 @@ using JustEat.ZendeskApi.Client.Resources;
 
 namespace JustEat.ZendeskApi.Client
 {
-    public class ZendeskClient: BaseClient
+    public class ZendeskClient: BaseClient, IZendeskClient
     {
         public ITicketResource Ticket { get; private set; }
         public ISearchResource Search { get; private set; }
