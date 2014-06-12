@@ -8,7 +8,7 @@ namespace JustEat.ZendeskApi.Contracts.Models
     public class Organization : IZendeskEntity
     {
         [DataMember(Name = "id")]
-        public int Id { get; set; }
+        public long? Id { get; set; }
 
         [DataMember(Name = "name", EmitDefaultValue = true)]
         public string Name { get; set; }

@@ -72,10 +72,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\GroupsResource.cs" />
     <Compile Include="Resources\IAssignableGroupResource.cs" />
+    <Compile Include="Resources\IOrganizationResource.cs" />
     <Compile Include="Resources\ISearchResource.cs" />
     <Compile Include="Resources\ITicketResource.cs" />
     <Compile Include="Resources\SearchResource.cs" />
     <Compile Include="Resources\AssignableGroupsResource.cs" />
+    <Compile Include="Resources\OrganizationResource.cs" />
+    <Compile Include="Resources\ZendeskResource.cs" />
     <Compile Include="Resources\TicketResource.cs" />
     <Compile Include="ZendeskClient.cs" />
     <Compile Include="ZendeskDefaultConfiguration.cs" />

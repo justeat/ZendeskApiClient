@@ -38,7 +38,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Get_Called_ReturnsTicketResponse()
         {
             // Given
-            var response = new TicketResponse { Ticket = new Ticket { Id = 1 }};
+            var response = new TicketResponse { Item = new Ticket { Id = 1 }};
             _client.Setup(b => b.Get<TicketResponse>(It.IsAny<Uri>())).Returns(response);
             var ticketResource = new TicketResource(_client.Object);
 
@@ -82,7 +82,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Put_Called_BuildsUri()
         {
             // Given
-            var request = new TicketRequest { Ticket = new Ticket { Subject = "blah blah", Id = 123 } };
+            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
             var ticketResource = new TicketResource(_client.Object);
 
             // When
@@ -96,8 +96,8 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Put_CalledWithTicket_ReturnsTicketReponse()
         {
             // Given
-            var response = new TicketResponse { Ticket = new Ticket { Subject = "blah blah" } };
-            var request = new TicketRequest { Ticket = new Ticket { Subject = "blah blah", Id = 123 } };
+            var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
+            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
             _client.Setup(b => b.Put<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
             var ticketResource = new TicketResource(_client.Object);
 
@@ -112,8 +112,8 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Put_TicketHasNoId_ThrowsException()
         {
             // Given
-            var response = new TicketResponse { Ticket = new Ticket { Subject = "blah blah" } };
-            var request = new TicketRequest { Ticket = new Ticket { Subject = "blah blah"} };
+            var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
+            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
             _client.Setup(b => b.Put<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
             var ticketResource = new TicketResource(_client.Object);
 
@@ -125,7 +125,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Post_Called_BuildsUri()
         {
             // Given
-            var request = new TicketRequest { Ticket = new Ticket  {Subject = "blah blah"}};
+            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
             var ticketResource = new TicketResource(_client.Object);
             
             // When
@@ -139,8 +139,8 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Post_CalledWithTicket_ReturnsTicketReponse()
         {
             // Given
-            var response = new TicketResponse { Ticket = new Ticket  {Subject = "blah blah"}};
-            var request = new TicketRequest { Ticket = new Ticket { Subject = "blah blah" } };
+            var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
+            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
             _client.Setup(b => b.Post<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
             var ticketResource = new TicketResource(_client.Object);
 
@@ -169,7 +169,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Delete_Called_CallsDeleteOnClient()
         {
             // Given
-            var response = new TicketResponse { Ticket = new Ticket { Id = 1 } };
+            var response = new TicketResponse { Item = new Ticket { Id = 1 } };
             _client.Setup(b => b.Get<TicketResponse>(It.IsAny<Uri>())).Returns(response);
             var ticketResource = new TicketResource(_client.Object);
 

@@ -6,6 +6,7 @@ using System.Web;
 using JustEat.ZendeskApi.Client;
 using JustEat.ZendeskApi.Contracts.Models;
 using JustEat.ZendeskApi.Contracts.Requests;
+using JustEat.ZendeskApi.Contracts.Responses;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 
@@ -35,7 +36,7 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             var tickets = table.Rows.Select(row => new Ticket{ Subject = row["Subject"], Description = row["Description"]}).ToList();
 
-            tickets.ForEach(t => _savedMultipleTicket.Add(_client.Ticket.Post(new TicketRequest { Ticket = t }).Ticket));
+            tickets.ForEach(t => _savedMultipleTicket.Add(_client.Ticket.Post(new TicketRequest { Item = t }).Item));
         }
 
         [Given(@"a ticket in Zendesk with the subject '(.*)' and description '(.*)'")]
@@ -44,8 +45,8 @@ namespace JustEat.ZendeskApi.Acceptance
             _savedSingleTicket =
                 _client.Ticket.Post(new TicketRequest
                 {
-                    Ticket = new Ticket {Subject = subject, Description = description}
-                }).Ticket;
+                    Item = new Ticket {Subject = subject, Description = description}
+                }).Item;
         }
 
         [When(@"I call get by id on the ZendeskApiClient")]
@@ -54,9 +55,10 @@ namespace JustEat.ZendeskApi.Acceptance
             if (!_savedSingleTicket.Id.HasValue)
                 throw new ArgumentException("Cannot get by id when id is null");
 
-            _singleTicketResponse = _client.Ticket.Get(_savedSingleTicket.Id.Value).Ticket;
+            _singleTicketResponse = _client.Ticket.Get(_savedSingleTicket.Id.Value).Item;
         }
 
+        [Scope(Feature = "Tickets")]
         [When(@"I call getall by id on the ZendeskApiClient")]
         public void WhenICallGetallOnTheZendeskApiClient()
         {
@@ -68,7 +70,7 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             _savedSingleTicket.Status = status;
 
-            _client.Ticket.Put(new TicketRequest { Ticket = _savedSingleTicket });
+            _client.Ticket.Put(new TicketRequest { Item = _savedSingleTicket });
         }
 
         [Then(@"I get a ticket from Zendesk with the subject '(.*)' and description '(.*)'")]

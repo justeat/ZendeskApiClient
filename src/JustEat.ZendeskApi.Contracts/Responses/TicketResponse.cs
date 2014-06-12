@@ -4,9 +4,9 @@ using JustEat.ZendeskApi.Contracts.Models;
 namespace JustEat.ZendeskApi.Contracts.Responses
 {
     [DataContract]
-    public class TicketResponse 
+    public class TicketResponse : IResponse<Ticket>
     {
         [DataMember(Name = "ticket")]
-        public Ticket Ticket { get; set; }
+        public Ticket Item { get; set; }
     }
 }

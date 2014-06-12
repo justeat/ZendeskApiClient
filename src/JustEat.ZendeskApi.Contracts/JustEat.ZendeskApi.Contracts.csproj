@@ -80,11 +80,16 @@
     <Compile Include="Queries\PagingQuery.cs" />
     <Compile Include="Queries\TypeQuery.cs" />
     <Compile Include="Queries\ZendeskQueryItem.cs" />
+    <Compile Include="Requests\IRequest.cs" />
+    <Compile Include="Requests\OrganizationRequest.cs" />
     <Compile Include="Responses\IListResponse.cs" />
     <Compile Include="Responses\GroupListResponse.cs" />
+    <Compile Include="Responses\IResponse.cs" />
+    <Compile Include="Responses\OrganizationListResponse.cs" />
     <Compile Include="Responses\TicketListResponse.cs" />
     <Compile Include="Responses\ListResponse.cs" />
     <Compile Include="Requests\TicketRequest.cs" />
+    <Compile Include="Responses\OrganizationResponse.cs" />
     <Compile Include="Responses\TicketResponse.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\TicketStatus.cs" />
