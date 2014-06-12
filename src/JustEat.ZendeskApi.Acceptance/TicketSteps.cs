@@ -107,7 +107,7 @@ namespace JustEat.ZendeskApi.Acceptance
             Assert.Throws<HttpException>(() => _client.Ticket.Get((long) _savedSingleTicket.Id), "Ticket not in Zendesk");
         }
 
-  /*      [AfterFeature]
+        [AfterScenario]
         public void AfterFeature()
         {
             try
@@ -124,6 +124,6 @@ namespace JustEat.ZendeskApi.Acceptance
             }
             
         }
-        */
+        
     }
 }
