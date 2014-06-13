@@ -38,6 +38,7 @@ namespace JustEat.ZendeskApi.Acceptance
             Organizations.ForEach(t => _savedMultipleOrganizations.Add(_client.Organizations.Post(new OrganizationRequest { Item = t }).Item));
         }
 
+        [Scope(Feature = "Organization")]
         [Given(@"an organization in Zendesk with the name '(.*)'")]
         public void GivenAOrganizationInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string name)
         {

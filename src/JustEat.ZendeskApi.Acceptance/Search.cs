@@ -54,7 +54,7 @@ namespace JustEat.ZendeskApi.Acceptance
             _organization = searchResults.Results.First();
         }
 
-        [Then(@"I am returned the organization ''(.*)'")]
+        [Then(@"I am returned the organization '(.*)'")]
         public void ThenIAmReturnedTheOrganization(string name)
         {
             Assert.That(_organization.Name, Is.StringStarting(name));

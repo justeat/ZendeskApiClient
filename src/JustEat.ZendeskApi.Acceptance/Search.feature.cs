@@ -70,15 +70,15 @@ namespace JustEat.ZendeskApi.Acceptance
         public virtual void ICanSearchForOrganizationsByCustomField()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can search for organizations by custom field", ((string[])(null)));
-#line 7
+#line 6
  this.ScenarioSetup(scenarioInfo);
-#line 8
+#line 7
  testRunner.Given("an organization in Zendesk with the name \'Coffee Break\' and the custom field \'res" +
                     "taurantid\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 9
+#line 8
  testRunner.When("I search for organizations with the custom field \'restaurantid\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 10
- testRunner.Then("I am returned the organization \'\'Coffee Break\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 9
+ testRunner.Then("I am returned the organization \'Coffee Break\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
