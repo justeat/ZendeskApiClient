@@ -4,10 +4,10 @@ namespace JustEat.ZendeskApi.Client
 {
     public interface IZendeskClient
     {
-        ITicketResource Ticket { get; }
-        IOrganizationResource Organization { get; }
+        ITicketResource Tickets { get; }
+        IOrganizationResource Organizations { get; }
         ISearchResource Search { get; }
-        IGroupResource Group { get; }
-        IGroupResource AssigableGroup { get; }
+        IGroupResource Groups { get; }
+        IGroupResource AssigableGroups { get; }
     }
 }

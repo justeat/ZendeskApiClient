@@ -53,7 +53,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Put_Called_BuildsUri()
         {
             // Given
-            var request = new OrganizationRequest { Item = new Organization { Name = "Organization", Id = 123 } };
+            var request = new OrganizationRequest { Item = new Organization { Name = "Organizations", Id = 123 } };
             var resource = new OrganizationResource(_client.Object);
 
             // When

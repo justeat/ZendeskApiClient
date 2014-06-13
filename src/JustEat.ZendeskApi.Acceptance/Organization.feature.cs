@@ -73,7 +73,7 @@ namespace JustEat.ZendeskApi.Acceptance
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 7
- testRunner.Given("an Organization in Zendesk with the name \'The Cheese Factory\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an organization in Zendesk with the name \'The Cheese Factory\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
  testRunner.When("I call get by id on the ZendeskApiClient", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 9
@@ -90,7 +90,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 11
 this.ScenarioSetup(scenarioInfo);
 #line 12
- testRunner.Given("an Organization in Zendesk with the name \'Coffee Hour\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an organization in Zendesk with the name \'Coffee Hour\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 13
  testRunner.When("I update the organization with the name \'The Cheese Factory\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 14
@@ -109,7 +109,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 17
 this.ScenarioSetup(scenarioInfo);
 #line 18
- testRunner.Given("an Organization in Zendesk with the name \'The Cheese Factory\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an organization in Zendesk with the name \'The Cheese Factory\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 19
  testRunner.When("I call delete by id on the ZendeskApiClient", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 20

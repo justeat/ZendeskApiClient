@@ -35,14 +35,14 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             var Organizations = table.Rows.Select(row => new Organization { Name = row["Name"] + Guid.NewGuid() }).ToList();
 
-            Organizations.ForEach(t => _savedMultipleOrganizations.Add(_client.Organization.Post(new OrganizationRequest { Item = t }).Item));
+            Organizations.ForEach(t => _savedMultipleOrganizations.Add(_client.Organizations.Post(new OrganizationRequest { Item = t }).Item));
         }
 
-        [Given(@"an Organization in Zendesk with the name '(.*)'")]
+        [Given(@"an organization in Zendesk with the name '(.*)'")]
         public void GivenAOrganizationInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string name)
         {
             _savedSingleOrganization =
-                _client.Organization.Post(new OrganizationRequest
+                _client.Organizations.Post(new OrganizationRequest
                 {
                     Item = new Organization { Name = name + Guid.NewGuid() }
                 }).Item;
@@ -55,7 +55,7 @@ namespace JustEat.ZendeskApi.Acceptance
             if (!_savedSingleOrganization.Id.HasValue)
                 throw new ArgumentException("Cannot get by id when id is null");
 
-            _singleOrganizationResponse = _client.Organization.Get(_savedSingleOrganization.Id.Value).Item;
+            _singleOrganizationResponse = _client.Organizations.Get(_savedSingleOrganization.Id.Value).Item;
         }
 
         [When(@"I update the organization with the name '(.*)'")]
@@ -63,7 +63,7 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             _savedSingleOrganization.Name = name + Guid.NewGuid();
 
-            _client.Organization.Put(new OrganizationRequest { Item = _savedSingleOrganization });
+            _client.Organizations.Put(new OrganizationRequest { Item = _savedSingleOrganization });
         }
 
         [Then(@"I get an Organization from Zendesk with the name '(.*)'")]
@@ -86,13 +86,13 @@ namespace JustEat.ZendeskApi.Acceptance
         [When(@"I call delete by id on the ZendeskApiClient")]
         public void WhenICallDeleteByIdOnTheZendeskApiClient()
         {
-            _client.Organization.Delete((long)_savedSingleOrganization.Id);
+            _client.Organizations.Delete((long)_savedSingleOrganization.Id);
         }
 
         [Then(@"the Organization is no longer in zendesk")]
         public void ThenTheOrganizationIsNoLongerInZendesk()
         {
-            Assert.Throws<HttpException>(() => _client.Organization.Get((long)_savedSingleOrganization.Id), "Organization not in Zendesk");
+            Assert.Throws<HttpException>(() => _client.Organizations.Get((long)_savedSingleOrganization.Id), "Organization not in Zendesk");
         }
 
         [AfterScenario]
@@ -101,9 +101,9 @@ namespace JustEat.ZendeskApi.Acceptance
             try
             {
                 if (_savedSingleOrganization != null)
-                    _client.Organization.Delete((long)_savedSingleOrganization.Id);
+                    _client.Organizations.Delete((long)_savedSingleOrganization.Id);
 
-                _savedMultipleOrganizations.ForEach(t => _client.Organization.Delete((long)t.Id));
+                _savedMultipleOrganizations.ForEach(t => _client.Organizations.Delete((long)t.Id));
 
             }
             catch (HttpException)

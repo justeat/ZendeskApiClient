@@ -36,14 +36,14 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             var tickets = table.Rows.Select(row => new Ticket{ Subject = row["Subject"], Description = row["Description"]}).ToList();
 
-            tickets.ForEach(t => _savedMultipleTicket.Add(_client.Ticket.Post(new TicketRequest { Item = t }).Item));
+            tickets.ForEach(t => _savedMultipleTicket.Add(_client.Tickets.Post(new TicketRequest { Item = t }).Item));
         }
 
         [Given(@"a ticket in Zendesk with the subject '(.*)' and description '(.*)'")]
         public void GivenATicketInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description)
         {
             _savedSingleTicket =
-                _client.Ticket.Post(new TicketRequest
+                _client.Tickets.Post(new TicketRequest
                 {
                     Item = new Ticket {Subject = subject, Description = description}
                 }).Item;
@@ -55,14 +55,14 @@ namespace JustEat.ZendeskApi.Acceptance
             if (!_savedSingleTicket.Id.HasValue)
                 throw new ArgumentException("Cannot get by id when id is null");
 
-            _singleTicketResponse = _client.Ticket.Get(_savedSingleTicket.Id.Value).Item;
+            _singleTicketResponse = _client.Tickets.Get(_savedSingleTicket.Id.Value).Item;
         }
 
         [Scope(Feature = "Tickets")]
         [When(@"I call getall by id on the ZendeskApiClient")]
         public void WhenICallGetallOnTheZendeskApiClient()
         {
-            _multipleTicketResponse.AddRange(_client.Ticket.GetAll(_savedMultipleTicket.Select(t => t.Id.Value).ToList()).Results);
+            _multipleTicketResponse.AddRange(_client.Tickets.GetAll(_savedMultipleTicket.Select(t => t.Id.Value).ToList()).Results);
         }
 
         [When(@"I update the ticket with the status '(.*)'")]
@@ -70,7 +70,7 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             _savedSingleTicket.Status = status;
 
-            _client.Ticket.Put(new TicketRequest { Item = _savedSingleTicket });
+            _client.Tickets.Put(new TicketRequest { Item = _savedSingleTicket });
         }
 
         [Then(@"I get a ticket from Zendesk with the subject '(.*)' and description '(.*)'")]
@@ -100,13 +100,13 @@ namespace JustEat.ZendeskApi.Acceptance
         [When(@"I call delete by id on the ZendeskApiClient")]
         public void WhenICallDeleteByIdOnTheZendeskApiClient()
         {
-            _client.Ticket.Delete((long)_savedSingleTicket.Id);
+            _client.Tickets.Delete((long)_savedSingleTicket.Id);
         }
 
         [Then(@"the ticket is no longer in zendesk")]
         public void ThenTheTicketIsNoLongerInZendesk()
         {
-            Assert.Throws<HttpException>(() => _client.Ticket.Get((long) _savedSingleTicket.Id), "Ticket not in Zendesk");
+            Assert.Throws<HttpException>(() => _client.Tickets.Get((long) _savedSingleTicket.Id), "Tickets not in Zendesk");
         }
 
         [AfterScenario]
@@ -115,9 +115,9 @@ namespace JustEat.ZendeskApi.Acceptance
             try
             {
                 if (_savedSingleTicket != null)
-                    _client.Ticket.Delete((long)_savedSingleTicket.Id);
+                    _client.Tickets.Delete((long)_savedSingleTicket.Id);
 
-                _savedMultipleTicket.ForEach(t => _client.Ticket.Delete((long)t.Id));
+                _savedMultipleTicket.ForEach(t => _client.Tickets.Delete((long)t.Id));
 
             }
             catch (HttpException)
