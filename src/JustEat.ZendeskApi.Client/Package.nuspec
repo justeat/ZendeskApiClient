@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<package >
     <metadata>
         <id>JustEat.ZendeskApi.Client</id>
         <version>1.0.0</version>
@@ -9,11 +9,11 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>API Client for use with Zendesk</description>
         <dependencies>
-            <dependency id="JE.Api.ClientBase" version="1.0.0.56" targetFramework="net45"/>
-			<dependency id="Newtonsoft.Json" version="6.0.3" targetFramework="net45" />
+			<dependency id="JE.Api.ClientBase" version="1.0.0.56" />
+			<dependency id="Newtonsoft.Json" version="6.0.3" />
         </dependencies>
     </metadata>
   <files>
-    <file src="lib\**" target="lib" />
+    <file src="lib\**" target="lib\net45" />
   </files>
 </package>
