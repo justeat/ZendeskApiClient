@@ -71,7 +71,7 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can search for organizations by custom field", ((string[])(null)));
 #line 6
- this.ScenarioSetup(scenarioInfo);
+this.ScenarioSetup(scenarioInfo);
 #line 7
  testRunner.Given("an organization in Zendesk with the name \'Coffee Break\' and the custom field \'res" +
                     "taurantid\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
@@ -79,6 +79,29 @@ namespace JustEat.ZendeskApi.Acceptance
  testRunner.When("I search for organizations with the custom field \'restaurantid\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 9
  testRunner.Then("I am returned the organization \'Coffee Break\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can page for organizations")]
+        public virtual void ICanPageForOrganizations()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can page for organizations", ((string[])(null)));
+#line 11
+this.ScenarioSetup(scenarioInfo);
+#line 12
+ testRunner.Given("an organization in Zendesk with the name \'Coffee Break\' and the custom field \'res" +
+                    "taurantid\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 13
+ testRunner.And("an organization in Zendesk with the name \'Cupcake Cafe\' and the custom field \'res" +
+                    "taurantid\' and value \'654\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 14
+ testRunner.When("I search for organizations with the page size \'1\' and page number \'1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 15
+ testRunner.And("I search again for organizations with the page size \'1\' and page number \'2\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 16
+ testRunner.Then("I am returned differnt results containing \'1\' item each", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

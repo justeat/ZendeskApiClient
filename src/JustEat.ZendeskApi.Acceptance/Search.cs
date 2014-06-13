@@ -22,6 +22,9 @@ namespace JustEat.ZendeskApi.Acceptance
         private Organization _organization;
         private Organization _createdOrganization;
 
+        private List<Organization> _searchResultsOne = new List<Organization>();
+        private List<Organization> _searchResultsTwo = new List<Organization>();
+
         [BeforeScenario]
         public void BeforeScenario()
         {
@@ -54,6 +57,45 @@ namespace JustEat.ZendeskApi.Acceptance
             _organization = searchResults.Results.First();
         }
 
+        [When(@"I search for organizations with the page size '(.*)' and page number '(.*)'")]
+        public void WhenISearchForOrganizationsWithThePageSizeAndNumber(int page, int pageNumber)
+        {
+            var searchResults = _client.Search.Get<Organization>(
+                new QueryFactory(new TypeQuery
+                {
+                    Type = ZendeskType.Organization,
+                },
+                paging: new PagingQuery()
+                {
+                    PageNumber = pageNumber, PageSize = page
+                }));
+            _searchResultsOne = searchResults.Results.ToList();
+        }
+
+        [When(@"I search again for organizations with the page size '(.*)' and page number '(.*)'")]
+        public void WhenISearchAgainForOrganizationsWithThePageSizeAndNumber(int page, int pageNumber)
+        {
+            var searchResults = _client.Search.Get<Organization>(
+                new QueryFactory(new TypeQuery
+                {
+                    Type = ZendeskType.Organization,
+                },
+                paging: new PagingQuery()
+                {
+                    PageNumber = pageNumber,
+                    PageSize = page
+                }));
+            _searchResultsTwo = searchResults.Results.ToList();
+        }
+
+        [Then(@"I am returned differnt results containing '(.*)' item each")]
+        public void ThenIAmReturnedResultsContainingXItems(int searchCount)
+        {
+            Assert.That(_searchResultsOne.Count, Is.EqualTo(searchCount));
+            Assert.That(_searchResultsTwo.Count, Is.EqualTo(searchCount));
+            Assert.That(_searchResultsOne.Any(o =>  _searchResultsTwo.Any(x => o.Name == x.Name)), Is.False);
+        }
+
         [Then(@"I am returned the organization '(.*)'")]
         public void ThenIAmReturnedTheOrganization(string name)
         {
@@ -67,6 +109,9 @@ namespace JustEat.ZendeskApi.Acceptance
             {
                 if (_createdOrganization != null)
                     _client.Organizations.Delete((long)_createdOrganization.Id);
+
+                _searchResultsOne.ForEach(s => _client.Organizations.Delete((long)s.Id));
+                _searchResultsTwo.ForEach(s => _client.Organizations.Delete((long)s.Id));
             }
             catch (HttpException)
             {
