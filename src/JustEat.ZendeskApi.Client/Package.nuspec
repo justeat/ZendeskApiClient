@@ -9,7 +9,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Add this to your project to easily monitor common statistics using StatsD</description>
         <dependencies>
-            <dependency id="JE.Api.ClientBase" version="1.0.0.56" />
+            <dependency id="JE.Api.ClientBase" version="1.0.0.56" targetFramework="net45"/>
 			<dependency id="Newtonsoft.Json" version="6.0.3" targetFramework="net45" />
         </dependencies>
     </metadata>
