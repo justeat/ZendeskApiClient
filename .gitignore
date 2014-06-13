@@ -112,3 +112,4 @@ UpgradeLog*.XML
 /src/JustEat.ZendeskApi.Client/bin
 
 /src/JustEat.ZendeskApi.Client/JustEat.ZendeskApi.Client.1.0.7.0.nupkg
+/src/lib

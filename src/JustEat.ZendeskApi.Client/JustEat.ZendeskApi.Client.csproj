@@ -25,19 +25,20 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release 4.5|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{710E1917-AC01-4877-9683-AF47A7DBDF84}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JustEat.ZendeskApi.Client</RootNamespace>
     <AssemblyName>JustEat.ZendeskApi.Client</AssemblyName>
+    <ContractsAssemblyName>JustEat.ZendeskApi.Contracts</ContractsAssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <OutputPath>bin\Release\net45\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="JE.Api.ClientBase">
@@ -108,7 +109,7 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(OutputPath)..\..\..\lib\net45" ContinueOnError="true" Condition=" '$(Configuration)|$(Platform)' == 'Release 4.5|AnyCPU' " />
-    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(OutputPath)..\..\..\lib\net40" ContinueOnError="true" Condition=" '$(Configuration)|$(Platform)' == 'Release 4.0|AnyCPU' " />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(OutputPath)..\..\lib" ContinueOnError="true" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
+    <Copy SourceFiles="$(OutputPath)$(ContractsAssemblyName).dll" DestinationFolder="$(OutputPath)..\..\lib" ContinueOnError="true" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
   </Target>
 </Project>
