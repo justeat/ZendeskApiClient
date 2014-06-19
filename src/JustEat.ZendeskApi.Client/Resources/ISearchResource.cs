@@ -6,6 +6,6 @@ namespace JustEat.ZendeskApi.Client.Resources
 {
     public interface ISearchResource
     {
-        IListResponse<T> Get<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity;
+        IListResponse<T> Find<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity;
     }
 }

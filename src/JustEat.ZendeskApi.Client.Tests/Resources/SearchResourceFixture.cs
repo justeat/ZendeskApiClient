@@ -30,7 +30,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             _query.Setup(q => q.BuildQuery()).Returns("query");
 
             // When
-            searchResource.Get<Organization>(_query.Object);
+            searchResource.Find<Organization>(_query.Object);
 
             // Then
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("search")), It.Is<string>(s => s.Contains("query"))));
@@ -46,7 +46,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             var searchResource = new SearchResource(_client.Object);
 
             // When
-            searchResource.Get<Organization>(_query.Object);
+            searchResource.Find<Organization>(_query.Object);
 
             // Then
             _client.Verify(c => c.Get<ListResponse<Organization>>(It.IsAny<Uri>()));

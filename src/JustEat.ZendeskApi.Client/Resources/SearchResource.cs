@@ -16,7 +16,7 @@ namespace JustEat.ZendeskApi.Client.Resources
             _client = client;
         }
 
-        public IListResponse<T> Get<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
+        public IListResponse<T> Find<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
         {
             var requestUri = _client.BuildUri(SearchUri, zendeskQuery.BuildQuery());
 
