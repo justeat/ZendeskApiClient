@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Text;
 using JE.Api.ClientBase;
-using JustEat.ZendeskApi.Client.Factories;
 using JustEat.ZendeskApi.Client.Resources;
 using JustEat.ZendeskApi.Contracts.Models;
+using JustEat.ZendeskApi.Contracts.Queries;
 using JustEat.ZendeskApi.Contracts.Responses;
 using Moq;
 using NUnit.Framework;
@@ -13,13 +12,13 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
     public class SearchResourceFixture
     {
         private Mock<IBaseClient> _client;
-        private Mock<IQueryFactory> _query;
+        private Mock<IZendeskQuery<Organization>> _query;
 
         [SetUp]
         public void SetUp()
         {
             _client = new Mock<IBaseClient>();
-            _query = new Mock<IQueryFactory>();
+            _query = new Mock<IZendeskQuery<Organization>>();
         }
         [Test]
         public void Get_Called_CallsBuildUriWithFieldId()

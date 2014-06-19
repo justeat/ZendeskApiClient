@@ -1,6 +1,4 @@
-﻿using System.Text;
-using JE.Api.ClientBase;
-using JustEat.ZendeskApi.Client.Factories;
+﻿using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Contracts.Models;
 using JustEat.ZendeskApi.Contracts.Queries;
 using JustEat.ZendeskApi.Contracts.Responses;
@@ -18,13 +16,12 @@ namespace JustEat.ZendeskApi.Client.Resources
             _client = client;
         }
 
-        public IListResponse<T> Get<T>(IQueryFactory queryFactory) where T : IZendeskEntity
+        public IListResponse<T> Get<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
         {
-            var requestUri = _client.BuildUri(SearchUri, queryFactory.BuildQuery());
+            var requestUri = _client.BuildUri(SearchUri, zendeskQuery.BuildQuery());
 
             return _client.Get<ListResponse<T>>(requestUri);
         }
-
 
     }
 }

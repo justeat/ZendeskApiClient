@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
 using System.Web;
 using JustEat.ZendeskApi.Client;
-using JustEat.ZendeskApi.Client.Factories;
 using JustEat.ZendeskApi.Contracts.Models;
 using JustEat.ZendeskApi.Contracts.Queries;
 using JustEat.ZendeskApi.Contracts.Requests;
@@ -47,44 +45,21 @@ namespace JustEat.ZendeskApi.Acceptance
         [When(@"I search for organizations with the custom field '(.*)' and value '(.*)'")]
         public void WhenISearchForOrganizationsWithTheCustomFieldAndValue(string field, string value)
         {
-            var searchResults = _client.Search.Get<Organization>(
-                new QueryFactory(new TypeQuery
-                {
-                    CustomField = field,
-                    Type = ZendeskType.Organization,
-                    CustomFieldValue = value
-                }));
+            var searchResults = _client.Search.Get(new ZendeskZendeskQuery<Organization>().WithCustomFilter(field, value));
             _organization = searchResults.Results.First();
         }
 
         [When(@"I search for organizations with the page size '(.*)' and page number '(.*)'")]
-        public void WhenISearchForOrganizationsWithThePageSizeAndNumber(int page, int pageNumber)
+        public void WhenISearchForOrganizationsWithThePageSizeAndNumber(PageSize page, int pageNumber)
         {
-            var searchResults = _client.Search.Get<Organization>(
-                new QueryFactory(new TypeQuery
-                {
-                    Type = ZendeskType.Organization,
-                },
-                paging: new PagingQuery()
-                {
-                    PageNumber = pageNumber, PageSize = page
-                }));
+            var searchResults = _client.Search.Get(new ZendeskZendeskQuery<Organization>().WithPaging(pageNumber, page));
             _searchResultsOne = searchResults.Results.ToList();
         }
 
         [When(@"I search again for organizations with the page size '(.*)' and page number '(.*)'")]
-        public void WhenISearchAgainForOrganizationsWithThePageSizeAndNumber(int page, int pageNumber)
+        public void WhenISearchAgainForOrganizationsWithThePageSizeAndNumber(PageSize page, int pageNumber)
         {
-            var searchResults = _client.Search.Get<Organization>(
-                new QueryFactory(new TypeQuery
-                {
-                    Type = ZendeskType.Organization,
-                },
-                paging: new PagingQuery()
-                {
-                    PageNumber = pageNumber,
-                    PageSize = page
-                }));
+            var searchResults = _client.Search.Get(new ZendeskZendeskQuery<Organization>().WithPaging(pageNumber, page));
             _searchResultsTwo = searchResults.Results.ToList();
         }
 

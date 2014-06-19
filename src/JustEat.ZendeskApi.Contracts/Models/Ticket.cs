@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace JustEat.ZendeskApi.Contracts.Models
 {
+    [Description("Ticket")]
     [DataContract]
     public class Ticket : IZendeskEntity
     {
