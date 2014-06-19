@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace JustEat.ZendeskApi.Contracts.Models
 {
+    [Description("Group")]
     [DataContract]
     public class Group : IZendeskEntity
     {

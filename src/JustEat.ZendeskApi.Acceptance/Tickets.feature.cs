@@ -66,10 +66,10 @@ namespace JustEat.ZendeskApi.Acceptance
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("When I call Get by id, I get the given ticket by Id")]
+        [NUnit.Framework.DescriptionAttribute("When I call Find by id, I get the given ticket by Id")]
         public virtual void WhenICallGetByIdIGetTheGivenTicketById()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I call Get by id, I get the given ticket by Id", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I call Find by id, I get the given ticket by Id", ((string[])(null)));
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 7

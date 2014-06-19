@@ -66,8 +66,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Factories\IQueryFactory.cs" />
-    <Compile Include="Factories\QueryFactory.cs" />
     <Compile Include="Formatters\ZendeskFormatter.cs" />
     <Compile Include="IZendeskClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

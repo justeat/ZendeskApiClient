@@ -53,9 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Queries\OrderQueryFixture.cs" />
-    <Compile Include="Queries\PagingQueryFixture.cs" />
-    <Compile Include="Queries\TypeQueryFixture.cs" />
+    <Compile Include="Queries\ZendeskQueryFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JustEat.ZendeskApi.Contracts\JustEat.ZendeskApi.Contracts.csproj">

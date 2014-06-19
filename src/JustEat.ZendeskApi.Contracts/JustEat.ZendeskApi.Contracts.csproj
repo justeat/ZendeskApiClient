@@ -27,7 +27,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{710E1917-AC01-4877-9683-AF47A7DBDF84}</ProjectGuid>
+    <ProjectGuid>{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JustEat.ZendeskApi.Contracts</RootNamespace>
@@ -65,16 +65,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\PageSize.cs" />
+    <Compile Include="Queries\IZendeskQuery.cs" />
+    <Compile Include="Queries\ZendeskQuery.cs" />
     <Compile Include="Models\IZendeskEntity.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Organization.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\OrderBy.cs" />
     <Compile Include="Models\ZendeskType.cs" />
-    <Compile Include="Queries\OrderQuery.cs" />
-    <Compile Include="Queries\PagingQuery.cs" />
-    <Compile Include="Queries\TypeQuery.cs" />
-    <Compile Include="Queries\ZendeskQueryItem.cs" />
     <Compile Include="Requests\IRequest.cs" />
     <Compile Include="Requests\OrganizationRequest.cs" />
     <Compile Include="Responses\IListResponse.cs" />

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace JustEat.ZendeskApi.Contracts.Models
 {
+    [Description("Organization")]
     [DataContract]
     public class Organization : IZendeskEntity
     {
