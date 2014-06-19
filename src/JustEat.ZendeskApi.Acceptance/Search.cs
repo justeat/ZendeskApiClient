@@ -45,21 +45,21 @@ namespace JustEat.ZendeskApi.Acceptance
         [When(@"I search for organizations with the custom field '(.*)' and value '(.*)'")]
         public void WhenISearchForOrganizationsWithTheCustomFieldAndValue(string field, string value)
         {
-            var searchResults = _client.Search.Find(new ZendeskZendeskQuery<Organization>().WithCustomFilter(field, value));
+            var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithCustomFilter(field, value));
             _organization = searchResults.Results.First();
         }
 
         [When(@"I search for organizations with the page size '(.*)' and page number '(.*)'")]
         public void WhenISearchForOrganizationsWithThePageSizeAndNumber(PageSize page, int pageNumber)
         {
-            var searchResults = _client.Search.Find(new ZendeskZendeskQuery<Organization>().WithPaging(pageNumber, page));
+            var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithPaging(pageNumber, page));
             _searchResultsOne = searchResults.Results.ToList();
         }
 
         [When(@"I search again for organizations with the page size '(.*)' and page number '(.*)'")]
         public void WhenISearchAgainForOrganizationsWithThePageSizeAndNumber(PageSize page, int pageNumber)
         {
-            var searchResults = _client.Search.Find(new ZendeskZendeskQuery<Organization>().WithPaging(pageNumber, page));
+            var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithPaging(pageNumber, page));
             _searchResultsTwo = searchResults.Results.ToList();
         }
 

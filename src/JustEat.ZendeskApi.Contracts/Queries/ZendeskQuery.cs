@@ -6,7 +6,7 @@ using JustEat.ZendeskApi.Contracts.Models;
 
 namespace JustEat.ZendeskApi.Contracts.Queries
 {
-    public class ZendeskZendeskQuery<T> : IZendeskQuery<T> where T : IZendeskEntity
+    public class ZendeskQuery<T> : IZendeskQuery<T> where T : IZendeskEntity
     {
         private readonly Dictionary<string, string> _customFilters;
 
@@ -18,7 +18,7 @@ namespace JustEat.ZendeskApi.Contracts.Queries
 
         private OrderBy _orderBy = OrderBy.created_at;
 
-        public ZendeskZendeskQuery()
+        public ZendeskQuery()
         {
             _customFilters = new Dictionary<string, string>();
         }
