@@ -11,6 +11,9 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(EmitDefaultValue = false)]
         public long? Id { get; set; }
 
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
+
         [DataMember(Name = "created_at", EmitDefaultValue = false)]
         public DateTime? Created { get; set; }
 
