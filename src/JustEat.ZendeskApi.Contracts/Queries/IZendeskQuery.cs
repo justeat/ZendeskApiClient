@@ -8,7 +8,7 @@ namespace JustEat.ZendeskApi.Contracts.Queries
 
         IZendeskQuery<T> WithCustomFilter(string field, string value);
 
-        IZendeskQuery<T> WithPaging(int pageNumber, PageSize pageSize);
+        IZendeskQuery<T> WithPaging(int pageNumber, int pageSize);
 
         IZendeskQuery<T> WithOrdering(OrderBy orderBy, Order order);
     }

@@ -25,7 +25,7 @@ namespace JustEat.ZendeskApi.Contracts.Tests.Queries
         {
             // Given
             var query = new ZendeskQuery<Organization>();
-            query.WithCustomFilter("name", "cheese factory").WithPaging(3, PageSize.Fifteen);
+            query.WithCustomFilter("name", "cheese factory").WithPaging(3, 15);
 
             // When 
             var queryString = query.BuildQuery();
@@ -39,7 +39,7 @@ namespace JustEat.ZendeskApi.Contracts.Tests.Queries
         {
             // Given
             var query = new ZendeskQuery<Ticket>();
-            query.WithCustomFilter("name", "cheese factory").WithPaging(3, PageSize.Fifteen);
+            query.WithCustomFilter("name", "cheese factory").WithPaging(3, 15);
 
             // When 
             var queryString = query.BuildQuery();
@@ -53,7 +53,7 @@ namespace JustEat.ZendeskApi.Contracts.Tests.Queries
         {
             // Given
             var query = new ZendeskQuery<Ticket>();
-            query.WithCustomFilter("name", "cheese factory").WithPaging(3, PageSize.Fifteen).WithOrdering(OrderBy.priority, Order.Asc);
+            query.WithCustomFilter("name", "cheese factory").WithPaging(3, 15).WithOrdering(OrderBy.priority, Order.Asc);
 
             // When 
             var queryString = query.BuildQuery();
