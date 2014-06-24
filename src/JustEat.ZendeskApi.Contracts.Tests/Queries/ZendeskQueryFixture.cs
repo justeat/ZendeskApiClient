@@ -17,7 +17,7 @@ namespace JustEat.ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:organization name:cheese factory&sort_by=created_at&sort_order=desc&page=1&per_page=15"));
+            Assert.That(queryString, Is.EqualTo("query=type:organization+name:cheese factory&sort_by=created_at&sort_order=desc&page=1&per_page=15"));
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace JustEat.ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:organization name:cheese factory&sort_by=created_at&sort_order=desc&page=3&per_page=15"));
+            Assert.That(queryString, Is.EqualTo("query=type:organization+name:cheese factory&sort_by=created_at&sort_order=desc&page=3&per_page=15"));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace JustEat.ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:ticket name:cheese factory&sort_by=created_at&sort_order=desc&page=3&per_page=15"));
+            Assert.That(queryString, Is.EqualTo("query=type:ticket+name:cheese factory&sort_by=created_at&sort_order=desc&page=3&per_page=15"));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace JustEat.ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:ticket name:cheese factory&sort_by=priority&sort_order=asc&page=3&per_page=15"));
+            Assert.That(queryString, Is.EqualTo("query=type:ticket+name:cheese factory&sort_by=priority&sort_order=asc&page=3&per_page=15"));
         }
     }
 }

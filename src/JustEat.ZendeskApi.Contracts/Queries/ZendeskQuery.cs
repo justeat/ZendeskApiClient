@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Web;
 using JustEat.ZendeskApi.Contracts.Models;
 
 namespace JustEat.ZendeskApi.Contracts.Queries
@@ -53,9 +54,8 @@ namespace JustEat.ZendeskApi.Contracts.Queries
 
             foreach (var filter in _customFilters)
             {
-                sb.Append(string.Format(" {0}:{1}", filter.Key, filter.Value));
+                sb.Append(string.Format("{0}{1}:{2}", HttpUtility.UrlEncode(" "), filter.Key, filter.Value));
             }
-
             sb.Append(string.Format("&sort_by={0}&sort_order={1}", _orderBy.ToString().ToLower(), _order.ToString().ToLower()));
 
             sb.Append(string.Format("&page={0}&per_page={1}", _pageNumber, (int)_pageSize));

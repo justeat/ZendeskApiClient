@@ -14,3 +14,9 @@ Scenario: I can page for organizations
 	When I search for organizations with the page size '1' and page number '1'
 	And I search again for organizations with the page size '1' and page number '2'
 	Then I am returned differnt results containing '1' item each
+
+Scenario: I can search by fields
+	Given an organization in Zendesk with the name 'Coffee Break' and the custom field 'restaurantid' and value '321'
+	And an organization in Zendesk with the name 'Cupcake Cafe' and the custom field 'restaurantid' and value '654'
+	When I search for the second organization by name
+	Then I am returned the organization 'Cupcake Cafe'
