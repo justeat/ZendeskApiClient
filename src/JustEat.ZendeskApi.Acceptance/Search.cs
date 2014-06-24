@@ -56,7 +56,7 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             IListResponse<Organization> searchResults = new ListResponse<Organization>() { Results = new List<Organization>() };
 
-            var i = 20;
+            var i = 40;
 
             while (i > 0 && !searchResults.Results.Any())
             {
