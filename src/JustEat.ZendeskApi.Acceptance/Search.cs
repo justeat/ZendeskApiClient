@@ -54,16 +54,7 @@ namespace JustEat.ZendeskApi.Acceptance
         [When(@"I search for the second organization by name")]
         public void WhenISearchForOrganizationsByTheName()
         {
-            IListResponse<Organization> searchResults = new ListResponse<Organization>() { Results = new List<Organization>() };
-
-            var i = 40;
-
-            while (i > 0 && !searchResults.Results.Any())
-            {
-                searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithCustomFilter("name", _createdOrganization.Name));
-                i--;
-                Thread.Sleep(2000);
-            }
+            var searchResults = WaitForOrganizationToBeAvailiable(new ZendeskQuery<Organization>().WithCustomFilter("name", _createdOrganization.Name));
             
             _organization = searchResults.Results.First();
         }
@@ -71,10 +62,11 @@ namespace JustEat.ZendeskApi.Acceptance
         [When(@"I search for organizations with the page size '(.*)' and page number '(.*)'")]
         public void WhenISearchForOrganizationsWithThePageSizeAndNumber(int  page, int pageNumber)
         {
-            var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithPaging(pageNumber, page));
+            var searchResults =
+                WaitForOrganizationToBeAvailiable(new ZendeskQuery<Organization>().WithPaging(pageNumber, page));
             _searchResultsOne = searchResults.Results.ToList();
         }
-
+ 
         [When(@"I search again for organizations with the page size '(.*)' and page number '(.*)'")]
         public void WhenISearchAgainForOrganizationsWithThePageSizeAndNumber(int page, int pageNumber)
         {
@@ -113,6 +105,26 @@ namespace JustEat.ZendeskApi.Acceptance
             }
 
         }
+
+        private IListResponse<Organization> WaitForOrganizationToBeAvailiable(IZendeskQuery<Organization> query)
+        {
+            IListResponse<Organization> searchResults = new ListResponse<Organization>() { Results = new List<Organization>() };
+
+            var i = 40;
+
+            while (i > 0 && !searchResults.Results.Any())
+            {
+                searchResults = _client.Search.Find(query);
+                i--;
+                Thread.Sleep(2000);
+            }
+
+            if (searchResults == null || searchResults.Results == null || !searchResults.Results.Any())
+                Assert.Fail("Query returned no matching results");
+
+            return searchResults;
+        }
+           
 
     }
 }
