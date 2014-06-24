@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using JustEat.ZendeskApi.Client;
 using JustEat.ZendeskApi.Contracts.Models;
 using JustEat.ZendeskApi.Contracts.Queries;
 using JustEat.ZendeskApi.Contracts.Requests;
+using JustEat.ZendeskApi.Contracts.Responses;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 
@@ -46,6 +48,23 @@ namespace JustEat.ZendeskApi.Acceptance
         public void WhenISearchForOrganizationsWithTheCustomFieldAndValue(string field, string value)
         {
             var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithCustomFilter(field, value));
+            _organization = searchResults.Results.First();
+        }
+
+        [When(@"I search for the second organization by name")]
+        public void WhenISearchForOrganizationsByTheName()
+        {
+            IListResponse<Organization> searchResults = new ListResponse<Organization>() { Results = new List<Organization>() };
+
+            var i = 20;
+
+            while (i > 0 && !searchResults.Results.Any())
+            {
+                searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithCustomFilter("name", _createdOrganization.Name));
+                i--;
+                Thread.Sleep(2000);
+            }
+            
             _organization = searchResults.Results.First();
         }
 
