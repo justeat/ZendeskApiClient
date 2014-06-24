@@ -50,14 +50,14 @@ namespace JustEat.ZendeskApi.Acceptance
         }
 
         [When(@"I search for organizations with the page size '(.*)' and page number '(.*)'")]
-        public void WhenISearchForOrganizationsWithThePageSizeAndNumber(PageSize page, int pageNumber)
+        public void WhenISearchForOrganizationsWithThePageSizeAndNumber(int  page, int pageNumber)
         {
             var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithPaging(pageNumber, page));
             _searchResultsOne = searchResults.Results.ToList();
         }
 
         [When(@"I search again for organizations with the page size '(.*)' and page number '(.*)'")]
-        public void WhenISearchAgainForOrganizationsWithThePageSizeAndNumber(PageSize page, int pageNumber)
+        public void WhenISearchAgainForOrganizationsWithThePageSizeAndNumber(int page, int pageNumber)
         {
             var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithPaging(pageNumber, page));
             _searchResultsTwo = searchResults.Results.ToList();

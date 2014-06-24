@@ -12,7 +12,7 @@ namespace JustEat.ZendeskApi.Contracts.Queries
 
         private int _pageNumber = 1;
 
-        private PageSize _pageSize = PageSize.Fifteen;
+        private int _pageSize = 15;
 
         private Order _order = Order.Desc;
 
@@ -29,7 +29,7 @@ namespace JustEat.ZendeskApi.Contracts.Queries
             return this;
         }
 
-        public IZendeskQuery<T> WithPaging(int pageNumber, PageSize pageSize)
+        public IZendeskQuery<T> WithPaging(int pageNumber, int pageSize)
         {
             _pageNumber = pageNumber;
             _pageSize = pageSize;
