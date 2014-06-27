@@ -58,7 +58,7 @@ namespace JustEat.ZendeskApi.Contracts.Queries
             }
             sb.Append(string.Format("&sort_by={0}&sort_order={1}", _orderBy.ToString().ToLower(), _order.ToString().ToLower()));
 
-            sb.Append(string.Format("&page={0}&per_page={1}", _pageNumber, (int)_pageSize));
+            sb.Append(string.Format("&page={0}&per_page={1}", _pageNumber, _pageSize));
 
             return sb.ToString();
         }

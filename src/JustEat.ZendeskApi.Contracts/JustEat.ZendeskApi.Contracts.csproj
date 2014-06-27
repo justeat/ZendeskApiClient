@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\User.cs" />
     <Compile Include="Queries\IZendeskQuery.cs" />
     <Compile Include="Queries\ZendeskQuery.cs" />
     <Compile Include="Models\IZendeskEntity.cs" />

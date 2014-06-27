@@ -73,10 +73,11 @@ namespace JustEat.ZendeskApi.Acceptance
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 7
- testRunner.Given("an organization in Zendesk with the name \'Coffee Break\' and the custom field \'res" +
-                    "taurantid\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an organization in Zendesk with the name \'Coffee Break\' and the custom field \'org" +
+                    "_restaurant_id\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
- testRunner.When("I search for organizations with the custom field \'restaurantid\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I search for organizations with the custom field \'org_restaurant_id\' and value \'3" +
+                    "21\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 9
  testRunner.Then("I am returned the organization \'Coffee Break\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
@@ -91,11 +92,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 11
 this.ScenarioSetup(scenarioInfo);
 #line 12
- testRunner.Given("an organization in Zendesk with the name \'Coffee Break\' and the custom field \'res" +
-                    "taurantid\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an organization in Zendesk with the name \'Coffee Break\' and the custom field \'org" +
+                    "_restaurant_id\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 13
- testRunner.And("an organization in Zendesk with the name \'Cupcake Cafe\' and the custom field \'res" +
-                    "taurantid\' and value \'654\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("an organization in Zendesk with the name \'Cupcake Cafe\' and the custom field \'org" +
+                    "_restaurant_id\' and value \'654\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 14
  testRunner.When("I search for organizations with the page size \'1\' and page number \'1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 15
@@ -114,15 +115,32 @@ this.ScenarioSetup(scenarioInfo);
 #line 18
 this.ScenarioSetup(scenarioInfo);
 #line 19
- testRunner.Given("an organization in Zendesk with the name \'Coffee Break\' and the custom field \'res" +
-                    "taurantid\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("an organization in Zendesk with the name \'Coffee Break\' and the custom field \'org" +
+                    "_restaurant_id\' and value \'321\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 20
- testRunner.And("an organization in Zendesk with the name \'Cupcake Cafe\' and the custom field \'res" +
-                    "taurantid\' and value \'654\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("an organization in Zendesk with the name \'Cupcake Cafe\' and the custom field \'org" +
+                    "_restaurant_id\' and value \'654\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 21
  testRunner.When("I search for the second organization by name", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 22
  testRunner.Then("I am returned the organization \'Cupcake Cafe\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can find a user by email address")]
+        public virtual void ICanFindAUserByEmailAddress()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can find a user by email address", ((string[])(null)));
+#line 24
+this.ScenarioSetup(scenarioInfo);
+#line 25
+ testRunner.Given("the email address of a user for whom I wish to search", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 26
+ testRunner.When("I search for a user by their email address", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 27
+ testRunner.Then("I am returned the correct user", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

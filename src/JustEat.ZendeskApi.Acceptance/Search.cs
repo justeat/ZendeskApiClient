@@ -25,6 +25,9 @@ namespace JustEat.ZendeskApi.Acceptance
         private List<Organization> _searchResultsOne = new List<Organization>();
         private List<Organization> _searchResultsTwo = new List<Organization>();
 
+        private string _usersEmail;
+        private User _user;
+            
         [BeforeScenario]
         public void BeforeScenario()
         {
@@ -42,6 +45,26 @@ namespace JustEat.ZendeskApi.Acceptance
             };
 
             _createdOrganization = _client.Organizations.Post(new OrganizationRequest { Item = _createdOrganization }).Item;
+        }
+
+        [Given(@"the email address of a user for whom I wish to search")]
+        public void GivenTheEmailAddressOfAUserForWhomIWishToSearch()
+        {
+            _usersEmail = ConfigurationManager.AppSettings["zendeskusername"];
+        }
+
+        [When(@"I search for a user by their email address")]
+        public void WhenISearchForAUserByTheirEmailAddress()
+        {
+            var response = _client.Search.Find(new ZendeskQuery<User>().WithCustomFilter("email", _usersEmail));
+
+            _user = response.Results.Single();
+        }
+
+        [Then(@"I am returned the correct user")]
+        public void ThenIAmReturnedTheCorrectUser()
+        {
+            Assert.That(_user.Email, Is.EqualTo(_usersEmail));
         }
 
         [When(@"I search for organizations with the custom field '(.*)' and value '(.*)'")]
@@ -110,13 +133,13 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             IListResponse<Organization> searchResults = new ListResponse<Organization>() { Results = new List<Organization>() };
 
-            var i = 40;
+            var i = 100;
 
             while (i > 0 && !searchResults.Results.Any())
             {
                 searchResults = _client.Search.Find(query);
                 i--;
-                Thread.Sleep(2000);
+                Thread.Sleep(3000);
             }
 
             if (searchResults == null || searchResults.Results == null || !searchResults.Results.Any())
