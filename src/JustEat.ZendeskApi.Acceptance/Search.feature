@@ -20,3 +20,8 @@ Scenario: I can search by fields
 	And an organization in Zendesk with the name 'Cupcake Cafe' and the custom field 'restaurantid' and value '654'
 	When I search for the second organization by name
 	Then I am returned the organization 'Cupcake Cafe'
+
+Scenario: I can find a user by email address
+	Given the email address of a user for whom I wish to search
+	When I search for a user by their email address
+	Then I am returned the correct user
