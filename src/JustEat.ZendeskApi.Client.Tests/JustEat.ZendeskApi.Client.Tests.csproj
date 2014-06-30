@@ -80,6 +80,7 @@
     <Compile Include="Resources\GroupResourceFixture.cs" />
     <Compile Include="Resources\SearchResourceFixture.cs" />
     <Compile Include="Resources\OrganizationResourceFixture.cs" />
+    <Compile Include="Resources\TicketCommentResourceFixture.cs" />
     <Compile Include="Resources\TicketResourceFixture.cs" />
   </ItemGroup>
   <ItemGroup>
