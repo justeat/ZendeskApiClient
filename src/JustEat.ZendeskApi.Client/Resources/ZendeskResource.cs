@@ -33,6 +33,13 @@ namespace JustEat.ZendeskApi.Client.Resources
             return Client.Get<TResponse>(requestUri);
         }
 
+        protected TResponse GetAll<TResponse>(long parentId) where TResponse : IListResponse<T>
+        {
+            var requestUri = Client.BuildUri(string.Format(ResourceUri,parentId));
+
+            return Client.Get<TResponse>(requestUri);
+        }
+
         protected IResponse<T> Put<TRequest, TResponse>(TRequest request)
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>

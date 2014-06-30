@@ -66,6 +66,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\TicketComment.cs" />
+    <Compile Include="Models\TicketEventType.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Queries\IZendeskQuery.cs" />
     <Compile Include="Queries\ZendeskQuery.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Responses\GroupListResponse.cs" />
     <Compile Include="Responses\IResponse.cs" />
     <Compile Include="Responses\OrganizationListResponse.cs" />
+    <Compile Include="Responses\TicketCommentListResponse.cs" />
     <Compile Include="Responses\TicketListResponse.cs" />
     <Compile Include="Responses\ListResponse.cs" />
     <Compile Include="Requests\TicketRequest.cs" />
