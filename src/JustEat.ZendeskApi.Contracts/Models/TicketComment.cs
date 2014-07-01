@@ -24,7 +24,7 @@ namespace JustEat.ZendeskApi.Contracts.Models
         public string Body { get; set; }
 
         [DataMember(Name = "author_id")]
-        public string Author { get; set; }
+        public long? Author { get; set; }
 
         [DataMember(Name = "public")]
         public bool IsPublic { get; set; }
