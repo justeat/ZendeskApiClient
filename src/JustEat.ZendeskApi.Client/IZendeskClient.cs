@@ -10,5 +10,6 @@ namespace JustEat.ZendeskApi.Client
         ISearchResource Search { get; }
         IGroupResource Groups { get; }
         IGroupResource AssigableGroups { get; }
+        IUserResource Users { get; }
     }
 }

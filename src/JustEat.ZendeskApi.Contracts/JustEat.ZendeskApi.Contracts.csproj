@@ -84,10 +84,12 @@
     <Compile Include="Responses\IResponse.cs" />
     <Compile Include="Responses\OrganizationListResponse.cs" />
     <Compile Include="Responses\TicketCommentListResponse.cs" />
+    <Compile Include="Responses\UserListResponse.cs" />
     <Compile Include="Responses\TicketListResponse.cs" />
     <Compile Include="Responses\ListResponse.cs" />
     <Compile Include="Requests\TicketRequest.cs" />
     <Compile Include="Responses\OrganizationResponse.cs" />
+    <Compile Include="Responses\UserResponse.cs" />
     <Compile Include="Responses\TicketResponse.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\TicketStatus.cs" />

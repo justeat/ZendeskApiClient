@@ -13,6 +13,7 @@ namespace JustEat.ZendeskApi.Client
         public ISearchResource Search { get; private set; }
         public IGroupResource Groups { get; private set; }
         public IGroupResource AssigableGroups { get; private set; }
+        public IUserResource Users { get; private set; }
 
         public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, IHttpChannel httpChannel = null, ILogAdapter logger = null)
             : base(baseUri, configuration, httpChannel, new ZendeskJsonSerializer(), logger)
@@ -23,6 +24,7 @@ namespace JustEat.ZendeskApi.Client
             Search = new SearchResource(this);
             Groups = new GroupsResource(this);
             AssigableGroups = new AssignableGroupResource(this);
+            Users = new UserResource(this);
         }
     }
 }
