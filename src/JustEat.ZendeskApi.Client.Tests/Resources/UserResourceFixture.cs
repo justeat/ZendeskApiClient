@@ -21,15 +21,6 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
-        public void TestGetUser()
-        {
-            var client = new ZendeskClient(new Uri("https://justeatukpoc1399564481.zendesk.com"),
-                new ZendeskDefaultConfiguration("zendeskapi@just-eat.com", "R8CvArGs3sOWoK0muPh8r39XocxylQEUwV2jFL0a"));
-            var userIds = new List<long> {515009161, 501399552};
-            var result = client.Users.GetAll(userIds);
-        }
-
-        [Test]
         public void Get_Called_CallsBuildUriWithFieldId()
         {
             // Given
