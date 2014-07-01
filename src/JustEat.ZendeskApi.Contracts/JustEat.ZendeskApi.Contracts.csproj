@@ -88,6 +88,7 @@
     <Compile Include="Responses\ListResponse.cs" />
     <Compile Include="Requests\TicketRequest.cs" />
     <Compile Include="Responses\OrganizationResponse.cs" />
+    <Compile Include="Responses\GroupResponse.cs" />
     <Compile Include="Responses\TicketResponse.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\TicketStatus.cs" />

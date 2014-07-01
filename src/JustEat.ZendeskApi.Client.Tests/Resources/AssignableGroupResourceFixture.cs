@@ -19,7 +19,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
-        public void Get_Called_CallsBuildUriWithFieldId()
+        public void GetAll_Called_CallsBuildUriWithFieldId()
         {
             // Given
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
