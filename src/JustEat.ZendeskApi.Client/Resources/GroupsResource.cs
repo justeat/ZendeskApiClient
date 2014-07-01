@@ -4,27 +4,21 @@ using JustEat.ZendeskApi.Contracts.Responses;
 
 namespace JustEat.ZendeskApi.Client.Resources
 {
-    public class GroupsResource : IGroupResource
+    public class GroupsResource : ZendeskResource<Group>, IGroupResource
     {
-        protected const string GroupsUri = @"/api/v2/groups";
-
-        private readonly IBaseClient _client;
+        protected override string ResourceUri
+        {
+            get { return @"/api/v2/groups"; }
+        }
 
         public GroupsResource(IBaseClient client)
         {
-            _client = client;
+            Client = client;
         }
 
-        public ListResponse<Group> GetAll()
+        public IResponse<Group> Get(long id)
         {
-            var requestUri = _client.BuildUri(GetGroupResource());
-
-            return _client.Get<GroupListResponse>(requestUri);
-        }
-
-        protected virtual string GetGroupResource()
-        {
-            return GroupsUri;
+            return Get<GroupResponse>(id);
         }
     }
 }

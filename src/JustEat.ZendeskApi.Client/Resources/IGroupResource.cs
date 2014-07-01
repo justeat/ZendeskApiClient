@@ -3,8 +3,8 @@ using JustEat.ZendeskApi.Contracts.Responses;
 
 namespace JustEat.ZendeskApi.Client.Resources
 {
-    public interface IAssignableGroupResource
+    public interface IGroupResource
     {
-        ListResponse<Group> GetAll();
+        IResponse<Group> Get(long id);
     }
 }

@@ -12,7 +12,7 @@ namespace JustEat.ZendeskApi.Client
         public IOrganizationResource Organizations { get; private set; }
         public ISearchResource Search { get; private set; }
         public IGroupResource Groups { get; private set; }
-        public IGroupResource AssigableGroups { get; private set; }
+        public IAssignableGroupResource AssigableGroups { get; private set; }
 
         public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, IHttpChannel httpChannel = null, ILogAdapter logger = null)
             : base(baseUri, configuration, httpChannel, new ZendeskJsonSerializer(), logger)
