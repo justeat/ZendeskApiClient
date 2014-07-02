@@ -28,7 +28,7 @@ namespace JustEat.ZendeskApi.Contracts.Models
         public string TimeZone { get; set; }
 
         [DataMember(Name = "url", EmitDefaultValue = false)]
-        public Uri Url { get; set; }
+        public string Url { get; set; }
 
         [DataMember(Name = "email", EmitDefaultValue = false)]
         public string Email { get; set; }
@@ -52,13 +52,13 @@ namespace JustEat.ZendeskApi.Contracts.Models
         public bool Verified { get; set; }
 
         [DataMember(Name = "external_id", EmitDefaultValue = false)]
-        public long? ExternalId { get; set; }
+        public string ExternalId { get; set; }
 
         [DataMember(Name = "tags", EmitDefaultValue = false)]
         public List<string> Tags { get; set; }
 
         [DataMember(Name = "active", EmitDefaultValue = false)]
-        public string Active { get; set; }
+        public bool Active { get; set; }
 
         [DataMember(Name = "shared", EmitDefaultValue = false)]
         public bool Shared { get; set; }
@@ -90,10 +90,7 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(Name = "suspended", EmitDefaultValue = false)]
         public bool Suspended { get; set; }
 
-        [DataMember(Name = "result_type", EmitDefaultValue = false)]
-        public string ResultType { get; set; }
-
         [DataMember(Name = "ticket_restriction", EmitDefaultValue = false)]
-        public int? TicketRestriction { get; set; }
+        public string TicketRestriction { get; set; }
     }
 }
