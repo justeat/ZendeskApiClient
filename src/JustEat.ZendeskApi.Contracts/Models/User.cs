@@ -51,10 +51,6 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(Name = "verified", EmitDefaultValue = false)]
         public bool Verified { get; set; }
 
-        [IgnoreDataMember]
-        [DataMember(Name = "photo")]
-        public string Photo { get; set; }
-
         [DataMember(Name = "external_id", EmitDefaultValue = false)]
         public long? ExternalId { get; set; }
 
@@ -99,9 +95,5 @@ namespace JustEat.ZendeskApi.Contracts.Models
 
         [DataMember(Name = "ticket_restriction", EmitDefaultValue = false)]
         public int? TicketRestriction { get; set; }
-
-        [IgnoreDataMember]
-        [DataMember(Name = "user_fields", EmitDefaultValue = false)]
-        public object UserFields { get; set; }
     }
 }
