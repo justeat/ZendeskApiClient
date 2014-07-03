@@ -61,6 +61,9 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(Name = "group_id", EmitDefaultValue = false)]
         public int? GroupId { get; set; }
 
+        [DataMember(Name = "ticket_form_id", EmitDefaultValue = false)]
+        public int? FormId { get; set; }
+
 // ReSharper disable InconsistentNaming
         [IgnoreDataMember]
         public long? External_Id { get; set; }
@@ -94,9 +97,6 @@ namespace JustEat.ZendeskApi.Contracts.Models
 
         [IgnoreDataMember]
         public List<object> fields { get; set; }
-
-        [IgnoreDataMember]
-        public int? ticket_form_id { get; set; }
 
         [IgnoreDataMember]
         public string result_type { get; set; }
