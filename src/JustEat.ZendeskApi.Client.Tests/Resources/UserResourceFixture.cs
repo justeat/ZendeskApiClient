@@ -22,21 +22,6 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
-        public void TestPostUser()
-        {
-            var client = new ZendeskClient(new Uri("https://justeatukpoc1399564481.zendesk.com"),
-                new ZendeskDefaultConfiguration("zendeskapi@just-eat.com", "R8CvArGs3sOWoK0muPh8r39XocxylQEUwV2jFL0a"));
-            //var request = new UserRequest { Item = new User { Name = "Test Spike User 3", Email = "test@email.com", Phone = "12345678", OrganizationId = 30645171, Verified = true } };
-            //var result = client.Users.Post(request);
-
-            //var result = client.Organizations.GetAll();
-
-            //var result = client.Search.Find(new ZendeskQuery<ListResponse<Organization>>().WithPaging(2, 100));
-
-            var result = client.Search.Find(new ZendeskQuery<Organization>().WithPaging(1,20000));
-        }
-
-        [Test]
         public void Get_Called_CallsBuildUriWithFieldId()
         {
             // Given
