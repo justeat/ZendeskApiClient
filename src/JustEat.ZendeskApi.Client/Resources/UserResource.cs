@@ -26,5 +26,10 @@ namespace JustEat.ZendeskApi.Client.Resources
         {
             return GetAll<UserListResponse>(ids);
         }
+
+        public IResponse<User> Post(UserRequest request)
+        {
+            return Post<UserRequest, UserResponse>(request);
+        }
     }
 }

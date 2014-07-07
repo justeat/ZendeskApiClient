@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Client.Resources;
 using JustEat.ZendeskApi.Contracts.Models;
+using JustEat.ZendeskApi.Contracts.Queries;
 using JustEat.ZendeskApi.Contracts.Requests;
 using JustEat.ZendeskApi.Contracts.Responses;
 using Moq;
@@ -73,6 +74,36 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 
             // When
             var result = userResource.GetAll(new List<long> { 4321, 3456, 6789 });
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void Post_Called_BuildsUri()
+        {
+            // Given
+            var request = new UserRequest { Item = new User { Name = "Owner Name" } };
+            var userResource = new UserResource(_client.Object);
+
+            // When
+            userResource.Post(request);
+
+            // Then
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        }
+
+        [Test]
+        public void Post_CalledWithUser_ReturnsUserReponse()
+        {
+            // Given
+            var response = new UserResponse { Item = new User { Name = "Owner Name" } };
+            var request = new UserRequest { Item = new User { Name = "Owner Name" } };
+            _client.Setup(b => b.Post<UserResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var userResource = new UserResource(_client.Object);
+
+            // When
+            var result = userResource.Post(request);
 
             // Then
             Assert.That(result, Is.EqualTo(response));

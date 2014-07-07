@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using JustEat.ZendeskApi.Contracts.Models;
+using JustEat.ZendeskApi.Contracts.Requests;
 using JustEat.ZendeskApi.Contracts.Responses;
 
 namespace JustEat.ZendeskApi.Client.Resources
@@ -8,5 +9,6 @@ namespace JustEat.ZendeskApi.Client.Resources
     {
         IResponse<User> Get(long id);
         IListResponse<User> GetAll(List<long> ids);
+        IResponse<User> Post(UserRequest request);
     }
 }

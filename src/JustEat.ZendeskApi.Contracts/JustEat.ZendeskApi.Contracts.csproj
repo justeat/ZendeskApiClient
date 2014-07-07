@@ -79,6 +79,7 @@
     <Compile Include="Models\ZendeskType.cs" />
     <Compile Include="Requests\IRequest.cs" />
     <Compile Include="Requests\OrganizationRequest.cs" />
+    <Compile Include="Requests\UserRequest.cs" />
     <Compile Include="Responses\IListResponse.cs" />
     <Compile Include="Responses\GroupListResponse.cs" />
     <Compile Include="Responses\IResponse.cs" />
