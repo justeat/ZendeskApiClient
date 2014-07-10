@@ -24,7 +24,7 @@ namespace JustEat.ZendeskApi.Contracts.Models
         public DateTime? Due { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name = "type", EmitDefaultValue = false)]
         public TicketType? Type { get; set; }
 
         [DataMember(Name = "subject")]
