@@ -24,6 +24,11 @@ Scenario: When I call Post I am able to add a ticket
 	When I call get by id on the ZendeskApiClient
 	Then I get a ticket from Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem'
 
+Scenario: When I call Post I am able to add a task
+	Given a task in Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem' and type 'task'
+	When I call get by id on the ZendeskApiClient
+	Then I get a task from Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem' and type 'task'
+
 Scenario: When I call Put I am able to update a ticket
 	Given a ticket in Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem'
 	When I update the ticket with the status 'closed'

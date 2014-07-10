@@ -6,9 +6,9 @@ namespace JustEat.ZendeskApi.Contracts.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum TicketType
     {
-        Task,
-        Incident,
-        Problem,
-        Question
+        task,
+        incident,
+        problem,
+        question
     }
 }
