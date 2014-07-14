@@ -69,6 +69,7 @@
     <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketEventType.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserIdentity.cs" />
     <Compile Include="Queries\IZendeskQuery.cs" />
     <Compile Include="Queries\ZendeskQuery.cs" />
     <Compile Include="Models\IZendeskEntity.cs" />
@@ -79,12 +80,15 @@
     <Compile Include="Models\ZendeskType.cs" />
     <Compile Include="Requests\IRequest.cs" />
     <Compile Include="Requests\OrganizationRequest.cs" />
+    <Compile Include="Requests\UserIdentityRequest.cs" />
     <Compile Include="Requests\UserRequest.cs" />
     <Compile Include="Responses\IListResponse.cs" />
     <Compile Include="Responses\GroupListResponse.cs" />
     <Compile Include="Responses\IResponse.cs" />
     <Compile Include="Responses\OrganizationListResponse.cs" />
     <Compile Include="Responses\TicketCommentListResponse.cs" />
+    <Compile Include="Responses\UserIdentityResponse.cs" />
+    <Compile Include="Responses\UserIdentityListResponse.cs" />
     <Compile Include="Responses\UserListResponse.cs" />
     <Compile Include="Responses\TicketListResponse.cs" />
     <Compile Include="Responses\ListResponse.cs" />
