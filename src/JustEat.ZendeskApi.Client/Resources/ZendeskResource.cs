@@ -79,7 +79,13 @@ namespace JustEat.ZendeskApi.Client.Resources
 
         public void Delete(long id)
         {
-            var requestUri = Client.BuildUri(string.Format("{0}/{1}", ResourceUri, id));
+            Delete(id, null);
+        }        
+
+        public void Delete(long id, long? parentId)
+        {
+            var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
+            var requestUri = Client.BuildUri(string.Format("{0}/{1}", resourceUri, id));
 
             Client.Delete(requestUri);
         }
