@@ -29,7 +29,9 @@ namespace JustEat.ZendeskApi.Client.Resources
 
         public IResponse<UserIdentity> Put(UserIdentityRequest request)
         {
-            return Put<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId);
+            var response = Post(request);
+            Delete(request.Item.Id??0, request.Item.UserId);
+            return response;
         }
     }
 }

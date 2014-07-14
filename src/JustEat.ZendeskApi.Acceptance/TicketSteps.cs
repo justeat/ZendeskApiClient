@@ -45,7 +45,17 @@ namespace JustEat.ZendeskApi.Acceptance
             _savedSingleTicket =
                 _client.Tickets.Post(new TicketRequest
                 {
-                    Item = new Ticket {Subject = subject, Description = description}
+                    Item = new Ticket {Subject = subject, Description = description, Type = TicketType.task}
+                }).Item;
+        }
+
+        [Given(@"a task in Zendesk with the subject '(.*)' and description '(.*)' and type '(.*)'")]
+        public void GivenATicketInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description, string type)
+        {
+            _savedSingleTicket =
+                _client.Tickets.Post(new TicketRequest
+                {
+                    Item = new Ticket { Subject = subject, Description = description, Type = (TicketType)Enum.Parse(typeof(TicketType), type)}
                 }).Item;
         }
 
@@ -79,6 +89,15 @@ namespace JustEat.ZendeskApi.Acceptance
             Assert.That(_singleTicketResponse.Subject, Is.EqualTo(subject));
             Assert.That(_singleTicketResponse.Description, Is.EqualTo(description));
             Assert.That(_singleTicketResponse.Created, Is.GreaterThan(DateTime.UtcNow.AddMinutes(-2)));
+        }
+
+        [Then(@"I get a task from Zendesk with the subject '(.*)' and description '(.*)' and type '(.*)'")]
+        public void ThenIGetATicketFromZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description, string type)
+        {
+            Assert.That(_singleTicketResponse.Subject, Is.EqualTo(subject));
+            Assert.That(_singleTicketResponse.Description, Is.EqualTo(description));
+            Assert.That(_singleTicketResponse.Created, Is.GreaterThan(DateTime.UtcNow.AddMinutes(-2)));
+            Assert.That(_singleTicketResponse.Type, Is.EqualTo((TicketType)Enum.Parse(typeof(TicketType), type)));
         }
 
         [Then(@"I get a ticket from Zendesk with the status '(.*)'")]
