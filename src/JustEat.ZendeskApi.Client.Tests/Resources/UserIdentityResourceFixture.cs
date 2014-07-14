@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JE.Api.ClientBase;
+using JustEat.ZendeskApi.Client.Resources;
 using JustEat.ZendeskApi.Contracts.Models;
 using JustEat.ZendeskApi.Contracts.Requests;
+using JustEat.ZendeskApi.Contracts.Responses;
 using Moq;
 using NUnit.Framework;
 
@@ -21,6 +23,63 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             _client = new Mock<IBaseClient>();
         }
 
-        
+        [Test]
+        public void GetAll_Called_CallsBuildUriWithFieldId()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            var userIdentityResource = new UserIdentityResource(_client.Object);
+
+            // When
+            userIdentityResource.GetAll(4321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321")),""));
+        }
+
+        [Test]
+        public void GetAll_Called_ReturnsUserIdentityResponse()
+        {
+            // Given
+            var response = new UserIdentityListResponse { Results = new List<UserIdentity> { new UserIdentity { Id = 1 } } };
+            _client.Setup(b => b.Get<UserIdentityListResponse>(It.IsAny<Uri>())).Returns(response);
+            var userIdentityResource = new UserIdentityResource(_client.Object);
+
+            // When
+            var result = userIdentityResource.GetAll(4321);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void Post_Called_BuildsUriWithFieldUserId()
+        {
+            // Given
+            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", UserId = 1234} };
+            var userIdentityResource = new UserIdentityResource(_client.Object);
+
+            // When
+            userIdentityResource.Post(request);
+
+            // Then
+            _client.Setup(b => b.BuildUri(It.Is<string>(s => s.Contains("1234")), ""));
+        }
+
+        [Test]
+        public void Post_CalledWithUser_ReturnsUserReponse()
+        {
+            // Given
+            var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email" } };
+            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email" } };
+            _client.Setup(b => b.Post<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var userIdentityResource = new UserIdentityResource(_client.Object);
+
+            // When
+            var result = userIdentityResource.Post(request);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
     }
 }
