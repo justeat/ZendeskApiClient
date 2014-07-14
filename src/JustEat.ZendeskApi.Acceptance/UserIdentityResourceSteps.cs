@@ -26,7 +26,7 @@ namespace JustEat.ZendeskApi.Acceptance
                 new ZendeskDefaultConfiguration(ConfigurationManager.AppSettings["zendeskusername"], ConfigurationManager.AppSettings["zendesktoken"]));
         }
 
-        [Given(@"Zendesk User")]
+        [Given(@"Zendesk User with an email")]
         public void GivenZendeskUser()
         {
             _user =
@@ -50,6 +50,26 @@ namespace JustEat.ZendeskApi.Acceptance
         {
             Assert.That(_userIdentities.Results.Any(i => i.Value == _user.Email));
         }
+
+        [When(@"I change the email")]
+        public void WhenIChangeTheEmail()
+        {
+            var identity = _userIdentities.Results.First();
+            identity.Value = "someother@email.com";
+
+            _client.UserIdentities.Put(new UserIdentityRequest()
+            {
+                Item = identity
+            });
+        }
+
+        [Then(@"it should be changed")]
+        public void ThenItShouldBeChanged()
+        {
+            _userIdentities = _client.UserIdentities.GetAll(_user.Id ?? 0);
+            Assert.That(_userIdentities.Results.First().Value == "someother@email.com");
+        }
+
 
         [AfterScenario]
         public void AfterFeature()

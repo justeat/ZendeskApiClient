@@ -81,5 +81,35 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             // Then
             Assert.That(result, Is.EqualTo(response));
         }
+
+        [Test]
+        public void Put_Called_BuildsUriWithFieldUserId()
+        {
+            // Given
+            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", UserId = 1234, Id = 123} };
+            var userIdentityResource = new UserIdentityResource(_client.Object);
+
+            // When
+            userIdentityResource.Put(request);
+
+            // Then
+            _client.Setup(b => b.BuildUri(It.Is<string>(s => s.Contains("1234")), ""));
+        }
+
+        [Test]
+        public void Put_CalledWithUser_ReturnsUserReponse()
+        {
+            // Given
+            var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email", Id = 123} };
+            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", Id = 123} };
+            _client.Setup(b => b.Post<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var userIdentityResource = new UserIdentityResource(_client.Object);
+
+            // When
+            var result = userIdentityResource.Put(request);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
     }
 }

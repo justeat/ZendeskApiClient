@@ -80,10 +80,13 @@ namespace JustEat.ZendeskApi.Client.Resources
         public void Delete(long id)
         {
             Delete(id, null);
-        }        
+        }
 
         public void Delete(long id, long? parentId)
         {
+            if (id <= 0)
+                throw new ArgumentException("Item must exist in Zendesk");
+
             var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
             var requestUri = Client.BuildUri(string.Format("{0}/{1}", resourceUri, id));
 
