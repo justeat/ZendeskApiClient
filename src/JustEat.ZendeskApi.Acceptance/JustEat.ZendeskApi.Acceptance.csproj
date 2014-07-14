@@ -82,6 +82,12 @@
     </Compile>
     <Compile Include="OrganizationSteps.cs" />
     <Compile Include="TicketSteps.cs" />
+    <Compile Include="UserIdentityResource.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserIdentityResource.feature</DependentUpon>
+    </Compile>
+    <Compile Include="UserIdentityResourceSteps.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -99,6 +105,10 @@
     <None Include="Tickets.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Tickets.feature.cs</LastGenOutput>
+    </None>
+    <None Include="UserIdentityResource.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>UserIdentityResource.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
