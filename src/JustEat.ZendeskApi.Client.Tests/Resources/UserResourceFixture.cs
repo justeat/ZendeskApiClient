@@ -39,7 +39,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Get_Called_ReturnsUserResponse()
         {
             // Given
-            var response = new UserResponse { Item = new User { Id = 1 }};
+            var response = new UserResponse { Item = new User { Id = 1 } };
             _client.Setup(b => b.Get<UserResponse>(It.IsAny<Uri>())).Returns(response);
             var userResource = new UserResource(_client.Object);
 
@@ -104,6 +104,36 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 
             // When
             var result = userResource.Post(request);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void Put_Called_BuildsUri()
+        {
+            // Given
+            var request = new UserRequest { Item = new User { Name = "Owner Name", Id = 123 } };
+            var userResource = new UserResource(_client.Object);
+
+            // When
+            userResource.Put(request);
+
+            // Then
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        }
+
+        [Test]
+        public void Put_CalledWithUser_ReturnsUserReponse()
+        {
+            // Given
+            var response = new UserResponse { Item = new User { Name = "Owner Name" } };
+            var request = new UserRequest { Item = new User { Name = "Owner Name", Id = 123 } };
+            _client.Setup(b => b.Put<UserResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var userResource = new UserResource(_client.Object);
+
+            // When
+            var result = userResource.Put(request);
 
             // Then
             Assert.That(result, Is.EqualTo(response));
