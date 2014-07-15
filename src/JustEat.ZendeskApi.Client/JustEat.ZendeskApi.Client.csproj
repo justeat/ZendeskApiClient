@@ -82,6 +82,7 @@
     <Compile Include="Resources\AssignableGroupsResource.cs" />
     <Compile Include="Resources\OrganizationResource.cs" />
     <Compile Include="Resources\TicketCommentResource.cs" />
+    <Compile Include="Resources\OrganizationMembershipResource.cs" />
     <Compile Include="Resources\UserIdentityResource.cs" />
     <Compile Include="Resources\UserResource.cs" />
     <Compile Include="Resources\ZendeskResource.cs" />
