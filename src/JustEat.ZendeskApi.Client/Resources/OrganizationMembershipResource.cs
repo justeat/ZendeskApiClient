@@ -6,7 +6,7 @@ using JustEat.ZendeskApi.Contracts.Responses;
 
 namespace JustEat.ZendeskApi.Client.Resources
 {
-    public class OrganizationMembershipResource : ZendeskResource<OrganizationMembership>
+    public class OrganizationMembershipResource : ZendeskResource<OrganizationMembership>, IOrganizationMembershipResource
     {
         protected override string ResourceUri {
             get { return @"/api/v2/users/{0}/organization_memberships"; }
