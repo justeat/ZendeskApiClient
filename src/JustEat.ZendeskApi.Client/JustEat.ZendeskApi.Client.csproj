@@ -72,6 +72,7 @@
     <Compile Include="Resources\GroupsResource.cs" />
     <Compile Include="Resources\IGroupResource.cs" />
     <Compile Include="Resources\IAssignableGroupResource.cs" />
+    <Compile Include="Resources\IOrganizationMembershipResource.cs" />
     <Compile Include="Resources\IOrganizationResource.cs" />
     <Compile Include="Resources\ISearchResource.cs" />
     <Compile Include="Resources\ITicketCommentResource.cs" />
