@@ -22,7 +22,7 @@ namespace JustEat.ZendeskApi.Contracts.Models
         public long? OrganizationId { get; set; }
 
         [DataMember(Name = "default", EmitDefaultValue = false)]
-        public bool Default { get; set; }
+        public bool? Default { get; set; }
 
         [DataMember(Name = "created_at", EmitDefaultValue = false)]
         public DateTime? Created { get; set; }
