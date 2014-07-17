@@ -53,47 +53,5 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             // Then
             _client.Verify(c => c.Get<ListResponse<Organization>>(It.IsAny<Uri>()));
         }
-
-        [Test]
-        public void FindAll_Called_ReturnsSameType()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321"))))
-                .Returns(new Uri("http://search"));
-            var searchResource = new SearchResource(_client.Object);
-            _query.Setup(q => q.BuildQuery()).Returns("query");
-            _client.Setup(b => b.Get<ListResponse<Organization>>(It.IsAny<Uri>())).Returns(new ListResponse<Organization>
-            {
-                Results = new List<Organization>() { new Organization()},
-                TotalCount = 3
-            });
-
-            // When
-            var result = searchResource.FindAll<Organization>();
-
-            // Then
-            Assert.IsInstanceOf<ListResponse<Organization>>(result);
-        }
-
-        [Test]
-        public void FindAll_Called_CallsBuildUriCorrectAmountOfTimes()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321"))))
-                .Returns(new Uri("http://search"));
-            var searchResource = new SearchResource(_client.Object);
-            _query.Setup(q => q.BuildQuery()).Returns("query");
-            _client.Setup(b => b.Get<ListResponse<Organization>>(It.IsAny<Uri>())).Returns(new ListResponse<Organization>
-            {
-                Results = new List<Organization>() { new Organization()},
-                TotalCount = 3
-            });
-
-            // When
-            var result = searchResource.FindAll<Organization>();
-
-            // Then
-            _client.Verify(c => c.Get<ListResponse<Organization>>(It.IsAny<Uri>()), Times.Exactly(3));
-        }
     }
 }
