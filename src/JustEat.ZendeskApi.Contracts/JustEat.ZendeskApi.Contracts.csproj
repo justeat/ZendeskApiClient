@@ -69,6 +69,7 @@
     <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketEventType.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Via.cs" />
     <Compile Include="Queries\IZendeskQuery.cs" />
     <Compile Include="Queries\ZendeskQuery.cs" />
     <Compile Include="Models\IZendeskEntity.cs" />

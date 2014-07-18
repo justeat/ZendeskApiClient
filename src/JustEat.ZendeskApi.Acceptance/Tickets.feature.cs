@@ -196,6 +196,24 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("When I call Get by id, I get told it was created via the api")]
+        public virtual void WhenICallGetByIdIGetToldItWasCreatedViaTheApi()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I call Get by id, I get told it was created via the api", ((string[])(null)));
+#line 43
+this.ScenarioSetup(scenarioInfo);
+#line 44
+ testRunner.Given("a ticket in Zendesk with the subject \'The coffee machiene is broken\' and descript" +
+                    "ion \'I can\'t work in these conditions!\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 45
+ testRunner.When("I call get by id on the ZendeskApiClient", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 46
+ testRunner.Then("I get a ticket from Zendesk which is via the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore
