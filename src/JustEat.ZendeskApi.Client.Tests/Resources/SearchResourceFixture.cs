@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Client.Resources;
 using JustEat.ZendeskApi.Contracts.Models;
@@ -22,7 +23,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
-        public void Get_Called_CallsBuildUriWithFieldId()
+        public void Find_Called_CallsBuildUriWithFieldId()
         {
             // Given
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321"))))
@@ -38,7 +39,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
-        public void Get_Called_CallsGetOnClient()
+        public void Find_Called_CallsGetOnClient()
         {
             // Given
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321"))))

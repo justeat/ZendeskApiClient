@@ -1,4 +1,5 @@
-﻿using JE.Api.ClientBase;
+﻿using System.Collections.Generic;
+using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Contracts.Models;
 using JustEat.ZendeskApi.Contracts.Queries;
 using JustEat.ZendeskApi.Contracts.Responses;
@@ -22,6 +23,5 @@ namespace JustEat.ZendeskApi.Client.Resources
 
             return _client.Get<ListResponse<T>>(requestUri);
         }
-
     }
 }
