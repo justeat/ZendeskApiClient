@@ -31,6 +31,9 @@ namespace JustEat.ZendeskApi.Contracts.Models
 
         [DataMember(Name = "created_at", EmitDefaultValue = false)]
         public DateTime? Created { get; set; }
+
+        [DataMember(Name = "via")]
+        public Via Via { get; set; }
         
 // ReSharper disable InconsistentNaming
         [IgnoreDataMember]
@@ -39,8 +42,6 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [IgnoreDataMember]
         public object metadata { get; set; }
 
-        [IgnoreDataMember]
-        public object via { get; set; }
 // ReSharper restore InconsistentNaming
 
     }
