@@ -106,6 +106,12 @@ namespace JustEat.ZendeskApi.Acceptance
             Assert.That(_singleTicketResponse.Status, Is.EqualTo(status));
         }
 
+        [Then(@"I get a ticket from Zendesk which is via the api")]
+        public void ThenIGetATicketViaTheApi()
+        {
+            Assert.That(_singleTicketResponse.Via.Channel, Is.EqualTo("api"));
+        }
+
 
         [Then(@"I get a ticket from Zendesk with the following values")]
         public void ThenIGetATicketFromZendeskWithTheFollowingValues(Table table)

@@ -64,12 +64,12 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(Name = "ticket_form_id", EmitDefaultValue = false)]
         public int? FormId { get; set; }
 
+        [DataMember(Name = "via")]
+        public Via Via { get; set; }
+
 // ReSharper disable InconsistentNaming
         [IgnoreDataMember]
         public long? External_Id { get; set; }
-
-        [IgnoreDataMember]
-        public object via { get; set; }
 
         [IgnoreDataMember]
         public List<long> collaborator_ids { get; set; }
