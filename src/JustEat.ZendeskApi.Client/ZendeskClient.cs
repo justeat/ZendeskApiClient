@@ -2,6 +2,7 @@
 using JE.Api.ClientBase;
 using JE.Api.ClientBase.Http;
 using JustEat.ZendeskApi.Client.Resources;
+using JustEat.ZendeskApi.Contracts.Models;
 
 namespace JustEat.ZendeskApi.Client
 {
@@ -14,6 +15,8 @@ namespace JustEat.ZendeskApi.Client
         public IGroupResource Groups { get; private set; }
         public IAssignableGroupResource AssignableGroups { get; private set; }
         public IUserResource Users { get; private set; }
+        public IUserIdentityResource UserIdentities { get; private set; }
+        public OrganizationMembershipResource OrganizationMemberships { get; set; }
 
         public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, IHttpChannel httpChannel = null, ILogAdapter logger = null)
             : base(baseUri, configuration, httpChannel, new ZendeskJsonSerializer(), logger)
@@ -25,6 +28,9 @@ namespace JustEat.ZendeskApi.Client
             Groups = new GroupsResource(this);
             AssignableGroups = new AssignableGroupResource(this);
             Users = new UserResource(this);
+            UserIdentities = new UserIdentityResource(this);
+            OrganizationMemberships = new OrganizationMembershipResource(this);
         }
+
     }
 }

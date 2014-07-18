@@ -81,6 +81,8 @@
     <Compile Include="Resources\SearchResourceFixture.cs" />
     <Compile Include="Resources\OrganizationResourceFixture.cs" />
     <Compile Include="Resources\TicketCommentResourceFixture.cs" />
+    <Compile Include="Resources\OrganizationMembershipResourceFixture.cs" />
+    <Compile Include="Resources\UserIdentityResourceFixture.cs" />
     <Compile Include="Resources\UserResourceFixture.cs" />
     <Compile Include="Resources\TicketResourceFixture.cs" />
   </ItemGroup>

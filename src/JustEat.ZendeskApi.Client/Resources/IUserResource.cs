@@ -10,5 +10,7 @@ namespace JustEat.ZendeskApi.Client.Resources
         IResponse<User> Get(long id);
         IListResponse<User> GetAll(List<long> ids);
         IResponse<User> Post(UserRequest request);
+        IResponse<User> Put(UserRequest request);
+        void Delete(long id);
     }
 }

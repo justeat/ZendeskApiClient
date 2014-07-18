@@ -44,10 +44,18 @@ namespace JustEat.ZendeskApi.Client.Resources
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
+            return Put<TRequest, TResponse>(request, null);
+        }
+
+        protected IResponse<T> Put<TRequest, TResponse>(TRequest request, long? parentId)
+            where TRequest : IRequest<T>
+            where TResponse : IResponse<T>
+        {
             if (!request.Item.Id.HasValue || request.Item.Id <= 0)
                 throw new ArgumentException("Item must exist in Zendesk");
 
-            var requestUri = Client.BuildUri(string.Format("{0}/{1}", ResourceUri, request.Item.Id));
+            var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
+            var requestUri = Client.BuildUri(string.Format("{0}/{1}", resourceUri, request.Item.Id));
 
             return Client.Put<TResponse>(requestUri, request);
         }
@@ -56,14 +64,31 @@ namespace JustEat.ZendeskApi.Client.Resources
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            var requestUri = Client.BuildUri(ResourceUri);
+            return Post<TRequest, TResponse>(request, null);
+        }
+
+        protected TResponse Post<TRequest, TResponse>(TRequest request, long? parentId) 
+            where TRequest : IRequest<T>
+            where TResponse : IResponse<T>
+        {
+            var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
+            var requestUri = Client.BuildUri(resourceUri);
 
             return Client.Post<TResponse>(requestUri, request);
         }
 
         public void Delete(long id)
         {
-            var requestUri = Client.BuildUri(string.Format("{0}/{1}", ResourceUri, id));
+            Delete(id, null);
+        }
+
+        public void Delete(long id, long? parentId)
+        {
+            if (id <= 0)
+                throw new ArgumentException("Item must exist in Zendesk");
+
+            var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
+            var requestUri = Client.BuildUri(string.Format("{0}/{1}", resourceUri, id));
 
             Client.Delete(requestUri);
         }
