@@ -5,7 +5,11 @@ A .net Zendesk Api Client NuGet package for use with the ZendeskApi v2
 
 ##Creating a client:##
 
-    IZendeskClient client = new ZendeskClient(new Uri("https://my-zendesk-api-host-endpoint"),"my-zendesk-username", "my-zendesk-token");
+    IZendeskClient client = new ZendeskClient(
+        new Uri("https://my-zendesk-api-host-endpoint"),
+        "my-zendesk-username", 
+        "my-zendesk-token"
+    );
 
 ##Accessing resources:##
 
@@ -34,8 +38,14 @@ A .net Zendesk Api Client NuGet package for use with the ZendeskApi v2
 
 ###Use:###
 
-    IResponse<User> response = client.Search.Find<User>(new ZendeskQuery<User>().WithCustomFilter("email", "jazzy.b@just-eat.com"));
-    IResponse<User> response = client.Search.Find(new ZendeskQuery<Organization>().WithCustomFilter("name", "Cupcake Cafe"));
+    IResponse<User> response = client.Search.Find<User>(
+        new ZendeskQuery<User>()
+        .WithCustomFilter("email", "jazzy.b@just-eat.com")
+    );
+    IResponse<User> response = client.Search.Find(
+        new ZendeskQuery<Organization>()
+        .WithCustomFilter("name", "Cupcake Cafe")
+    );
     
 ##The Zendesk API:##
 
