@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Client.Resources;
 using JustEat.ZendeskApi.Contracts.Models;
+using JustEat.ZendeskApi.Contracts.Queries;
 using JustEat.ZendeskApi.Contracts.Requests;
 using JustEat.ZendeskApi.Contracts.Responses;
 using Moq;
@@ -77,6 +78,35 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 
             // When
             var result = organizationMembershipResource.Post(request);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void GetOrganizationMembers_Called_CallsBuildUriWithFieldId()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            organizationMembershipResource.GetOrganizationMembers(4321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321")), ""));
+        }
+
+        [Test]
+        public void GetOrganizationMembers_Called_ReturnsOrganizationMembershipResponse()
+        {
+            // Given
+            var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
+            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(response);
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            var result = organizationMembershipResource.GetOrganizationMembers(4321);
 
             // Then
             Assert.That(result, Is.EqualTo(response));

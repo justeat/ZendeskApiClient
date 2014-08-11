@@ -8,5 +8,6 @@ namespace JustEat.ZendeskApi.Client.Resources
     {
         IListResponse<OrganizationMembership> GetAll(long id);
         IResponse<OrganizationMembership> Post(OrganizationMembershipRequest request);
+        IListResponse<OrganizationMembership> GetOrganizationMembers(long id);
     }
 }
