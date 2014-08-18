@@ -33,5 +33,10 @@ namespace JustEat.ZendeskApi.Client.Resources
             Delete(request.Item.Id??0, request.Item.UserId);
             return response;
         }
+
+        public void Delete(long id, long userId)
+        {
+            base.Delete(id ,userId);
+        }
     }
 }
