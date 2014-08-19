@@ -21,6 +21,21 @@ namespace JustEat.ZendeskApi.Contracts.Tests.Queries
         }
 
         [Test]
+        public void CalledWithCustomFieldsTwice_BuildsQuery()
+        {
+            // Given
+            var query = new ZendeskQuery<Organization>();
+            query.WithCustomFilter("name", "cheese factory");
+            query.WithCustomFilter("name", "meat factory");
+
+            // When 
+            var queryString = query.BuildQuery();
+
+            // Then
+            Assert.That(queryString, Is.EqualTo("query=type:organization+name:meat factory&sort_by=created_at&sort_order=desc&page=1&per_page=15"));
+        }
+
+        [Test]
         public void CalledWithCustomFieldsAndPage_BuildsQuery()
         {
             // Given
