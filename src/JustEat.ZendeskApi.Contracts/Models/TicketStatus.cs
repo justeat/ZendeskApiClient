@@ -9,11 +9,14 @@ namespace JustEat.ZendeskApi.Contracts.Models
         New,
         [EnumMember(Value = "open")]
         Open,
-        [EnumMember(Value = "closed")]
-        Closed,
         [EnumMember(Value = "pending")]
         Pending,
+        [EnumMember(Value = "hold")]
+        Hold,
         [EnumMember(Value = "solved")]
-        Solved
+        Closed,
+        [EnumMember(Value = "closed")]
+        Solved,
+
     }
 }
