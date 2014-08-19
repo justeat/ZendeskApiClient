@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using JustEat.ZendeskApi.Contracts.Models;
 
 namespace JustEat.ZendeskApi.Contracts.Responses

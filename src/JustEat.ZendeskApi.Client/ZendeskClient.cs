@@ -2,7 +2,6 @@
 using JE.Api.ClientBase;
 using JE.Api.ClientBase.Http;
 using JustEat.ZendeskApi.Client.Resources;
-using JustEat.ZendeskApi.Contracts.Models;
 
 namespace JustEat.ZendeskApi.Client
 {
@@ -18,7 +17,7 @@ namespace JustEat.ZendeskApi.Client
         public IUserIdentityResource UserIdentities { get; private set; }
         public IOrganizationMembershipResource OrganizationMemberships { get; private set; }
 
-        public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, IHttpChannel httpChannel = null, ILogAdapter logger = null)
+       public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, IHttpChannel httpChannel = null, ILogAdapter logger = null)
             : base(baseUri, configuration, httpChannel, new ZendeskJsonSerializer(), logger)
         {
             Tickets = new TicketResource(this);
@@ -31,6 +30,5 @@ namespace JustEat.ZendeskApi.Client
             UserIdentities = new UserIdentityResource(this);
             OrganizationMemberships = new OrganizationMembershipResource(this);
         }
-
     }
 }

@@ -1,7 +1,4 @@
-﻿using System.Runtime.Serialization;
-using System.Security.Cryptography.X509Certificates;
-
-namespace JustEat.ZendeskApi.Contracts.Models
+﻿namespace JustEat.ZendeskApi.Contracts.Models
 {
     public interface IZendeskEntity
     {

@@ -6,7 +6,6 @@ using System.Web;
 using JustEat.ZendeskApi.Client;
 using JustEat.ZendeskApi.Contracts.Models;
 using JustEat.ZendeskApi.Contracts.Requests;
-using JustEat.ZendeskApi.Contracts.Responses;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 
