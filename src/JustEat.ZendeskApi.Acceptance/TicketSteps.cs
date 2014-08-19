@@ -45,7 +45,7 @@ namespace JustEat.ZendeskApi.Acceptance
             _savedSingleTicket =
                 _client.Tickets.Post(new TicketRequest
                 {
-                    Item = new Ticket {Subject = subject, Description = description, Type = TicketType.task}
+                    Item = new Ticket {Subject = subject, Description = description, Type = TicketType.Task}
                 }).Item;
         }
 
