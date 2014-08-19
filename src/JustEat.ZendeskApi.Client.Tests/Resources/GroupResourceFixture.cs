@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Client.Resources;
 using JustEat.ZendeskApi.Contracts.Models;
