@@ -52,8 +52,9 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(EmitDefaultValue = false)]
         public Uri Url { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public string Priority { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        [DataMember(Name = "priority", EmitDefaultValue = false)]
+        public TicketPriority Priority { get; set; }
 
         [DataMember(Name = "recipient", EmitDefaultValue = false)]
         public object Recipient { get; set; }
