@@ -120,7 +120,7 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(OutputPath)..\..\lib" ContinueOnError="true" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
-    <Copy SourceFiles="$(OutputPath)$(ContractsAssemblyName).dll" DestinationFolder="$(OutputPath)..\..\lib" ContinueOnError="true" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(OutputPath)..\..\lib\net45" ContinueOnError="true" Condition=" '$(Configuration)|$(Platform)|$(TargetFrameworkVersion)' == 'Release|AnyCPU|v4.5' " />
+    <Copy SourceFiles="$(OutputPath)$(ContractsAssemblyName).dll" DestinationFolder="$(OutputPath)..\..\lib\net45" ContinueOnError="true" Condition=" '$(Configuration)|$(Platform)|$(TargetFrameworkVersion)' == 'Release|AnyCPU|v4.5' " />
   </Target>
 </Project>

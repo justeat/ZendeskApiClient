@@ -115,3 +115,5 @@ UpgradeLog*.XML
 /src/lib
 /src/ZendeskApi.Client/lib/ZendeskApi.Client.dll
 /src/ZendeskApi.Client/lib/ZendeskApi.Contracts.dll
+/src/ZendeskApi.Client/lib/net45/ZendeskApi.Client.dll
+/src/ZendeskApi.Client/lib/net45/ZendeskApi.Contracts.dll
