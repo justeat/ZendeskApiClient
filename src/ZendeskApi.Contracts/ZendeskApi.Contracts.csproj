@@ -30,8 +30,8 @@
     <ProjectGuid>{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JustEat.ZendeskApi.Contracts</RootNamespace>
-    <AssemblyName>JustEat.ZendeskApi.Contracts</AssemblyName>
+    <RootNamespace>ZendeskApi.Contracts</RootNamespace>
+    <AssemblyName>ZendeskApi.Contracts</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
