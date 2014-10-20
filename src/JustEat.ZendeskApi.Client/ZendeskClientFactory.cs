@@ -6,7 +6,7 @@ namespace JustEat.ZendeskApi.Client
 {
     public class ZendeskClientFactory : IZendeskClientFactory
     {
-        public ZendeskClient Create(Uri baseUri, ZendeskDefaultConfiguration configuration, IHttpChannel httpChannel = null, ILogAdapter logger = null)
+        public IZendeskClient Create(Uri baseUri, ZendeskDefaultConfiguration configuration, IHttpChannel httpChannel = null, ILogAdapter logger = null)
         {
             return new ZendeskClient(baseUri, configuration, httpChannel, logger);
         }
