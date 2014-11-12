@@ -40,13 +40,15 @@ namespace JustEat.ZendeskApi.Contracts.Queries
 
         public IZendeskQuery<T> WithNegativeCustomFilter(string field, string value)
         {
-            if (_customFilters.ContainsKey("-" + field))
+            var negativeField = "-" + field;
+
+            if (_customFilters.ContainsKey(negativeField))
             {
-                _customFilters["-" + field] = value;
+                _customFilters[negativeField] = value;
             }
             else
             {
-                _customFilters.Add("-" + field, value);
+                _customFilters.Add(negativeField, value);
             }
             return this;
         }
