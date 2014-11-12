@@ -71,6 +71,9 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(Name = "custom_fields")]
         public List<TicketCustomField> CustomFields { get; set; }
 
+        [DataMember(Name= "comment")]
+        public TicketComment Comment { get; set; }
+
 // ReSharper disable InconsistentNaming
         [IgnoreDataMember]
         public long? External_Id { get; set; }

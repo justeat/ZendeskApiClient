@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -34,11 +35,11 @@ namespace JustEat.ZendeskApi.Contracts.Models
 
         [DataMember(Name = "via")]
         public Via Via { get; set; }
-        
-// ReSharper disable InconsistentNaming
-        [IgnoreDataMember]
-        public object attachments { get; set; }
 
+        [DataMember(Name = "uploads")]
+        public List<string> Attachments { get; set; }
+
+// ReSharper disable InconsistentNaming
         [IgnoreDataMember]
         public object metadata { get; set; }
 

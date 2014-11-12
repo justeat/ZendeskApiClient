@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Formatters\ZendeskFormatter.cs" />
     <Compile Include="IZendeskClient.cs" />
+    <Compile Include="IZendeskClientFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\GroupsResource.cs" />
     <Compile Include="Resources\IGroupResource.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Resources\ZendeskResource.cs" />
     <Compile Include="Resources\TicketResource.cs" />
     <Compile Include="ZendeskClient.cs" />
+    <Compile Include="ZendeskClientFactory.cs" />
     <Compile Include="ZendeskDefaultConfiguration.cs" />
     <Compile Include="ZendeskJsonSerializer.cs" />
   </ItemGroup>

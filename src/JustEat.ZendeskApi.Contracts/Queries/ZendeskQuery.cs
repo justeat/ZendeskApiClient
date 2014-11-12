@@ -26,13 +26,28 @@ namespace JustEat.ZendeskApi.Contracts.Queries
 
         public IZendeskQuery<T> WithCustomFilter(string field, string value)
         {
-            _customFilters.Add(field, value);
+            if (_customFilters.ContainsKey(field))
+            {
+                _customFilters[field] = value;
+            }
+            else
+            {
+                _customFilters.Add(field, value);    
+            }
+            
             return this;
         }
 
         public IZendeskQuery<T> WithNegativeCustomFilter(string field, string value)
         {
-            _customFilters.Add("-" + field, value);
+            if (_customFilters.ContainsKey("-" + field))
+            {
+                _customFilters["-" + field] = value;
+            }
+            else
+            {
+                _customFilters.Add("-" + field, value);
+            }
             return this;
         }
 
