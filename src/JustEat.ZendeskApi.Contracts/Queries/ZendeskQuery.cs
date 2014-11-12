@@ -30,6 +30,12 @@ namespace JustEat.ZendeskApi.Contracts.Queries
             return this;
         }
 
+        public IZendeskQuery<T> WithNegativeCustomFilter(string field, string value)
+        {
+            _customFilters.Add("-" + field, value);
+            return this;
+        }
+
         public IZendeskQuery<T> WithPaging(int pageNumber, int pageSize)
         {
             _pageNumber = pageNumber;
