@@ -66,8 +66,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\TicketCustomField.cs" />
     <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketEventType.cs" />
+    <Compile Include="Models\TicketPriority.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Via.cs" />
     <Compile Include="Models\OrganizationMembership.cs" />

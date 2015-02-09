@@ -38,6 +38,21 @@ namespace JustEat.ZendeskApi.Contracts.Queries
             return this;
         }
 
+        public IZendeskQuery<T> WithNegativeCustomFilter(string field, string value)
+        {
+            var negativeField = "-" + field;
+
+            if (_customFilters.ContainsKey(negativeField))
+            {
+                _customFilters[negativeField] = value;
+            }
+            else
+            {
+                _customFilters.Add(negativeField, value);
+            }
+            return this;
+        }
+
         public IZendeskQuery<T> WithPaging(int pageNumber, int pageSize)
         {
             _pageNumber = pageNumber;

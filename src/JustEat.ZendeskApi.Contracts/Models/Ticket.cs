@@ -52,8 +52,9 @@ namespace JustEat.ZendeskApi.Contracts.Models
         [DataMember(EmitDefaultValue = false)]
         public Uri Url { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public string Priority { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        [DataMember(Name = "priority", EmitDefaultValue = false)]
+        public TicketPriority? Priority { get; set; }
 
         [DataMember(Name = "recipient", EmitDefaultValue = false)]
         public object Recipient { get; set; }
@@ -66,6 +67,12 @@ namespace JustEat.ZendeskApi.Contracts.Models
 
         [DataMember(Name = "via")]
         public Via Via { get; set; }
+
+        [DataMember(Name = "custom_fields")]
+        public List<TicketCustomField> CustomFields { get; set; }
+
+        [DataMember(Name= "comment")]
+        public TicketComment Comment { get; set; }
 
 // ReSharper disable InconsistentNaming
         [IgnoreDataMember]
@@ -85,9 +92,6 @@ namespace JustEat.ZendeskApi.Contracts.Models
 
         [IgnoreDataMember]
         public List<string> tags { get; set; }
-
-        [IgnoreDataMember]
-        public List<object> custom_fields { get; set; }
 
         [IgnoreDataMember]
         public object satisfaction_rating { get; set; }
