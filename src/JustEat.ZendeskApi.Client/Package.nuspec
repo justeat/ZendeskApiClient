@@ -9,8 +9,8 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>API Client for use with Zendesk</description>
         <dependencies>
-			<dependency id="JE.Api.ClientBase" version="1.0.0.56" />
-			<dependency id="Newtonsoft.Json" version="6.0.3" />
+			<dependency id="JE.Api.ClientBase"/>
+			<dependency id="Newtonsoft.Json"/>
         </dependencies>
     </metadata>
   <files>
