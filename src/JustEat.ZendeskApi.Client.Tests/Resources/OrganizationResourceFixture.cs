@@ -11,26 +11,26 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 {
     public class OrganizationResourceFixture
     {
-        private Mock<IBaseClient> _client;
+        private Mock<IZendeskClient> _client;
 
         [SetUp]
         public void SetUp()
         {
-            _client = new Mock<IBaseClient>();
+            _client = new Mock<IZendeskClient>();
         }
 
         [Test]
         public void Get_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
             var resource = new OrganizationResource(_client.Object);
 
             // When
             resource.Get(321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
         [Test]
@@ -125,14 +125,14 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Delete_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
             var resource = new OrganizationResource(_client.Object);
 
             // When
             resource.Delete(321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
         [Test]

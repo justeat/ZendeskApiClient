@@ -11,7 +11,7 @@ namespace JustEat.ZendeskApi.Client.Resources
             get { return @"/api/v2/users/{0}/identities"; }
         }
 
-        public UserIdentityResource(IBaseClient client)
+        public UserIdentityResource(IZendeskClient client)
         {
             Client = client;
         }

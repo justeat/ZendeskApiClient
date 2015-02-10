@@ -11,13 +11,13 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 {
     public class SearchResourceFixture
     {
-        private Mock<IBaseClient> _client;
+        private Mock<IZendeskClient> _client;
         private Mock<IZendeskQuery<Organization>> _query;
 
         [SetUp]
         public void SetUp()
         {
-            _client = new Mock<IBaseClient>();
+            _client = new Mock<IZendeskClient>();
             _query = new Mock<IZendeskQuery<Organization>>();
         }
 
@@ -25,7 +25,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Find_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321"))))
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321"))))
                 .Returns(new Uri("http://search"));
             var searchResource = new SearchResource(_client.Object);
             _query.Setup(q => q.BuildQuery()).Returns("query");
@@ -34,7 +34,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             searchResource.Find(_query.Object);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("search")), It.Is<string>(s => s.Contains("query"))));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(s => s.Contains("search")), It.Is<string>(s => s.Contains("query"))));
         }
 
         [Test]

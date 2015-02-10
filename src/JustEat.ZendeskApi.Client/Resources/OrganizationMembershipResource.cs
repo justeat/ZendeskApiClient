@@ -16,7 +16,7 @@ namespace JustEat.ZendeskApi.Client.Resources
             get { return _resourceUrl; }
         }
 
-        public OrganizationMembershipResource(IBaseClient client)
+        public OrganizationMembershipResource(IZendeskClient client)
         {
             Client = client;
         }

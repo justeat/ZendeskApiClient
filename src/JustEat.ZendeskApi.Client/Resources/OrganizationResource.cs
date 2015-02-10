@@ -12,7 +12,7 @@ namespace JustEat.ZendeskApi.Client.Resources
             get { return @"/api/v2/organizations"; }
         }
 
-        public OrganizationResource(IBaseClient client)
+        public OrganizationResource(IZendeskClient client)
         {
             Client = client;
         }

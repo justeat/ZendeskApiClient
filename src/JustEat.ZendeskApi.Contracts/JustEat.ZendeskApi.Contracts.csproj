@@ -40,8 +40,9 @@
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JE.Api.ClientBase">
-      <HintPath>..\..\packages\JE.Api.ClientBase.1.0.0.56\lib\net45\JE.Api.ClientBase.dll</HintPath>
+    <Reference Include="JE.Api.ClientBase, Version=1.0.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\JE.Api.ClientBase.1.0.0.104\lib\net45\JE.Api.ClientBase.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

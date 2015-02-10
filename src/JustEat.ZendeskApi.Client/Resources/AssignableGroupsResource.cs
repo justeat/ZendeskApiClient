@@ -8,16 +8,16 @@ namespace JustEat.ZendeskApi.Client.Resources
     {
         private const string AssignableGroupUri = @"/api/v2/groups/assignable";
 
-        private readonly IBaseClient _client;
+        private readonly IZendeskClient _client;
 
-        public AssignableGroupResource(IBaseClient client)
+        public AssignableGroupResource(IZendeskClient client)
         {
             _client = client;
         }
 
         public ListResponse<Group> GetAll()
         {
-            var requestUri = _client.BuildUri(AssignableGroupUri);
+            var requestUri = _client.BuildZendeskUri(AssignableGroupUri);
 
             return _client.Get<GroupListResponse>(requestUri);
         }

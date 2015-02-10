@@ -11,7 +11,7 @@ namespace JustEat.ZendeskApi.Client.Resources
             get { return @"/api/v2/tickets/{0}/comments"; }
         }
 
-        public TicketCommentResource(IBaseClient client)
+        public TicketCommentResource(IZendeskClient client)
         {
             Client = client;
         }

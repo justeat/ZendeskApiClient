@@ -12,26 +12,26 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 {
     public class UserResourceFixture
     {
-        private Mock<IBaseClient> _client;
+        private Mock<IZendeskClient> _client;
 
         [SetUp]
         public void SetUp()
         {
-            _client = new Mock<IBaseClient>();
+            _client = new Mock<IZendeskClient>();
         }
 
         [Test]
         public void Get_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("4321")))).Returns(new Uri("http://search"));
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("4321")))).Returns(new Uri("http://search"));
             var userResource = new UserResource(_client.Object);
 
             // When
             userResource.Get(4321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("4321")), ""));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(s => s.Contains("4321")), ""));
         }
 
         [Test]
@@ -53,14 +53,14 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void GetAll_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
             var userResource = new UserResource(_client.Object);
 
             // When
             userResource.GetAll(new List<long> { 4321, 3456, 6789 });
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.Is<string>(st => st.Contains("4321,3456,6789"))));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(s => s.Contains("/show_many")), It.Is<string>(st => st.Contains("4321,3456,6789"))));
         }
 
         [Test]
