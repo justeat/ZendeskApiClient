@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using JE.Api.ClientBase;
 
@@ -11,8 +12,7 @@ namespace JustEat.ZendeskApi.Client
             var auth = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}/token:{1}", username, token)));
 
             Headers.AddHeader("Authorization", string.Format("Basic {0}", auth));
-            Headers.AddHeader("Accept", "application/json");
-            Headers.AddHeader("Content-Type", "application/json");
+
         }
     }
 }

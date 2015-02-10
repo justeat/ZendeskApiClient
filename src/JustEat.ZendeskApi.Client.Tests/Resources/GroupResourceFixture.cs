@@ -29,7 +29,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             groupResource.Get(321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/groups/321")), ""));
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/groups.json/321")), ""));
         }
 
 

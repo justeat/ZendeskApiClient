@@ -8,8 +8,8 @@ namespace JustEat.ZendeskApi.Client.Resources
     public class OrganizationMembershipResource : ZendeskResource<OrganizationMembership>, IOrganizationMembershipResource
     {
 
-        private const string UsersResourceUrl = @"/api/v2/users/{0}/organization_memberships";
-        private const string OrganizationsResourceUrl = @"/api/v2/organizations/{0}/organization_memberships";
+        private const string UsersResourceUrl = @"/api/v2/users/{0}/organization_memberships.json";
+        private const string OrganizationsResourceUrl = @"/api/v2/organizations/{0}/organization_memberships.json";
         private string _resourceUrl = "";
 
         protected override string ResourceUri {

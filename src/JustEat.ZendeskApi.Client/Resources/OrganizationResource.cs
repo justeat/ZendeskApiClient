@@ -9,7 +9,7 @@ namespace JustEat.ZendeskApi.Client.Resources
     {
         protected override string ResourceUri
         {
-            get { return @"/api/v2/organizations"; }
+            get { return @"/api/v2/organizations.json"; }
         }
 
         public OrganizationResource(IBaseClient client)

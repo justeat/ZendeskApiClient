@@ -9,7 +9,7 @@ namespace JustEat.ZendeskApi.Client.Resources
     public class UserResource : ZendeskResource<User>, IUserResource
     {
         protected override string ResourceUri {
-            get { return @"/api/v2/users/"; }
+            get { return @"/api/v2/users.json"; }
         }
 
         public UserResource(IBaseClient client)

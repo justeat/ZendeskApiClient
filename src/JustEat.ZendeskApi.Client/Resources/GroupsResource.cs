@@ -8,7 +8,7 @@ namespace JustEat.ZendeskApi.Client.Resources
     {
         protected override string ResourceUri
         {
-            get { return @"/api/v2/groups"; }
+            get { return @"/api/v2/groups.json"; }
         }
 
         public GroupsResource(IBaseClient client)

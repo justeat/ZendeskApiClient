@@ -6,7 +6,7 @@ namespace JustEat.ZendeskApi.Client.Resources
 {
     public class AssignableGroupResource : IAssignableGroupResource
     {
-        private const string AssignableGroupUri = @"/api/v2/groups/assignable";
+        private const string AssignableGroupUri = @"/api/v2/groups/assignable.json";
 
         private readonly IBaseClient _client;
 

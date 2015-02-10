@@ -1,6 +1,8 @@
 ﻿using System;
 using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Client.Resources;
+using JustEat.ZendeskApi.Contracts.Models;
+using JustEat.ZendeskApi.Contracts.Queries;
 using Moq;
 using NUnit.Framework;
 

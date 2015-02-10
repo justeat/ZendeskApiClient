@@ -7,7 +7,7 @@ namespace JustEat.ZendeskApi.Client.Resources
 {
     public class SearchResource : ISearchResource
     {
-        private const string SearchUri = @"/api/v2/search";
+        private const string SearchUri = @"/api/v2/search.json";
 
         private readonly IBaseClient _client;
 
