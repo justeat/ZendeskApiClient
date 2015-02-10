@@ -17,6 +17,7 @@ namespace JustEat.ZendeskApi.Acceptance
         private IZendeskClient _client;
         private User _user;
         private IListResponse<UserIdentity> _userIdentities;
+        private string _randomEmail;
 
         [BeforeScenario]
         public void BeforeScenario()
@@ -36,6 +37,7 @@ namespace JustEat.ZendeskApi.Acceptance
                         Email = string.Format("{0}@email.com", DateTime.Now.Ticks)
                     }
                 }).Item;
+            _randomEmail = string.Format("{0}@email.com", DateTime.UtcNow.Ticks);
         }
 
         [When(@"I call UserIdentityResource GetAll for this User")]
@@ -54,7 +56,7 @@ namespace JustEat.ZendeskApi.Acceptance
         public void WhenIChangeTheEmail()
         {
             var identity = _userIdentities.Results.First();
-            identity.Value = "someother@email.com";
+            identity.Value = _randomEmail;
 
             _client.UserIdentities.Put(new UserIdentityRequest()
             {
@@ -66,7 +68,7 @@ namespace JustEat.ZendeskApi.Acceptance
         public void ThenItShouldBeChanged()
         {
             _userIdentities = _client.UserIdentities.GetAll(_user.Id ?? 0);
-            Assert.That(_userIdentities.Results.First().Value == "someother@email.com");
+            Assert.That(_userIdentities.Results.First().Value == _randomEmail);
         }
 
 
