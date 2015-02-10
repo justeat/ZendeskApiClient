@@ -30,5 +30,14 @@ namespace JustEat.ZendeskApi.Client
             UserIdentities = new UserIdentityResource(this);
             OrganizationMemberships = new OrganizationMembershipResource(this);
         }
+
+       public Uri BuildZendeskUri(string handler, string query = "")
+       {
+           return new UriBuilder(BaseUri)
+           {
+               Path = handler + ".json",
+               Query = query
+           }.Uri;
+       }
     }
 }

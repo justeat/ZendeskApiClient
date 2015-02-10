@@ -11,12 +11,12 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 {
     public class TicketCommentResourceFixture
     {
-        private Mock<IBaseClient> _client;
+        private Mock<IZendeskClient> _client;
 
         [SetUp]
         public void SetUp()
         {
-            _client = new Mock<IBaseClient>();
+            _client = new Mock<IZendeskClient>();
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
             resource.GetAll(123);
 
             //Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(u => u.Contains("tickets/123/comments")), It.IsAny<string>()));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(u => u.Contains("tickets/123/comments")), It.IsAny<string>()));
         }
 
     }

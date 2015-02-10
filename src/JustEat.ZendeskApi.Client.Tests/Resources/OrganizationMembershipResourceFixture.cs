@@ -12,26 +12,26 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 {
     public class OrganizationMembershipResourceFixture
     {
-        private Mock<IBaseClient> _client;
+        private Mock<IZendeskClient> _client;
 
         [SetUp]
         public void SetUp()
         {
-            _client = new Mock<IBaseClient>();
+            _client = new Mock<IZendeskClient>();
         }
 
         [Test]
         public void GetAll_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
             organizationMembershipResource.GetAll(4321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321")),""));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(st => st.Contains("4321")), ""));
         }
 
         [Test]
@@ -83,14 +83,14 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void GetOrganizationMembers_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
             organizationMembershipResource.GetOrganizationMembers(4321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321")), ""));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(st => st.Contains("4321")), ""));
         }
 
         [Test]

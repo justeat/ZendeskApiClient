@@ -9,10 +9,10 @@ namespace JustEat.ZendeskApi.Client.Resources
     public class TicketResource : ZendeskResource<Ticket>, ITicketResource
     {
         protected override string ResourceUri {
-            get { return @"/api/v2/tickets.json"; }
+            get { return @"/api/v2/tickets"; }
         }
 
-        public TicketResource(IBaseClient client)
+        public TicketResource(IZendeskClient client)
         {
             Client = client;
         }

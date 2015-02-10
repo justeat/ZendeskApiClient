@@ -17,25 +17,25 @@ namespace JustEat.ZendeskApi.Client.Resources
             get { return "show_many"; }
         }
 
-        protected IBaseClient Client;
+        protected IZendeskClient Client;
 
         protected IResponse<T> Get<TResponse>(long id) where TResponse : IResponse<T> 
         {
-            var requestUri = Client.BuildUri(string.Format("{0}/{1}", ResourceUri, id));
+            var requestUri = Client.BuildZendeskUri(string.Format("{0}/{1}", ResourceUri, id));
 
             return Client.Get<TResponse>(requestUri);
         }
 
         protected TResponse GetAll<TResponse>(List<long> ids) where TResponse : IListResponse<T>
         {
-            var requestUri = Client.BuildUri(string.Format("{0}/{1}", ResourceUri, ShowMany), string.Format("ids={0}", ZendeskFormatter.ToCsv(ids)));
+            var requestUri = Client.BuildZendeskUri(string.Format("{0}/{1}", ResourceUri, ShowMany), string.Format("ids={0}", ZendeskFormatter.ToCsv(ids)));
 
             return Client.Get<TResponse>(requestUri);
         }
 
         protected TResponse GetAll<TResponse>(long parentId) where TResponse : IListResponse<T>
         {
-            var requestUri = Client.BuildUri(string.Format(ResourceUri,parentId));
+            var requestUri = Client.BuildZendeskUri(string.Format(ResourceUri,parentId));
 
             return Client.Get<TResponse>(requestUri);
         }
@@ -55,7 +55,7 @@ namespace JustEat.ZendeskApi.Client.Resources
                 throw new ArgumentException("Item must exist in Zendesk");
 
             var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
-            var requestUri = Client.BuildUri(string.Format("{0}/{1}", resourceUri, request.Item.Id));
+            var requestUri = Client.BuildZendeskUri(string.Format("{0}/{1}", resourceUri, request.Item.Id));
 
             return Client.Put<TResponse>(requestUri, request);
         }
@@ -72,7 +72,7 @@ namespace JustEat.ZendeskApi.Client.Resources
             where TResponse : IResponse<T>
         {
             var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
-            var requestUri = Client.BuildUri(resourceUri);
+            var requestUri = Client.BuildZendeskUri(resourceUri);
 
             return Client.Post<TResponse>(requestUri, request);
         }
@@ -88,7 +88,7 @@ namespace JustEat.ZendeskApi.Client.Resources
                 throw new ArgumentException("Item must exist in Zendesk");
 
             var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
-            var requestUri = Client.BuildUri(string.Format("{0}/{1}", resourceUri, id));
+            var requestUri = Client.BuildZendeskUri(string.Format("{0}/{1}", resourceUri, id));
 
             Client.Delete(requestUri);
         }

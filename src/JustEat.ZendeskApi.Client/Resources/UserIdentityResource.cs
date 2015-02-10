@@ -8,10 +8,10 @@ namespace JustEat.ZendeskApi.Client.Resources
     public class UserIdentityResource : ZendeskResource<UserIdentity>, IUserIdentityResource
     {
         protected override string ResourceUri {
-            get { return @"/api/v2/users/{0}/identities.json"; }
+            get { return @"/api/v2/users/{0}/identities"; }
         }
 
-        public UserIdentityResource(IBaseClient client)
+        public UserIdentityResource(IZendeskClient client)
         {
             Client = client;
         }

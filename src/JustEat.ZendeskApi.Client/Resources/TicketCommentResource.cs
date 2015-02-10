@@ -8,10 +8,10 @@ namespace JustEat.ZendeskApi.Client.Resources
     {
         protected override string ResourceUri
         {
-            get { return @"/api/v2/tickets/{0}/comments.json"; }
+            get { return @"/api/v2/tickets/{0}/comments"; }
         }
 
-        public TicketCommentResource(IBaseClient client)
+        public TicketCommentResource(IZendeskClient client)
         {
             Client = client;
         }

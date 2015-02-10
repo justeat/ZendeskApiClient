@@ -12,26 +12,26 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
 {
     public class TicketResourceFixture
     {
-        private Mock<IBaseClient> _client;
+        private Mock<IZendeskClient> _client;
 
         [SetUp]
         public void SetUp()
         {
-            _client = new Mock<IBaseClient>();
+            _client = new Mock<IZendeskClient>();
         }
 
         [Test]
         public void Get_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
             var ticketResource = new TicketResource(_client.Object);
 
             // When
             ticketResource.Get(321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
         [Test]
@@ -53,14 +53,14 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void GetAll_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
             var ticketResource = new TicketResource(_client.Object);
 
             // When
             ticketResource.GetAll(new List<long> { 321, 456, 789 });
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
         }
 
         [Test]
@@ -155,14 +155,14 @@ namespace JustEat.ZendeskApi.Client.Tests.Resources
         public void Delete_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+            _client.Setup(b => b.BuildZendeskUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
             var ticketResource = new TicketResource(_client.Object);
 
             // When
             ticketResource.Delete(321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+            _client.Verify(c => c.BuildZendeskUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
         [Test]
