@@ -6,11 +6,17 @@
         <title>Zendesk Api Client</title>
         <authors>kate.richardson</authors>
         <owners>JUST EAT PLC</owners>
-	<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>API Client for use with Zendesk</description>
         <dependencies>
-			<dependency id="Newtonsoft.Json" version="6.0.3" />
+			<group>
+				<dependency id="Newtonsoft.Json" version="6.0.3" />
+			</group>
+			<group targetFramework="net40">
+				<dependency id="Microsoft.Bcl" version="1.1.9" />
+				<dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+			</group>			
         </dependencies>
     </metadata>
   <files>
