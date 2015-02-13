@@ -46,7 +46,7 @@ namespace ZendeskApi.Acceptance
             _savedSingleTicket =
                 _client.Tickets.Post(new TicketRequest
                 {
-                    Item = new Ticket {Subject = subject, Description = description, Type = TicketType.task}
+                    Item = new Ticket {Subject = subject, Comment = new TicketComment { Body = description}, Type = TicketType.task}
                 }).Item;
         }
 
