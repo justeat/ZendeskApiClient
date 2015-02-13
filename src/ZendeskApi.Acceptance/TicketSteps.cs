@@ -38,6 +38,8 @@ namespace ZendeskApi.Acceptance
             tickets.ForEach(t => _savedMultipleTicket.Add(_client.Tickets.Post(new TicketRequest { Item = t }).Item));
         }
 
+
+        [Scope(Feature = "Tickets")]
         [Given(@"a ticket in Zendesk with the subject '(.*)' and description '(.*)'")]
         public void GivenATicketInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description)
         {
@@ -47,6 +49,7 @@ namespace ZendeskApi.Acceptance
                     Item = new Ticket {Subject = subject, Description = description, Type = TicketType.task}
                 }).Item;
         }
+
 
         [Given(@"a task in Zendesk with the subject '(.*)' and description '(.*)' and type '(.*)'")]
         public void GivenATicketInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description, string type)

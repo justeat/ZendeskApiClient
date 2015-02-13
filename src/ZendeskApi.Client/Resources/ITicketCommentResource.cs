@@ -1,4 +1,5 @@
 using ZendeskApi.Contracts.Models;
+using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
