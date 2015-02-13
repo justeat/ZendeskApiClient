@@ -44,4 +44,3 @@ Scenario: When I call Get by id, I get told it was created via the api
 	Given a ticket in Zendesk with the subject 'The coffee machiene is broken' and description 'I can't work in these conditions!'
 	When I call get by id on the ZendeskApiClient
 	Then I get a ticket from Zendesk which is via the api
-

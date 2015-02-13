@@ -50,6 +50,5 @@ namespace ZendeskApi.Client.Tests.Resources
             //Then
             _client.Verify(c => c.BuildUri(It.Is<string>(u => u.Contains("tickets/123/comments")), It.IsAny<string>()));
         }
-
     }
 }

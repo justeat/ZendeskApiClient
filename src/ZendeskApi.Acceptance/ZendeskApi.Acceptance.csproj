@@ -70,12 +70,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Search.feature</DependentUpon>
     </Compile>
+    <Compile Include="TicketComments.feature.cs">
+      <DependentUpon>TicketComments.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Tickets.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Tickets.feature</DependentUpon>
     </Compile>
     <Compile Include="OrganizationSteps.cs" />
+    <Compile Include="TicketCommentSteps.cs" />
     <Compile Include="TicketSteps.cs" />
     <Compile Include="UserIdentityResource.feature.cs">
       <AutoGen>True</AutoGen>
@@ -98,6 +104,10 @@
     <None Include="Search.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Search.feature.cs</LastGenOutput>
+    </None>
+    <None Include="TicketComments.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>TicketComments.feature.cs</LastGenOutput>
     </None>
     <None Include="Tickets.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

@@ -33,6 +33,9 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "description")]
         public string Description { get; set; }
 
+        [DataMember(Name = "comment")]
+        public TicketComment Comment { get; set; }
+
         [JsonConverter(typeof(StringEnumConverter))]
         [DataMember(Name = "status", EmitDefaultValue = false)]
         public TicketStatus Status { get; set; }
