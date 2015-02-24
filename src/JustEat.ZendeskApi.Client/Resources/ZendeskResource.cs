@@ -115,14 +115,6 @@ namespace JustEat.ZendeskApi.Client.Resources
         }
 
 
-        protected TResponse Post1<TRequest, TResponse>(TRequest request)
-            where TRequest : IRequest<T>
-            where TResponse : IResponse<T>
-        {
-            return Post<TRequest, TResponse>(request, null);
-        }
-
-
         protected TResponse Post<TResponse>(Uri requestUri, HttpPostedFileBase file) where TResponse : IResponse<T>
         {
             var request = ConfigureRequest(
