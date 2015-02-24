@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Web;
 using JE.Api.ClientBase;
 using JustEat.ZendeskApi.Client.Resources;
+using JustEat.ZendeskApi.Contracts.Models;
+using JustEat.ZendeskApi.Contracts.Responses;
 
 namespace JustEat.ZendeskApi.Client
 {
@@ -15,7 +18,7 @@ namespace JustEat.ZendeskApi.Client
         IUserResource Users { get; }
         IUserIdentityResource UserIdentities { get; }
         IOrganizationMembershipResource OrganizationMemberships { get; }
-
+        IUploadResource Uploads { get; }
         Uri BuildZendeskUri(string handler, string query = "");
     }
 }

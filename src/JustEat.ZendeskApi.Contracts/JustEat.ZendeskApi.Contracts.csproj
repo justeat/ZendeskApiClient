@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\TicketCustomField.cs" />
     <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketEventType.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Requests\IRequest.cs" />
     <Compile Include="Requests\OrganizationRequest.cs" />
     <Compile Include="Requests\OrganizationMembershipRequest.cs" />
+    <Compile Include="Requests\UploadRequest.cs" />
     <Compile Include="Requests\UserIdentityRequest.cs" />
     <Compile Include="Requests\UserRequest.cs" />
     <Compile Include="Responses\IListResponse.cs" />
@@ -95,6 +97,8 @@
     <Compile Include="Responses\OrganizationMembershipResponse.cs" />
     <Compile Include="Responses\TicketCommentListResponse.cs" />
     <Compile Include="Responses\OrganizationMembershipListResponse.cs" />
+    <Compile Include="Models\Upload.cs" />
+    <Compile Include="Responses\UploadResponse.cs" />
     <Compile Include="Responses\UserIdentityResponse.cs" />
     <Compile Include="Responses\UserIdentityListResponse.cs" />
     <Compile Include="Responses\UserListResponse.cs" />
