@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\MemoryFile.cs" />
     <Compile Include="Organization.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -83,6 +84,12 @@
     </Compile>
     <Compile Include="OrganizationSteps.cs" />
     <Compile Include="TicketSteps.cs" />
+    <Compile Include="UploadResource.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadResource.feature</DependentUpon>
+    </Compile>
+    <Compile Include="UploadResourceSteps.cs" />
     <Compile Include="UserIdentityResource.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -107,6 +114,10 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Tickets.feature.cs</LastGenOutput>
     </None>
+    <None Include="UploadResource.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>UploadResource.feature.cs</LastGenOutput>
+    </None>
     <None Include="UserIdentityResource.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>UserIdentityResource.feature.cs</LastGenOutput>
@@ -122,6 +133,10 @@
       <Name>JustEat.ZendeskApi.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Picture.jpg" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
