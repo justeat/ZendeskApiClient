@@ -160,20 +160,43 @@ this.ScenarioSetup(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("When I call Post I am able to add a ticket with a custom field")]
+        public virtual void WhenICallPostIAmAbleToAddATicketWithACustomField()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I call Post I am able to add a ticket with a custom field", ((string[])(null)));
+#line 32
+this.ScenarioSetup(scenarioInfo);
+#line 33
+ testRunner.Given("a task in Zendesk with the subject \'I\'ve swallowed my mouse cable\' and descriptio" +
+                    "n \'It\'s a bit of a problem\' and type \'task\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 34
+ testRunner.When("I set the first ticket custom fields with the value of \'Yes\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 35
+ testRunner.And("I call get by id on the ZendeskApiClient", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 36
+ testRunner.Then("I get a task from Zendesk with the subject \'I\'ve swallowed my mouse cable\' and de" +
+                    "scription \'It\'s a bit of a problem\' and type \'task\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 37
+ testRunner.And("the ticket has the custom field set with the value \'Yes\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("When I call Put I am able to update a ticket")]
         public virtual void WhenICallPutIAmAbleToUpdateATicket()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I call Put I am able to update a ticket", ((string[])(null)));
-#line 32
+#line 39
 this.ScenarioSetup(scenarioInfo);
-#line 33
+#line 40
  testRunner.Given("a ticket in Zendesk with the subject \'I\'ve swallowed my mouse cable\' and descript" +
                     "ion \'It\'s a bit of a problem\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 34
+#line 41
  testRunner.When("I update the ticket with the status \'closed\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 35
+#line 42
  testRunner.And("I call get by id on the ZendeskApiClient", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 36
+#line 43
  testRunner.Then("I get a ticket from Zendesk with the status \'closed\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -184,14 +207,14 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void WhenICallDeleteTheTicketIsDeletedFromZendesk()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I call Delete the ticket is deleted from zendesk", ((string[])(null)));
-#line 38
+#line 45
 this.ScenarioSetup(scenarioInfo);
-#line 39
+#line 46
  testRunner.Given("a ticket in Zendesk with the subject \'The coffee machiene is broken\' and descript" +
                     "ion \'I can\'t work in these conditions!\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 40
+#line 47
  testRunner.When("I call delete by id on the ZendeskApiClient", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 41
+#line 48
  testRunner.Then("the ticket is no longer in zendesk", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -202,14 +225,14 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void WhenICallGetByIdIGetToldItWasCreatedViaTheApi()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I call Get by id, I get told it was created via the api", ((string[])(null)));
-#line 43
+#line 50
 this.ScenarioSetup(scenarioInfo);
-#line 44
+#line 51
  testRunner.Given("a ticket in Zendesk with the subject \'The coffee machiene is broken\' and descript" +
                     "ion \'I can\'t work in these conditions!\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 45
+#line 52
  testRunner.When("I call get by id on the ZendeskApiClient", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 46
+#line 53
  testRunner.Then("I get a ticket from Zendesk which is via the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
