@@ -17,6 +17,7 @@ namespace ZendeskApi.Acceptance
         private IZendeskClient _client;
         private User _user;
         private IListResponse<UserIdentity> _userIdentities;
+        private readonly string newEmail = string.Format("someother{0}@email.com", DateTime.UtcNow.Date.Millisecond);
 
         [BeforeScenario]
         public void BeforeScenario()
@@ -54,7 +55,7 @@ namespace ZendeskApi.Acceptance
         public void WhenIChangeTheEmail()
         {
             var identity = _userIdentities.Results.First();
-            identity.Value = "someother@email.com";
+            identity.Value = newEmail;
 
             _client.UserIdentities.Put(new UserIdentityRequest()
             {
@@ -66,7 +67,7 @@ namespace ZendeskApi.Acceptance
         public void ThenItShouldBeChanged()
         {
             _userIdentities = _client.UserIdentities.GetAll(_user.Id ?? 0);
-            Assert.That(_userIdentities.Results.First().Value == "someother@email.com");
+            Assert.That(_userIdentities.Results.First().Value == newEmail);
         }
 
 

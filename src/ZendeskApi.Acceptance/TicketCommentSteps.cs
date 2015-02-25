@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Web;
 using ZendeskApi.Client;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
