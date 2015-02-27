@@ -19,6 +19,8 @@ namespace ZendeskApi.Acceptance
         private readonly List<Ticket> _savedMultipleTicket = new List<Ticket>();
         private readonly List<Ticket> _multipleTicketResponse = new List<Ticket>();
 
+        private int _customFieldId;
+
         private Ticket _savedSingleTicket;
         private Ticket _singleTicketResponse;
 
@@ -38,15 +40,18 @@ namespace ZendeskApi.Acceptance
             tickets.ForEach(t => _savedMultipleTicket.Add(_client.Tickets.Post(new TicketRequest { Item = t }).Item));
         }
 
+
+        [Scope(Feature = "Tickets")]
         [Given(@"a ticket in Zendesk with the subject '(.*)' and description '(.*)'")]
         public void GivenATicketInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description)
         {
             _savedSingleTicket =
                 _client.Tickets.Post(new TicketRequest
                 {
-                    Item = new Ticket {Subject = subject, Description = description, Type = TicketType.task}
+                    Item = new Ticket {Subject = subject, Comment = new TicketComment { Body = description}, Type = TicketType.task}
                 }).Item;
         }
+
 
         [Given(@"a task in Zendesk with the subject '(.*)' and description '(.*)' and type '(.*)'")]
         public void GivenATicketInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description, string type)
@@ -56,6 +61,16 @@ namespace ZendeskApi.Acceptance
                 {
                     Item = new Ticket { Subject = subject, Description = description, Type = (TicketType)Enum.Parse(typeof(TicketType), type)}
                 }).Item;
+        }
+
+        [When(@"I set the first ticket custom fields with the value of '(.*)'")]
+        public void GivenTheTicketHasTheCustomFieldsAnd(string value)
+        {
+            _customFieldId = _savedSingleTicket.CustomFields.First().Id;
+
+            _savedSingleTicket.CustomFields.First(c => c.Id == _customFieldId).Value = value;
+
+            _client.Tickets.Put(new TicketRequest { Item = _savedSingleTicket });
         }
 
         [When(@"I call get by id on the ZendeskApiClient")]
@@ -119,6 +134,12 @@ namespace ZendeskApi.Acceptance
             {
                 Assert.That(_multipleTicketResponse.Any(t => t.Subject.Equals(row["Subject"]) && t.Description.Equals(row["Description"])));
             }
+        }
+
+        [Then(@"the ticket has the custom field set with the value '(.*)'")]
+        public void ThenTheTicketHasTheCustomFieldIdAndValue(string value)
+        {
+            Assert.That(_singleTicketResponse.CustomFields.First(c => c.Id == _customFieldId).Value, Is.EqualTo(value));
         }
 
         [When(@"I call delete by id on the ZendeskApiClient")]

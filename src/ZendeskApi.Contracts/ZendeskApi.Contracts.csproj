@@ -72,6 +72,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\CustomField.cs" />
     <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketEventType.cs" />
     <Compile Include="Models\User.cs" />

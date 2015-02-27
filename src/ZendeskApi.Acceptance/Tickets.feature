@@ -29,6 +29,13 @@ Scenario: When I call Post I am able to add a task
 	When I call get by id on the ZendeskApiClient
 	Then I get a task from Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem' and type 'task'
 
+Scenario: When I call Post I am able to add a ticket with a custom field
+	Given a task in Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem' and type 'task'
+	When I set the first ticket custom fields with the value of 'Yes'
+	And I call get by id on the ZendeskApiClient
+	Then I get a task from Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem' and type 'task'
+	And the ticket has the custom field set with the value 'Yes'
+
 Scenario: When I call Put I am able to update a ticket
 	Given a ticket in Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem'
 	When I update the ticket with the status 'closed'
@@ -44,4 +51,3 @@ Scenario: When I call Get by id, I get told it was created via the api
 	Given a ticket in Zendesk with the subject 'The coffee machiene is broken' and description 'I can't work in these conditions!'
 	When I call get by id on the ZendeskApiClient
 	Then I get a ticket from Zendesk which is via the api
-
