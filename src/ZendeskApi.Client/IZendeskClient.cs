@@ -12,6 +12,7 @@ namespace ZendeskApi.Client
         IAssignableGroupResource AssignableGroups { get; }
         IUserResource Users { get; }
         IUserIdentityResource UserIdentities { get; }
+        IUploadResource Upload { get; }
         IOrganizationMembershipResource OrganizationMemberships { get; }
     }
 }

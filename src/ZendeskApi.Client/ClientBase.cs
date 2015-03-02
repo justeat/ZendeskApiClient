@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Web;
 using ZendeskApi.Client.Http;
+using ZendeskApi.Contracts.Models;
 using HttpChannel = ZendeskApi.Client.Http.HttpChannel;
 using HttpRequest = ZendeskApi.Client.Http.HttpRequest;
 using IHttpRequest = ZendeskApi.Client.Http.IHttpRequest;
@@ -68,6 +69,15 @@ namespace ZendeskApi.Client
             return DeserializeContent<T>(response);
         }
 
+        public T PostFile<T>(Uri requestUri, IHttpPostedFile file)
+        {
+            var response = _http.Post(BuildRequest(requestUri, file.ContentType), file);
+
+            ValidateResponse(response);
+
+            return DeserializeContent<T>(response);
+        }
+
         public async Task<T> PostAsync<T>(Uri requestUri, object item = null, string contentType = "application/json")
         {
             var request = BuildRequest(requestUri, item, contentType);
@@ -109,12 +119,18 @@ namespace ZendeskApi.Client
             return new HttpRequest(requestUri, _configuration.Headers, null, null, _configuration.RequestTimeout);
         }
 
+        private IHttpRequest BuildRequest(Uri requestUri, string contentType)
+        {
+            return BuildRequest(requestUri, null, contentType);
+        }
+
         private IHttpRequest BuildRequest(Uri requestUri, object item, string contentType)
         {
-            var content = (string)null;
+            var content = (string) null;
             if (item != null)
                 content = _serializer.Serialize(item);
-            return new HttpRequest(requestUri, _configuration.Headers, content, contentType, _configuration.RequestTimeout);
+            return new HttpRequest(requestUri, _configuration.Headers, content, contentType,
+                _configuration.RequestTimeout);
         }
 
         private static void ValidateResponse(IHttpResponse response)

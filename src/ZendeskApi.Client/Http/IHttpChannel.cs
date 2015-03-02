@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Client.Http
 {
@@ -9,6 +10,8 @@ namespace ZendeskApi.Client.Http
         Task<IHttpResponse> GetAsync(IHttpRequest request);
 
         IHttpResponse Post(IHttpRequest request);
+
+        IHttpResponse Post(IHttpRequest request, IHttpPostedFile fileBase);
 
         Task<IHttpResponse> PostAsync(IHttpRequest request);
 

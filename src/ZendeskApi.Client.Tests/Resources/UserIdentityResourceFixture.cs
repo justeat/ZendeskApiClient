@@ -99,7 +99,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email", Id = 123} };
             var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", Id = 123} };
-            _client.Setup(b => b.Post<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.Put<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When

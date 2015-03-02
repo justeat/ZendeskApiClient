@@ -17,6 +17,7 @@ namespace ZendeskApi.Client
         public IAssignableGroupResource AssignableGroups { get; private set; }
         public IUserResource Users { get; private set; }
         public IUserIdentityResource UserIdentities { get; private set; }
+        public IUploadResource Upload { get; private set; }
         public IOrganizationMembershipResource OrganizationMemberships { get; private set; }
 
         public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, ISerializer serializer = null, IHttpChannel httpChannel = null, ILogAdapter logger = null)
@@ -30,6 +31,7 @@ namespace ZendeskApi.Client
             AssignableGroups = new AssignableGroupResource(this);
             Users = new UserResource(this);
             UserIdentities = new UserIdentityResource(this);
+            Upload = new UploadResource(this);
             OrganizationMemberships = new OrganizationMembershipResource(this);
         }
     }
