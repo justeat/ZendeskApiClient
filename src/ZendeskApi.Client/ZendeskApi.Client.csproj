@@ -80,6 +80,7 @@
     <Compile Include="Resources\ISearchResource.cs" />
     <Compile Include="Resources\ITicketCommentResource.cs" />
     <Compile Include="Resources\ITicketResource.cs" />
+    <Compile Include="Resources\IUploadResource.cs" />
     <Compile Include="Resources\IUserIdentityResource.cs" />
     <Compile Include="Resources\IUserResource.cs" />
     <Compile Include="Resources\SearchResource.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Resources\OrganizationResource.cs" />
     <Compile Include="Resources\TicketCommentResource.cs" />
     <Compile Include="Resources\OrganizationMembershipResource.cs" />
+    <Compile Include="Resources\UploadResource.cs" />
     <Compile Include="Resources\UserIdentityResource.cs" />
     <Compile Include="Resources\UserResource.cs" />
     <Compile Include="Resources\ZendeskResource.cs" />
