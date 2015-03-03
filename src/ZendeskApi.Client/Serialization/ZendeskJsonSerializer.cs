@@ -24,7 +24,7 @@ namespace ZendeskApi.Client.Serialization
 
         public string Serialize(object obj)
         {
-            return JsonConvert.SerializeObject(obj);
+            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore});
         }
 
         private static JsonSerializerSettings GetJsonSettings(out List<string> errors)
@@ -43,6 +43,7 @@ namespace ZendeskApi.Client.Serialization
                 {
                     new StringEnumConverter { AllowIntegerValues = false, CamelCaseText = false }
                 },
+                NullValueHandling = NullValueHandling.Ignore
                 
             };
             errors = errList;

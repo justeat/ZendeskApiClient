@@ -68,7 +68,6 @@
     <Compile Include="Http\IHttpResponse.cs" />
     <Compile Include="Http\IRestClient.cs" />
     <Compile Include="IZendeskClient.cs" />
-    <Compile Include="IZendeskClientFactory.cs" />
     <Compile Include="Logging\ILogAdapter.cs" />
     <Compile Include="Logging\SystemDiagnosticsAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +79,7 @@
     <Compile Include="Resources\ISearchResource.cs" />
     <Compile Include="Resources\ITicketCommentResource.cs" />
     <Compile Include="Resources\ITicketResource.cs" />
+    <Compile Include="Resources\IUploadResource.cs" />
     <Compile Include="Resources\IUserIdentityResource.cs" />
     <Compile Include="Resources\IUserResource.cs" />
     <Compile Include="Resources\SearchResource.cs" />
@@ -87,6 +87,7 @@
     <Compile Include="Resources\OrganizationResource.cs" />
     <Compile Include="Resources\TicketCommentResource.cs" />
     <Compile Include="Resources\OrganizationMembershipResource.cs" />
+    <Compile Include="Resources\UploadResource.cs" />
     <Compile Include="Resources\UserIdentityResource.cs" />
     <Compile Include="Resources\UserResource.cs" />
     <Compile Include="Resources\ZendeskResource.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="ClientBase.cs" />
     <Compile Include="ZendeskClient.cs" />
-    <Compile Include="ZendeskClientFactory.cs" />
     <Compile Include="ZendeskDefaultConfiguration.cs" />
     <Compile Include="Serialization\ZendeskJsonSerializer.cs" />
   </ItemGroup>
