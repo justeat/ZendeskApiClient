@@ -1,10 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Web;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Acceptance.Helpers
 {
-    public class MemoryFile: HttpPostedFileBase, IHttpPostedFile
+    public class MemoryFile: HttpPostedFileBase, IHttpPostedFile, IDisposable
     {
         readonly Stream _stream;
         readonly string _contentType;
@@ -12,9 +13,9 @@ namespace ZendeskApi.Acceptance.Helpers
 
         public MemoryFile(Stream stream, string contentType, string fileName)
         {
-            this._stream = stream;
-            this._contentType = contentType;
-            this._fileName = fileName;
+            _stream = stream;
+            _contentType = contentType;
+            _fileName = fileName;
         }
 
         public override int ContentLength
@@ -40,7 +41,15 @@ namespace ZendeskApi.Acceptance.Helpers
         public override void SaveAs(string filename)
         {
             using (var file = File.Open(filename, FileMode.CreateNew))
+            {
                 _stream.CopyTo(file);
+            }
+                
+        }
+
+        public void Dispose()
+        {
+            _stream.Dispose();
         }
     }
 }

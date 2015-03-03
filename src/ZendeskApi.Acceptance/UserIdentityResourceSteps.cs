@@ -17,7 +17,7 @@ namespace ZendeskApi.Acceptance
         private IZendeskClient _client;
         private User _user;
         private IListResponse<UserIdentity> _userIdentities;
-        private readonly string _newEmail = string.Format("someother{0}@email.com", DateTime.Now.Ticks);
+        private string _randomEmail;
 
         [BeforeScenario]
         public void BeforeScenario()
@@ -32,11 +32,13 @@ namespace ZendeskApi.Acceptance
             _user =
                 _client.Users.Post(new UserRequest
                 {
-                    Item = new User { 
+                    Item = new User
+                    {
                         Name = "TestUser-" + Guid.NewGuid(),
                         Email = string.Format("{0}@email.com", DateTime.Now.Ticks)
                     }
                 }).Item;
+            _randomEmail = string.Format("{0}@email.com", DateTime.UtcNow.Ticks);
         }
 
         [When(@"I call UserIdentityResource GetAll for this User")]
@@ -55,9 +57,9 @@ namespace ZendeskApi.Acceptance
         public void WhenIChangeTheEmail()
         {
             var identity = _userIdentities.Results.First();
-            identity.Value = _newEmail;
+            identity.Value = _randomEmail;
 
-            _client.UserIdentities.Put(new UserIdentityRequest()
+            _client.UserIdentities.Put(new UserIdentityRequest
             {
                 Item = identity
             });
@@ -67,7 +69,7 @@ namespace ZendeskApi.Acceptance
         public void ThenItShouldBeChanged()
         {
             _userIdentities = _client.UserIdentities.GetAll(_user.Id ?? 0);
-            Assert.That(_userIdentities.Results.First().Value == _newEmail);
+            Assert.That(_userIdentities.Results.First().Value == _randomEmail);
         }
 
 
@@ -78,10 +80,10 @@ namespace ZendeskApi.Acceptance
             {
                 if (_user != null)
                 {
-                    _client.Users.Delete(_user.Id??0);
+                    _client.Users.Delete(_user.Id ?? 0);
                 }
             }
-            catch (HttpException)  {}
+            catch (HttpException) { }
         }
     }
 }

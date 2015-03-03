@@ -9,6 +9,7 @@ Scenario: I can upload a file
 	Then I should get a token back
 
 Scenario: I can delete an upload
-	Given I have a valid token
-	When I delete an uploaded resource
-	Then I should get an OK response
+	Given I have a file to upload
+	When I call UploadResource Post
+	And I delete the uploaded resource
+	Then  I should get an OK response

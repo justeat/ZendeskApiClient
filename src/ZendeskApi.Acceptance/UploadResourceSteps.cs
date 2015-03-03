@@ -52,11 +52,14 @@ namespace ZendeskApi.Acceptance
             public void WhenICallUploadResourcePost()
             {
                 var fileInfo = new FileInfo(_filePath);
-                var file = new MemoryFile(File.Open(_filePath, FileMode.Open), "image/jpeg", fileInfo.Name);
-                _response = _client.Upload.Post(new UploadRequest
+                using (var file = new MemoryFile(File.Open(_filePath, FileMode.Open), "image/jpeg", fileInfo.Name))
                 {
-                    Item = file
-                });
+                    _response = _client.Upload.Post(new UploadRequest
+                    {
+                        Item = file
+                    });
+                }
+                _uploadToken = _response.Item.Token;
             }
 
             [Then(@"I should get a token back")]
@@ -66,13 +69,7 @@ namespace ZendeskApi.Acceptance
                 _uploadToken = _response.Item.Token;
             }
 
-            [Given(@"I have a valid token")]
-            public void GivenIHaveAValidToken()
-            {
-                Assert.That(!string.IsNullOrWhiteSpace(_uploadToken));
-            }
-
-            [When(@"I delete an uploaded resource")]
+            [When(@"I delete the uploaded resource")]
             public void WhenICallUploadResourceDelete()
             {
                 try
