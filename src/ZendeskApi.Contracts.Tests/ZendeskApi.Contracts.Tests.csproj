@@ -41,8 +41,7 @@
     <OutputPath>bin\$(Configuration)\$(NugetFrameworkVersion)\</OutputPath>
   </PropertyGroup>
   <Choose>
-    <!--<When Condition="'$(Configuration.Substring(0,4))' == 'Debug'"> -->
-    <When Condition="'$(Configuration)' == 'Debug' or '$(Configuration)' == 'Debug40'">
+    <When Condition="$(Configuration.Contains('Debug'))">
       <PropertyGroup>
         <DebugSymbols>true</DebugSymbols>
         <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -93,5 +92,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-
+  <Target Name = "Clean">
+        <RemoveDir Directories="bin" />
+  </Target>
 </Project>
