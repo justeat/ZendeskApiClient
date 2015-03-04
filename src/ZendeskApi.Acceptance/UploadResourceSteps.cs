@@ -77,7 +77,7 @@ namespace ZendeskApi.Acceptance
                     _client.Upload.Delete(_uploadToken);
                     _okResponse = true;
                 }
-                catch (Exception e)
+                catch 
                 {
                     _okResponse = false;
                 }
