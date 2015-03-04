@@ -2,18 +2,25 @@
 <package >
     <metadata>
         <id>ZendeskApi.Client</id>
-        <version>1.0.0</version>
+        <version>0.0.37.1</version>
         <title>Zendesk Api Client</title>
         <authors>kate.richardson</authors>
         <owners>JUST EAT PLC</owners>
-		<licenseUrl>http://www.apache.org/licenses/license-2.0</licenseUrl>
+		    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>API Client for use with Zendesk</description>
         <dependencies>
-			<dependency id="Newtonsoft.Json" version="6.0.3" />
+			<group targetFramework="net45">
+				<dependency id="Newtonsoft.Json" version="6.0.8" />
+			</group>
+			<group targetFramework="net40">
+        <dependency id="Newtonsoft.Json" version="6.0.8" />
+				<dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+			</group>
         </dependencies>
     </metadata>
   <files>
-    <file src="lib\**" target="lib" />
+    <file src="bin\Release\net45\ZendeskApi*.*" target="lib\net45" />
+    <file src="bin\Release40\net40\ZendeskApi*.*" target="lib\net40" />
   </files>
 </package>
