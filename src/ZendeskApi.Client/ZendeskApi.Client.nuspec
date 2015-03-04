@@ -6,7 +6,7 @@
         <title>Zendesk Api Client</title>
         <authors>kate.richardson</authors>
         <owners>JUST EAT PLC</owners>
-	<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+		<licenseUrl>http://www.apache.org/licenses/license-2.0</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>API Client for use with Zendesk</description>
         <dependencies>

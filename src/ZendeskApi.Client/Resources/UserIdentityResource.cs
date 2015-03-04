@@ -29,8 +29,8 @@ namespace ZendeskApi.Client.Resources
         public IResponse<UserIdentity> Put(UserIdentityRequest request)
         {
             var response = Post(request);
-            Delete(request.Item.Id??0, request.Item.UserId);
-            return response;
+             Delete(request.Item.Id??0, request.Item.UserId);
+             return response;
         }
     }
 }

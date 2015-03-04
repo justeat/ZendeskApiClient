@@ -15,7 +15,7 @@ using TechTalk.SpecFlow;
 namespace ZendeskApi.Acceptance
 {
     [Binding]
-    public class Search
+    public class SearchSteps
     {
         private IZendeskClient _client;
 
@@ -41,7 +41,9 @@ namespace ZendeskApi.Acceptance
             _createdOrganization = new Organization
             {
                 Name = name + Guid.NewGuid(),
-                CustomFields = new Dictionary<object, object> { {customField, value}}
+                CustomFields = new Dictionary<object, object> { {customField, value}},
+                Details = name,
+                Notes = "new customer"
             };
 
             _createdOrganization = _client.Organizations.Post(new OrganizationRequest { Item = _createdOrganization }).Item;
