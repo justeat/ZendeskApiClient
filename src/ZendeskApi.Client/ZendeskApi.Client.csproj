@@ -68,6 +68,7 @@
     <Compile Include="Http\IHttpResponse.cs" />
     <Compile Include="Http\IRestClient.cs" />
     <Compile Include="IZendeskClient.cs" />
+    <Compile Include="IZendeskClientFactory.cs" />
     <Compile Include="Logging\ILogAdapter.cs" />
     <Compile Include="Logging\SystemDiagnosticsAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="ClientBase.cs" />
     <Compile Include="ZendeskClient.cs" />
+    <Compile Include="ZendeskClientFactory.cs" />
     <Compile Include="ZendeskDefaultConfiguration.cs" />
     <Compile Include="Serialization\ZendeskJsonSerializer.cs" />
   </ItemGroup>
