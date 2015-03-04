@@ -6,6 +6,7 @@ using ZendeskApi.Client.Http;
 using Moq;
 using NUnit.Framework;
 using ZendeskApi.Client.Serialization;
+using ZendeskApi.Contracts.Models;
 using HttpRequest = ZendeskApi.Client.Http.HttpRequest;
 using HttpResponse = ZendeskApi.Client.Http.HttpResponse;
 
@@ -146,6 +147,25 @@ namespace ZendeskApi.Client.Tests
         }
 
         [Test]
+        public void PostFile_Success_ReturnsSuccessResult()
+        {
+            // Given
+            var http = new Mock<IHttpChannel>();
+            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<IHttpPostedFile>()))
+                .Returns(_successResponse);
+
+            var file = new Mock<IHttpPostedFile>();
+
+            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+
+            // When
+            var result = client.PostFile<string>(new Uri("http://someurl.co.uk/resource"), file.Object);
+
+            // Then
+            Assert.That(result, Is.EqualTo(_successResponse.Content));
+        }
+
+        [Test]
         public void PostAsync_Success_ReturnsSuccessResult()
         {
             // Given
@@ -177,6 +197,24 @@ namespace ZendeskApi.Client.Tests
             // When, Then
             Assert.Throws<HttpException>(() => client.Post<string>(new Uri("http://someurl.co.uk/resource")));
         }
+
+        [Test]
+        public void PostFile_HttpReturnsFailResult_ThrowsException()
+        {
+            // Given
+            var http = new Mock<IHttpChannel>();
+            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<IHttpPostedFile>()))
+                .Returns(_failureResponse);
+
+            var file = new Mock<IHttpPostedFile>();
+
+            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+
+            // When, Then
+            Assert.Throws<HttpException>(
+                () => client.PostFile<string>(new Uri("http://someurl.co.uk/resource"), file.Object));
+        }
+
 
         [Test]
         public void Delete_Success_CallsDeleteOnHttp()

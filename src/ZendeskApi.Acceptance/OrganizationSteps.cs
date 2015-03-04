@@ -33,9 +33,12 @@ namespace ZendeskApi.Acceptance
         [Given(@"I post the following Organizations")]
         public void GivenTheFollowingOrganizationsInZendesk(Table table)
         {
-            var Organizations = table.Rows.Select(row => new Organization { Name = row["Name"] + Guid.NewGuid() }).ToList();
+            var organizations = table.Rows.Select(row => new Organization
+            {
+                Name = row["Name"] + Guid.NewGuid(), Details = row["Name"], Notes = "Some notes"
+            }).ToList();
 
-            Organizations.ForEach(t => _savedMultipleOrganizations.Add(_client.Organizations.Post(new OrganizationRequest { Item = t }).Item));
+            organizations.ForEach(t => _savedMultipleOrganizations.Add(_client.Organizations.Post(new OrganizationRequest { Item = t }).Item));
         }
 
         [Scope(Feature = "Organization")]
@@ -45,7 +48,7 @@ namespace ZendeskApi.Acceptance
             _savedSingleOrganization =
                 _client.Organizations.Post(new OrganizationRequest
                 {
-                    Item = new Organization { Name = name + Guid.NewGuid() }
+                    Item = new Organization { Name = name + Guid.NewGuid(), Details = name, Notes = "new item" }
                 }).Item;
         }
 

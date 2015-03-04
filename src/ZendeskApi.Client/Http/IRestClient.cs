@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Client.Http
 {
@@ -12,6 +13,8 @@ namespace ZendeskApi.Client.Http
         Task<T> GetAsync<T>(Uri requestUri);
 
         T Post<T>(Uri requestUri, object item = null, string contentType = "application/json");
+
+        T PostFile<T>(Uri requestUri, IHttpPostedFile file);
 
         Task<T> PostAsync<T>(Uri requestUri, object item = null, string contentType = "application/json");
 
