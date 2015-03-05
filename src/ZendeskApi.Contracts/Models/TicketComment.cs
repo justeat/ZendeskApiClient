@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -31,17 +32,27 @@ namespace ZendeskApi.Contracts.Models
 
         [DataMember(Name = "created_at", EmitDefaultValue = false)]
         public DateTime? Created { get; set; }
-        
-// ReSharper disable InconsistentNaming
-        [IgnoreDataMember]
-        public object attachments { get; set; }
 
+        [DataMember(Name = "attachments")]
+        public List<Attachment> Attachments { get; private set; }
+
+        [DataMember(Name = "uploads")]
+        public List<string> Uploads { get; set; }
+
+        // ReSharper disable InconsistentNaming
         [IgnoreDataMember]
         public object metadata { get; set; }
 
         [IgnoreDataMember]
         public object via { get; set; }
-// ReSharper restore InconsistentNaming
+        // ReSharper restore InconsistentNaming
+
+        public void AddAttachmentToComment(string attachmentToken)
+        {
+            Uploads = Uploads ?? new List<string>();
+
+            Uploads.Add(attachmentToken);
+        }
 
     }
 }

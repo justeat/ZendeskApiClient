@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using ZendeskApi.Acceptance.Helpers;
 using ZendeskApi.Client;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
@@ -15,6 +17,7 @@ namespace ZendeskApi.Acceptance
     {
         private IZendeskClient _client;
         private Ticket _savedTicket;
+        private string _uploadToken;
         private readonly List<TicketComment> _savedTicketComments = new List<TicketComment>();
 
         [BeforeScenario]
@@ -31,7 +34,7 @@ namespace ZendeskApi.Acceptance
             _savedTicket =
                 _client.Tickets.Post(new TicketRequest
                 {
-                    Item = new Ticket { Subject = subject, Comment = new TicketComment{ Body = description}, Type = TicketType.task }
+                    Item = new Ticket { Subject = subject, Comment = new TicketComment { Body = description }, Type = TicketType.task }
                 }).Item;
         }
 
@@ -39,6 +42,36 @@ namespace ZendeskApi.Acceptance
         public void WhenIAddTheComment(string comment)
         {
             _savedTicket.Comment = new TicketComment { Body = comment };
+
+            _client.Tickets.Put(new TicketRequest { Item = _savedTicket });
+        }
+
+        [Given(@"I upload a file to attach to that comment")]
+        public void GivenIHaveAFileToUpload()
+        {
+            var directoryInfo = Directory.GetParent(Directory.GetCurrentDirectory()).Parent;
+
+            var filePath = Path.Combine(directoryInfo.FullName, "Picture.jpg");
+
+            var fileInfo = new FileInfo(filePath);
+
+            using (var file = new MemoryFile(File.Open(filePath, FileMode.Open), "image/jpeg", fileInfo.Name))
+            {
+                var response = _client.Upload.Post(new UploadRequest
+                {
+                    Item = file
+                });
+
+                _uploadToken = response.Item.Token;
+            }
+        }
+
+        [When(@"I add the comment '(.*)' with the upload attached")]
+        public void WhenIAddTheCommentWithTheUploadAttached(string comment)
+        {
+            _savedTicket.Comment = new TicketComment { Body = comment };
+
+            _savedTicket.Comment.AddAttachmentToComment(_uploadToken);
 
             _client.Tickets.Put(new TicketRequest { Item = _savedTicket });
         }
@@ -55,5 +88,15 @@ namespace ZendeskApi.Acceptance
         {
             Assert.That(_savedTicketComments.Any(c => c.Body.Contains(comment)));
         }
+
+        [Then(@"I am returned a comment with the body '(.*)' with that attachment")]
+        public void ThenIAmReturnedACommentWithTheBodyAndThatAttachment(string comment)
+        {
+            var postedComment = _savedTicketComments.First(c => c.Body.Contains(comment));
+
+
+            Assert.That(postedComment.Attachments.Count() == 1);
+        }
+
     }
 }

@@ -170,14 +170,14 @@ this.ScenarioSetup(scenarioInfo);
  testRunner.Given("a task in Zendesk with the subject \'I\'ve swallowed my mouse cable\' and descriptio" +
                     "n \'It\'s a bit of a problem\' and type \'task\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 34
- testRunner.When("I set the first ticket custom fields with the value of \'Yes\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I set the first ticket custom fields with the value of \'true\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 35
  testRunner.And("I call get by id on the ZendeskApiClient", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 36
  testRunner.Then("I get a task from Zendesk with the subject \'I\'ve swallowed my mouse cable\' and de" +
                     "scription \'It\'s a bit of a problem\' and type \'task\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 37
- testRunner.And("the ticket has the custom field set with the value \'Yes\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the ticket has the custom field set with the value \'true\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

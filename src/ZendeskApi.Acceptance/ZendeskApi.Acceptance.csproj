@@ -38,7 +38,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <!--If configuration is not provided, default to Debug build-->
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <OutputPath>bin\$(Configuration)\$(NugetFrameworkVersion)\</OutputPath>
+    <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <Choose>
     <When Condition="$(Configuration.Contains('Debug'))">
