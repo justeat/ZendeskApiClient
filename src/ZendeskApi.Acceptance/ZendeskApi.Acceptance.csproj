@@ -32,13 +32,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{CDA8A5A6-461A-48C5-865F-812CF7275407}</ProjectGuid>
-    <ContractsAssemblyName>ZendeskApi.Contracts</ContractsAssemblyName>
     <RootNamespace>ZendeskApi.Acceptance</RootNamespace>
     <AssemblyName>ZendeskApi.Acceptance</AssemblyName>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <!--If configuration is not provided, default to Debug build-->
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <Choose>
     <When Condition="$(Configuration.Contains('Debug'))">
@@ -118,7 +117,7 @@
     </Compile>
     <Compile Include="UserIdentityResourceSteps.cs" />
   </ItemGroup>
-  <ItemGroup Condition="$(Configuration.Contains('40'))">
+  <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
