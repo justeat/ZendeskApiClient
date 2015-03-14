@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
@@ -92,5 +92,8 @@ namespace ZendeskApi.Contracts.Models
 
         [DataMember(Name = "ticket_restriction", EmitDefaultValue = false)]
         public string TicketRestriction { get; set; }
+
+        [DataMember(Name = "user_fields", EmitDefaultValue = false)]
+        public Dictionary<string, object> UserFields { get; set; }
     }
 }
