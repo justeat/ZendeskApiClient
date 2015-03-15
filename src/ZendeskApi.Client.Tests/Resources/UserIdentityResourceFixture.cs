@@ -31,7 +31,7 @@ namespace ZendeskApi.Client.Tests.Resources
             userIdentityResource.GetAll(4321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321")),""));
+            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321")), ""));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Tests.Resources
         public void Post_Called_BuildsUriWithFieldUserId()
         {
             // Given
-            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", UserId = 1234} };
+            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", UserId = 1234 } };
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When
@@ -83,7 +83,7 @@ namespace ZendeskApi.Client.Tests.Resources
         public void Put_Called_BuildsUriWithFieldUserId()
         {
             // Given
-            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", UserId = 1234, Id = 123} };
+            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", UserId = 1234, Id = 123 } };
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When
@@ -97,9 +97,9 @@ namespace ZendeskApi.Client.Tests.Resources
         public void Put_CalledWithUser_ReturnsUserReponse()
         {
             // Given
-            var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email", Id = 123} };
-            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", Id = 123} };
-            _client.Setup(b => b.Post<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email", Id = 123 } };
+            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", Id = 123 } };
+            _client.Setup(b => b.Put<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When
@@ -107,23 +107,6 @@ namespace ZendeskApi.Client.Tests.Resources
 
             // Then
             Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Test]
-        public void Put_CalledWithUser_PostsANewUserIdentityAndDeletesTheOld()
-        {
-            // Given
-            var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email", Id = 123 } };
-            var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", Id = 123 } };
-            _client.Setup(b => b.Post<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
-            var userIdentityResource = new UserIdentityResource(_client.Object);
-
-            // When
-            userIdentityResource.Put(request);
-
-            // Then
-            _client.Verify(b => b.Post<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json"));
-            _client.Verify(c => c.Delete(It.IsAny<Uri>()));
         }
     }
 }
