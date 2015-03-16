@@ -54,7 +54,7 @@ namespace ZendeskApi.Contracts.Queries
 
             foreach (var filter in _customFilters)
             {
-                sb.Append(string.Format("{0}{1}:{2}", HttpUtility.UrlEncode(" "), filter.Key, filter.Value));
+                sb.Append(string.Format("{0}{1}:{2}", HttpUtility.UrlEncode(" "), filter.Key, HttpUtility.UrlEncode(filter.Value)));
             }
             sb.Append(string.Format("&sort_by={0}&sort_order={1}", _orderBy.ToString().ToLower(), _order.ToString().ToLower()));
 
