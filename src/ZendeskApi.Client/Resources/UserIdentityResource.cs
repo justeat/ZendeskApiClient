@@ -7,7 +7,8 @@ namespace ZendeskApi.Client.Resources
 {
     public class UserIdentityResource : ZendeskResource<UserIdentity>, IUserIdentityResource
     {
-        protected override string ResourceUri {
+        protected override string ResourceUri
+        {
             get { return @"/api/v2/users/{0}/identities"; }
         }
 
@@ -28,9 +29,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<UserIdentity> Put(UserIdentityRequest request)
         {
-            var response = Post(request);
-             Delete(request.Item.Id??0, request.Item.UserId);
-             return response;
+            return Put<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId);
         }
     }
 }
