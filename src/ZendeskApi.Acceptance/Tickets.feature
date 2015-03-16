@@ -34,7 +34,7 @@ Scenario: When I call Post I am able to add a ticket with a custom field
 	When I set the first ticket custom fields with the value of 'true'
 	And I call get by id on the ZendeskApiClient
 	Then I get a task from Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem' and type 'task'
-	And the ticket has the custom field set with the value 'true'
+	And the ticket has the custom field set with the value 'True'
 
 Scenario: When I call Put I am able to update a ticket
 	Given a ticket in Zendesk with the subject 'I've swallowed my mouse cable' and description 'It's a bit of a problem'

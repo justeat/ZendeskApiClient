@@ -177,7 +177,7 @@ this.ScenarioSetup(scenarioInfo);
  testRunner.Then("I get a task from Zendesk with the subject \'I\'ve swallowed my mouse cable\' and de" +
                     "scription \'It\'s a bit of a problem\' and type \'task\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 37
- testRunner.And("the ticket has the custom field set with the value \'true\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the ticket has the custom field set with the value \'True\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
