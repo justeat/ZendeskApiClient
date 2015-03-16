@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Queries;
 
