@@ -57,12 +57,17 @@ namespace ZendeskApi.Acceptance
         public void WhenIChangeTheEmail()
         {
             var identity = _userIdentities.Results.First();
-            identity.Value = _randomEmail;
 
-            _client.UserIdentities.Put(new UserIdentityRequest
+            var oldId = identity.Id.Value;
+            identity.Value = _randomEmail;
+            identity.Id = null;
+
+            _client.UserIdentities.Post(new UserIdentityRequest
             {
                 Item = identity
             });
+
+            _client.UserIdentities.Delete(oldId, identity.UserId.Value);
         }
 
         [Then(@"it should be changed")]

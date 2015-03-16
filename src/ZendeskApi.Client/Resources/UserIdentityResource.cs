@@ -31,5 +31,10 @@ namespace ZendeskApi.Client.Resources
         {
             return Put<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId);
         }
+
+        public void Delete(long id, long parentId)
+        {
+            base.Delete(id, parentId);
+        }
     }
 }
