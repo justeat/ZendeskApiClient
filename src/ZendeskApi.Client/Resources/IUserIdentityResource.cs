@@ -9,5 +9,6 @@ namespace ZendeskApi.Client.Resources
         IListResponse<UserIdentity> GetAll(long id);
         IResponse<UserIdentity> Post(UserIdentityRequest request);
         IResponse<UserIdentity> Put(UserIdentityRequest request);
+        void Delete(long id, long parentId);
     }
 }
