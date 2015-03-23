@@ -96,6 +96,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Requests.feature.cs">
+      <DependentUpon>Requests.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Tickets.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -103,6 +108,7 @@
     </Compile>
     <Compile Include="OrganizationSteps.cs" />
     <Compile Include="TicketCommentSteps.cs" />
+    <Compile Include="RequestSteps.cs" />
     <Compile Include="TicketSteps.cs" />
     <Compile Include="UploadResource.feature.cs">
       <AutoGen>True</AutoGen>
@@ -135,6 +141,10 @@
     <None Include="TicketComments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>TicketComments.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Requests.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Requests.feature.cs</LastGenOutput>
     </None>
     <None Include="Tickets.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -169,7 +179,7 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
     <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
-  <Target Name = "Clean">
-        <RemoveDir Directories="bin" />
+  <Target Name="Clean">
+    <RemoveDir Directories="bin" />
   </Target>
 </Project>

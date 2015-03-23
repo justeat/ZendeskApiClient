@@ -19,6 +19,7 @@ namespace ZendeskApi.Client
         public IUserIdentityResource UserIdentities { get; private set; }
         public IUploadResource Upload { get; private set; }
         public IOrganizationMembershipResource OrganizationMemberships { get; private set; }
+        public IRequestResource Requests { get; private set; }
 
         public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, ISerializer serializer = null, IHttpChannel httpChannel = null, ILogAdapter logger = null)
             :base(baseUri, configuration, serializer, httpChannel, logger)
@@ -33,6 +34,7 @@ namespace ZendeskApi.Client
             UserIdentities = new UserIdentityResource(this);
             Upload = new UploadResource(this);
             OrganizationMemberships = new OrganizationMembershipResource(this);
+            Requests = new RequestResource(this);
         }
     }
 }

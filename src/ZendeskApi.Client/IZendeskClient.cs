@@ -14,5 +14,6 @@ namespace ZendeskApi.Client
         IUserIdentityResource UserIdentities { get; }
         IUploadResource Upload { get; }
         IOrganizationMembershipResource OrganizationMemberships { get; }
+        IRequestResource Requests { get; }
     }
 }

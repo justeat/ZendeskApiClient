@@ -5,9 +5,9 @@ using ZendeskApi.Contracts.Models;
 namespace ZendeskApi.Contracts.Responses
 {
     [DataContract]
-    internal class RequestListResponse : ListResponse<Request>
+    internal class TicketListResponse : ListResponse<Ticket>
     {
-        [DataMember(Name = "requests")]
-        public override IEnumerable<Request> Results { get; set; }
+        [DataMember(Name = "tickets")]
+        public override IEnumerable<Ticket> Results { get; set; }
     }
 }

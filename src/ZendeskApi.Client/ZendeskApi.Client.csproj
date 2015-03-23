@@ -109,6 +109,7 @@
     <Compile Include="Resources\IAssignableGroupResource.cs" />
     <Compile Include="Resources\IOrganizationMembershipResource.cs" />
     <Compile Include="Resources\IOrganizationResource.cs" />
+    <Compile Include="Resources\IRequestResource.cs" />
     <Compile Include="Resources\ISearchResource.cs" />
     <Compile Include="Resources\ITicketCommentResource.cs" />
     <Compile Include="Resources\ITicketResource.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Resources\OrganizationResource.cs" />
     <Compile Include="Resources\TicketCommentResource.cs" />
     <Compile Include="Resources\OrganizationMembershipResource.cs" />
+    <Compile Include="Resources\RequestResource.cs" />
     <Compile Include="Resources\UploadResource.cs" />
     <Compile Include="Resources\UserIdentityResource.cs" />
     <Compile Include="Resources\UserResource.cs" />
@@ -134,7 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Folder Include="lib\" />
   </ItemGroup>
   <ItemGroup Condition="$(Configuration.Contains('40'))">
     <Reference Include="System.Runtime">
@@ -145,26 +146,25 @@
     </Reference>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="lib\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
     <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
-  <Target Name = "Clean">
-        <RemoveDir Directories="bin" />
+  <Target Name="Clean">
+    <RemoveDir Directories="bin" />
   </Target>
-
   <Target Name="configurations">
-   <CreateItem Include="$(Configuration)">
-    <Output TaskParameter="Include" ItemName="Configuration" />
-   </CreateItem>
- </Target>
-
- <Target Name="BuildAll" DependsOnTargets="configurations" Inputs="@(Configuration)">
-   <Message Text="Building: (%(Configuration.Identity))"/>
-   <MSBuild  ContinueOnError="false"  Properties="Configuration=%(Configuration.Identity)" />
- </Target>
-
-
+    <CreateItem Include="$(Configuration)">
+      <Output TaskParameter="Include" ItemName="Configuration" />
+    </CreateItem>
+  </Target>
+  <Target Name="BuildAll" DependsOnTargets="configurations" Inputs="@(Configuration)">
+    <Message Text="Building: (%(Configuration.Identity))" />
+    <MSBuild ContinueOnError="false" Properties="Configuration=%(Configuration.Identity)" />
+  </Target>
 </Project>

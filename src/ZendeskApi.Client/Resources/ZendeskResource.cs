@@ -31,9 +31,9 @@ namespace ZendeskApi.Client.Resources
             return Client.Get<TResponse>(requestUri);
         }
 
-        protected IResponse<T> Get<TResponse>(string id) where TResponse : IResponse<T>
+        protected IResponse<T> Get<TResponse>(string query) where TResponse : IResponse<T>
         {
-            var requestUri = Client.BuildUri(string.Format("{0}/{1}", ResourceUri, id));
+            var requestUri = Client.BuildUri(ResourceUri, query);
 
             return Client.Get<TResponse>(requestUri);
         }

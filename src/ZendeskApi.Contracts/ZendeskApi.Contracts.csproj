@@ -55,7 +55,6 @@
     </When>
   </Choose>
   <ItemGroup>
-
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\$(NugetFrameworkVersion)\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -76,6 +75,7 @@
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\CustomField.cs" />
     <Compile Include="Models\IHttpPostedFile.cs" />
+    <Compile Include="Models\Request.cs" />
     <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketEventType.cs" />
     <Compile Include="Models\Upload.cs" />
@@ -94,6 +94,7 @@
     <Compile Include="Requests\IRequest.cs" />
     <Compile Include="Requests\OrganizationRequest.cs" />
     <Compile Include="Requests\OrganizationMembershipRequest.cs" />
+    <Compile Include="Requests\RequestRequest.cs" />
     <Compile Include="Requests\UploadRequest.cs" />
     <Compile Include="Requests\UserIdentityRequest.cs" />
     <Compile Include="Requests\UserRequest.cs" />
@@ -104,6 +105,8 @@
     <Compile Include="Responses\OrganizationMembershipResponse.cs" />
     <Compile Include="Responses\TicketCommentListResponse.cs" />
     <Compile Include="Responses\OrganizationMembershipListResponse.cs" />
+    <Compile Include="Responses\RequestResponse.cs" />
+    <Compile Include="Responses\RequestListResponse.cs" />
     <Compile Include="Responses\UploadResponse.cs" />
     <Compile Include="Responses\UserIdentityResponse.cs" />
     <Compile Include="Responses\UserIdentityListResponse.cs" />
@@ -124,7 +127,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name = "Clean">
-        <RemoveDir Directories="bin" />
+  <Target Name="Clean">
+    <RemoveDir Directories="bin" />
   </Target>
 </Project>
