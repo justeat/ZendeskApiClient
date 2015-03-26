@@ -106,12 +106,12 @@
     <Compile Include="Responses\TicketCommentListResponse.cs" />
     <Compile Include="Responses\OrganizationMembershipListResponse.cs" />
     <Compile Include="Responses\RequestResponse.cs" />
-    <Compile Include="Responses\RequestListResponse.cs" />
+    <Compile Include="Responses\TicketListResponse.cs" />
     <Compile Include="Responses\UploadResponse.cs" />
     <Compile Include="Responses\UserIdentityResponse.cs" />
     <Compile Include="Responses\UserIdentityListResponse.cs" />
     <Compile Include="Responses\UserListResponse.cs" />
-    <Compile Include="Responses\TicketListResponse.cs" />
+    <Compile Include="Responses\RequestListResponse.cs" />
     <Compile Include="Responses\ListResponse.cs" />
     <Compile Include="Requests\TicketRequest.cs" />
     <Compile Include="Responses\OrganizationResponse.cs" />
