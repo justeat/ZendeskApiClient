@@ -27,11 +27,6 @@ namespace ZendeskApi.Client.Resources
             return Get<RequestResponse>(string.Format("status={0}", string.Join(",", requestedStatuses).ToLower()));
         }
 
-        public IListResponse<Request> GetAll(IEnumerable<long> ids)
-        {
-            return GetAll<RequestListResponse>(ids);
-        }
-
         public IResponse<Request> Put(RequestRequest request)
         {
             return Put<RequestRequest, RequestResponse>(request);
