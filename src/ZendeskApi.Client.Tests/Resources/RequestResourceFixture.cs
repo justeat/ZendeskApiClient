@@ -65,35 +65,6 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
-        public void GetAll_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
-            var resource = new RequestResource(_client.Object);
-
-            // When
-            resource.GetAll(new List<long> { 321, 456, 789 });
-
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
-        }
-
-        [Test]
-        public void GetAll_Called_ReturnsRequestResponse()
-        {
-            // Given
-            var response = new RequestListResponse { Results = new List<Request> { new Request { Id = 1 } } };
-            _client.Setup(b => b.Get<RequestListResponse>(It.IsAny<Uri>())).Returns(response);
-            var resource = new RequestResource(_client.Object);
-
-            // When
-            var result = resource.GetAll(new List<long> { 321, 456, 789 });
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Test]
         public void Put_Called_BuildsUri()
         {
             // Given
