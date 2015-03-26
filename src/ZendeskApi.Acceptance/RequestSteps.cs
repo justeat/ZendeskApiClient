@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
+using System.Web;
 using ZendeskApi.Client;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
@@ -15,8 +14,6 @@ namespace ZendeskApi.Acceptance
     public class RequestSteps
     {
         private IZendeskClient _client;
-
-        private readonly List<Request> _savedMultipleRequest = new List<Request>();
 
         private Request _savedSingleRequest;
         private Request _singleRequestResponse;
@@ -60,6 +57,22 @@ namespace ZendeskApi.Acceptance
         public void ThenIGetARequestViaTheApi()
         {
             Assert.That(_singleRequestResponse.Via.Channel, Is.EqualTo("api"));
-        }  
+        }
+
+        [AfterScenario]
+        public void AfterFeature()
+        {
+            try
+            {
+                if (_savedSingleRequest != null)
+                    _client.Tickets.Delete((long)_savedSingleRequest.Id);
+
+            }
+            catch (HttpException)
+            {
+
+            }
+
+        }
     }
 }
