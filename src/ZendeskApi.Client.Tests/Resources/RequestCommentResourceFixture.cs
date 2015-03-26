@@ -20,6 +20,20 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public void Get_Called_UrlIsCorrect()
+        {
+            //Given
+            _client.Setup(c => c.Get<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(new TicketCommentListResponse());
+            var resource = new RequestCommentResource(_client.Object);
+
+            //When
+            resource.Get(321, 123);
+
+            //Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(u => u.Contains("requests/123/comments/321")), It.IsAny<string>()));
+        }
+
+        [Test]
         public void GetAll_CalledWithId_ReturnsListOfComments()
         {
             //Given

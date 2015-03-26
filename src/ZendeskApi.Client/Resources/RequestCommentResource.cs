@@ -16,6 +16,11 @@ namespace ZendeskApi.Client.Resources
             Client = client;
         }
 
+        public IResponse<TicketComment> Get(long id, long parentId)
+        {
+            return Get<TicketCommentResponse>(id, parentId);
+        }
+
         public IListResponse<TicketComment> GetAll(long parentId)
         {
             return GetAll<TicketCommentListResponse>(parentId);

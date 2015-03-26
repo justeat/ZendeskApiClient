@@ -38,6 +38,13 @@ namespace ZendeskApi.Client.Resources
             return Client.Get<TResponse>(requestUri);
         }
 
+        protected IResponse<T> Get<TResponse>(long id, long parentId) where TResponse : IResponse<T>
+        {
+            var requestUri = Client.BuildUri(string.Format("{0}/{1}", string.Format(ResourceUri, parentId), id));
+
+            return Client.Get<TResponse>(requestUri);
+        }
+
         protected TResponse GetAll<TResponse>(IEnumerable<long> ids) where TResponse : IListResponse<T>
         {
             var requestUri = Client.BuildUri(string.Format("{0}/{1}", ResourceUri, ShowMany), string.Format("ids={0}", ZendeskFormatter.ToCsv(ids)));

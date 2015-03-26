@@ -11,6 +11,7 @@ namespace ZendeskApi.Client
     {
         public ITicketResource Tickets { get; private set; }
         public ITicketCommentResource TicketComments { get; private set; }
+        public IRequestCommentResource RequestComments { get; private set; }
         public IOrganizationResource Organizations { get; private set; }
         public ISearchResource Search { get; private set; }
         public IGroupResource Groups { get; private set; }
@@ -26,6 +27,7 @@ namespace ZendeskApi.Client
         {
             Tickets = new TicketResource(this);
             TicketComments = new TicketCommentResource(this);
+            RequestComments = new RequestCommentResource(this);
             Organizations = new OrganizationResource(this);
             Search = new SearchResource(this);
             Groups = new GroupsResource(this);

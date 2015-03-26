@@ -17,6 +17,7 @@ namespace ZendeskApi.Acceptance
     {
         private IZendeskClient _client;
         private Ticket _savedTicket;
+        private Request _savedRequest;
         private string _uploadToken;
         private readonly List<TicketComment> _savedTicketComments = new List<TicketComment>();
 
@@ -38,12 +39,31 @@ namespace ZendeskApi.Acceptance
                 }).Item;
         }
 
+        [Scope(Feature = "TicketComments")]
+        [Given(@"a request in Zendesk with the subject '(.*)' and description '(.*)'")]
+        public void GivenARequestInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description)
+        {
+            _savedRequest =
+                _client.Requests.Post(new RequestRequest
+                {
+                    Item = new Request { Subject = subject, Comment = new TicketComment { Body = description }, Type = TicketType.task }
+                }).Item;
+        }
+
         [Given(@"I add the comment '(.*)'")]
         public void WhenIAddTheComment(string comment)
         {
             _savedTicket.Comment = new TicketComment { Body = comment };
 
             _client.Tickets.Put(new TicketRequest { Item = _savedTicket });
+        }
+
+        [Given(@"I add the comment '(.*)' to the request")]
+        public void WhenIAddTheCommentToTheRequest(string comment)
+        {
+            _savedRequest.Comment = new TicketComment { Body = comment };
+
+            _client.Requests.Put(new RequestRequest { Item = _savedRequest });
         }
 
         [Given(@"I upload a file to attach to that comment")]
@@ -80,6 +100,13 @@ namespace ZendeskApi.Acceptance
         public void WhenICallGetAllCommentsForThatTicket()
         {
             var allComments = _client.TicketComments.GetAll(_savedTicket.Id.Value);
+            _savedTicketComments.AddRange(allComments.Results);
+        }
+
+        [When(@"I call get all comments for that request")]
+        public void WhenICallGetAllCommentsForThatRequest()
+        {
+            var allComments = _client.RequestComments.GetAll(_savedRequest.Id.Value);
             _savedTicketComments.AddRange(allComments.Results);
         }
 

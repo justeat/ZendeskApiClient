@@ -107,6 +107,7 @@
     <Compile Include="Responses\OrganizationMembershipListResponse.cs" />
     <Compile Include="Responses\RequestResponse.cs" />
     <Compile Include="Responses\TicketListResponse.cs" />
+    <Compile Include="Responses\TicketCommentResponse.cs" />
     <Compile Include="Responses\UploadResponse.cs" />
     <Compile Include="Responses\UserIdentityResponse.cs" />
     <Compile Include="Responses\UserIdentityListResponse.cs" />
