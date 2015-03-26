@@ -29,7 +29,7 @@ namespace ZendeskApi.Acceptance
         public void GivenARequestInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string comment)
         {
             _savedSingleRequest =
-                _client.Requests.Post(new RequestRequest
+                _client.Request.Post(new RequestRequest
                 {
                     Item = new Request { Subject = subject, Type = TicketType.task, Comment = new TicketComment { Body = comment } }
                 }).Item;
@@ -42,7 +42,7 @@ namespace ZendeskApi.Acceptance
             if (!_savedSingleRequest.Id.HasValue)
                 throw new ArgumentException("Cannot get by id when id is null");
 
-            _singleRequestResponse = _client.Requests.Get(_savedSingleRequest.Id.Value).Item;
+            _singleRequestResponse = _client.Request.Get(_savedSingleRequest.Id.Value).Item;
         }
 
         [Then(@"I get a request from Zendesk with the subject '(.*)' and description '(.*)'")]

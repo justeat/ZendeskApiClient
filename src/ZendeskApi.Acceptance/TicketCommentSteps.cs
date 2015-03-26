@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Web;
 using ZendeskApi.Acceptance.Helpers;
 using ZendeskApi.Client;
 using ZendeskApi.Contracts.Models;
@@ -44,7 +45,7 @@ namespace ZendeskApi.Acceptance
         public void GivenARequestInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description)
         {
             _savedRequest =
-                _client.Requests.Post(new RequestRequest
+                _client.Request.Post(new RequestRequest
                 {
                     Item = new Request { Subject = subject, Comment = new TicketComment { Body = description }, Type = TicketType.task }
                 }).Item;
@@ -63,7 +64,7 @@ namespace ZendeskApi.Acceptance
         {
             _savedRequest.Comment = new TicketComment { Body = comment };
 
-            _client.Requests.Put(new RequestRequest { Item = _savedRequest });
+            _client.Request.Put(new RequestRequest { Item = _savedRequest });
         }
 
         [Given(@"I upload a file to attach to that comment")]
@@ -123,6 +124,28 @@ namespace ZendeskApi.Acceptance
 
 
             Assert.That(postedComment.Attachments.Count() == 1);
+        }
+
+        [AfterScenario]
+        public void AfterFeature()
+        {
+            try
+            {
+                if (_savedTicketComments != null && _savedTicketComments.Any())
+                    _savedTicketComments.ForEach(comment => _client.Tickets.Delete((long)comment.Id));
+
+                if (_savedRequest != null)
+                    _client.Tickets.Delete((long)_savedRequest.Id);
+
+                if (_savedTicket != null)
+                    _client.Tickets.Delete((long)_savedTicket.Id);
+
+            }
+            catch (HttpException)
+            {
+
+            }
+
         }
 
     }
