@@ -85,6 +85,12 @@
       <DependentUpon>Organization.feature</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SatisfactionRating.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SatisfactionRating.feature</DependentUpon>
+    </Compile>
+    <Compile Include="SatisfactionRatingSteps.cs" />
     <Compile Include="SearchSteps.cs" />
     <Compile Include="Search.feature.cs">
       <AutoGen>True</AutoGen>
@@ -134,6 +140,10 @@
       <LastGenOutput>Organization.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="SatisfactionRating.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>SatisfactionRating.feature.cs</LastGenOutput>
+    </None>
     <None Include="Search.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Search.feature.cs</LastGenOutput>

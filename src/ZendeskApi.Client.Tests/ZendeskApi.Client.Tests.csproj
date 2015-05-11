@@ -90,6 +90,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Resources\SatisfactionRatingResourceFixture.cs" />
     <Compile Include="Resources\RequestCommentResourceFixture.cs" />
     <Compile Include="Resources\RequestResourceFixture.cs" />
     <Compile Include="ZendeskClientFixture.cs" />

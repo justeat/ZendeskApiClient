@@ -73,7 +73,10 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "custom_fields")]
         public List<CustomField> CustomFields { get; private set; }
 
-// ReSharper disable InconsistentNaming
+        [DataMember(Name = "satisfaction_rating")]
+        public object SatisfactionRating { get; set; }
+
+        // ReSharper disable InconsistentNaming
         [IgnoreDataMember]
         public long? External_Id { get; set; }
 
@@ -91,9 +94,6 @@ namespace ZendeskApi.Contracts.Models
 
         [IgnoreDataMember]
         public List<string> tags { get; set; }
-
-        [IgnoreDataMember]
-        public object satisfaction_rating { get; set; }
 
         [IgnoreDataMember]
         public List<object> sharing_agreement_ids { get; set; }

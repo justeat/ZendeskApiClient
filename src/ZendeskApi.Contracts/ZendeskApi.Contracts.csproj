@@ -76,8 +76,10 @@
     <Compile Include="Models\CustomField.cs" />
     <Compile Include="Models\IHttpPostedFile.cs" />
     <Compile Include="Models\Request.cs" />
+    <Compile Include="Models\SatisfactionRating.cs" />
     <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketEventType.cs" />
+    <Compile Include="Models\SatisfactionRatingScore.cs" />
     <Compile Include="Models\Upload.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Via.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Requests\IRequest.cs" />
     <Compile Include="Requests\OrganizationRequest.cs" />
     <Compile Include="Requests\OrganizationMembershipRequest.cs" />
+    <Compile Include="Requests\SatisfasctionRatingRequest.cs" />
     <Compile Include="Requests\RequestRequest.cs" />
     <Compile Include="Requests\UploadRequest.cs" />
     <Compile Include="Requests\UserIdentityRequest.cs" />
@@ -108,6 +111,7 @@
     <Compile Include="Responses\RequestResponse.cs" />
     <Compile Include="Responses\TicketListResponse.cs" />
     <Compile Include="Responses\TicketCommentResponse.cs" />
+    <Compile Include="Responses\SatisfactionRatingResponse.cs" />
     <Compile Include="Responses\UploadResponse.cs" />
     <Compile Include="Responses\UserIdentityResponse.cs" />
     <Compile Include="Responses\UserIdentityListResponse.cs" />
