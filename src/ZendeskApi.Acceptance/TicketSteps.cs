@@ -63,6 +63,7 @@ namespace ZendeskApi.Acceptance
                 }).Item;
         }
 
+        [Scope(Feature = "Tickets")]
         [When(@"I set the first ticket custom fields with the value of '(.*)'")]
         public void GivenTheTicketHasTheCustomFieldsAnd(string value)
         {

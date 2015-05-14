@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Web;
 using ZendeskApi.Acceptance.Helpers;
 using ZendeskApi.Client;
 using ZendeskApi.Contracts.Models;
@@ -17,6 +18,7 @@ namespace ZendeskApi.Acceptance
     {
         private IZendeskClient _client;
         private Ticket _savedTicket;
+        private Request _savedRequest;
         private string _uploadToken;
         private readonly List<TicketComment> _savedTicketComments = new List<TicketComment>();
 
@@ -38,12 +40,31 @@ namespace ZendeskApi.Acceptance
                 }).Item;
         }
 
+        [Scope(Feature = "TicketComments")]
+        [Given(@"a request in Zendesk with the subject '(.*)' and description '(.*)'")]
+        public void GivenARequestInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description)
+        {
+            _savedRequest =
+                _client.Request.Post(new RequestRequest
+                {
+                    Item = new Request { Subject = subject, Comment = new TicketComment { Body = description }, Type = TicketType.task }
+                }).Item;
+        }
+
         [Given(@"I add the comment '(.*)'")]
         public void WhenIAddTheComment(string comment)
         {
             _savedTicket.Comment = new TicketComment { Body = comment };
 
             _client.Tickets.Put(new TicketRequest { Item = _savedTicket });
+        }
+
+        [Given(@"I add the comment '(.*)' to the request")]
+        public void WhenIAddTheCommentToTheRequest(string comment)
+        {
+            _savedRequest.Comment = new TicketComment { Body = comment };
+
+            _client.Request.Put(new RequestRequest { Item = _savedRequest });
         }
 
         [Given(@"I upload a file to attach to that comment")]
@@ -83,6 +104,13 @@ namespace ZendeskApi.Acceptance
             _savedTicketComments.AddRange(allComments.Results);
         }
 
+        [When(@"I call get all comments for that request")]
+        public void WhenICallGetAllCommentsForThatRequest()
+        {
+            var allComments = _client.RequestComments.GetAll(_savedRequest.Id.Value);
+            _savedTicketComments.AddRange(allComments.Results);
+        }
+
         [Then(@"I am returned a comment with the body '(.*)'")]
         public void ThenIAmReturnedACommentWithTheBody(string comment)
         {
@@ -96,6 +124,28 @@ namespace ZendeskApi.Acceptance
 
 
             Assert.That(postedComment.Attachments.Count() == 1);
+        }
+
+        [AfterScenario]
+        public void AfterFeature()
+        {
+            try
+            {
+                if (_savedTicketComments != null && _savedTicketComments.Any())
+                    _savedTicketComments.ForEach(comment => _client.Tickets.Delete((long)comment.Id));
+
+                if (_savedRequest != null)
+                    _client.Tickets.Delete((long)_savedRequest.Id);
+
+                if (_savedTicket != null)
+                    _client.Tickets.Delete((long)_savedTicket.Id);
+
+            }
+            catch (HttpException)
+            {
+
+            }
+
         }
 
     }

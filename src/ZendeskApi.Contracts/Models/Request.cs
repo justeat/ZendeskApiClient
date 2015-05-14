@@ -7,12 +7,25 @@ using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Contracts.Models
 {
-    [Description("Ticket")]
+    [Description("Request")]
     [DataContract]
-    public class Ticket : IZendeskEntity
+    public class Request : IZendeskEntity
     {
         [DataMember(EmitDefaultValue = false)]
         public long? Id { get; set; }
+
+        [DataMember(Name = "subject")]
+        public string Subject { get; set; }
+        
+        [DataMember(Name = "url", EmitDefaultValue = false)]
+        public Uri Url { get; set; }
+        
+        [DataMember(Name = "description")]
+        public string Description { get; set; }
+        
+        [JsonConverter(typeof(StringEnumConverter))]
+        [DataMember(Name = "status", EmitDefaultValue = false)]
+        public TicketStatus Status { get; set; }
 
         [DataMember(Name = "created_at", EmitDefaultValue = false)]
         public DateTime? Created { get; set; }
@@ -26,19 +39,12 @@ namespace ZendeskApi.Contracts.Models
         [JsonConverter(typeof(StringEnumConverter))]
         [DataMember(Name = "type", EmitDefaultValue = false)]
         public TicketType? Type { get; set; }
-
-        [DataMember(Name = "subject")]
-        public string Subject { get; set; }
-
-        [DataMember(Name = "description")]
-        public string Description { get; set; }
+        
+        [DataMember(EmitDefaultValue = false)]
+        public string Priority { get; set; }
 
         [DataMember(Name = "comment")]
         public TicketComment Comment { get; set; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        [DataMember(Name = "status", EmitDefaultValue = false)]
-        public TicketStatus Status { get; set; }
 
         [DataMember(Name = "requester_id", EmitDefaultValue = false)]
         public long? RequesterId { get; set; }
@@ -52,14 +58,8 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "organization_id", EmitDefaultValue = false)]
         public long? OrganisationId { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public Uri Url { get; set; }
-
-        [DataMember(EmitDefaultValue = false)]
-        public string Priority { get; set; }
-
-        [DataMember(Name = "recipient", EmitDefaultValue = false)]
-        public object Recipient { get; set; }
+        [DataMember(Name = "collaborator_ids", EmitDefaultValue = false)]
+        public List<int> CollaboratorIds { get; set; }
 
         [DataMember(Name = "group_id", EmitDefaultValue = false)]
         public int? GroupId { get; set; }
@@ -67,45 +67,16 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "ticket_form_id", EmitDefaultValue = false)]
         public int? FormId { get; set; }
 
+        [DataMember(Name = "can_be_solved_by_me")]
+        public bool CanBeSolvedByMe { get; set; }
+
+        [DataMember(Name = "solved")]
+        public bool Solved { get; set; }
+
         [DataMember(Name = "via")]
         public Via Via { get; set; }
 
         [DataMember(Name = "custom_fields")]
         public List<CustomField> CustomFields { get; private set; }
-
-        [DataMember(Name = "satisfaction_rating")]
-        public object SatisfactionRating { get; set; }
-
-        // ReSharper disable InconsistentNaming
-        [IgnoreDataMember]
-        public long? External_Id { get; set; }
-
-        [IgnoreDataMember]
-        public List<long> collaborator_ids { get; set; }
-
-        [IgnoreDataMember]
-        public long forum_topic_id { get; set; }
-
-        [IgnoreDataMember]
-        public long problem_id { get; set; }
-
-        [IgnoreDataMember]
-        public bool has_incidents { get; set; }
-
-        [IgnoreDataMember]
-        public List<string> tags { get; set; }
-
-        [IgnoreDataMember]
-        public List<object> sharing_agreement_ids { get; set; }
-
-        [IgnoreDataMember]
-        public List<object> fields { get; set; }
-
-        [IgnoreDataMember]
-        public string result_type { get; set; }
-
-        [IgnoreDataMember]
-        public List<long> followup_ids { get; set; }
-// ReSharper restore InconsistentNaming
     }
 }

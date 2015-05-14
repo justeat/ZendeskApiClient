@@ -14,6 +14,8 @@ namespace ZendeskApi.Contracts.Models
         [EnumMember(Value = "pending")]
         Pending,
         [EnumMember(Value = "solved")]
-        Solved
+        Solved,
+        [EnumMember(Value = "hold")]
+        Hold
     }
 }
