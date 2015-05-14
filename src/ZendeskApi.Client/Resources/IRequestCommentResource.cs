@@ -5,6 +5,7 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IRequestCommentResource
     {
+        IResponse<TicketComment> Get(long id, long parentId);
         IListResponse<TicketComment> GetAll(long parentId);
     }
 }
