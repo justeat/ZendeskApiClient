@@ -38,11 +38,11 @@ A .net Zendesk Api Client NuGet package for use with the ZendeskApi v2
 
 ###Use:###
 
-    IResponse<User> response = client.Search.Find<User>(
+    IListResponse<User> response = client.Search.Find<User>(
         new ZendeskQuery<User>()
         .WithCustomFilter("email", "jazzy.b@just-eat.com")
     );
-    IResponse<User> response = client.Search.Find(
+    IListResponse<User> response = client.Search.Find(
         new ZendeskQuery<Organization>()
         .WithCustomFilter("name", "Cupcake Cafe")
     );
