@@ -11,6 +11,11 @@ namespace ZendeskApi.Contracts.Models
     [DataContract]
     public class Request : IZendeskEntity
     {
+        public Request()
+        {
+            CustomFields = new List<CustomField>();
+        }
+        
         [DataMember(EmitDefaultValue = false)]
         public long? Id { get; set; }
 
