@@ -80,7 +80,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 9
  testRunner.When("I call get satisfaction rating by id on the ZendeskApiClient", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 10
- testRunner.Then("I get a satisfaction rating with a score of \'Good\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I get a satisfaction rating with a score of good", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
