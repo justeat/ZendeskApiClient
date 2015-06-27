@@ -71,7 +71,7 @@ namespace ZendeskApi.Contracts.Models
         public Via Via { get; set; }
 
         [DataMember(Name = "custom_fields")]
-        public List<CustomField> CustomFields { get; private set; }
+        public List<CustomField> CustomFields { get; set; }
 
         [DataMember(Name = "satisfaction_rating")]
         public object SatisfactionRating { get; set; }
@@ -92,7 +92,7 @@ namespace ZendeskApi.Contracts.Models
         [IgnoreDataMember]
         public bool has_incidents { get; set; }
 
-        [IgnoreDataMember]
+        [DataMember(Name = "tags", EmitDefaultValue = false)]
         public List<string> tags { get; set; }
 
         [IgnoreDataMember]
