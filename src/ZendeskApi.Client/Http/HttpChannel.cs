@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using ZendeskApi.Contracts.Models;
@@ -16,7 +17,7 @@ namespace ZendeskApi.Client.Http
     {
         public IHttpResponse Get(IHttpRequest request)
         {
-            return GetAsync(request).Result;
+            return MakeSynchronousRequest(request, "GET");
         }
 
         public async Task<IHttpResponse> GetAsync(IHttpRequest request)
@@ -44,7 +45,7 @@ namespace ZendeskApi.Client.Http
 
         public IHttpResponse Post(IHttpRequest request)
         {
-            return PostAsync(request).Result;
+            return MakeSynchronousRequest(request, "POST");
         }
 
         public IHttpResponse Post(IHttpRequest request, IHttpPostedFile fileBase)
@@ -93,7 +94,7 @@ namespace ZendeskApi.Client.Http
 
         public IHttpResponse Put(IHttpRequest request)
         {
-            return PutAsync(request).Result;
+            return MakeSynchronousRequest(request, "PUT"); 
         }
 
         public async Task<IHttpResponse> PutAsync(IHttpRequest request)
@@ -122,7 +123,7 @@ namespace ZendeskApi.Client.Http
 
         public IHttpResponse Delete(IHttpRequest request)
         {
-            return DeleteAsync(request).Result;
+            return MakeSynchronousRequest(request, "DELETE");
         }
 
         public async Task<IHttpResponse> DeleteAsync(IHttpRequest request)
@@ -146,6 +147,89 @@ namespace ZendeskApi.Client.Http
                 }
             }
             return response;
+        }
+
+        private static IHttpResponse MakeSynchronousRequest(IHttpRequest request, string method)
+        {
+            IHttpResponse response;
+            var webRequest = ConfigureRequest(request, method);
+
+            try
+            {
+                var webResponse = (HttpWebResponse)webRequest.GetResponse();
+                response = BuildResponse(webResponse);
+            }
+            catch (WebException we)
+            {
+                response = HandleWebException(we);
+            }
+
+            return response;
+        }
+
+        private static IHttpResponse HandleWebException(WebException exception)
+        {
+            if (exception.Status == WebExceptionStatus.Timeout)
+            {
+                return BuildTimeoutResponse(exception);
+            }
+
+            if (exception.Response == null)
+            {
+                return BuildNullWebExceptionReponse(exception);
+            }
+
+            return BuildExceptionResponse(exception); 
+        }
+
+        private static IHttpResponse BuildExceptionResponse(WebException exception)
+        {
+            using (var webResponse = exception.Response)
+            {
+                var httpResponse = (HttpWebResponse) webResponse;
+                var response = new HttpResponse(false)
+                {
+                    StatusCode = httpResponse.StatusCode,
+                    ReasonPhrase = httpResponse.StatusDescription
+                };
+                AddHeaders(response, httpResponse);
+
+                using (var data = webResponse.GetResponseStream())
+                {
+                    if (data != null)
+                    {
+                        using (var reader = new StreamReader(data))
+                        {
+                            response.Content = reader.ReadToEnd();
+                        }
+                    }
+                    else
+                    {
+                        response.Content = exception.Message;
+                    }
+                }
+                return response;
+            }
+        }
+
+        private static IHttpResponse BuildNullWebExceptionReponse(WebException exception)
+        {
+            return new HttpResponse(false)
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                ReasonPhrase = "Null WebException Response",
+                Content = exception.Message
+            };
+        }
+
+        private static IHttpResponse BuildTimeoutResponse(WebException exception)
+        {
+            return new HttpResponse(false)
+            {
+                StatusCode = HttpStatusCode.RequestTimeout,
+                ReasonPhrase = "Request timed out",
+                Content = exception.Message
+            };
         }
 
         private static void SetTimeout(IHttpRequest request, HttpClient client)
@@ -223,6 +307,22 @@ namespace ZendeskApi.Client.Http
             }
         }
 
+        private static void AddContent(WebRequest webRequest, IHttpRequest request)
+        {
+            webRequest.ContentType = request.ContentType;
+
+            if (string.IsNullOrWhiteSpace(request.Content))
+                return;
+
+            var data = Encoding.UTF8.GetBytes(request.Content);
+            webRequest.ContentLength = data.Length;
+
+            using (var stream = webRequest.GetRequestStream())
+            {
+                stream.Write(data, 0, data.Length);
+            }
+        }
+
         private static void ConfigureRequest(IHttpRequest request, HttpClient client)
         {
             SetTimeout(request, client);
@@ -239,7 +339,7 @@ namespace ZendeskApi.Client.Http
 
             webRequest.Method = method;
 
-            webRequest.ContentType = request.ContentType;
+            AddContent(webRequest, request);
 
             return webRequest;
         }
