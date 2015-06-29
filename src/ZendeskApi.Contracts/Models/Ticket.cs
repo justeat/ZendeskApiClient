@@ -93,7 +93,7 @@ namespace ZendeskApi.Contracts.Models
         public bool has_incidents { get; set; }
 
         [DataMember(Name = "tags", EmitDefaultValue = false)]
-        public List<string> tags { get; set; }
+        public List<string> Tags { get; set; }
 
         [IgnoreDataMember]
         public List<object> sharing_agreement_ids { get; set; }
