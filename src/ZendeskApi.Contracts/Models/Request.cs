@@ -82,6 +82,6 @@ namespace ZendeskApi.Contracts.Models
         public Via Via { get; set; }
 
         [DataMember(Name = "custom_fields")]
-        public List<CustomField> CustomFields { get; private set; }
+        public List<CustomField> CustomFields { get; set; }
     }
 }
