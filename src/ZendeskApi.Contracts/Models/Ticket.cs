@@ -55,7 +55,7 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(EmitDefaultValue = false)]
         public Uri Url { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name = "priority", EmitDefaultValue = false)]
         public string Priority { get; set; }
 
         [DataMember(Name = "recipient", EmitDefaultValue = false)]
@@ -77,7 +77,7 @@ namespace ZendeskApi.Contracts.Models
         public object SatisfactionRating { get; set; }
 
         // ReSharper disable InconsistentNaming
-        [IgnoreDataMember]
+        [DataMember(Name = "external_id", EmitDefaultValue = false)]
         public long? External_Id { get; set; }
 
         [IgnoreDataMember]
