@@ -9,7 +9,7 @@ namespace ZendeskApi.Contracts.Queries
 {
     public class ZendeskQuery<T> : IZendeskQuery<T> where T : IZendeskEntity
     {
-        private readonly Dictionary<string, string> _customFilters;
+        private readonly List<Filter> _customFilters;
 
         private int _pageNumber = 1;
 
@@ -21,12 +21,16 @@ namespace ZendeskApi.Contracts.Queries
 
         public ZendeskQuery()
         {
-            _customFilters = new Dictionary<string, string>();
+            _customFilters = new List<Filter>();
         }
 
-        public IZendeskQuery<T> WithCustomFilter(string field, string value)
+        public IZendeskQuery<T> WithCustomFilter(string field, string value, FilterOperator filterOperator)
         {
-            _customFilters.Add(field, value);
+            Filter nFilter = new Filter();
+            nFilter.field = field;
+            nFilter.value = value;
+            nFilter.filterOperator = filterOperator;
+            _customFilters.Add(nFilter);
             return this;
         }
 
@@ -54,7 +58,22 @@ namespace ZendeskApi.Contracts.Queries
 
             foreach (var filter in _customFilters)
             {
-                sb.Append(string.Format("{0}{1}:{2}", HttpUtility.UrlEncode(" "), filter.Key, HttpUtility.UrlEncode(filter.Value)));
+                string operatorString = String.Empty;
+                switch (filter.filterOperator)
+                {
+                    case FilterOperator.LessThan:
+                        operatorString = "<";
+                        break;
+                    case FilterOperator.GreaterThan:
+                        operatorString = ">";
+                        break;
+                    case FilterOperator.Equals:
+                        operatorString = ":";
+                        break;
+                    default:
+                        break;
+                }
+                sb.Append(string.Format("{0}{1}{2}{3}", HttpUtility.UrlEncode(" "), filter.field, operatorString, HttpUtility.UrlEncode(filter.value)));
             }
             sb.Append(string.Format("&sort_by={0}&sort_order={1}", _orderBy.ToString().ToLower(), _order.ToString().ToLower()));
 

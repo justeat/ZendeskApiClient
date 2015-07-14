@@ -34,7 +34,7 @@ namespace ZendeskApi.Acceptance
         {
             var requesterId =
                 _supportUserClient.Search.Find<User>(new ZendeskQuery<User>().WithCustomFilter("email",
-                    ConfigurationManager.AppSettings["zendeskenduserusername"])).Results.First().Id;
+                    ConfigurationManager.AppSettings["zendeskenduserusername"], FilterOperator.Equals)).Results.First().Id;
 
             _ticket =
                 _supportUserClient.Tickets.Post(new TicketRequest

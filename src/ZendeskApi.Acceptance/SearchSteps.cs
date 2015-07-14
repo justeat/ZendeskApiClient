@@ -58,7 +58,7 @@ namespace ZendeskApi.Acceptance
         [When(@"I search for a user by their email address")]
         public void WhenISearchForAUserByTheirEmailAddress()
         {
-            var response = _client.Search.Find(new ZendeskQuery<User>().WithCustomFilter("email", _usersEmail));
+            var response = _client.Search.Find(new ZendeskQuery<User>().WithCustomFilter("email", _usersEmail, FilterOperator.Equals));
 
             _user = response.Results.Single();
         }
@@ -72,14 +72,14 @@ namespace ZendeskApi.Acceptance
         [When(@"I search for organizations with the custom field '(.*)' and value '(.*)'")]
         public void WhenISearchForOrganizationsWithTheCustomFieldAndValue(string field, string value)
         {
-            var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithCustomFilter(field, value));
+            var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithCustomFilter(field, value, FilterOperator.Equals));
             _organization = searchResults.Results.First();
         }
 
         [When(@"I search for the second organization by name")]
         public void WhenISearchForOrganizationsByTheName()
         {
-            var searchResults = WaitForOrganizationToBeAvailiable(new ZendeskQuery<Organization>().WithCustomFilter("name", _createdOrganization.Name));
+            var searchResults = WaitForOrganizationToBeAvailiable(new ZendeskQuery<Organization>().WithCustomFilter("name", _createdOrganization.Name, FilterOperator.Equals));
             
             _organization = searchResults.Results.First();
         }
