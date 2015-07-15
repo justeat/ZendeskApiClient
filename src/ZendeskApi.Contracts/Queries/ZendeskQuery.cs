@@ -27,9 +27,9 @@ namespace ZendeskApi.Contracts.Queries
         public IZendeskQuery<T> WithCustomFilter(string field, string value, FilterOperator filterOperator)
         {
             Filter nFilter = new Filter();
-            nFilter.field = field;
-            nFilter.value = value;
-            nFilter.filterOperator = filterOperator;
+            nFilter.Field = field;
+            nFilter.Value = value;
+            nFilter.FilterOperator = filterOperator;
             _customFilters.Add(nFilter);
             return this;
         }
@@ -59,7 +59,7 @@ namespace ZendeskApi.Contracts.Queries
             foreach (var filter in _customFilters)
             {
                 string operatorString = String.Empty;
-                switch (filter.filterOperator)
+                switch (filter.FilterOperator)
                 {
                     case FilterOperator.LessThan:
                         operatorString = "<";
@@ -73,7 +73,7 @@ namespace ZendeskApi.Contracts.Queries
                     default:
                         break;
                 }
-                sb.Append(string.Format("{0}{1}{2}{3}", HttpUtility.UrlEncode(" "), filter.field, operatorString, HttpUtility.UrlEncode(filter.value)));
+                sb.Append(string.Format("{0}{1}{2}{3}", HttpUtility.UrlEncode(" "), filter.Field, operatorString, HttpUtility.UrlEncode(filter.Value)));
             }
             sb.Append(string.Format("&sort_by={0}&sort_order={1}", _orderBy.ToString().ToLower(), _order.ToString().ToLower()));
 

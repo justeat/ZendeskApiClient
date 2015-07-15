@@ -2,8 +2,8 @@
 {
     public struct Filter
     {
-        public string field;
-        public string value;
-        public FilterOperator filterOperator;
+        public string Field;
+        public string Value;
+        public FilterOperator FilterOperator;
     }
 }
