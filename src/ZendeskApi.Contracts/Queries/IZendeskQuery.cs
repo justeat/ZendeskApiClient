@@ -6,7 +6,7 @@ namespace ZendeskApi.Contracts.Queries
     {
         string BuildQuery();
 
-        IZendeskQuery<T> WithCustomFilter(string field, string value);
+        IZendeskQuery<T> WithCustomFilter(string field, string value, FilterOperator filterOperator);
 
         IZendeskQuery<T> WithPaging(int pageNumber, int pageSize);
 
