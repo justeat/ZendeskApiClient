@@ -126,6 +126,12 @@ namespace ZendeskApi.Acceptance
             Assert.That(postedComment.Attachments.Count() == 1);
         }
 
+        [Then(@"I am returned a comment that is made via the api")]
+        public void ThenIAmReturnedACommentThatIsMadeViaTheApi()
+        {
+            Assert.That(_savedTicketComments.Any(c => c.Via.Channel == "api"));
+        }
+
         [AfterScenario]
         public void AfterFeature()
         {
