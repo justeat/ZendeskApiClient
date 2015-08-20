@@ -26,7 +26,7 @@ Scenario: When I add to a request a comment it is created
 	Then I am returned a comment with the body 'The biscuits have all gone too!'
 	Then I am returned a comment with the body 'Do you have an ETA fix date?'
 
-Scenario: When I get a ticket comment by ID, I get told it was created via the api
+Scenario: When I get a ticket comment, I get told it was created via the api
 	Given a ticket in Zendesk with the subject 'The coffee machine is broken' and description 'I can't work in these conditions!'
 	When I call get all comments for that ticket
 	Then I am returned a comment that is made via the api

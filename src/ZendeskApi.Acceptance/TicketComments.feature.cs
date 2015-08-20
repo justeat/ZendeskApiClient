@@ -137,10 +137,10 @@ this.ScenarioSetup(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("When I get a ticket comment by ID, I get told it was created via the api")]
-        public virtual void WhenIGetATicketCommentByIDIGetToldItWasCreatedViaTheApi()
+        [NUnit.Framework.DescriptionAttribute("When I get a ticket comment, I get told it was created via the api")]
+        public virtual void WhenIGetATicketCommentIGetToldItWasCreatedViaTheApi()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I get a ticket comment by ID, I get told it was created via the api", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When I get a ticket comment, I get told it was created via the api", ((string[])(null)));
 #line 29
 this.ScenarioSetup(scenarioInfo);
 #line 30
