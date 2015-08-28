@@ -21,6 +21,64 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public void GetAllByOrganization_Called_CallsBuildUriWithFieldIdAndType()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            organizationMembershipResource.GetAllByOrganization(4321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/organizations/")), ""));
+        }
+
+        [Test]
+        public void GetAllByOrganization_Called_ReturnsOrganizationMembershipResponse()
+        {
+            // Given
+            var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
+            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(response);
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            var result = organizationMembershipResource.GetAllByOrganization(4321);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void GetAllByUser_Called_CallsBuildUriWithFieldIdAndType()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            organizationMembershipResource.GetAllByUser(4321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/users/")), ""));
+        }
+
+        [Test]
+        public void GetAllByUser_Called_ReturnsOrganizationMembershipResponse()
+        {
+            // Given
+            var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
+            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(response);
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            var result = organizationMembershipResource.GetAllByUser(4321);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
         public void GetAll_Called_CallsBuildUriWithFieldId()
         {
             // Given
