@@ -82,6 +82,7 @@
     <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketEventType.cs" />
     <Compile Include="Models\SatisfactionRatingScore.cs" />
+    <Compile Include="Models\TicketRequester.cs" />
     <Compile Include="Models\Upload.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Via.cs" />
