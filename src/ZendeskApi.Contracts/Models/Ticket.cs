@@ -106,6 +106,9 @@ namespace ZendeskApi.Contracts.Models
 
         [IgnoreDataMember]
         public List<long> followup_ids { get; set; }
+
+        [DataMember(Name = "requester")]
+        public TicketRequester Requester { get; set; }
 // ReSharper restore InconsistentNaming
     }
 }
