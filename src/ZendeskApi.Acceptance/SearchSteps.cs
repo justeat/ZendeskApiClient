@@ -35,6 +35,20 @@ namespace ZendeskApi.Acceptance
                 new ZendeskDefaultConfiguration(ConfigurationManager.AppSettings["zendeskusername"], ConfigurationManager.AppSettings["zendesktoken"]));
         }
 
+        [Given(@"an organization in Zendesk named '(.*)'")]
+        public void GivenAnOrganizationInZendeskWithTheNameAndTheCustomFieldAndValue(string name)
+        {
+            _createdOrganization = new Organization
+            {
+                Name = name + Guid.NewGuid(),
+                Details = name,
+                Notes = "new customer",
+                Created = DateTime.UtcNow
+            };
+
+            _createdOrganization = _client.Organizations.Post(new OrganizationRequest { Item = _createdOrganization }).Item;
+        }
+
         [Given(@"an organization in Zendesk with the name '(.*)' and the custom field '(.*)' and value '(.*)'")]
         public void GivenAnOrganizationInZendeskWithTheNameAndTheCustomFieldAndValue(string name, string customField, string value)
         {
@@ -58,7 +72,7 @@ namespace ZendeskApi.Acceptance
         [When(@"I search for a user by their email address")]
         public void WhenISearchForAUserByTheirEmailAddress()
         {
-            var response = _client.Search.Find(new ZendeskQuery<User>().WithCustomFilter("email", _usersEmail));
+            var response = _client.Search.Find(new ZendeskQuery<User>().WithCustomFilter("email", _usersEmail, FilterOperator.Equals));
 
             _user = response.Results.Single();
         }
@@ -72,14 +86,14 @@ namespace ZendeskApi.Acceptance
         [When(@"I search for organizations with the custom field '(.*)' and value '(.*)'")]
         public void WhenISearchForOrganizationsWithTheCustomFieldAndValue(string field, string value)
         {
-            var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithCustomFilter(field, value));
+            var searchResults = _client.Search.Find(new ZendeskQuery<Organization>().WithCustomFilter(field, value, FilterOperator.Equals));
             _organization = searchResults.Results.First();
         }
 
         [When(@"I search for the second organization by name")]
         public void WhenISearchForOrganizationsByTheName()
         {
-            var searchResults = WaitForOrganizationToBeAvailiable(new ZendeskQuery<Organization>().WithCustomFilter("name", _createdOrganization.Name));
+            var searchResults = WaitForOrganizationToBeAvailiable(new ZendeskQuery<Organization>().WithCustomFilter("name", _createdOrganization.Name, FilterOperator.Equals));
             
             _organization = searchResults.Results.First();
         }
@@ -91,7 +105,16 @@ namespace ZendeskApi.Acceptance
                 WaitForOrganizationToBeAvailiable(new ZendeskQuery<Organization>().WithPaging(pageNumber, page));
             _searchResultsOne = searchResults.Results.ToList();
         }
- 
+
+        [When(@"I search for organisations created today")]
+        public void WhenISearchForOrganisationsCreatedToday()
+        {
+            var response = WaitForOrganizationToBeAvailiable(new ZendeskQuery<Organization>().WithCustomFilter("created", 
+                DateTime.UtcNow.AddDays(-1).Date.ToString("yyyy-MM-dd"), FilterOperator.GreaterThan));
+
+            _searchResultsOne = response.Results.ToList();
+        }
+
         [When(@"I search again for organizations with the page size '(.*)' and page number '(.*)'")]
         public void WhenISearchAgainForOrganizationsWithThePageSizeAndNumber(int page, int pageNumber)
         {
@@ -112,6 +135,14 @@ namespace ZendeskApi.Acceptance
         {
             Assert.That(_organization.Name, Is.StringStarting(name));
         }
+
+        [Then(@"I am returned only organisations with a created date of today")]
+        public void ThenIAmReturnedThatUser()
+        {
+            Assert.That(_searchResultsOne.Count(u => u.Created > DateTime.UtcNow.Date), Is.GreaterThan(0));
+            Assert.That(_searchResultsOne.Count(u => u.Created < DateTime.UtcNow.Date), Is.EqualTo(0));
+        }
+
 
         [AfterScenario]
         public void AfterFeature()

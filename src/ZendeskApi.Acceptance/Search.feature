@@ -25,3 +25,8 @@ Scenario: I can find a user by email address
 	Given the email address of a user for whom I wish to search
 	When I search for a user by their email address
 	Then I am returned the correct user
+
+Scenario: I can search using a greater than opperator
+	Given an organization in Zendesk named 'Coffee Break'
+	When I search for organisations created today
+	Then I am returned only organisations with a created date of today
