@@ -12,10 +12,14 @@ namespace ZendeskApi.Contracts.Models
         public Source Source { get; set; }
     }
 
+    [DataContract]
     public class Source
     {
         [DataMember(Name = "to")]
-        public object To { get; set; }
+        public dynamic To { get; set; }
+
+        [DataMember(Name = "from")]
+        public dynamic From { get; set; }
 
         [DataMember(Name = "rel")]
         public string Rel { get; set; }
