@@ -39,15 +39,9 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "uploads")]
         public List<string> Uploads { get; set; }
 
+
         [DataMember(Name = "via")]
         public Via Via { get; set; }
-
-        // ReSharper disable InconsistentNaming
-        [IgnoreDataMember]
-        public object metadata { get; set; }
-
-        // ReSharper restore InconsistentNaming
-
         public void AddAttachmentToComment(string attachmentToken)
         {
             Uploads = Uploads ?? new List<string>();
