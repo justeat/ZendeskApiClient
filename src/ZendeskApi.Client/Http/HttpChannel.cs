@@ -354,7 +354,8 @@ namespace ZendeskApi.Client.Http
         private static IHttpResponse BuildResponse(HttpWebResponse webResponse)
         {
             var response = new HttpResponse(webResponse.StatusCode == HttpStatusCode.OK 
-                || webResponse.StatusCode == HttpStatusCode.Created);
+                || webResponse.StatusCode == HttpStatusCode.Created
+                || webResponse.StatusCode == HttpStatusCode.NoContent);
 
             SetResponseContent(webResponse, response);
 
