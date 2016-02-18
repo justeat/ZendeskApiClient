@@ -22,57 +22,93 @@ namespace ZendeskApi.Acceptance
         [BeforeScenario]
         public void BeforeScenario()
         {
-            _customerClient = new ZendeskClient(new Uri(ConfigurationManager.AppSettings["zendeskhost"]),
-                new ZendeskDefaultConfiguration(ConfigurationManager.AppSettings["zendeskenduserusername"], ConfigurationManager.AppSettings["zendesktoken"]));
+            _customerClient = new ZendeskClient(Host, new ZendeskDefaultConfiguration(Enduser, Token));
 
-            _supportUserClient = new ZendeskClient(new Uri(ConfigurationManager.AppSettings["zendeskhost"]),
-                 new ZendeskDefaultConfiguration(ConfigurationManager.AppSettings["zendeskusername"], ConfigurationManager.AppSettings["zendesktoken"]));
+            _supportUserClient = new ZendeskClient(Host, new ZendeskDefaultConfiguration(Username, Token));
         }
 
         [Given(@"a ticket in Zendesk with the subject '(.*)' and description '(.*)'")]
         public void GivenATicketInZendeskWithTheSubjectAndDescription(string subject, string description)
         {
-            var requesterId =
-                _supportUserClient.Search.Find<User>(new ZendeskQuery<User>().WithCustomFilter("email",
-                    ConfigurationManager.AppSettings["zendeskenduserusername"], FilterOperator.Equals)).Results.First().Id;
+            var query = new ZendeskQuery<User>().WithCustomFilter("email",
+                ConfigurationManager.AppSettings["zendeskenduserusername"], FilterOperator.Equals);
+            var requesterId = _supportUserClient.Search.Find(query).Results.First().Id;
 
-            _ticket =
-                _supportUserClient.Tickets.Post(new TicketRequest
-                {
-                    Item = new Ticket { Subject = subject, Comment = new TicketComment { Body = description }, RequesterId = requesterId, Status = TicketStatus.Solved }
-                }).Item;
+            var ticket = new Ticket
+            {
+                Subject = subject,
+                Comment = new TicketComment {Body = description},
+                RequesterId = requesterId,
+                Status = TicketStatus.Solved,
+                Type = TicketType.question
+            };
+            var ticketRequest = new TicketRequest {Item = ticket};
+            _ticket = _supportUserClient.Tickets.Post(ticketRequest).Item;
 
             _ticket.Status = TicketStatus.Solved;
 
-            _ticket = _supportUserClient.Tickets.Put(new TicketRequest
-                {
-                    Item = _ticket
-                }
-            ).Item;
+            var ticketSolved = new TicketRequest {Item = _ticket};
+            _ticket = _supportUserClient.Tickets.Put(ticketSolved).Item;
         }
 
 
         [Given(@"a satisfaction rating with the score '(.*)'")]
         public void GivenARequestInZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(SatisfactionRatingScore score)
         {
-            _satisfactionRating =
-                _customerClient.SatisfactionRating.Post(new SatisfactionRatingRequest
-                {
-                    Item = new SatisfactionRating {Score = score }
-                }, _ticket.Id.Value).Item;
+            if (_ticket == null || !_ticket.Id.HasValue)
+            {
+                throw new NullReferenceException("Ticket (or ticket ID) cannot be null");
+            }
+            var rating = new SatisfactionRating {Score = score};
+            var request = new SatisfactionRatingRequest {Item = rating};
+            _satisfactionRating = _customerClient.SatisfactionRating.Post(request, _ticket.Id.Value).Item;
         }
 
 
         [When(@"I call get satisfaction rating by id on the ZendeskApiClient")]
         public void WhenIGetSatisfactionRating()
         {
-            _savedSatisfactionRating = _supportUserClient.SatisfactionRating.Get((long)_satisfactionRating.Id).Item;
+            if (_satisfactionRating == null || !_satisfactionRating.Id.HasValue)
+            {
+                throw new NullReferenceException("Satisfaction rating (or its ID) cannot be null");
+            }
+            _savedSatisfactionRating = _supportUserClient.SatisfactionRating.Get(_satisfactionRating.Id.Value).Item;
         }
 
         [Then(@"I get a satisfaction rating with a score of (.*)")]
         public void ThenIGetASatisfactionRatingWithAScoreOf(SatisfactionRatingScore score)
         {
             Assert.That(_savedSatisfactionRating.Score, Is.EqualTo(score));
+        }
+
+        private Uri Host
+        {
+            get { return new Uri(GetSetting("zendeskhost")); }
+        }
+
+        private string Enduser
+        {
+            get { return GetSetting("zendeskenduserusername"); }
+        }
+
+        private string Token
+        {
+            get { return GetSetting("zendesktoken"); }
+        }
+
+        private string Username
+        {
+            get { return GetSetting("zendeskusername"); }
+        }
+
+        private string GetSetting(string key)
+        {
+            var setting = ConfigurationManager.AppSettings[key];
+            if (string.IsNullOrEmpty(setting))
+            {
+                Assert.Fail("Setting '{0}' must be set", key);
+            }
+            return setting;
         }
     }
 }
