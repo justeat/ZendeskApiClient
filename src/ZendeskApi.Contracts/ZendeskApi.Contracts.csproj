@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\CustomField.cs" />
+    <Compile Include="Models\CustomFieldOption.cs" />
     <Compile Include="Models\Filter.cs" />
     <Compile Include="Models\FilterOperator.cs" />
     <Compile Include="Models\IHttpPostedFile.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
@@ -71,5 +72,7 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "removable", EmitDefaultValue = false)]
         public bool? Removable { get; set; }
 
+        [DataMember(Name = "custom_field_options", EmitDefaultValue = false)]
+        public List<CustomFieldOption> CustomFieldOptions { get; set; }
     }
 }
