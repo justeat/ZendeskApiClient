@@ -1,9 +1,8 @@
 ﻿using System;
 using ZendeskApi.Client.Http;
+using ZendeskApi.Client.Logging;
 using ZendeskApi.Client.Resources;
-using ILogAdapter = ZendeskApi.Client.Logging.ILogAdapter;
-using ISerializer = ZendeskApi.Client.Serialization.ISerializer;
-
+using ZendeskApi.Client.Serialization;
 
 namespace ZendeskApi.Client
 {
@@ -22,9 +21,13 @@ namespace ZendeskApi.Client
         public IOrganizationMembershipResource OrganizationMemberships { get; private set; }
         public IRequestResource Request { get; private set; }
         public ISatisfactionRatingResource SatisfactionRating { get; private set; }
+        public IUploadResource Uploads { get; private set; }
+        public ITicketFieldResource TicketFields { get; private set; }
+        public ITicketFormResource TicketForms { get; private set; }
+        public IJobStatusResource JobStatuses { get; private set; }
 
         public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, ISerializer serializer = null, IHttpChannel httpChannel = null, ILogAdapter logger = null)
-            :base(baseUri, configuration, serializer, httpChannel, logger)
+            : base(baseUri, configuration, serializer, httpChannel, logger)
         {
             Tickets = new TicketResource(this);
             TicketComments = new TicketCommentResource(this);
@@ -39,6 +42,19 @@ namespace ZendeskApi.Client
             OrganizationMemberships = new OrganizationMembershipResource(this);
             Request = new RequestResource(this);
             SatisfactionRating = new SatisfactionRatingResource(this);
+            Uploads = new UploadResource(this);
+            TicketFields = new TicketFieldResource(this);
+            TicketForms = new TicketFormResource(this);
+            JobStatuses = new JobStatusResource(this);
+        }
+
+        public Uri BuildZendeskUri(string handler, string query = "")
+        {
+            return new UriBuilder(BaseUri)
+            {
+                Path = handler + ".json",
+                Query = query
+            }.Uri;
         }
     }
 }

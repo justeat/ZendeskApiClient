@@ -48,7 +48,7 @@ namespace ZendeskApi.Client.Http
             return MakeSynchronousRequest(request, "POST");
         }
 
-        public IHttpResponse Post(IHttpRequest request, IHttpPostedFile fileBase)
+        public IHttpResponse Post(IHttpRequest request, HttpPostedFileBase fileBase)
         {
             var webRequest = (HttpWebRequest)ConfigureRequest(request, "POST");
 
@@ -247,7 +247,7 @@ namespace ZendeskApi.Client.Http
             }
         }
 
-        private void ReadFileStreamToWebRequest(WebRequest webRequest, IHttpPostedFile fileBase)
+        private void ReadFileStreamToWebRequest(WebRequest webRequest, HttpPostedFileBase fileBase)
         {
             using (var requestStream = webRequest.GetRequestStream())
             {

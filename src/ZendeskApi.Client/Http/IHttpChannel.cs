@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Web;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Client.Http
@@ -11,7 +12,7 @@ namespace ZendeskApi.Client.Http
 
         IHttpResponse Post(IHttpRequest request);
 
-        IHttpResponse Post(IHttpRequest request, IHttpPostedFile fileBase);
+        IHttpResponse Post(IHttpRequest request, HttpPostedFileBase fileBase);
 
         Task<IHttpResponse> PostAsync(IHttpRequest request);
 

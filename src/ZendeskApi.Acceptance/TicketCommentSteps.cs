@@ -71,6 +71,7 @@ namespace ZendeskApi.Acceptance
         public void GivenIHaveAFileToUpload()
         {
             var directoryInfo = Directory.GetParent(Directory.GetCurrentDirectory()).Parent;
+            if (directoryInfo == null) throw new FileNotFoundException("Current directory has no parent");
 
             var filePath = Path.Combine(directoryInfo.FullName, "Picture.jpg");
 
@@ -100,6 +101,7 @@ namespace ZendeskApi.Acceptance
         [When(@"I call get all comments for that ticket")]
         public void WhenICallGetAllCommentsForThatTicket()
         {
+            if (_savedTicket == null || !_savedTicket.Id.HasValue) throw new NullReferenceException("No saved ticket");
             var allComments = _client.TicketComments.GetAll(_savedTicket.Id.Value);
             _savedTicketComments.AddRange(allComments.Results);
         }
@@ -107,6 +109,7 @@ namespace ZendeskApi.Acceptance
         [When(@"I call get all comments for that request")]
         public void WhenICallGetAllCommentsForThatRequest()
         {
+            if (_savedRequest == null || !_savedRequest.Id.HasValue) throw new NullReferenceException("No saved request");
             var allComments = _client.RequestComments.GetAll(_savedRequest.Id.Value);
             _savedTicketComments.AddRange(allComments.Results);
         }
@@ -122,8 +125,7 @@ namespace ZendeskApi.Acceptance
         {
             var postedComment = _savedTicketComments.First(c => c.Body.Contains(comment));
 
-
-            Assert.That(postedComment.Attachments.Count() == 1);
+            Assert.That(postedComment.Attachments.Count == 1);
         }
 
         [Then(@"I am returned a comment that is made via the api")]
@@ -138,13 +140,21 @@ namespace ZendeskApi.Acceptance
             try
             {
                 if (_savedTicketComments != null && _savedTicketComments.Any())
-                    _savedTicketComments.ForEach(comment => _client.Tickets.Delete((long)comment.Id));
+                {
+                    foreach (var comment in _savedTicketComments)
+                    {
+                        if (comment.Id.HasValue)
+                        {
+                            _client.Tickets.Delete(comment.Id.Value);
+                        }
+                    }
+                }
 
-                if (_savedRequest != null)
-                    _client.Tickets.Delete((long)_savedRequest.Id);
+                if (_savedRequest != null && _savedRequest.Id.HasValue)
+                    _client.Tickets.Delete(_savedRequest.Id.Value);
 
-                if (_savedTicket != null)
-                    _client.Tickets.Delete((long)_savedTicket.Id);
+                if (_savedTicket != null && _savedTicket.Id.HasValue)
+                    _client.Tickets.Delete(_savedTicket.Id.Value);
 
             }
             catch (HttpException)

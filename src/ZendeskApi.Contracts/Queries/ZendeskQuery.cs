@@ -24,12 +24,14 @@ namespace ZendeskApi.Contracts.Queries
             _customFilters = new List<Filter>();
         }
 
-        public IZendeskQuery<T> WithCustomFilter(string field, string value, FilterOperator filterOperator)
+        public IZendeskQuery<T> WithCustomFilter(string field, string value, FilterOperator filterOperator = FilterOperator.Equals)
         {
-            Filter nFilter = new Filter();
-            nFilter.Field = field;
-            nFilter.Value = value;
-            nFilter.FilterOperator = filterOperator;
+            Filter nFilter = new Filter
+            {
+                Field = field,
+                Value = value,
+                FilterOperator = filterOperator
+            };
             _customFilters.Add(nFilter);
             return this;
         }

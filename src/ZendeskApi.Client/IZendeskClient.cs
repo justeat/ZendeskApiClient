@@ -1,8 +1,9 @@
-﻿using ZendeskApi.Client.Resources;
+﻿using ZendeskApi.Client.Http;
+using ZendeskApi.Client.Resources;
 
 namespace ZendeskApi.Client
 {
-    public interface IZendeskClient
+    public interface IZendeskClient : IRestClient
     {
         ITicketResource Tickets { get; }
         ITicketCommentResource TicketComments { get; }
@@ -17,5 +18,9 @@ namespace ZendeskApi.Client
         IOrganizationMembershipResource OrganizationMemberships { get; }
         IRequestResource Request { get; }
         ISatisfactionRatingResource SatisfactionRating { get; }
+        IUploadResource Uploads { get; }
+        ITicketFieldResource TicketFields { get; }
+        ITicketFormResource TicketForms { get; }
+        IJobStatusResource JobStatuses { get; }
     }
 }

@@ -151,10 +151,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<IHttpPostedFile>()))
+            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<HttpPostedFileBase>()))
                 .Returns(_successResponse);
 
-            var file = new Mock<IHttpPostedFile>();
+            var file = new Mock<HttpPostedFileBase>();
 
             var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
@@ -203,10 +203,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<IHttpPostedFile>()))
+            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<HttpPostedFileBase>()))
                 .Returns(_failureResponse);
 
-            var file = new Mock<IHttpPostedFile>();
+            var file = new Mock<HttpPostedFileBase>();
 
             var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 

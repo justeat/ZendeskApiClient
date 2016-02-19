@@ -2,21 +2,15 @@
 using System.Threading.Tasks;
 using System.Web;
 using ZendeskApi.Client.Http;
-using ZendeskApi.Contracts.Models;
-using HttpChannel = ZendeskApi.Client.Http.HttpChannel;
+using ZendeskApi.Client.Logging;
+using ZendeskApi.Client.Serialization;
 using HttpRequest = ZendeskApi.Client.Http.HttpRequest;
-using IHttpRequest = ZendeskApi.Client.Http.IHttpRequest;
-using IHttpResponse = ZendeskApi.Client.Http.IHttpResponse;
-using ILogAdapter = ZendeskApi.Client.Logging.ILogAdapter;
-using IRestClient = ZendeskApi.Client.Http.IRestClient;
-using ISerializer = ZendeskApi.Client.Serialization.ISerializer;
-
 
 namespace ZendeskApi.Client
 {
     public abstract class ClientBase : IRestClient
     {
-        private readonly Uri _baseUri;
+        protected readonly Uri BaseUri;
 
         private readonly ZendeskDefaultConfiguration _configuration;
 
@@ -28,19 +22,19 @@ namespace ZendeskApi.Client
         {
             if (baseUri == null)
                 throw new ArgumentNullException("baseUri");
-            var logger = loggerAdapter ?? new Logging.SystemDiagnosticsAdapter();
-            _baseUri = baseUri;
+            var logger = loggerAdapter ?? new SystemDiagnosticsAdapter();
+            BaseUri = baseUri;
             _configuration = configuration;
             _http = httpChannel ?? new HttpChannel();
-            _serializer = serializer ?? new Serialization.ZendeskJsonSerializer();
+            _serializer = serializer ?? new ZendeskJsonSerializer();
             logger.Debug(string.Format("Created Zendesk client. BaseUri: {0}, Serializer: {1}, HttpChannel: {2}, Logger: {3}",
-                _baseUri, _serializer.GetType().Name, _http.GetType().Name, logger.GetType().Name));
+                BaseUri, _serializer.GetType().Name, _http.GetType().Name, logger.GetType().Name));
     
         }
 
         public Uri BuildUri(string handler, string query = "")
         {
-            return new UriBuilder(_baseUri)
+            return new UriBuilder(BaseUri)
             {
                 Path = handler,
                 Query = query
@@ -69,7 +63,7 @@ namespace ZendeskApi.Client
             return DeserializeContent<T>(response);
         }
 
-        public T PostFile<T>(Uri requestUri, IHttpPostedFile file)
+        public T PostFile<T>(Uri requestUri, HttpPostedFileBase file)
         {
             var response = _http.Post(BuildRequest(requestUri, file.ContentType), file);
 

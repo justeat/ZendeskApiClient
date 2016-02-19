@@ -52,9 +52,23 @@ namespace ZendeskApi.Client.Resources
             return Client.Get<TResponse>(requestUri);
         }
 
+        protected TResponse GetAll<TResponse>(List<string> ids) where TResponse : IListResponse<T>
+        {
+            var requestUri = Client.BuildUri(string.Format("{0}/{1}", ResourceUri, ShowMany), string.Format("ids={0}", ZendeskFormatter.ToCsv(ids)));
+
+            return Client.Get<TResponse>(requestUri);
+        }
+
         protected TResponse GetAll<TResponse>(long parentId) where TResponse : IListResponse<T>
         {
-            var requestUri = Client.BuildUri(string.Format(ResourceUri,parentId));
+            var requestUri = Client.BuildUri(string.Format(ResourceUri, parentId));
+
+            return Client.Get<TResponse>(requestUri);
+        }
+
+        protected TResponse GetAll<TResponse>() where TResponse : IListResponse<T>
+        {
+            var requestUri = Client.BuildUri(ResourceUri);
 
             return Client.Get<TResponse>(requestUri);
         }

@@ -34,7 +34,7 @@ namespace ZendeskApi.Contracts.Models
         public DateTime? Created { get; set; }
 
         [DataMember(Name = "attachments")]
-        public List<Attachment> Attachments { get; private set; }
+        public List<Attachment> Attachments { get; set; }
 
         [DataMember(Name = "uploads")]
         public List<string> Uploads { get; set; }
