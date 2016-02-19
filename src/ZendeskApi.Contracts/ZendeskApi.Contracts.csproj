@@ -82,6 +82,8 @@
     <Compile Include="Models\TicketComment.cs" />
     <Compile Include="Models\TicketEventType.cs" />
     <Compile Include="Models\SatisfactionRatingScore.cs" />
+    <Compile Include="Models\TicketField.cs" />
+    <Compile Include="Models\TicketForm.cs" />
     <Compile Include="Models\TicketRequester.cs" />
     <Compile Include="Models\Upload.cs" />
     <Compile Include="Models\User.cs" />
@@ -112,6 +114,10 @@
     <Compile Include="Responses\TicketCommentListResponse.cs" />
     <Compile Include="Responses\OrganizationMembershipListResponse.cs" />
     <Compile Include="Responses\RequestResponse.cs" />
+    <Compile Include="Responses\TicketFieldListResponse.cs" />
+    <Compile Include="Responses\TicketFieldResponse.cs" />
+    <Compile Include="Responses\TicketFormListResponse.cs" />
+    <Compile Include="Responses\TicketFormResponse.cs" />
     <Compile Include="Responses\TicketListResponse.cs" />
     <Compile Include="Responses\TicketCommentResponse.cs" />
     <Compile Include="Responses\SatisfactionRatingResponse.cs" />

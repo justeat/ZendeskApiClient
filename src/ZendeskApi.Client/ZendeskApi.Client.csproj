@@ -114,6 +114,8 @@
     <Compile Include="Resources\ISatisfactionRatingResource.cs" />
     <Compile Include="Resources\ISearchResource.cs" />
     <Compile Include="Resources\ITicketCommentResource.cs" />
+    <Compile Include="Resources\ITicketFieldResource.cs" />
+    <Compile Include="Resources\ITicketFormResource.cs" />
     <Compile Include="Resources\ITicketResource.cs" />
     <Compile Include="Resources\IUploadResource.cs" />
     <Compile Include="Resources\IUserIdentityResource.cs" />
@@ -126,6 +128,8 @@
     <Compile Include="Resources\OrganizationMembershipResource.cs" />
     <Compile Include="Resources\RequestResource.cs" />
     <Compile Include="Resources\SatisfactionRatingResource.cs" />
+    <Compile Include="Resources\TicketFieldResource.cs" />
+    <Compile Include="Resources\TicketFormResource.cs" />
     <Compile Include="Resources\UploadResource.cs" />
     <Compile Include="Resources\UserIdentityResource.cs" />
     <Compile Include="Resources\UserResource.cs" />

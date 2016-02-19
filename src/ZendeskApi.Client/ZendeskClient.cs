@@ -19,6 +19,8 @@ namespace ZendeskApi.Client
         public IUserResource Users { get; private set; }
         public IUserIdentityResource UserIdentities { get; private set; }
         public IUploadResource Upload { get; private set; }
+        public ITicketFieldResource TicketFields { get; private set; }
+        public ITicketFormResource TicketForms { get; private set; }
         public IOrganizationMembershipResource OrganizationMemberships { get; private set; }
         public IRequestResource Request { get; private set; }
         public ISatisfactionRatingResource SatisfactionRating { get; private set; }
@@ -36,6 +38,8 @@ namespace ZendeskApi.Client
             Users = new UserResource(this);
             UserIdentities = new UserIdentityResource(this);
             Upload = new UploadResource(this);
+            TicketFields = new TicketFieldResource(this);
+            TicketForms = new TicketFormResource(this);
             OrganizationMemberships = new OrganizationMembershipResource(this);
             Request = new RequestResource(this);
             SatisfactionRating = new SatisfactionRatingResource(this);
