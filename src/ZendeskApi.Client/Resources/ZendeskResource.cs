@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Web;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Http;
@@ -55,6 +54,13 @@ namespace ZendeskApi.Client.Resources
         protected TResponse GetAll<TResponse>(long parentId) where TResponse : IListResponse<T>
         {
             var requestUri = Client.BuildUri(string.Format(ResourceUri,parentId));
+
+            return Client.Get<TResponse>(requestUri);
+        }
+
+        protected TResponse GetAll<TResponse>() where TResponse : IListResponse<T>
+        {
+            var requestUri = Client.BuildUri(string.Format(ResourceUri));
 
             return Client.Get<TResponse>(requestUri);
         }

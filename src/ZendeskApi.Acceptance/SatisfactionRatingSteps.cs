@@ -36,11 +36,17 @@ namespace ZendeskApi.Acceptance
                 _supportUserClient.Search.Find<User>(new ZendeskQuery<User>().WithCustomFilter("email",
                     ConfigurationManager.AppSettings["zendeskenduserusername"], FilterOperator.Equals)).Results.First().Id;
 
-            _ticket =
-                _supportUserClient.Tickets.Post(new TicketRequest
-                {
-                    Item = new Ticket { Subject = subject, Comment = new TicketComment { Body = description }, RequesterId = requesterId, Status = TicketStatus.Solved }
-                }).Item;
+            var ticket = new Ticket
+            {
+                Subject = subject,
+                Comment = new TicketComment {Body = description},
+                RequesterId = requesterId,
+                Type = TicketType.question,
+                Status = TicketStatus.Solved
+            };
+            var ticketRequest = new TicketRequest {Item = ticket};
+
+            _ticket = _supportUserClient.Tickets.Post(ticketRequest).Item;
 
             _ticket.Status = TicketStatus.Solved;
 
