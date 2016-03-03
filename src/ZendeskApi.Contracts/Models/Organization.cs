@@ -32,6 +32,9 @@ namespace ZendeskApi.Contracts.Models
 
         [DataMember(Name = "organization_fields", EmitDefaultValue = true)]
         public Dictionary<object, object> CustomFields { get; set; }
+        
+        [DataMember(Name = "external_id", EmitDefaultValue = false)]
+        public string external_id { get; set; }
 
 // ReSharper disable InconsistentNaming       
         [IgnoreDataMember]
@@ -48,9 +51,6 @@ namespace ZendeskApi.Contracts.Models
 
         [IgnoreDataMember]
         public long group_id { get; set; }
-
-        [DataMember(Name = "external_id", EmitDefaultValue = false)]
-        public string external_id { get; set; }
 
         [IgnoreDataMember]
         public object domain_names { get; set; }
