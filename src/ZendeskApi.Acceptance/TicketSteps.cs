@@ -19,7 +19,7 @@ namespace ZendeskApi.Acceptance
         private readonly List<Ticket> _savedMultipleTicket = new List<Ticket>();
         private readonly List<Ticket> _multipleTicketResponse = new List<Ticket>();
 
-        private int _customFieldId;
+        private long _customFieldId;
 
         private Ticket _savedSingleTicket;
         private Ticket _singleTicketResponse;
