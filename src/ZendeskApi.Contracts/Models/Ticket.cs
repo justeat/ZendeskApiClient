@@ -78,7 +78,7 @@ namespace ZendeskApi.Contracts.Models
 
         // ReSharper disable InconsistentNaming
         [DataMember(Name = "external_id", EmitDefaultValue = false)]
-        public long? External_Id { get; set; }
+        public string External_Id { get; set; }
 
         [IgnoreDataMember]
         public List<long> collaborator_ids { get; set; }
