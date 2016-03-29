@@ -7,8 +7,8 @@ A .net Zendesk Api Client NuGet package for use with the ZendeskApi v2
 
     IZendeskClient client = new ZendeskClient(
         new Uri("https://my-zendesk-api-host-endpoint"),
-        "my-zendesk-username", 
-        "my-zendesk-token"
+        new ZendeskDefaultConfiguration ("my-zendesk-username", 
+        "my-zendesk-token")
     );
 
 ##Accessing resources:##
