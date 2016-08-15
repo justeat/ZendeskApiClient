@@ -1,4 +1,5 @@
-﻿using ZendeskApi.Client.Http;
+﻿using System.Threading.Tasks;
+using ZendeskApi.Client.Http;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
@@ -7,10 +8,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class UploadResource : ZendeskResource<Upload>, IUploadResource
     {
-        protected override string ResourceUri
-        {
-            get { return @"/api/v2/uploads"; }
-        }
+        protected override string ResourceUri => @"/api/v2/uploads";
 
         public UploadResource(IRestClient client)
         {
@@ -20,6 +18,11 @@ namespace ZendeskApi.Client.Resources
         public IResponse<Upload> Get(long id)
         {
             return Get<UploadResponse>(id);
+        }
+
+        public async Task<IResponse<Upload>> GetAsync(long id)
+        {
+            return await GetAsync<UploadResponse>(id);
         }
 
         public IResponse<Upload> Post(UploadRequest request)
