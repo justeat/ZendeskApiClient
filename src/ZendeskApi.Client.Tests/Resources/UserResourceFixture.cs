@@ -40,7 +40,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new UserResponse { Item = new User { Id = 1 } };
-            _client.Setup(b => b.GetAsync<UserResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
+            _client.Setup(b => b.GetAsync<UserResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var userResource = new UserResource(_client.Object);
 
             // When
@@ -69,7 +69,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new UserListResponse { Results = new List<User> { new User { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<UserListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
+            _client.Setup(b => b.GetAsync<UserListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var userResource = new UserResource(_client.Object);
 
             // When
@@ -99,7 +99,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new UserResponse { Item = new User { Name = "Owner Name" } };
             var request = new UserRequest { Item = new User { Name = "Owner Name" } };
-            _client.Setup(b => b.PostAsync<UserResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
+            _client.Setup(b => b.PostAsync<UserResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
             var userResource = new UserResource(_client.Object);
 
             // When
@@ -129,7 +129,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new UserResponse { Item = new User { Name = "Owner Name" } };
             var request = new UserRequest { Item = new User { Name = "Owner Name", Id = 123 } };
-            _client.Setup(b => b.PutAsync<UserResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
+            _client.Setup(b => b.PutAsync<UserResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
             var userResource = new UserResource(_client.Object);
 
             // When

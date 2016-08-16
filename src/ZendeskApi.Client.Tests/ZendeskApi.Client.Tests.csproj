@@ -93,6 +93,7 @@
     <Compile Include="Resources\SatisfactionRatingResourceFixture.cs" />
     <Compile Include="Resources\RequestCommentResourceFixture.cs" />
     <Compile Include="Resources\RequestResourceFixture.cs" />
+    <Compile Include="TaskHelper.cs" />
     <Compile Include="ZendeskClientFixture.cs" />
     <Compile Include="Formatters\ZendeskFormatterFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -40,7 +40,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new TicketResponse { Item = new Ticket { Id = 1 }};
-            _client.Setup(b => b.GetAsync<TicketResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
+            _client.Setup(b => b.GetAsync<TicketResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var ticketResource = new TicketResource(_client.Object);
 
             // When
@@ -69,7 +69,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new TicketListResponse { Results = new List<Ticket> { new Ticket { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<TicketListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
+            _client.Setup(b => b.GetAsync<TicketListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var ticketResource = new TicketResource(_client.Object);
 
             // When
@@ -99,7 +99,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
             var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
-            _client.Setup(b => b.PutAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
+            _client.Setup(b => b.PutAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
             var ticketResource = new TicketResource(_client.Object);
 
             // When
@@ -115,7 +115,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
             var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
-            _client.Setup(b => b.PutAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
+            _client.Setup(b => b.PutAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
             var ticketResource = new TicketResource(_client.Object);
 
             // When, Then
@@ -142,7 +142,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
             var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
-            _client.Setup(b => b.PostAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
+            _client.Setup(b => b.PostAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
             var ticketResource = new TicketResource(_client.Object);
 
             // When
@@ -171,7 +171,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new TicketResponse { Item = new Ticket { Id = 1 } };
-            _client.Setup(b => b.GetAsync<TicketResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
+            _client.Setup(b => b.GetAsync<TicketResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var ticketResource = new TicketResource(_client.Object);
 
             // When

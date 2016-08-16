@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new GroupResponse { Item = new Group { Id = 1 }};
-            _client.Setup(b => b.GetAsync<GroupResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
+            _client.Setup(b => b.GetAsync<GroupResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
             var groupResource = new GroupsResource(_client.Object);
 

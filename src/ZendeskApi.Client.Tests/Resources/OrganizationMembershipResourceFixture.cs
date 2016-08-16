@@ -40,7 +40,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
+            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
@@ -69,7 +69,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
+            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
@@ -98,7 +98,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
+            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
@@ -128,7 +128,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new OrganizationMembershipResponse { Item = new OrganizationMembership { Id = 123 } };
             var request = new OrganizationMembershipRequest { Item = new OrganizationMembership { Id = 123 } };
-            _client.Setup(b => b.PostAsync<OrganizationMembershipResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
+            _client.Setup(b => b.PostAsync<OrganizationMembershipResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
