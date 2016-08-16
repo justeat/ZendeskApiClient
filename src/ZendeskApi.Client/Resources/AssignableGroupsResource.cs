@@ -1,4 +1,5 @@
-﻿using ZendeskApi.Client.Http;
+﻿using System.Threading.Tasks;
+using ZendeskApi.Client.Http;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
@@ -17,9 +18,14 @@ namespace ZendeskApi.Client.Resources
 
         public ListResponse<Group> GetAll()
         {
+            return GetAllAsync().Result;
+        }
+
+        public async Task<ListResponse<Group>> GetAllAsync()
+        {
             var requestUri = _client.BuildUri(AssignableGroupUri);
 
-            return _client.Get<GroupListResponse>(requestUri);
+            return await _client.GetAsync<GroupListResponse>(requestUri).ConfigureAwait(false);
         }
     }
 }

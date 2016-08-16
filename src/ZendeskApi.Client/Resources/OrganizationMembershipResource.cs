@@ -10,10 +10,7 @@ namespace ZendeskApi.Client.Resources
     public class OrganizationMembershipResource : ZendeskResource<OrganizationMembership>, IOrganizationMembershipResource
     {
         private string _resourceUrl;
-        protected override string ResourceUri
-        {
-            get { return _resourceUrl ?? @"/api/v2/users/{0}/organization_memberships"; }
-        }
+        protected override string ResourceUri => _resourceUrl ?? @"/api/v2/users/{0}/organization_memberships";
 
         public OrganizationMembershipResource(IRestClient client)
         {
@@ -22,19 +19,18 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<OrganizationMembership> GetAllByOrganization(long organizationId)
         {
-            _resourceUrl = @"/api/v2/organizations/{0}/organization_memberships";
-            return GetAll<OrganizationMembershipListResponse>(organizationId);
+            return GetAllByOrganizationAsync(organizationId).Result;
         }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByOrganizationAsync(long organizationId)
         {
             _resourceUrl = @"/api/v2/organizations/{0}/organization_memberships";
-            return await GetAllAsync<OrganizationMembershipListResponse>(organizationId);
+            return await GetAllAsync<OrganizationMembershipListResponse>(organizationId).ConfigureAwait(false);
         }
 
         public IListResponse<OrganizationMembership> GetAllByUser(long userId)
         {
-            return GetAll<OrganizationMembershipListResponse>(userId);
+            return GetAllByUserAsync(userId).Result;
         }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByUserAsync(long userId)
@@ -44,7 +40,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<OrganizationMembership> Post(OrganizationMembershipRequest request)
         {
-            return Post<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, request.Item.UserId);
+            return PostAsync(request).Result;
         }
 
         public async Task<IResponse<OrganizationMembership>> PostAsync(OrganizationMembershipRequest request)

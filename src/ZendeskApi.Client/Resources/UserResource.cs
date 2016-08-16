@@ -18,42 +18,42 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<User> Get(long id)
         {
-            return Get<UserResponse>(id);
+            return GetAsync(id).Result;
         }
 
         public async Task<IResponse<User>> GetAsync(long id)
         {
-            return await GetAsync<UserResponse>(id);
+            return await GetAsync<UserResponse>(id).ConfigureAwait(false);
         }
 
         public IListResponse<User> GetAll(List<long> ids)
         {
-            return GetAll<UserListResponse>(ids);
+            return GetAllAsync(ids).Result;
         }
 
         public async Task<IListResponse<User>> GetAllAsync(List<long> ids)
         {
-            return await GetAllAsync<UserListResponse>(ids);
+            return await GetAllAsync<UserListResponse>(ids).ConfigureAwait(false);
         }
 
         public IResponse<User> Post(UserRequest request)
         {
-            return Post<UserRequest, UserResponse>(request);
+            return PostAsync(request).Result;
         }
 
         public async Task<IResponse<User>> PostAsync(UserRequest request)
         {
-            return await PostAsync<UserRequest, UserResponse>(request);
+            return await PostAsync<UserRequest, UserResponse>(request).ConfigureAwait(false);
         }
 
         public IResponse<User> Put(UserRequest request)
         {
-            return Put<UserRequest, UserResponse>(request);
+            return PutAsync(request).Result;
         }
 
         public async Task<IResponse<User>> PutAsync(UserRequest request)
         {
-            return await PutAsync<UserRequest, UserResponse>(request);
+            return await PutAsync<UserRequest, UserResponse>(request).ConfigureAwait(false);
         }
     }
 }

@@ -18,26 +18,24 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<SatisfactionRating> Get(long id)
         {
-            _resourceUrl = "/api/v2/satisfaction_ratings";
-
-            return Get<SatisfactionRatingResponse>(id);
+            return GetAsync(id).Result;
         }
 
         public async Task<IResponse<SatisfactionRating>> GetAsync(long id)
         {
             _resourceUrl = "/api/v2/satisfaction_ratings";
 
-            return await GetAsync<SatisfactionRatingResponse>(id);
+            return await GetAsync<SatisfactionRatingResponse>(id).ConfigureAwait(false);
         }
 
         public IResponse<SatisfactionRating> Post(SatisfactionRatingRequest request, long ticketId)
         {
-            return Post<SatisfactionRatingRequest, SatisfactionRatingResponse>(request, ticketId);
+            return PostAsync(request, ticketId).Result;
         }
 
         public async Task<IResponse<SatisfactionRating>> PostAsync(SatisfactionRatingRequest request, long ticketId)
         {
-            return await PostAsync<SatisfactionRatingRequest, SatisfactionRatingResponse>(request, ticketId);
+            return await PostAsync<SatisfactionRatingRequest, SatisfactionRatingResponse>(request, ticketId).ConfigureAwait(false);
         }
     }
 }

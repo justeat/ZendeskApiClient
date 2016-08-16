@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
@@ -38,7 +39,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new GroupResponse { Item = new Group { Id = 1 }};
-            _client.Setup(b => b.Get<GroupResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.GetAsync<GroupResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
             var groupResource = new GroupsResource(_client.Object);
 

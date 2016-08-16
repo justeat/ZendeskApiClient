@@ -18,42 +18,42 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Request> Get(long id)
         {
-            return Get<RequestResponse>(id);
+            return GetAsync(id).Result;
         }
 
         public async Task<IResponse<Request>> GetAsync(long id)
         {
-            return await GetAsync<RequestResponse>(id);
+            return await GetAsync<RequestResponse>(id).ConfigureAwait(false);
         }
 
         public IResponse<Request> Get(IEnumerable<TicketStatus> requestedStatuses)
         {
-            return Get<RequestResponse>($"status={string.Join(",", requestedStatuses).ToLower()}");
+            return GetAsync(requestedStatuses).Result;
         }
 
         public async Task<IResponse<Request>> GetAsync(IEnumerable<TicketStatus> requestedStatuses)
         {
-            return await GetAsync<RequestResponse>($"status={string.Join(",", requestedStatuses).ToLower()}");
+            return await GetAsync<RequestResponse>($"status={string.Join(",", requestedStatuses).ToLower()}").ConfigureAwait(false);
         }
 
         public IResponse<Request> Put(RequestRequest request)
         {
-            return Put<RequestRequest, RequestResponse>(request);
+            return PutAsync(request).Result;
         }
 
         public async Task<IResponse<Request>> PutAsync(RequestRequest request)
         {
-            return await PutAsync<RequestRequest, RequestResponse>(request);
+            return await PutAsync<RequestRequest, RequestResponse>(request).ConfigureAwait(false);
         }
 
         public IResponse<Request> Post(RequestRequest request)
         {
-            return Post<RequestRequest, RequestResponse>(request);
+            return PostAsync(request).Result;
         }
 
         public async Task<IResponse<Request>> PostAsync(RequestRequest request)
         {
-            return await PostAsync<RequestRequest, RequestResponse>(request);
+            return await PostAsync<RequestRequest, RequestResponse>(request).ConfigureAwait(false);
         }
     }
 }

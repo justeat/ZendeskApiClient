@@ -23,7 +23,8 @@ namespace ZendeskApi.Client.Tests.Resources
         public void Get_Called_UrlIsCorrect()
         {
             //Given
-            _client.Setup(c => c.Get<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(new TicketCommentListResponse());
+            var response = new TicketCommentListResponse();
+            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var resource = new RequestCommentResource(_client.Object);
 
             //When
@@ -37,25 +38,26 @@ namespace ZendeskApi.Client.Tests.Resources
         public void GetAll_CalledWithId_ReturnsListOfComments()
         {
             //Given
-            var listOfTicketComments = new TicketCommentListResponse
+            var response = new TicketCommentListResponse
             {
                 Results = new List<TicketComment> { new TicketComment { Id = 123 } }
             };
-            _client.Setup(c => c.Get<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(listOfTicketComments);
+            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var resource = new RequestCommentResource(_client.Object);
 
             //When
             var result = resource.GetAll(123);
 
             //Then
-            Assert.That(result, Is.EqualTo(listOfTicketComments));
+            Assert.That(result, Is.EqualTo(response));
         }
 
         [Test]
         public void GetAll_Called_UrlIsCorrect()
         {
             //Given
-            _client.Setup(c => c.Get<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(new TicketCommentListResponse());
+            var response = new TicketCommentListResponse();
+            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var resource = new RequestCommentResource(_client.Object);
 
             //When
