@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
@@ -39,7 +40,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
@@ -68,7 +69,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
@@ -97,7 +98,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
@@ -127,7 +128,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new OrganizationMembershipResponse { Item = new OrganizationMembership { Id = 123 } };
             var request = new OrganizationMembershipRequest { Item = new OrganizationMembership { Id = 123 } };
-            _client.Setup(b => b.Post<OrganizationMembershipResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.PostAsync<OrganizationMembershipResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When

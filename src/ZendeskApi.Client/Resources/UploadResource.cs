@@ -17,17 +17,17 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Upload> Get(long id)
         {
-            return Get<UploadResponse>(id);
+            return GetAsync(id).Result;
         }
 
         public async Task<IResponse<Upload>> GetAsync(long id)
         {
-            return await GetAsync<UploadResponse>(id);
+            return await GetAsync<UploadResponse>(id).ConfigureAwait(false);
         }
 
         public IResponse<Upload> Post(UploadRequest request)
         {
-            var requestUri = Client.BuildUri(ResourceUri, string.Format("filename={0}{1}", request.Item.FileName, request.Token ?? ""));
+            var requestUri = Client.BuildUri(ResourceUri, $"filename={request.Item.FileName}{request.Token ?? ""}");
 
             return Client.PostFile<UploadResponse>(requestUri, request.Item);
         }

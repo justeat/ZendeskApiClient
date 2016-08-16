@@ -50,7 +50,7 @@ namespace ZendeskApi.Client.Tests.Resources
             searchResource.Find(_query.Object);
 
             // Then
-            _client.Verify(c => c.Get<ListResponse<Organization>>(It.IsAny<Uri>()));
+            _client.Verify(c => c.GetAsync<ListResponse<Organization>>(It.IsAny<Uri>()));
         }
     }
 }

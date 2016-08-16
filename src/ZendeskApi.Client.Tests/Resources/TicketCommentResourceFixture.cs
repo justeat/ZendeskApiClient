@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
@@ -27,7 +28,7 @@ namespace ZendeskApi.Client.Tests.Resources
             {
                 Results = new List<TicketComment> { new TicketComment { Id = 123 } }
             };
-            _client.Setup(c => c.Get<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(listOfTicketComments);
+            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(listOfTicketComments));
             var resource = new TicketCommentResource(_client.Object);
 
             //When
@@ -41,7 +42,7 @@ namespace ZendeskApi.Client.Tests.Resources
         public void GetAll_Called_UrlIsCorrect()
         {
             //Given
-            _client.Setup(c => c.Get<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(new TicketCommentListResponse());
+            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(new TicketCommentListResponse()));
             var resource = new TicketCommentResource(_client.Object);
 
             //When

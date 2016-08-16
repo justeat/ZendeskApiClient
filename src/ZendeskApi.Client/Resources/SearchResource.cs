@@ -1,4 +1,5 @@
-﻿using ZendeskApi.Client.Http;
+﻿using System.Threading.Tasks;
+using ZendeskApi.Client.Http;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Queries;
 using ZendeskApi.Contracts.Responses;
@@ -18,9 +19,14 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<T> Find<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
         {
+            return FindAsync(zendeskQuery).Result;
+        }
+
+        public async Task<IListResponse<T>> FindAsync<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
+        {
             var requestUri = _client.BuildUri(SearchUri, zendeskQuery.BuildQuery());
 
-            return _client.Get<ListResponse<T>>(requestUri);
+            return await _client.GetAsync<ListResponse<T>>(requestUri);
         }
     }
 }

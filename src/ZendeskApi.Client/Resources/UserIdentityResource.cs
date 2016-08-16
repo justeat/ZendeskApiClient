@@ -17,42 +17,42 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<UserIdentity> GetAll(long id)
         {
-            return GetAll<UserIdentityListResponse>(id);
+            return GetAllAsync(id).Result;
         }
 
         public async Task<IListResponse<UserIdentity>> GetAllAsync(long id)
         {
-            return await GetAllAsync<UserIdentityListResponse>(id);
+            return await GetAllAsync<UserIdentityListResponse>(id).ConfigureAwait(false);
         }
 
         public IResponse<UserIdentity> Post(UserIdentityRequest request)
         {
-            return Post<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId);
+            return PostAsync(request).Result;
         }
 
         public async Task<IResponse<UserIdentity>> PostAsync(UserIdentityRequest request)
         {
-            return await PostAsync<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId);
+            return await PostAsync<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId).ConfigureAwait(false);
         }
 
         public IResponse<UserIdentity> Put(UserIdentityRequest request)
         {
-            return Put<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId);
+            return PutAsync(request).Result;
         }
 
         public async Task<IResponse<UserIdentity>> PutAsync(UserIdentityRequest request)
         {
-            return await PutAsync<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId);
+            return await PutAsync<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId).ConfigureAwait(false);
         }
 
         public void Delete(long id, long parentId)
         {
-            base.Delete(id, parentId);
+            DeleteAsync(id, parentId).Wait();
         }
 
         public async Task DeleteAsync(long id, long parentId)
         {
-            await base.DeleteAsync(id, parentId);
+            await base.DeleteAsync(id, parentId).ConfigureAwait(false);
         }
     }
 }

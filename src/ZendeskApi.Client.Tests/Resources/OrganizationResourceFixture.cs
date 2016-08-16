@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
@@ -38,7 +39,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new OrganizationResponse { Item = new Organization { Id = 1 } };
-            _client.Setup(b => b.Get<OrganizationResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.GetAsync<OrganizationResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
             var resource = new OrganizationResource(_client.Object);
 
             // When
@@ -68,7 +69,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
             var request = new OrganizationRequest { Item = new Organization { Name = "blah blah", Id = 123 } };
-            _client.Setup(b => b.Put<OrganizationResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.PutAsync<OrganizationResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
             var resource = new OrganizationResource(_client.Object);
 
             // When
@@ -84,11 +85,11 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
             var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
-            _client.Setup(b => b.Put<OrganizationResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.PutAsync<OrganizationResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
             var resource = new OrganizationResource(_client.Object);
 
             // When, Then
-            Assert.Throws<ArgumentException>(() => resource.Put(request));
+            Assert.Throws<AggregateException>(() => resource.Put(request));
         }
 
         [Test]
@@ -111,7 +112,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
             var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
-            _client.Setup(b => b.Post<OrganizationResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.PostAsync<OrganizationResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(Task.FromResult(response));
             var resource = new OrganizationResource(_client.Object);
 
             // When
@@ -140,14 +141,14 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new OrganizationResponse { Item = new Organization { Id = 1 } };
-            _client.Setup(b => b.Get<OrganizationResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.GetAsync<OrganizationResponse>(It.IsAny<Uri>())).Returns(Task.FromResult(response));
             var resource = new OrganizationResource(_client.Object);
 
             // When
             resource.Delete(321);
 
             // Then
-            _client.Verify(c => c.Delete(It.IsAny<Uri>()));
+            _client.Verify(c => c.DeleteAsync(It.IsAny<Uri>()));
         }
     }
 }

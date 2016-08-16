@@ -7,10 +7,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class GroupsResource : ZendeskResource<Group>, IGroupResource
     {
-        protected override string ResourceUri
-        {
-            get { return @"/api/v2/groups"; }
-        }
+        protected override string ResourceUri => @"/api/v2/groups";
 
         public GroupsResource(IRestClient client)
         {
@@ -19,12 +16,12 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Group> Get(long id)
         {
-            return Get<GroupResponse>(id);
+            return GetAsync(id).Result;
         }
 
         public async Task<IResponse<Group>> GetAsync(long id)
         {
-            return await GetAsync<GroupResponse>(id);
+            return await GetAsync<GroupResponse>(id).ConfigureAwait(false);
         }
     }
 }

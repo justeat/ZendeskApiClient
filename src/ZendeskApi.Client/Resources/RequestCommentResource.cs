@@ -7,10 +7,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class RequestCommentResource : ZendeskResource<TicketComment>, IRequestCommentResource
     {
-        protected override string ResourceUri
-        {
-            get { return @"/api/v2/requests/{0}/comments"; }
-        }
+        protected override string ResourceUri => @"/api/v2/requests/{0}/comments";
 
         public RequestCommentResource(IRestClient client)
         {
@@ -19,22 +16,22 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<TicketComment> Get(long id, long parentId)
         {
-            return Get<TicketCommentResponse>(id, parentId);
+            return GetAsync(id, parentId).Result;
         }
 
         public async Task<IResponse<TicketComment>> GetAsync(long id, long parentId)
         {
-            return await GetAsync<TicketCommentResponse>(id, parentId);
+            return await GetAsync<TicketCommentResponse>(id, parentId).ConfigureAwait(false);
         }
 
         public IListResponse<TicketComment> GetAll(long parentId)
         {
-            return GetAll<TicketCommentListResponse>(parentId);
+            return GetAllAsync(parentId).Result;
         }
 
         public async Task<IListResponse<TicketComment>> GetAllAsync(long parentId)
         {
-            return await GetAllAsync<TicketCommentListResponse>(parentId);
+            return await GetAllAsync<TicketCommentListResponse>(parentId).ConfigureAwait(false);
         }
     }
 }

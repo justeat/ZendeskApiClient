@@ -16,12 +16,12 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<TicketComment> GetAll(long parentId)
         {
-            return GetAll<TicketCommentListResponse>(parentId);
+            return GetAllAsync(parentId).Result;
         }
 
         public async Task<IListResponse<TicketComment>> GetAllAsync(long parentId)
         {
-            return await GetAllAsync<TicketCommentListResponse>(parentId);
+            return await GetAllAsync<TicketCommentListResponse>(parentId).ConfigureAwait(false);
         }
     }
 }

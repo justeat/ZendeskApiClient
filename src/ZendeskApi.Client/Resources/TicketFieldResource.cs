@@ -15,22 +15,22 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<TicketField> Get(long id)
         {
-            return Get<TicketFieldResponse>(id);
+            return GetAsync(id).Result;
         }
 
         public async Task<IResponse<TicketField>> GetAsync(long id)
         {
-            return await GetAsync<TicketFieldResponse>(id);
+            return await GetAsync<TicketFieldResponse>(id).ConfigureAwait(false);
         }
 
         public IListResponse<TicketField> GetAll()
         {
-            return GetAll<TicketFieldListResponse>();
+            return GetAllAsync().Result;
         }
 
         public async Task<IListResponse<TicketField>> GetAllAsync()
         {
-            return await GetAllAsync<TicketFieldListResponse>();
+            return await GetAllAsync<TicketFieldListResponse>().ConfigureAwait(false);
         }
     }
 }
