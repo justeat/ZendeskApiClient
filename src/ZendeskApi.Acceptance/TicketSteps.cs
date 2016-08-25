@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using FluentAssertions;
 using ZendeskApi.Client;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
@@ -152,7 +153,9 @@ namespace ZendeskApi.Acceptance
         [Then(@"the ticket is no longer in zendesk")]
         public void ThenTheTicketIsNoLongerInZendesk()
         {
-            Assert.Throws<HttpException>(() => _client.Tickets.Get((long) _savedSingleTicket.Id), "Tickets not in Zendesk");
+            //Assert.Throws<HttpException>(() => _client.Tickets.Get((long) _savedSingleTicket.Id), "Tickets not in Zendesk");
+            Action act = () => _client.Tickets.Get((long) _savedSingleTicket.Id);
+            act.ShouldThrow<AggregateException>().WithInnerMessage("{\"error\":\"RecordNotFound\",\"description\":\"Not found\"}");
         }
 
         [AfterScenario]
@@ -166,11 +169,7 @@ namespace ZendeskApi.Acceptance
                 _savedMultipleTicket.ForEach(t => _client.Tickets.Delete((long)t.Id));
 
             }
-            catch (HttpException)
-            {
-                
-            }
-            
+            catch{}
         }
         
     }
