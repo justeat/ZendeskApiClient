@@ -70,6 +70,9 @@ namespace ZendeskApi.Contracts.Queries
                     case FilterOperator.Equals:
                         operatorString = ":";
                         break;
+                    case FilterOperator.NotEqual:
+                        operatorString = ":-";
+                        break;
                     default:
                         break;
                 }
