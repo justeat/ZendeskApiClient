@@ -32,9 +32,9 @@ namespace ZendeskApi.Acceptance
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "UserIdentityResource", "In order to manage User Identity in Zendesk (Email and Phone Number)\r\nAs an api c" +
-                    "omsumer\r\nI want to be able to get, update & insert user identity info via Api ca" +
-                    "lls", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "UserIdentityResource", "In order to manage User Identity in Zendesk (Email and Phone Number)\nAs an api co" +
+                    "msumer\nI want to be able to get, update & insert user identity info via Api call" +
+                    "s", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         

@@ -32,8 +32,8 @@ namespace ZendeskApi.Acceptance
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Organization", "In order to manage organizations\r\nAs an api comsumer\r\nI want to be able to get, g" +
-                    "etall, put, post and delete", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Organization", "In order to manage organizations\nAs an api comsumer\nI want to be able to get, get" +
+                    "all, put, post and delete", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         

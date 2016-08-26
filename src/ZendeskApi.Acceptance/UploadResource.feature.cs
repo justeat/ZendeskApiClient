@@ -32,8 +32,8 @@ namespace ZendeskApi.Acceptance
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "UploadResource", "In order to create Attachments in Zendesk\r\nAs an api comsumer\r\nI want to be able " +
-                    "to upload files via Api calls", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "UploadResource", "In order to create Attachments in Zendesk\nAs an api comsumer\nI want to be able to" +
+                    " upload files via Api calls", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         

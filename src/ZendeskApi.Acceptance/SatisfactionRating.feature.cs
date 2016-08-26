@@ -32,8 +32,8 @@ namespace ZendeskApi.Acceptance
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Satisfaction Rating", "In order to manage customer satisfaction\r\nAs an api consumer\r\nI want to be able t" +
-                    "o get and post satisfaction ratings", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Satisfaction Rating", "In order to manage customer satisfaction\nAs an api consumer\nI want to be able to " +
+                    "get and post satisfaction ratings", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
