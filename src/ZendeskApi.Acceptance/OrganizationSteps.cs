@@ -7,6 +7,7 @@ using ZendeskApi.Client;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using TechTalk.SpecFlow;
 
 namespace ZendeskApi.Acceptance
@@ -96,7 +97,8 @@ namespace ZendeskApi.Acceptance
         [Then(@"the Organization is no longer in zendesk")]
         public void ThenTheOrganizationIsNoLongerInZendesk()
         {
-            Assert.Throws<HttpException>(() => _client.Organizations.Get((long)_savedSingleOrganization.Id), "Organization not in Zendesk");
+            Assert.That(() => _client.Organizations.Get((long)_savedSingleOrganization.Id),
+                Throws.InnerException.TypeOf<HttpException>().And.InnerException.Message.EqualTo("{\"error\":\"RecordNotFound\",\"description\":\"Not found\"}"));
         }
 
         [AfterScenario]
@@ -110,7 +112,7 @@ namespace ZendeskApi.Acceptance
                 _savedMultipleOrganizations.ForEach(t => _client.Organizations.Delete((long)t.Id));
 
             }
-            catch (HttpException)
+            catch (Exception)
             {
 
             }
