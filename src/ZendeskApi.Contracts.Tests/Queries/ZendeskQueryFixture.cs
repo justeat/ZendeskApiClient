@@ -89,5 +89,19 @@ namespace ZendeskApi.Contracts.Tests.Queries
             // Then
             Assert.That(queryString, Is.EqualTo("query=type:ticket+name:cheese+factory&sort_by=priority&sort_order=asc&page=3&per_page=15"));
         }
+
+        [Test]
+        public void CalledWithNotEqual_BuildsQuery()
+        {
+            // Given
+            var query = new ZendeskQuery<Ticket>();
+            query.WithCustomFilter("name", "cheese factory", FilterOperator.NotEqual).WithPaging(3, 15).WithOrdering(OrderBy.priority, Order.Asc);
+
+            // When 
+            var queryString = query.BuildQuery();
+
+            // Then
+            Assert.That(queryString, Is.EqualTo("query=type:ticket+name:-cheese+factory&sort_by=priority&sort_order=asc&page=3&per_page=15"));
+        }
     }
 }
