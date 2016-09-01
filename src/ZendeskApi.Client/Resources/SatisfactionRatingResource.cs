@@ -18,7 +18,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<SatisfactionRating> Get(long id)
         {
-            return GetAsync(id).Result;
+            return GetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<SatisfactionRating>> GetAsync(long id)
@@ -30,7 +30,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<SatisfactionRating> Post(SatisfactionRatingRequest request, long ticketId)
         {
-            return PostAsync(request, ticketId).Result;
+            return PostAsync(request, ticketId).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<SatisfactionRating>> PostAsync(SatisfactionRatingRequest request, long ticketId)

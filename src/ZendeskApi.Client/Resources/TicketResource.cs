@@ -18,7 +18,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Ticket> Get(long id)
         {
-            return GetAsync(id).Result;
+            return GetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<Ticket>> GetAsync(long id)
@@ -28,7 +28,7 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<Ticket> GetAll(List<long> ids)
         {
-            return GetAllAsync(ids).Result;
+            return GetAllAsync(ids).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IListResponse<Ticket>> GetAllAsync(List<long> ids)
@@ -38,7 +38,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Ticket> Put(TicketRequest request)
         {
-            return PutAsync(request).Result;
+            return PutAsync(request).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<Ticket>> PutAsync(TicketRequest request)
@@ -48,7 +48,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Ticket> Post(TicketRequest request)
         {
-            return PostAsync(request).Result;
+            return PostAsync(request).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<Ticket>> PostAsync(TicketRequest request)

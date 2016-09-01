@@ -29,7 +29,7 @@ namespace ZendeskApi.Client.Http
                 try
                 {
                     using (var responseMessage = await client.GetAsync(request.RequestUri).ConfigureAwait(false))
-                        response = await BuildResponseAsync(responseMessage);
+                        response = await BuildResponseAsync(responseMessage).ConfigureAwait(false);
                 }
                 catch (WebException ex)
                 {
@@ -78,7 +78,7 @@ namespace ZendeskApi.Client.Http
                 {
                     var content = BuildHttpContent(request);
                     using (var responseMessage = await client.PostAsync(request.RequestUri, content).ConfigureAwait(false))
-                        response = await BuildResponseAsync(responseMessage);
+                        response = await BuildResponseAsync(responseMessage).ConfigureAwait(false);
                 }
                 catch (WebException ex)
                 {
@@ -107,7 +107,7 @@ namespace ZendeskApi.Client.Http
                 {
                     var content = BuildHttpContent(request);
                     using (var responseMessage = await client.PutAsync(request.RequestUri, content).ConfigureAwait(false))
-                        response = await BuildResponseAsync(responseMessage);
+                        response = await BuildResponseAsync(responseMessage).ConfigureAwait(false);
                 }
                 catch (WebException ex)
                 {
@@ -135,7 +135,7 @@ namespace ZendeskApi.Client.Http
                 try
                 {
                     using (var responseMessage = await client.DeleteAsync(request.RequestUri).ConfigureAwait(false))
-                        response = await BuildResponseAsync(responseMessage);
+                        response = await BuildResponseAsync(responseMessage).ConfigureAwait(false);
                 }
                 catch (WebException ex)
                 {
@@ -388,7 +388,7 @@ namespace ZendeskApi.Client.Http
                 Headers = GetResponseHeaders(responseMessage.Headers),
                 StatusCode = responseMessage.StatusCode,
                 ReasonPhrase = responseMessage.ReasonPhrase,
-                Content = await responseMessage.Content.ReadAsStringAsync()
+                Content = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)
             };
             return response;
         }
