@@ -17,7 +17,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Organization> Get(long id)
         {
-            return GetAsync(id).Result;
+            return GetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<Organization>> GetAsync(long id)
@@ -27,7 +27,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Organization> Put(OrganizationRequest request)
         {
-            return PutAsync(request).Result;
+            return PutAsync(request).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<Organization>> PutAsync(OrganizationRequest request)
@@ -37,7 +37,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Organization> Post(OrganizationRequest request)
         {
-            return PostAsync(request).Result;
+            return PostAsync(request).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<Organization>> PostAsync(OrganizationRequest request)

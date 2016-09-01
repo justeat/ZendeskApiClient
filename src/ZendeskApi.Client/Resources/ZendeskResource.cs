@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Resources
 
         protected IResponse<T> Get<TResponse>(long id) where TResponse : IResponse<T>
         {
-            return GetAsync<TResponse>(id).Result;
+            return GetAsync<TResponse>(id).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected async Task<IResponse<T>> GetAsync<TResponse>(long id) where TResponse : IResponse<T>
@@ -31,7 +31,7 @@ namespace ZendeskApi.Client.Resources
 
         protected IResponse<T> Get<TResponse>(string query) where TResponse : IResponse<T>
         {
-            return GetAsync<TResponse>(query).Result;
+            return GetAsync<TResponse>(query).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected async Task<IResponse<T>> GetAsync<TResponse>(string query) where TResponse : IResponse<T>
@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Resources
 
         protected IResponse<T> Get<TResponse>(long id, long parentId) where TResponse : IResponse<T>
         {
-            return GetAsync<TResponse>(id, parentId).Result;
+            return GetAsync<TResponse>(id, parentId).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected async Task<IResponse<T>> GetAsync<TResponse>(long id, long parentId) where TResponse : IResponse<T>
@@ -67,7 +67,7 @@ namespace ZendeskApi.Client.Resources
 
         protected TResponse GetAll<TResponse>(long parentId) where TResponse : IListResponse<T>
         {
-            return GetAllAsync<TResponse>(parentId).Result;
+            return GetAllAsync<TResponse>(parentId).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected async Task<TResponse> GetAllAsync<TResponse>(long parentId) where TResponse : IListResponse<T>
@@ -79,7 +79,7 @@ namespace ZendeskApi.Client.Resources
 
         protected TResponse GetAll<TResponse>() where TResponse : IListResponse<T>
         {
-            return GetAllAsync<TResponse>().Result;
+            return GetAllAsync<TResponse>().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected async Task<TResponse> GetAllAsync<TResponse>() where TResponse : IListResponse<T>
@@ -93,21 +93,21 @@ namespace ZendeskApi.Client.Resources
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return PutAsync<TRequest, TResponse>(request, null).Result;
+            return PutAsync<TRequest, TResponse>(request, null).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected async Task<IResponse<T>> PutAsync<TRequest, TResponse>(TRequest request)
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return await PutAsync<TRequest, TResponse>(request, null);
+            return await PutAsync<TRequest, TResponse>(request, null).ConfigureAwait(false);
         }
 
         protected IResponse<T> Put<TRequest, TResponse>(TRequest request, long? parentId)
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return PutAsync<TRequest, TResponse>(request, parentId).Result;
+            return PutAsync<TRequest, TResponse>(request, parentId).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected async Task<IResponse<T>> PutAsync<TRequest, TResponse>(TRequest request, long? parentId)
@@ -127,21 +127,21 @@ namespace ZendeskApi.Client.Resources
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return PostAsync<TRequest, TResponse>(request, null).Result;
+            return PostAsync<TRequest, TResponse>(request, null).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request) 
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return await PostAsync<TRequest, TResponse>(request, null);
+            return await PostAsync<TRequest, TResponse>(request, null).ConfigureAwait(false);
         }
 
         protected TResponse Post<TRequest, TResponse>(TRequest request, long? parentId) 
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return PostAsync<TRequest, TResponse>(request, parentId).Result;
+            return PostAsync<TRequest, TResponse>(request, parentId).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request, long? parentId) 

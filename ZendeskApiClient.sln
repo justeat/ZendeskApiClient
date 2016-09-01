@@ -1,8 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40121.0
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AcceptanceTests", "AcceptanceTests", "{E1E8E158-EFFE-40B4-96F8-8C2083ED1C88}"
 EndProject
@@ -11,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Contracts", "src\ZendeskApi.Contracts\ZendeskApi.Contracts.csproj", "{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Client.Tests", "src\ZendeskApi.Client.Tests\ZendeskApi.Client.Tests.csproj", "{182231A6-213B-4F9B-851D-ED5B7E6DA53D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{710E1917-AC01-4877-9683-AF47A7DBDF84} = {710E1917-AC01-4877-9683-AF47A7DBDF84}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Contracts.Tests", "src\ZendeskApi.Contracts.Tests\ZendeskApi.Contracts.Tests.csproj", "{C53ACF17-3DCD-4A21-B22A-1A8CA47FD85B}"
 EndProject

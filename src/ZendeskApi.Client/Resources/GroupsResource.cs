@@ -16,7 +16,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Group> Get(long id)
         {
-            return GetAsync(id).Result;
+            return GetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<Group>> GetAsync(long id)

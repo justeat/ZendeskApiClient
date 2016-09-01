@@ -18,7 +18,7 @@ namespace ZendeskApi.Client.Resources
 
         public ListResponse<Group> GetAll()
         {
-            return GetAllAsync().Result;
+            return GetAllAsync().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<ListResponse<Group>> GetAllAsync()

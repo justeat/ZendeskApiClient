@@ -149,7 +149,7 @@ namespace ZendeskApi.Acceptance
             }
             catch (Exception)
             {
-
+                //we dont care if this errors
             }
 
         }

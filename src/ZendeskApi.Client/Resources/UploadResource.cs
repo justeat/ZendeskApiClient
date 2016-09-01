@@ -17,7 +17,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Upload> Get(long id)
         {
-            return GetAsync(id).Result;
+            return GetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public async Task<IResponse<Upload>> GetAsync(long id)
