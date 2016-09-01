@@ -166,9 +166,9 @@ namespace ZendeskApi.Acceptance
                 _savedMultipleTicket.ForEach(t => _client.Tickets.Delete((long)t.Id));
 
             }
-            catch (HttpException)
+            catch (Exception)
             {
-                
+                //we dont care if this errors
             }
             
         }

@@ -49,7 +49,7 @@ namespace ZendeskApi.Acceptance
         public void ThenIGetARequestFromZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description)
         {
             Assert.That(_singleRequestResponse.Subject, Is.EqualTo(subject));
-            Assert.That(_singleRequestResponse.Description, Is.EqualTo(description));
+            Assert.That(_singleRequestResponse.Description, Is.StringStarting(description));
             Assert.That(_singleRequestResponse.Created, Is.GreaterThan(DateTime.UtcNow.AddMinutes(-2)));
         }
 

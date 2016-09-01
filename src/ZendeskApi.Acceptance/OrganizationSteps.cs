@@ -110,9 +110,9 @@ namespace ZendeskApi.Acceptance
                 _savedMultipleOrganizations.ForEach(t => _client.Organizations.Delete((long)t.Id));
 
             }
-            catch (HttpException)
+            catch (Exception)
             {
-
+                //we dont care if this errors
             }
 
         }

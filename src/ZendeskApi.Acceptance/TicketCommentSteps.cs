@@ -147,9 +147,9 @@ namespace ZendeskApi.Acceptance
                     _client.Tickets.Delete((long)_savedTicket.Id);
 
             }
-            catch (HttpException)
+            catch (Exception)
             {
-
+                //we dont care if this errors
             }
 
         }
