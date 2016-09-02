@@ -27,7 +27,7 @@ namespace ZendeskApi.Client.Resources
         {
             _resourceUrl = "/api/v2/satisfaction_ratings";
 
-            return await GetAsync<SatisfactionRatingResponse>(id);
+            return await GetAsync<SatisfactionRatingResponse>(id).ConfigureAwait(false);
         }
 
         public IResponse<SatisfactionRating> Post(SatisfactionRatingRequest request, long ticketId)
@@ -37,7 +37,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<SatisfactionRating>> PostAsync(SatisfactionRatingRequest request, long ticketId)
         {
-            return await PostAsync<SatisfactionRatingRequest, SatisfactionRatingResponse>(request, ticketId);
+            return await PostAsync<SatisfactionRatingRequest, SatisfactionRatingResponse>(request, ticketId).ConfigureAwait(false);
         }
     }
 }

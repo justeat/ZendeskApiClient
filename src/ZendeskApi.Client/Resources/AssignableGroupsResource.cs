@@ -27,7 +27,7 @@ namespace ZendeskApi.Client.Resources
         {
             var requestUri = _client.BuildUri(AssignableGroupUri);
 
-            return await _client.GetAsync<GroupListResponse>(requestUri);
+            return await _client.GetAsync<GroupListResponse>(requestUri).ConfigureAwait(false);
         }
     }
 }

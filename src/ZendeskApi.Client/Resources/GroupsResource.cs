@@ -21,7 +21,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<Group>> GetAsync(long id)
         {
-            return await GetAsync<GroupResponse>(id);
+            return await GetAsync<GroupResponse>(id).ConfigureAwait(false);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IListResponse<UserIdentity>> GetAllAsync(long id)
         {
-            return await GetAllAsync<UserIdentityListResponse>(id);
+            return await GetAllAsync<UserIdentityListResponse>(id).ConfigureAwait(false);
         }
 
         public IResponse<UserIdentity> Post(UserIdentityRequest request)
@@ -32,7 +32,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<UserIdentity>> PostAsync(UserIdentityRequest request)
         {
-            return await PostAsync<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId);
+            return await PostAsync<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId).ConfigureAwait(false);
         }
 
         public IResponse<UserIdentity> Put(UserIdentityRequest request)
@@ -42,7 +42,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<UserIdentity>> PutAsync(UserIdentityRequest request)
         {
-            return await PutAsync<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId);
+            return await PutAsync<UserIdentityRequest, UserIdentityResponse>(request, request.Item.UserId).ConfigureAwait(false);
         }
 
         public void Delete(long id, long parentId)
@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(long id, long parentId)
         {
-            await base.DeleteAsync(id, parentId);
+            await base.DeleteAsync(id, parentId).ConfigureAwait(false);
         }
     }
 }

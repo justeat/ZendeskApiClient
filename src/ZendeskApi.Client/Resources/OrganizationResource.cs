@@ -22,7 +22,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<Organization>> GetAsync(long id)
         {
-            return await GetAsync<OrganizationResponse>(id);
+            return await GetAsync<OrganizationResponse>(id).ConfigureAwait(false);
         }
 
         public IResponse<Organization> Put(OrganizationRequest request)
@@ -32,7 +32,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<Organization>> PutAsync(OrganizationRequest request)
         {
-            return await PutAsync<OrganizationRequest, OrganizationResponse>(request);
+            return await PutAsync<OrganizationRequest, OrganizationResponse>(request).ConfigureAwait(false);
         }
 
         public IResponse<Organization> Post(OrganizationRequest request)
@@ -42,7 +42,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<Organization>> PostAsync(OrganizationRequest request)
         {
-            return await PostAsync<OrganizationRequest, OrganizationResponse>(request);
+            return await PostAsync<OrganizationRequest, OrganizationResponse>(request).ConfigureAwait(false);
         }
     }
 }
