@@ -1,7 +1,12 @@
 # Zendesk Api Client #
 ====================
 
+
+
 A .net Zendesk Api Client NuGet package for use with the ZendeskApi v2
+
+#Breaking Changes#
+* 2.x.x - .Net Framework version 4.0 is no longer supported
 
 ##Creating a client:##
 
