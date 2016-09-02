@@ -10,17 +10,10 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>API Client for use with Zendesk</description>
         <dependencies>
-			<group targetFramework="net45">
-				<dependency id="Newtonsoft.Json" version="6.0.8" />
-			</group>
-			<group targetFramework="net40">
-        <dependency id="Newtonsoft.Json" version="6.0.8" />
-				<dependency id="Microsoft.Bcl.Async" version="1.0.168" />
-			</group>
+				  <dependency id="Newtonsoft.Json" version="6.0.8" />
         </dependencies>
     </metadata>
   <files>
     <file src="bin\Release\net45\ZendeskApi*.*" target="lib\net45" />
-    <file src="bin\Release40\net40\ZendeskApi*.*" target="lib\net40" />
   </files>
 </package>
