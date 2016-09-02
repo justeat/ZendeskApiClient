@@ -80,6 +80,20 @@ namespace ZendeskApi.Client.Tests
         }
 
         [Test]
+        public void GetAsync_HttpReturnsFailResult_ThrowsException()
+        {
+            // Given
+            var http = new Mock<IHttpChannel>();
+            http.Setup(h => h.GetAsync(It.IsAny<IHttpRequest>()))
+                .Returns(TaskHelper.CreateTaskFromResult(_failureResponse));
+
+            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+
+            // When, Then
+            Assert.Throws<HttpException>(async () => await client.GetAsync<string>(new Uri("http://someurl.co.uk/resource")));
+        }
+
+        [Test]
         public void Put_Success_ReturnsSuccessResult()
         {
             // Given
@@ -196,6 +210,20 @@ namespace ZendeskApi.Client.Tests
 
             // When, Then
             Assert.Throws<HttpException>(() => client.Post<string>(new Uri("http://someurl.co.uk/resource")));
+        }
+
+        [Test]
+        public void PostAsync_HttpReturnsFailResult_ThrowsException()
+        {
+            // Given
+            var http = new Mock<IHttpChannel>();
+            http.Setup(h => h.PostAsync(It.IsAny<IHttpRequest>()))
+                .Returns(TaskHelper.CreateTaskFromResult(_failureResponse));
+
+            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+
+            // When, Then
+            Assert.Throws<HttpException>(async () => await client.PostAsync<string>(new Uri("http://someurl.co.uk/resource")));
         }
 
         [Test]

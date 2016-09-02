@@ -19,7 +19,8 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<OrganizationMembership> GetAllByOrganization(long organizationId)
         {
-            return GetAllByOrganizationAsync(organizationId).Result;
+            _resourceUrl = @"/api/v2/organizations/{0}/organization_memberships";
+            return GetAll<OrganizationMembershipListResponse>(organizationId);
         }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByOrganizationAsync(long organizationId)
@@ -30,22 +31,22 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<OrganizationMembership> GetAllByUser(long userId)
         {
-            return GetAllByUserAsync(userId).Result;
+            return GetAll<OrganizationMembershipListResponse>(userId);
         }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByUserAsync(long userId)
         {
-            return await GetAllAsync<OrganizationMembershipListResponse>(userId);
+            return await GetAllAsync<OrganizationMembershipListResponse>(userId).ConfigureAwait(false);
         }
 
         public IResponse<OrganizationMembership> Post(OrganizationMembershipRequest request)
         {
-            return PostAsync(request).Result;
+            return Post<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, request.Item.UserId);
         }
 
         public async Task<IResponse<OrganizationMembership>> PostAsync(OrganizationMembershipRequest request)
         {
-            return await PostAsync<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, request.Item.UserId);
+            return await PostAsync<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, request.Item.UserId).ConfigureAwait(false);
         }
 
         [Obsolete("GetAll is deprecated, please use GetAllByUser or GetAllByOrganization instead.")]

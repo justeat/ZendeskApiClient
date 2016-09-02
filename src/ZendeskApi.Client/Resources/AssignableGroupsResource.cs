@@ -18,7 +18,9 @@ namespace ZendeskApi.Client.Resources
 
         public ListResponse<Group> GetAll()
         {
-            return GetAllAsync().Result;
+            var requestUri = _client.BuildUri(AssignableGroupUri);
+
+            return _client.Get<GroupListResponse>(requestUri);
         }
 
         public async Task<ListResponse<Group>> GetAllAsync()

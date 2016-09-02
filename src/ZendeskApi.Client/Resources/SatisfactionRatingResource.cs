@@ -18,7 +18,9 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<SatisfactionRating> Get(long id)
         {
-            return GetAsync(id).Result;
+            _resourceUrl = "/api/v2/satisfaction_ratings";
+
+            return Get<SatisfactionRatingResponse>(id);
         }
 
         public async Task<IResponse<SatisfactionRating>> GetAsync(long id)
@@ -30,7 +32,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<SatisfactionRating> Post(SatisfactionRatingRequest request, long ticketId)
         {
-            return PostAsync(request, ticketId).Result;
+            return Post<SatisfactionRatingRequest, SatisfactionRatingResponse>(request, ticketId);
         }
 
         public async Task<IResponse<SatisfactionRating>> PostAsync(SatisfactionRatingRequest request, long ticketId)

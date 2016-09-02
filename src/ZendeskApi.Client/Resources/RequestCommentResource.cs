@@ -16,7 +16,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<TicketComment> Get(long id, long parentId)
         {
-            return GetAsync(id, parentId).Result;
+            return Get<TicketCommentResponse>(id, parentId);
         }
 
         public async Task<IResponse<TicketComment>> GetAsync(long id, long parentId)
@@ -26,7 +26,7 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<TicketComment> GetAll(long parentId)
         {
-            return GetAllAsync(parentId).Result;
+            return GetAll<TicketCommentListResponse>(parentId);
         }
 
         public async Task<IListResponse<TicketComment>> GetAllAsync(long parentId)

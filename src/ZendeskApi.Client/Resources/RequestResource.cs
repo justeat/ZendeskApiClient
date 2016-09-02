@@ -18,7 +18,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Request> Get(long id)
         {
-            return GetAsync(id).Result;
+            return Get<RequestResponse>(id);
         }
 
         public async Task<IResponse<Request>> GetAsync(long id)
@@ -28,7 +28,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Request> Get(IEnumerable<TicketStatus> requestedStatuses)
         {
-            return GetAsync(requestedStatuses).Result;
+            return Get<RequestResponse>($"status={string.Join(",", requestedStatuses).ToLower()}");
         }
 
         public async Task<IResponse<Request>> GetAsync(IEnumerable<TicketStatus> requestedStatuses)
@@ -38,7 +38,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Request> Put(RequestRequest request)
         {
-            return PutAsync(request).Result;
+            return Put<RequestRequest, RequestResponse>(request);
         }
 
         public async Task<IResponse<Request>> PutAsync(RequestRequest request)
@@ -48,7 +48,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<Request> Post(RequestRequest request)
         {
-            return PostAsync(request).Result;
+            return Post<RequestRequest, RequestResponse>(request);
         }
 
         public async Task<IResponse<Request>> PostAsync(RequestRequest request)

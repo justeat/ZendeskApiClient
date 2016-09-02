@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
@@ -36,7 +35,36 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void GetAsync_Called_CallsBuildUriWithFieldId()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+            var resource = new RequestResource(_client.Object);
+
+            // When
+            await resource.GetAsync(321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+        }
+
+        [Test]
         public void Get_Called_ReturnsRequestResponse()
+        {
+            // Given
+            var response = new RequestResponse { Item = new Request { Id = 1 } };
+            _client.Setup(b => b.Get<RequestResponse>(It.IsAny<Uri>())).Returns(response);
+            var resource = new RequestResource(_client.Object);
+
+            // When
+            var result = resource.Get(321);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public async void GetAsync_Called_ReturnsRequestResponse()
         {
             // Given
             var response = new RequestResponse { Item = new Request { Id = 1 } };
@@ -44,7 +72,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var resource = new RequestResource(_client.Object);
 
             // When
-            var result = resource.Get(321);
+            var result = await resource.GetAsync(321);
 
             // Then
             Assert.That(result, Is.EqualTo(response));
@@ -66,6 +94,21 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void GetAsync_CalledWithStatuses_CallsBuildUriWithStatuses()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+            var resource = new RequestResource(_client.Object);
+            var statuses = new List<TicketStatus> {TicketStatus.Hold, TicketStatus.Open};
+
+            // When
+            await resource.GetAsync(statuses);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("requests")), It.Is<string>(s => s.Contains("status=hold,open"))));
+        }
+
+        [Test]
         public void Put_Called_BuildsUri()
         {
             // Given
@@ -80,7 +123,37 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void PutAsync_Called_BuildsUri()
+        {
+            // Given
+            var request = new RequestRequest { Item = new Request { Subject = "blah blah", Id = 123 } };
+            var resource = new RequestResource(_client.Object);
+
+            // When
+            await resource.PutAsync(request);
+
+            // Then
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        }
+
+        [Test]
         public void Put_CalledWithRequest_ReturnsRequestReponse()
+        {
+            // Given
+            var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
+            var request = new RequestRequest { Item = new Request { Subject = "blah blah", Id = 123 } };
+            _client.Setup(b => b.Put<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var resource = new RequestResource(_client.Object);
+
+            // When
+            var result = resource.Put(request);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public async void PutAsync_CalledWithRequest_ReturnsRequestReponse()
         {
             // Given
             var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
@@ -89,7 +162,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var resource = new RequestResource(_client.Object);
 
             // When
-            var result = resource.Put(request);
+            var result = await resource.PutAsync(request);
 
             // Then
             Assert.That(result, Is.EqualTo(response));
@@ -101,11 +174,24 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
             var request = new RequestRequest { Item = new Request { Subject = "blah blah" } };
+            _client.Setup(b => b.Put<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var requestResource = new RequestResource(_client.Object);
+
+            // When, Then
+            Assert.Throws<ArgumentException>(() => requestResource.Put(request));
+        }
+
+        [Test]
+        public void PutAsync_RequestHasNoId_ThrowsException()
+        {
+            // Given
+            var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
+            var request = new RequestRequest { Item = new Request { Subject = "blah blah" } };
             _client.Setup(b => b.PutAsync<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
             var requestResource = new RequestResource(_client.Object);
 
             // When, Then
-            Assert.Throws<AggregateException>(() => requestResource.Put(request));
+            Assert.Throws<ArgumentException>(async () => await requestResource.PutAsync(request));
         }
 
         [Test]
@@ -123,7 +209,37 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void PostAsync_Called_BuildsUri()
+        {
+            // Given
+            var request = new RequestRequest { Item = new Request { Subject = "blah blah" } };
+            var requestResource = new RequestResource(_client.Object);
+
+            // When
+            await requestResource.PostAsync(request);
+
+            // Then
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        }
+
+        [Test]
         public void Post_CalledWithRequest_ReturnsRequestReponse()
+        {
+            // Given
+            var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
+            var request = new RequestRequest { Item = new Request { Subject = "blah blah" } };
+            _client.Setup(b => b.Post<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var requestResource = new RequestResource(_client.Object);
+
+            // When
+            var result = requestResource.Post(request);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public async void PostAsync_CalledWithRequest_ReturnsRequestReponse()
         {
             // Given
             var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
@@ -132,7 +248,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var requestResource = new RequestResource(_client.Object);
 
             // When
-            var result = requestResource.Post(request);
+            var result = await requestResource.PostAsync(request);
 
             // Then
             Assert.That(result, Is.EqualTo(response));
@@ -153,7 +269,36 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void DeleteAsync_Called_CallsBuildUriWithFieldId()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+            var requestResource = new RequestResource(_client.Object);
+
+            // When
+            await requestResource.DeleteAsync(321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+        }
+
+        [Test]
         public void Delete_Called_CallsDeleteOnClient()
+        {
+            // Given
+            var response = new RequestResponse { Item = new Request { Id = 1 } };
+            _client.Setup(b => b.Get<RequestResponse>(It.IsAny<Uri>())).Returns(response);
+            var requestResource = new RequestResource(_client.Object);
+
+            // When
+            requestResource.Delete(321);
+
+            // Then
+            _client.Verify(c => c.Delete(It.IsAny<Uri>()));
+        }
+
+        [Test]
+        public async void DeleteAsync_Called_CallsDeleteOnClient()
         {
             // Given
             var response = new RequestResponse { Item = new Request { Id = 1 } };
@@ -161,7 +306,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var requestResource = new RequestResource(_client.Object);
 
             // When
-            requestResource.Delete(321);
+            await requestResource.DeleteAsync(321);
 
             // Then
             _client.Verify(c => c.DeleteAsync(It.IsAny<Uri>()));

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
@@ -34,9 +33,39 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/satisfaction_ratings/321")), ""));
         }
 
+        [Test]
+        public async void GetAsync_Called_CallsBuildUriWithFieldId()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
+            var resource = new SatisfactionRatingResource(_client.Object);
+
+            // When
+            await resource.GetAsync(321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/satisfaction_ratings/321")), ""));
+        }
+
 
         [Test]
         public void Get_Called_ReturnsResponse()
+        {
+            // Given
+            var response = new SatisfactionRatingResponse { Item = new SatisfactionRating { Id = 1 }};
+            _client.Setup(b => b.Get<SatisfactionRatingResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
+            var resource = new SatisfactionRatingResource(_client.Object);
+
+            // When
+            var result = resource.Get(321);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public async void GetAsync_Called_ReturnsResponse()
         {
             // Given
             var response = new SatisfactionRatingResponse { Item = new SatisfactionRating { Id = 1 }};
@@ -45,7 +74,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var resource = new SatisfactionRatingResource(_client.Object);
 
             // When
-            var result = resource.Get(321);
+            var result = await resource.GetAsync(321);
 
             // Then
             Assert.That(result, Is.EqualTo(response));
@@ -66,7 +95,37 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void PostAsync_Called_BuildsUri()
+        {
+            // Given
+            var request = new SatisfactionRatingRequest { Item = new SatisfactionRating { Score = SatisfactionRatingScore.good } };
+            var resource = new SatisfactionRatingResource(_client.Object);
+
+            // When
+            await resource.PostAsync(request, 231);
+
+            // Then
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        }
+
+        [Test]
         public void Post_CalledWithRating_ReturnsUserReponse()
+        {
+            // Given
+            var response = new SatisfactionRatingResponse { Item = new SatisfactionRating { Score = SatisfactionRatingScore.good } };
+            var request = new SatisfactionRatingRequest { Item = new SatisfactionRating { Score = SatisfactionRatingScore.good } };
+            _client.Setup(b => b.Post<SatisfactionRatingResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var resource = new SatisfactionRatingResource(_client.Object);
+
+            // When
+            var result = resource.Post(request, 21);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public async void PostAsync_CalledWithRating_ReturnsUserReponse()
         {
             // Given
             var response = new SatisfactionRatingResponse { Item = new SatisfactionRating { Score = SatisfactionRatingScore.good } };
@@ -75,7 +134,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var resource = new SatisfactionRatingResource(_client.Object);
 
             // When
-            var result = resource.Post(request, 21);
+            var result = await resource.PostAsync(request, 21);
 
             // Then
             Assert.That(result, Is.EqualTo(response));
