@@ -57,7 +57,7 @@ namespace ZendeskApi.Client
         public async Task<T> GetAsync<T>(Uri requestUri)
         {
             var request = BuildRequest(requestUri);
-            var response = await _http.GetAsync(request).ConfigureAwait(false);
+            var response = await _http.GetAsync(request);
             ValidateResponse(response);
             return DeserializeContent<T>(response);
         }
@@ -81,7 +81,7 @@ namespace ZendeskApi.Client
         public async Task<T> PostAsync<T>(Uri requestUri, object item = null, string contentType = "application/json")
         {
             var request = BuildRequest(requestUri, item, contentType);
-            var response = await _http.PostAsync(request).ConfigureAwait(false);
+            var response = await _http.PostAsync(request);
             ValidateResponse(response);
             return DeserializeContent<T>(response);
         }
@@ -97,7 +97,7 @@ namespace ZendeskApi.Client
         public async Task<T> PutAsync<T>(Uri requestUri, object item = null, string contentType = "application/json")
         {
             var request = BuildRequest(requestUri, item, contentType);
-            var response = await _http.PutAsync(request).ConfigureAwait(false);
+            var response = await _http.PutAsync(request);
             ValidateResponse(response);
             return DeserializeContent<T>(response);
         }
@@ -110,7 +110,7 @@ namespace ZendeskApi.Client
         public async Task DeleteAsync(Uri requestUri)
         {
             var request = BuildRequest(requestUri);
-            var response = await _http.DeleteAsync(request).ConfigureAwait(false);
+            var response = await _http.DeleteAsync(request);
             ValidateResponse(response);
         }
 

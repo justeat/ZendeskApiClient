@@ -22,7 +22,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<Upload>> GetAsync(long id)
         {
-            return await GetAsync<UploadResponse>(id).ConfigureAwait(false);
+            return await GetAsync<UploadResponse>(id);
         }
 
         public IResponse<Upload> Post(UploadRequest request)

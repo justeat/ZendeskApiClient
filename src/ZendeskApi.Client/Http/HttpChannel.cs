@@ -28,8 +28,8 @@ namespace ZendeskApi.Client.Http
                 ConfigureRequest(request, client);
                 try
                 {
-                    using (var responseMessage = await client.GetAsync(request.RequestUri).ConfigureAwait(false))
-                        response = await BuildResponseAsync(responseMessage).ConfigureAwait(false);
+                    using (var responseMessage = await client.GetAsync(request.RequestUri))
+                        response = await BuildResponseAsync(responseMessage);
                 }
                 catch (WebException ex)
                 {
@@ -77,8 +77,8 @@ namespace ZendeskApi.Client.Http
                 try
                 {
                     var content = BuildHttpContent(request);
-                    using (var responseMessage = await client.PostAsync(request.RequestUri, content).ConfigureAwait(false))
-                        response = await BuildResponseAsync(responseMessage).ConfigureAwait(false);
+                    using (var responseMessage = await client.PostAsync(request.RequestUri, content))
+                        response = await BuildResponseAsync(responseMessage);
                 }
                 catch (WebException ex)
                 {
@@ -106,8 +106,8 @@ namespace ZendeskApi.Client.Http
                 try
                 {
                     var content = BuildHttpContent(request);
-                    using (var responseMessage = await client.PutAsync(request.RequestUri, content).ConfigureAwait(false))
-                        response = await BuildResponseAsync(responseMessage).ConfigureAwait(false);
+                    using (var responseMessage = await client.PutAsync(request.RequestUri, content))
+                        response = await BuildResponseAsync(responseMessage);
                 }
                 catch (WebException ex)
                 {
@@ -134,8 +134,8 @@ namespace ZendeskApi.Client.Http
                 ConfigureRequest(request, client);
                 try
                 {
-                    using (var responseMessage = await client.DeleteAsync(request.RequestUri).ConfigureAwait(false))
-                        response = await BuildResponseAsync(responseMessage).ConfigureAwait(false);
+                    using (var responseMessage = await client.DeleteAsync(request.RequestUri))
+                        response = await BuildResponseAsync(responseMessage);
                 }
                 catch (WebException ex)
                 {
@@ -388,7 +388,7 @@ namespace ZendeskApi.Client.Http
                 Headers = GetResponseHeaders(responseMessage.Headers),
                 StatusCode = responseMessage.StatusCode,
                 ReasonPhrase = responseMessage.ReasonPhrase,
-                Content = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)
+                Content = await responseMessage.Content.ReadAsStringAsync()
             };
             return response;
         }

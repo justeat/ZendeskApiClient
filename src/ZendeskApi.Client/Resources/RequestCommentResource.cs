@@ -21,7 +21,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<TicketComment>> GetAsync(long id, long parentId)
         {
-            return await GetAsync<TicketCommentResponse>(id, parentId).ConfigureAwait(false);
+            return await GetAsync<TicketCommentResponse>(id, parentId);
         }
 
         public IListResponse<TicketComment> GetAll(long parentId)
@@ -31,7 +31,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IListResponse<TicketComment>> GetAllAsync(long parentId)
         {
-            return await GetAllAsync<TicketCommentListResponse>(parentId).ConfigureAwait(false);
+            return await GetAllAsync<TicketCommentListResponse>(parentId);
         }
     }
 }

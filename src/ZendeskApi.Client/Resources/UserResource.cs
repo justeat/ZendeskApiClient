@@ -23,7 +23,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<User>> GetAsync(long id)
         {
-            return await GetAsync<UserResponse>(id).ConfigureAwait(false);
+            return await GetAsync<UserResponse>(id);
         }
 
         public IListResponse<User> GetAll(List<long> ids)
@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IListResponse<User>> GetAllAsync(List<long> ids)
         {
-            return await GetAllAsync<UserListResponse>(ids).ConfigureAwait(false);
+            return await GetAllAsync<UserListResponse>(ids);
         }
 
         public IResponse<User> Post(UserRequest request)
@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<User>> PostAsync(UserRequest request)
         {
-            return await PostAsync<UserRequest, UserResponse>(request).ConfigureAwait(false);
+            return await PostAsync<UserRequest, UserResponse>(request);
         }
 
         public IResponse<User> Put(UserRequest request)
@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<User>> PutAsync(UserRequest request)
         {
-            return await PutAsync<UserRequest, UserResponse>(request).ConfigureAwait(false);
+            return await PutAsync<UserRequest, UserResponse>(request);
         }
     }
 }

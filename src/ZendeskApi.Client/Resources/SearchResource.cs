@@ -28,7 +28,7 @@ namespace ZendeskApi.Client.Resources
         {
             var requestUri = _client.BuildUri(SearchUri, zendeskQuery.BuildQuery());
 
-            return await _client.GetAsync<ListResponse<T>>(requestUri).ConfigureAwait(false);
+            return await _client.GetAsync<ListResponse<T>>(requestUri);
         }
     }
 }

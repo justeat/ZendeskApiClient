@@ -20,7 +20,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<TicketForm>> GetAsync(long id)
         {
-            return await GetAsync<TicketFormResponse>(id).ConfigureAwait(false);
+            return await GetAsync<TicketFormResponse>(id);
         }
 
         public IListResponse<TicketForm> GetAll()
@@ -30,7 +30,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IListResponse<TicketForm>> GetAllAsync()
         {
-            return await GetAllAsync<TicketFormListResponse>().ConfigureAwait(false);
+            return await GetAllAsync<TicketFormListResponse>();
         }
     }
 }
