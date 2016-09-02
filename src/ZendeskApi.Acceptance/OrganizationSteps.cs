@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Threading.Tasks;
 using ZendeskApi.Client;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
