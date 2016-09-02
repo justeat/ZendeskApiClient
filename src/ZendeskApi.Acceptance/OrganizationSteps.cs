@@ -97,8 +97,7 @@ namespace ZendeskApi.Acceptance
         [Then(@"the Organization is no longer in zendesk")]
         public void ThenTheOrganizationIsNoLongerInZendesk()
         {
-            Assert.That(() => _client.Organizations.Get((long)_savedSingleOrganization.Id),
-                Throws.InnerException.TypeOf<HttpException>().And.InnerException.Message.EqualTo("{\"error\":\"RecordNotFound\",\"description\":\"Not found\"}"));
+            Assert.Throws<HttpException>(() => _client.Organizations.Get((long)_savedSingleOrganization.Id), "Organization not in Zendesk");
         }
 
         [AfterScenario]

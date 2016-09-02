@@ -48,8 +48,8 @@ namespace ZendeskApi.Acceptance
         [Then(@"I get a request from Zendesk with the subject '(.*)' and description '(.*)'")]
         public void ThenIGetARequestFromZendeskWithTheSubjectAndDescriptionTWorkInTheseConditions(string subject, string description)
         {
-            Assert.That(_singleRequestResponse.Subject, Is.EqualTo(subject));
-            Assert.That(_singleRequestResponse.Description, Is.EqualTo(description));
+            StringAssert.AreEqualIgnoringCase(subject, _singleRequestResponse.Subject);
+            StringAssert.StartsWith(description, _singleRequestResponse.Description);
             Assert.That(_singleRequestResponse.Created, Is.GreaterThan(DateTime.UtcNow.AddMinutes(-2)));
         }
 
