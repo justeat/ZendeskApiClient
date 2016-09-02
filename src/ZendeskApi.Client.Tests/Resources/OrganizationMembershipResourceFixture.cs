@@ -36,7 +36,36 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void GetAllByOrganizationAsync_Called_CallsBuildUriWithFieldIdAndType()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            await organizationMembershipResource.GetAllByOrganizationAsync(4321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/organizations/")), ""));
+        }
+
+        [Test]
         public void GetAllByOrganization_Called_ReturnsOrganizationMembershipResponse()
+        {
+            // Given
+            var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
+            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(response);
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            var result = organizationMembershipResource.GetAllByOrganization(4321);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public async void GetAllByOrganizationAsync_Called_ReturnsOrganizationMembershipResponse()
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
@@ -44,7 +73,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
-            var result = organizationMembershipResource.GetAllByOrganization(4321);
+            var result = await organizationMembershipResource.GetAllByOrganizationAsync(4321);
 
             // Then
             Assert.That(result, Is.EqualTo(response));
@@ -65,11 +94,25 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void GetAllByUserAsync_Called_CallsBuildUriWithFieldIdAndType()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            await organizationMembershipResource.GetAllByUserAsync(4321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/users/")), ""));
+        }
+
+        [Test]
         public void GetAllByUser_Called_ReturnsOrganizationMembershipResponse()
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(response);
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
@@ -80,7 +123,22 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
-        public void GetAll_Called_CallsBuildUriWithFieldId()
+        public async void GetAllByUserAsync_Called_ReturnsOrganizationMembershipResponse()
+        {
+            // Given
+            var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
+            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            var result = await organizationMembershipResource.GetAllByUserAsync(4321);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void GetAllAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
@@ -98,7 +156,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(It.IsAny<Uri>())).Returns(response);
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
@@ -123,7 +181,37 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void PostAsync_Called_BuildsUriWithFieldUserId()
+        {
+            // Given
+            var request = new OrganizationMembershipRequest { Item = new OrganizationMembership { UserId = 1234 } };
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            await organizationMembershipResource.PostAsync(request);
+
+            // Then
+            _client.Setup(b => b.BuildUri(It.Is<string>(s => s.Contains("1234")), ""));
+        }
+
+        [Test]
         public void Post_CalledWithId_ReturnsReponseWithId()
+        {
+            // Given
+            var response = new OrganizationMembershipResponse { Item = new OrganizationMembership { Id = 123 } };
+            var request = new OrganizationMembershipRequest { Item = new OrganizationMembership { Id = 123 } };
+            _client.Setup(b => b.Post<OrganizationMembershipResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            var result = organizationMembershipResource.Post(request);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public async void PostAsync_CalledWithId_ReturnsReponseWithId()
         {
             // Given
             var response = new OrganizationMembershipResponse { Item = new OrganizationMembership { Id = 123 } };
@@ -132,7 +220,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
 
             // When
-            var result = organizationMembershipResource.Post(request);
+            var result = await organizationMembershipResource.PostAsync(request);
 
             // Then
             Assert.That(result, Is.EqualTo(response));

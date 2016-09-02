@@ -20,6 +20,20 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async void GetAsync_Called_CallsBuildUriWithFieldId()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
+            var groupResource = new GroupsResource(_client.Object);
+
+            // When
+            await groupResource.GetAsync(321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/groups/321")), ""));
+        }
+
+        [Test]
         public void Get_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -35,11 +49,27 @@ namespace ZendeskApi.Client.Tests.Resources
 
 
         [Test]
-        public void Get_Called_ReturnsResponse()
+        public async void GetAsync_Called_ReturnsResponse()
         {
             // Given
             var response = new GroupResponse { Item = new Group { Id = 1 }};
             _client.Setup(b => b.GetAsync<GroupResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
+            var groupResource = new GroupsResource(_client.Object);
+
+            // When
+            var result = await groupResource.GetAsync(321);
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
+        public void Get_Called_ReturnsResponse()
+        {
+            // Given
+            var response = new GroupResponse { Item = new Group { Id = 1 }};
+            _client.Setup(b => b.Get<GroupResponse>(It.IsAny<Uri>())).Returns(response);
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
             var groupResource = new GroupsResource(_client.Object);
 

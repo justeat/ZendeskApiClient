@@ -15,7 +15,7 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<TicketField> Get(long id)
         {
-            return GetAsync(id).Result;
+            return Get<TicketFieldResponse>(id);
         }
 
         public async Task<IResponse<TicketField>> GetAsync(long id)
@@ -25,7 +25,7 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<TicketField> GetAll()
         {
-            return GetAllAsync().Result;
+            return GetAll<TicketFieldListResponse>();
         }
 
         public async Task<IListResponse<TicketField>> GetAllAsync()

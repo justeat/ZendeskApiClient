@@ -152,8 +152,7 @@ namespace ZendeskApi.Acceptance
         [Then(@"the ticket is no longer in zendesk")]
         public void ThenTheTicketIsNoLongerInZendesk()
         {
-            Assert.That(() => _client.Tickets.Get((long)_savedSingleTicket.Id),
-                Throws.InnerException.TypeOf<HttpException>().And.InnerException.Message.EqualTo("{\"error\":\"RecordNotFound\",\"description\":\"Not found\"}"));
+            Assert.Throws<HttpException>(() => _client.Tickets.Get((long) _savedSingleTicket.Id), "Tickets not in Zendesk");
         }
 
         [AfterScenario]

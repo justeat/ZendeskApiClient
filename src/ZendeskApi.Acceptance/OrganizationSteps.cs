@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Threading.Tasks;
 using ZendeskApi.Client;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
@@ -97,8 +98,7 @@ namespace ZendeskApi.Acceptance
         [Then(@"the Organization is no longer in zendesk")]
         public void ThenTheOrganizationIsNoLongerInZendesk()
         {
-            Assert.That(() => _client.Organizations.Get((long)_savedSingleOrganization.Id),
-                Throws.InnerException.TypeOf<HttpException>().And.InnerException.Message.EqualTo("{\"error\":\"RecordNotFound\",\"description\":\"Not found\"}"));
+            Assert.Throws<HttpException>(() => _client.Organizations.Get((long)_savedSingleOrganization.Id), "Organization not in Zendesk");
         }
 
         [AfterScenario]

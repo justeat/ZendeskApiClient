@@ -19,7 +19,9 @@ namespace ZendeskApi.Client.Resources
 
         protected IResponse<T> Get<TResponse>(long id) where TResponse : IResponse<T>
         {
-            return GetAsync<TResponse>(id).Result;
+            var requestUri = Client.BuildUri($"{ResourceUri}/{id}");
+
+            return Client.Get<TResponse>(requestUri);
         }
 
         protected async Task<IResponse<T>> GetAsync<TResponse>(long id) where TResponse : IResponse<T>
@@ -31,7 +33,9 @@ namespace ZendeskApi.Client.Resources
 
         protected IResponse<T> Get<TResponse>(string query) where TResponse : IResponse<T>
         {
-            return GetAsync<TResponse>(query).Result;
+            var requestUri = Client.BuildUri(ResourceUri, query);
+
+            return Client.Get<TResponse>(requestUri);
         }
 
         protected async Task<IResponse<T>> GetAsync<TResponse>(string query) where TResponse : IResponse<T>
@@ -43,7 +47,9 @@ namespace ZendeskApi.Client.Resources
 
         protected IResponse<T> Get<TResponse>(long id, long parentId) where TResponse : IResponse<T>
         {
-            return GetAsync<TResponse>(id, parentId).Result;
+            var requestUri = Client.BuildUri($"{string.Format(ResourceUri, parentId)}/{id}");
+
+            return Client.Get<TResponse>(requestUri);
         }
 
         protected async Task<IResponse<T>> GetAsync<TResponse>(long id, long parentId) where TResponse : IResponse<T>
@@ -55,7 +61,9 @@ namespace ZendeskApi.Client.Resources
 
         protected TResponse GetAll<TResponse>(IEnumerable<long> ids) where TResponse : IListResponse<T>
         {
-            return GetAllAsync<TResponse>().Result;
+            var requestUri = Client.BuildUri($"{ResourceUri}/{ShowMany}", $"ids={ZendeskFormatter.ToCsv(ids)}");
+
+            return Client.Get<TResponse>(requestUri);
         }
 
         protected async Task<TResponse> GetAllAsync<TResponse>(IEnumerable<long> ids) where TResponse : IListResponse<T>
@@ -67,7 +75,9 @@ namespace ZendeskApi.Client.Resources
 
         protected TResponse GetAll<TResponse>(long parentId) where TResponse : IListResponse<T>
         {
-            return GetAllAsync<TResponse>(parentId).Result;
+            var requestUri = Client.BuildUri(string.Format(ResourceUri, parentId));
+
+            return Client.Get<TResponse>(requestUri);
         }
 
         protected async Task<TResponse> GetAllAsync<TResponse>(long parentId) where TResponse : IListResponse<T>
@@ -79,7 +89,9 @@ namespace ZendeskApi.Client.Resources
 
         protected TResponse GetAll<TResponse>() where TResponse : IListResponse<T>
         {
-            return GetAllAsync<TResponse>().Result;
+            var requestUri = Client.BuildUri(string.Format(ResourceUri));
+
+            return Client.Get<TResponse>(requestUri);
         }
 
         protected async Task<TResponse> GetAllAsync<TResponse>() where TResponse : IListResponse<T>
@@ -93,21 +105,27 @@ namespace ZendeskApi.Client.Resources
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return PutAsync<TRequest, TResponse>(request, null).Result;
+            return Put<TRequest, TResponse>(request, null);
         }
 
         protected async Task<IResponse<T>> PutAsync<TRequest, TResponse>(TRequest request)
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return await PutAsync<TRequest, TResponse>(request, null);
+            return await PutAsync<TRequest, TResponse>(request, null).ConfigureAwait(false);
         }
 
         protected IResponse<T> Put<TRequest, TResponse>(TRequest request, long? parentId)
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return PutAsync<TRequest, TResponse>(request, parentId).Result;
+            if (!request.Item.Id.HasValue || request.Item.Id <= 0)
+                throw new ArgumentException("Item must exist in Zendesk");
+
+            var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
+            var requestUri = Client.BuildUri($"{resourceUri}/{request.Item.Id}");
+
+            return Client.Put<TResponse>(requestUri, request);
         }
 
         protected async Task<IResponse<T>> PutAsync<TRequest, TResponse>(TRequest request, long? parentId)
@@ -127,21 +145,24 @@ namespace ZendeskApi.Client.Resources
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return PostAsync<TRequest, TResponse>(request, null).Result;
+            return Post<TRequest, TResponse>(request, null);
         }
 
         protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request) 
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return await PostAsync<TRequest, TResponse>(request, null);
+            return await PostAsync<TRequest, TResponse>(request, null).ConfigureAwait(false);
         }
 
         protected TResponse Post<TRequest, TResponse>(TRequest request, long? parentId) 
             where TRequest : IRequest<T>
             where TResponse : IResponse<T>
         {
-            return PostAsync<TRequest, TResponse>(request, parentId).Result;
+            var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
+            var requestUri = Client.BuildUri(resourceUri);
+
+            return Client.Post<TResponse>(requestUri, request);
         }
 
         protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request, long? parentId) 
@@ -156,17 +177,19 @@ namespace ZendeskApi.Client.Resources
 
         public void Delete(long id)
         {
-            Task.WaitAll(DeleteAsync(id, null));
+            Delete(id, null);
         }
 
         public async Task DeleteAsync(long id)
         {
-            await DeleteAsync(id, null);
+            await DeleteAsync(id, null).ConfigureAwait(false);
         }
 
         public void Delete(string token)
         {
-            Task.WaitAll(DeleteAsync(token));
+            var requestUri = Client.BuildUri($"{ResourceUri}/{token}");
+
+            Client.Delete(requestUri);
         }
 
         public async Task DeleteAsync(string token)
@@ -178,7 +201,13 @@ namespace ZendeskApi.Client.Resources
 
         public void Delete(long id, long? parentId)
         {
-            Task.WaitAll(DeleteAsync(id, parentId));
+            if (id <= 0)
+                throw new ArgumentException("Item must exist in Zendesk");
+
+            var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
+            var requestUri = Client.BuildUri($"{resourceUri}/{id}");
+
+            Client.Delete(requestUri);
         }
 
         public async Task DeleteAsync(long id, long? parentId)

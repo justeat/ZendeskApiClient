@@ -19,14 +19,16 @@ namespace ZendeskApi.Client.Resources
 
         public IListResponse<T> Find<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
         {
-            return FindAsync(zendeskQuery).Result;
+            var requestUri = _client.BuildUri(SearchUri, zendeskQuery.BuildQuery());
+
+            return _client.Get<ListResponse<T>>(requestUri);
         }
 
         public async Task<IListResponse<T>> FindAsync<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
         {
             var requestUri = _client.BuildUri(SearchUri, zendeskQuery.BuildQuery());
 
-            return await _client.GetAsync<ListResponse<T>>(requestUri);
+            return await _client.GetAsync<ListResponse<T>>(requestUri).ConfigureAwait(false);
         }
     }
 }

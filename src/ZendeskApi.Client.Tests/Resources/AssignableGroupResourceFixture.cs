@@ -30,5 +30,20 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/assignable")), ""));
         }
 
+
+        [Test]
+        public async void GetAllAsync_Called_CallsBuildUriWithFieldId()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+            var groupResource = new AssignableGroupResource(_client.Object);
+
+            // When
+            await groupResource.GetAllAsync();
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/assignable")), ""));
+        }
+
     }
 }
