@@ -58,25 +58,25 @@ namespace ZendeskApi.Contracts.Queries
 
             foreach (var filter in _customFilters)
             {
-                string operatorString = String.Empty;
+                string operatorAndField = String.Empty;
                 switch (filter.FilterOperator)
                 {
                     case FilterOperator.LessThan:
-                        operatorString = "<";
+                        operatorAndField = string.Format("{0}<", filter.Field);
                         break;
                     case FilterOperator.GreaterThan:
-                        operatorString = ">";
+                        operatorAndField = string.Format("{0}>", filter.Field);
                         break;
                     case FilterOperator.Equals:
-                        operatorString = ":";
+                        operatorAndField = string.Format("{0}:", filter.Field);
                         break;
                     case FilterOperator.NotEqual:
-                        operatorString = ":-";
+                        operatorAndField = string.Format("-{0}:", filter.Field);
                         break;
                     default:
                         break;
                 }
-                sb.Append(string.Format("{0}{1}{2}{3}", HttpUtility.UrlEncode(" "), filter.Field, operatorString, HttpUtility.UrlEncode(filter.Value)));
+                sb.Append(string.Format("{0}{1}{2}", HttpUtility.UrlEncode(" "), operatorAndField, HttpUtility.UrlEncode(filter.Value)));
             }
             sb.Append(string.Format("&sort_by={0}&sort_order={1}", _orderBy.ToString().ToLower(), _order.ToString().ToLower()));
 
