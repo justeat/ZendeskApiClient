@@ -101,7 +101,7 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:ticket+name:-cheese+factory&sort_by=priority&sort_order=asc&page=3&per_page=15"));
+            Assert.That(queryString, Is.EqualTo("query=type:ticket+-name:cheese+factory&sort_by=priority&sort_order=asc&page=3&per_page=15"));
         }
     }
 }
