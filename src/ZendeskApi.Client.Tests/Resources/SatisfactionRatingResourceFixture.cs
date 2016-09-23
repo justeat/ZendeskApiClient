@@ -67,6 +67,12 @@ namespace ZendeskApi.Client.Tests.Resources
 
             // Then
             Assert.That(result, Is.EqualTo(response));
+
+            //check the resource and operation are correctly populated
+            _client.Verify(c => c.Get<SatisfactionRatingResponse>(
+                It.IsAny<Uri>(),
+                It.Is<string>(s => s == "SatisfactionRatingResource"),
+                It.Is<string>(s => s == "Get")));
         }
 
         [Test]
