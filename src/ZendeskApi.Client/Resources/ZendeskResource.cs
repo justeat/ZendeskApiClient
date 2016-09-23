@@ -189,14 +189,14 @@ namespace ZendeskApi.Client.Resources
         {
             var requestUri = Client.BuildUri($"{ResourceUri}/{token}");
 
-            Client.Delete(requestUri);
+            Client.Delete<object>(requestUri);
         }
 
         public async Task DeleteAsync(string token)
         {
             var requestUri = Client.BuildUri($"{ResourceUri}/{token}");
 
-            await Client.DeleteAsync(requestUri).ConfigureAwait(false);
+            await Client.DeleteAsync<object>(requestUri).ConfigureAwait(false);
         }
 
         public void Delete(long id, long? parentId)
@@ -207,7 +207,7 @@ namespace ZendeskApi.Client.Resources
             var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
             var requestUri = Client.BuildUri($"{resourceUri}/{id}");
 
-            Client.Delete(requestUri);
+            Client.Delete<object>(requestUri);
         }
 
         public async Task DeleteAsync(long id, long? parentId)
@@ -218,7 +218,7 @@ namespace ZendeskApi.Client.Resources
             var resourceUri = parentId == null ? ResourceUri : string.Format(ResourceUri, parentId);
             var requestUri = Client.BuildUri($"{resourceUri}/{id}");
 
-            await Client.DeleteAsync(requestUri).ConfigureAwait(false);
+            await Client.DeleteAsync<object>(requestUri).ConfigureAwait(false);
         }
     }
 }

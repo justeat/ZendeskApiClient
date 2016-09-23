@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new UserIdentityListResponse { Results = new List<UserIdentity> { new UserIdentity { Id = 1 } } };
-            _client.Setup(b => b.Get<UserIdentityListResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.Get<UserIdentityListResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(response);
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When
@@ -68,7 +68,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new UserIdentityListResponse { Results = new List<UserIdentity> { new UserIdentity { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<UserIdentityListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.GetAsync<UserIdentityListResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When
@@ -112,7 +112,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email" } };
             var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email" } };
-            _client.Setup(b => b.Post<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.Post<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(response);
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When
@@ -128,7 +128,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email" } };
             var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email" } };
-            _client.Setup(b => b.PostAsync<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.PostAsync<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When
@@ -172,7 +172,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email", Id = 123 } };
             var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", Id = 123 } };
-            _client.Setup(b => b.Put<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.Put<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(response);
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When
@@ -188,7 +188,7 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new UserIdentityResponse { Item = new UserIdentity { Name = "email", Id = 123 } };
             var request = new UserIdentityRequest { Item = new UserIdentity { Name = "email", Id = 123 } };
-            _client.Setup(b => b.PutAsync<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.PutAsync<UserIdentityResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var userIdentityResource = new UserIdentityResource(_client.Object);
 
             // When

@@ -53,7 +53,12 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new SatisfactionRatingResponse { Item = new SatisfactionRating { Id = 1 }};
-            _client.Setup(b => b.Get<SatisfactionRatingResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.Get<SatisfactionRatingResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(response);
+
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
             var resource = new SatisfactionRatingResource(_client.Object);
 
@@ -69,7 +74,12 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new SatisfactionRatingResponse { Item = new SatisfactionRating { Id = 1 }};
-            _client.Setup(b => b.GetAsync<SatisfactionRatingResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.GetAsync<SatisfactionRatingResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(TaskHelper.CreateTaskFromResult(response));
+
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
             var resource = new SatisfactionRatingResource(_client.Object);
 
@@ -114,7 +124,14 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new SatisfactionRatingResponse { Item = new SatisfactionRating { Score = SatisfactionRatingScore.good } };
             var request = new SatisfactionRatingRequest { Item = new SatisfactionRating { Score = SatisfactionRatingScore.good } };
-            _client.Setup(b => b.Post<SatisfactionRatingResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.Post<SatisfactionRatingResponse>(
+                It.IsAny<Uri>(), 
+                request, 
+                "application/json",
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(response);
+
             var resource = new SatisfactionRatingResource(_client.Object);
 
             // When
@@ -130,7 +147,14 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new SatisfactionRatingResponse { Item = new SatisfactionRating { Score = SatisfactionRatingScore.good } };
             var request = new SatisfactionRatingRequest { Item = new SatisfactionRating { Score = SatisfactionRatingScore.good } };
-            _client.Setup(b => b.PostAsync<SatisfactionRatingResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.PostAsync<SatisfactionRatingResponse>(
+                It.IsAny<Uri>(), 
+                request, 
+                "application/json", 
+                It.IsAny<string>(), 
+                It.IsAny<string>()))
+                .Returns(TaskHelper.CreateTaskFromResult(response));
+
             var resource = new SatisfactionRatingResource(_client.Object);
 
             // When

@@ -24,7 +24,10 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             //Given
             var response = new TicketCommentListResponse();
-            _client.Setup(c => c.Get<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(c => c.Get<TicketCommentListResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>())).Returns(response);
             var resource = new RequestCommentResource(_client.Object);
 
             //When
@@ -39,7 +42,11 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             //Given
             var response = new TicketCommentListResponse();
-            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
+
             var resource = new RequestCommentResource(_client.Object);
 
             //When
@@ -57,7 +64,11 @@ namespace ZendeskApi.Client.Tests.Resources
             {
                 Results = new List<TicketComment> { new TicketComment { Id = 123 } }
             };
-            _client.Setup(c => c.Get<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(c => c.Get<TicketCommentListResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>())).Returns(response);
+
             var resource = new RequestCommentResource(_client.Object);
 
             //When
@@ -75,7 +86,11 @@ namespace ZendeskApi.Client.Tests.Resources
             {
                 Results = new List<TicketComment> { new TicketComment { Id = 123 } }
             };
-            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
+
             var resource = new RequestCommentResource(_client.Object);
 
             //When
@@ -90,7 +105,12 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             //Given
             var response = new TicketCommentListResponse();
-            _client.Setup(c => c.Get<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(c => c.Get<TicketCommentListResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(response);
+
             var resource = new RequestCommentResource(_client.Object);
 
             //When
@@ -105,7 +125,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             //Given
             var response = new TicketCommentListResponse();
-            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(c => c.GetAsync<TicketCommentListResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var resource = new RequestCommentResource(_client.Object);
 
             //When
