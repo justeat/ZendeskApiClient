@@ -7,52 +7,56 @@ using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class OrganizationMembershipResource : ZendeskResource<OrganizationMembership>, IOrganizationMembershipResource
+    public class OrganizationMembershipResource : IOrganizationMembershipResource
     {
-        private string _resourceUrl;
-        protected override string ResourceUri => _resourceUrl ?? @"/api/v2/users/{0}/organization_memberships";
+        private readonly IRestClient _client;
 
         public OrganizationMembershipResource(IRestClient client)
         {
-            Client = client;
+            _client = client;
         }
 
         public IListResponse<OrganizationMembership> GetAllByOrganization(long organizationId)
         {
-            _resourceUrl = @"/api/v2/organizations/{0}/organization_memberships";
-            return GetAll<OrganizationMembershipListResponse>(organizationId);
+            var requestUri = _client.BuildUri($"/api/v2/organizations/{organizationId}/organization_memberships");
+            return _client.Get<OrganizationMembershipListResponse>(requestUri);
         }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByOrganizationAsync(long organizationId)
         {
-            _resourceUrl = @"/api/v2/organizations/{0}/organization_memberships";
-            return await GetAllAsync<OrganizationMembershipListResponse>(organizationId).ConfigureAwait(false);
+            var requestUri = _client.BuildUri($"/api/v2/organizations/{organizationId}/organization_memberships");
+            return await _client.GetAsync<OrganizationMembershipListResponse>(requestUri).ConfigureAwait(false);
         }
 
         public IListResponse<OrganizationMembership> GetAllByUser(long userId)
         {
-            return GetAll<OrganizationMembershipListResponse>(userId);
+            var requestUri = _client.BuildUri($"/api/v2/users/{userId}/organization_memberships");
+            return _client.Get<OrganizationMembershipListResponse>(requestUri);
         }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByUserAsync(long userId)
         {
-            return await GetAllAsync<OrganizationMembershipListResponse>(userId).ConfigureAwait(false);
+            var requestUri = _client.BuildUri($"/api/v2/users/{userId}/organization_memberships");
+            return await _client.GetAsync<OrganizationMembershipListResponse>(requestUri).ConfigureAwait(false);
         }
 
         public IResponse<OrganizationMembership> Post(OrganizationMembershipRequest request)
         {
-            return Post<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, request.Item.UserId);
+            var requestUri = _client.BuildUri($"/api/v2/users/{request.Item.UserId}/organization_memberships");
+            return _client.Post<OrganizationMembershipResponse>(requestUri, request);
         }
 
         public async Task<IResponse<OrganizationMembership>> PostAsync(OrganizationMembershipRequest request)
         {
-            return await PostAsync<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, request.Item.UserId).ConfigureAwait(false);
+            var requestUri = _client.BuildUri($"/api/v2/users/{request.Item.UserId}/organization_memberships");
+            return await _client.PostAsync<OrganizationMembershipResponse>(requestUri, request).ConfigureAwait(false);
         }
 
         [Obsolete("GetAll is deprecated, please use GetAllByUser or GetAllByOrganization instead.")]
         public IListResponse<OrganizationMembership> GetAll(long id)
         {
-            return GetAll<OrganizationMembershipListResponse>(id);
+            var requestUri = _client.BuildUri($"/api/v2/users/{id}/organization_memberships");
+            return _client.Get<OrganizationMembershipListResponse>(requestUri);
         }
     }
 }
