@@ -34,6 +34,21 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public void Post_MultipleMethodsAreCalled_CalledUrlIsCorrect()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
+            var resource = new SatisfactionRatingResource(_client.Object);
+
+            // When
+            resource.Get(321);
+            resource.Post(new SatisfactionRatingRequest(), 1);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/tickets/1")), ""));
+        }
+
+        [Test]
         public async void GetAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
