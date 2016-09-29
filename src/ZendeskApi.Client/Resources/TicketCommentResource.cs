@@ -1,29 +1,28 @@
 ﻿using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
+using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class TicketCommentResource : ITicketCommentResource
+    public class TicketCommentResource : ZendeskResource<TicketComment>, ITicketCommentResource
     {
-        private readonly IRestClient _client;
+        private const string ResourceUri = "/api/v2/tickets/{0}/comments";
 
         public TicketCommentResource(IRestClient client)
         {
-            _client = client;
+            Client = client;
         }
 
         public IListResponse<TicketComment> GetAll(long parentId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/tickets/{parentId}/comments");
-            return _client.Get<TicketCommentListResponse>(requestUri);
+            return GetAll<TicketCommentListResponse>(string.Format(ResourceUri, parentId));
         }
 
         public async Task<IListResponse<TicketComment>> GetAllAsync(long parentId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/tickets/{parentId}/comments");
-            return await _client.GetAsync<TicketCommentListResponse>(requestUri).ConfigureAwait(false);
+            return await GetAllAsync<TicketCommentListResponse>(string.Format(ResourceUri, parentId)).ConfigureAwait(false);
         }
     }
 }

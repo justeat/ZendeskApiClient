@@ -1,76 +1,67 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
+using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class UserIdentityResource : IUserIdentityResource
+    public class UserIdentityResource : ZendeskResource<UserIdentity>, IUserIdentityResource
     {
-        private readonly IRestClient _client;
+        private const string ResourceUri = "/api/v2/users/{0}/identities";
 
         public UserIdentityResource(IRestClient client)
         {
-            _client = client;
+            Client = client;
         }
 
         public IListResponse<UserIdentity> GetAll(long id)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{id}/identities");
-            return _client.Get<UserIdentityListResponse>(requestUri);
+            return GetAll<UserIdentityListResponse>(string.Format(ResourceUri, id));
         }
 
         public async Task<IListResponse<UserIdentity>> GetAllAsync(long id)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{id}/identities");
-            return await _client.GetAsync<UserIdentityListResponse>(requestUri).ConfigureAwait(false);
+            return await GetAllAsync<UserIdentityListResponse>(string.Format(ResourceUri, id)).ConfigureAwait(false);
         }
 
         public IResponse<UserIdentity> Post(UserIdentityRequest request)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{request.Item.UserId}/identities");
-            return _client.Post<UserIdentityResponse>(requestUri, request);
+            return Post<UserIdentityRequest, UserIdentityResponse>(request, 
+                string.Format(ResourceUri, request.Item.UserId));
         }
 
         public async Task<IResponse<UserIdentity>> PostAsync(UserIdentityRequest request)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{request.Item.UserId}/identities");
-            return await _client.PostAsync<UserIdentityResponse>(requestUri, request).ConfigureAwait(false);
+            return await PostAsync<UserIdentityRequest, UserIdentityResponse>(request, 
+                string.Format(ResourceUri, request.Item.UserId)).ConfigureAwait(false);
         }
 
         public IResponse<UserIdentity> Put(UserIdentityRequest request)
         {
-            if (!request.Item.Id.HasValue || request.Item.Id <= 0)
-                throw new ArgumentException("Item must exist in Zendesk");
-
-            var requestUri = _client.BuildUri($"/api/v2/users/{request.Item.UserId}/identities");
-            return _client.Put<UserIdentityResponse>(requestUri, request);
+            ValidateRequest(request);
+            return Put<UserIdentityRequest, UserIdentityResponse>(request, 
+                string.Format(ResourceUri, request.Item.UserId));
         }
 
         public async Task<IResponse<UserIdentity>> PutAsync(UserIdentityRequest request)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{request.Item.UserId}/identities");
-            return await _client.PutAsync<UserIdentityResponse>(requestUri, request).ConfigureAwait(false);
+            return await PutAsync<UserIdentityRequest, UserIdentityResponse>(request,
+                string.Format(ResourceUri, request.Item.UserId)).ConfigureAwait(false);
         }
 
         public void Delete(long id, long parentId)
         {
-            if (id <= 0)
-                throw new ArgumentException("Item must exist in Zendesk");
-
-            var requestUri = _client.BuildUri($"/api/v2/users/{parentId}/identities/{id}");
-            _client.Delete(requestUri);
+            ValidateRequest(id);
+            Delete($"{string.Format(ResourceUri, parentId)}/{id}");
         }
 
         public async Task DeleteAsync(long id, long parentId)
         {
-            if (id <= 0)
-                throw new ArgumentException("Item must exist in Zendesk");
-
-            var requestUri = _client.BuildUri($"/api/v2/users/{parentId}/identities/{id}");
-            await _client.DeleteAsync(requestUri).ConfigureAwait(false);
+            ValidateRequest(id);
+            await DeleteAsync($"{string.Format(ResourceUri, parentId)}/{id}").ConfigureAwait(false); ;
         }
     }
 }

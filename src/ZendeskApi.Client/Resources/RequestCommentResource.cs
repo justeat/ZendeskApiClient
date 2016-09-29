@@ -1,41 +1,43 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
+using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class RequestCommentResource : IRequestCommentResource
+    public class RequestCommentResource : ZendeskResource<TicketComment>, IRequestCommentResource
     {
-        private readonly IRestClient _client;
+        private const string ResourceUri = "/api/v2/requests/{0}/comments";
 
         public RequestCommentResource(IRestClient client)
         {
-            _client = client;
+            Client = client;
         }
 
         public IResponse<TicketComment> Get(long id, long parentId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/requests/{parentId}/comments/{id}");
-            return _client.Get<TicketCommentResponse>(requestUri);
+            string url = $"{string.Format(ResourceUri, parentId)}/{id}";
+            return Get<TicketCommentResponse>(url);
         }
 
         public async Task<IResponse<TicketComment>> GetAsync(long id, long parentId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/requests/{parentId}/comments/{id}");
-            return await _client.GetAsync<TicketCommentResponse>(requestUri).ConfigureAwait(false);
+            string url = $"{string.Format(ResourceUri, parentId)}/{id}";
+            return await GetAsync<TicketCommentResponse>(url).ConfigureAwait(false);
         }
 
         public IListResponse<TicketComment> GetAll(long parentId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/requests/{parentId}/comments");
-            return _client.Get<TicketCommentListResponse>(requestUri);
+            string url = string.Format(ResourceUri, parentId);
+            return GetAll<TicketCommentListResponse>(url);
         }
 
         public async Task<IListResponse<TicketComment>> GetAllAsync(long parentId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/requests/{parentId}/comments");
-            return await _client.GetAsync<TicketCommentListResponse>(requestUri).ConfigureAwait(false);
+            string url = string.Format(ResourceUri, parentId);
+            return await GetAllAsync<TicketCommentListResponse>(url).ConfigureAwait(false);
         }
     }
 }

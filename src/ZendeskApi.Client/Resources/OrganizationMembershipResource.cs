@@ -1,62 +1,64 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
+using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class OrganizationMembershipResource : IOrganizationMembershipResource
+    public class OrganizationMembershipResource : ZendeskResource<OrganizationMembership>, IOrganizationMembershipResource
     {
-        private readonly IRestClient _client;
+        private const string UsersUrl = "/api/v2/users/{0}/organization_memberships";
+        private const string OrganisationsUrl = "/api/v2/organizations/{0}/organization_memberships";
 
         public OrganizationMembershipResource(IRestClient client)
         {
-            _client = client;
+            Client = client;
         }
 
         public IListResponse<OrganizationMembership> GetAllByOrganization(long organizationId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/organizations/{organizationId}/organization_memberships");
-            return _client.Get<OrganizationMembershipListResponse>(requestUri);
+            string url = string.Format(OrganisationsUrl, organizationId);
+            return GetAll<OrganizationMembershipListResponse>(url);
         }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByOrganizationAsync(long organizationId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/organizations/{organizationId}/organization_memberships");
-            return await _client.GetAsync<OrganizationMembershipListResponse>(requestUri).ConfigureAwait(false);
+            string url = string.Format(OrganisationsUrl, organizationId);
+            return await GetAllAsync<OrganizationMembershipListResponse>(url).ConfigureAwait(false); ;
         }
 
         public IListResponse<OrganizationMembership> GetAllByUser(long userId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{userId}/organization_memberships");
-            return _client.Get<OrganizationMembershipListResponse>(requestUri);
+            string url = string.Format(UsersUrl, userId);
+            return GetAll<OrganizationMembershipListResponse>(url);
         }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByUserAsync(long userId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{userId}/organization_memberships");
-            return await _client.GetAsync<OrganizationMembershipListResponse>(requestUri).ConfigureAwait(false);
+            string url = string.Format(UsersUrl, userId);
+            return await GetAllAsync<OrganizationMembershipListResponse>(url).ConfigureAwait(false);
         }
 
         public IResponse<OrganizationMembership> Post(OrganizationMembershipRequest request)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{request.Item.UserId}/organization_memberships");
-            return _client.Post<OrganizationMembershipResponse>(requestUri, request);
+            string url = string.Format(UsersUrl, request.Item.UserId);
+            return Post<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, url);
         }
 
         public async Task<IResponse<OrganizationMembership>> PostAsync(OrganizationMembershipRequest request)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{request.Item.UserId}/organization_memberships");
-            return await _client.PostAsync<OrganizationMembershipResponse>(requestUri, request).ConfigureAwait(false);
+            string url = string.Format(UsersUrl, request.Item.UserId);
+            return await PostAsync<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, url).ConfigureAwait(false);
         }
 
         [Obsolete("GetAll is deprecated, please use GetAllByUser or GetAllByOrganization instead.")]
         public IListResponse<OrganizationMembership> GetAll(long id)
         {
-            var requestUri = _client.BuildUri($"/api/v2/users/{id}/organization_memberships");
-            return _client.Get<OrganizationMembershipListResponse>(requestUri);
+            string url = string.Format(UsersUrl, id);
+            return GetAll<OrganizationMembershipListResponse>(url);
         }
     }
 }

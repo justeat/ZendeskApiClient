@@ -1,42 +1,44 @@
 ﻿using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
+using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class SatisfactionRatingResource : ISatisfactionRatingResource
+    public class SatisfactionRatingResource : ZendeskResource<SatisfactionRating>, ISatisfactionRatingResource
     {
-        private readonly IRestClient _client;
+        private const string GetResourceUrl = "/api/v2/satisfaction_ratings/{0}";
+        private const string PostResourceUrl = "/api/v2/tickets/{0}/satisfaction_rating";
 
         public SatisfactionRatingResource(IRestClient client)
         {
-            _client = client;
+            Client = client;
         }
 
         public IResponse<SatisfactionRating> Get(long id)
         {
-            var requestUri = _client.BuildUri($"/api/v2/satisfaction_ratings/{id}");
-            return _client.Get<SatisfactionRatingResponse>(requestUri);
+            string url = string.Format(GetResourceUrl, id);
+            return Get<SatisfactionRatingResponse>(url);
         }
 
         public async Task<IResponse<SatisfactionRating>> GetAsync(long id)
         {
-            var requestUri = _client.BuildUri($"/api/v2/satisfaction_ratings/{id}");
-            return await _client.GetAsync<SatisfactionRatingResponse>(requestUri).ConfigureAwait(false);
+            string url = string.Format(GetResourceUrl, id);
+            return await GetAsync<SatisfactionRatingResponse>(url).ConfigureAwait(false);
         }
 
         public IResponse<SatisfactionRating> Post(SatisfactionRatingRequest request, long ticketId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/tickets/{ticketId}/satisfaction_rating");
-            return _client.Post<SatisfactionRatingResponse>(requestUri, request);
+            string url = string.Format(PostResourceUrl, ticketId);
+            return Post<SatisfactionRatingRequest, SatisfactionRatingResponse>(request, url);
         }
 
         public async Task<IResponse<SatisfactionRating>> PostAsync(SatisfactionRatingRequest request, long ticketId)
         {
-            var requestUri = _client.BuildUri($"/api/v2/tickets/{ticketId}/satisfaction_rating");
-            return await _client.PostAsync<SatisfactionRatingResponse>(requestUri, request).ConfigureAwait(false);
+            string url = string.Format(PostResourceUrl, ticketId);
+            return await PostAsync<SatisfactionRatingRequest, SatisfactionRatingResponse>(request, url).ConfigureAwait(false);
         }
     }
 }
