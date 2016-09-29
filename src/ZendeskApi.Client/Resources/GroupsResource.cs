@@ -5,23 +5,26 @@ using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class GroupsResource : ZendeskResource<Group>, IGroupResource
+    public class GroupsResource : IGroupResource
     {
-        protected override string ResourceUri => @"/api/v2/groups";
+        private readonly IRestClient _client;
+        private const string ResourceUri = @"/api/v2/groups";
 
         public GroupsResource(IRestClient client)
         {
-            Client = client;
+            _client = client;
         }
 
         public IResponse<Group> Get(long id)
         {
-            return Get<GroupResponse>(id);
+            var requestUri = _client.BuildUri($"{ResourceUri}/{id}");
+            return _client.Get<GroupResponse>(requestUri);
         }
 
         public async Task<IResponse<Group>> GetAsync(long id)
         {
-            return await GetAsync<GroupResponse>(id).ConfigureAwait(false);
+            var requestUri = _client.BuildUri($"{ResourceUri}/{id}");
+            return await _client.GetAsync<GroupResponse>(requestUri).ConfigureAwait(false);
         }
     }
 }

@@ -6,30 +6,38 @@ using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class UploadResource : ZendeskResource<Upload>, IUploadResource
+    public class UploadResource : IUploadResource
     {
-        protected override string ResourceUri => @"/api/v2/uploads";
+        private readonly IRestClient _client;
+        private const string ResourceUri = "/api/v2/uploads";
 
         public UploadResource(IRestClient client)
         {
-            Client = client;
+            _client = client;
+        }
+
+        public void Delete(string token)
+        {
+            var requestUri = _client.BuildUri($"{ResourceUri}/{token}");
+            _client.Delete(requestUri);
         }
 
         public IResponse<Upload> Get(long id)
         {
-            return Get<UploadResponse>(id);
+            var requestUri = _client.BuildUri($"{ResourceUri}/{id}");
+            return _client.Get<UploadResponse>(requestUri);
         }
 
         public async Task<IResponse<Upload>> GetAsync(long id)
         {
-            return await GetAsync<UploadResponse>(id).ConfigureAwait(false);
+            var requestUri = _client.BuildUri($"{ResourceUri}/{id}");
+            return await _client.GetAsync<UploadResponse>(requestUri).ConfigureAwait(false);
         }
 
         public IResponse<Upload> Post(UploadRequest request)
         {
-            var requestUri = Client.BuildUri(ResourceUri, $"filename={request.Item.FileName}{request.Token ?? ""}");
-
-            return Client.PostFile<UploadResponse>(requestUri, request.Item);
+            var requestUri = _client.BuildUri(ResourceUri, $"filename={request.Item.FileName}{request.Token ?? ""}");
+            return _client.PostFile<UploadResponse>(requestUri, request.Item);
         }
     }
 }

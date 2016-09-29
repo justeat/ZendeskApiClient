@@ -4,33 +4,38 @@ using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class TicketFormResource : ZendeskResource<TicketForm>, ITicketFormResource
+    public class TicketFormResource : ITicketFormResource
     {
-        protected override string ResourceUri => @"/api/v2/ticket_forms";
+        private readonly IZendeskClient _client;
+        private const string ResourceUri = "/api/v2/ticket_forms";
 
         public TicketFormResource(IZendeskClient client)
         {
-            Client = client;
+            _client = client;
         }
 
         public IResponse<TicketForm> Get(long id)
         {
-            return Get<TicketFormResponse>(id);
+            var requestUri = _client.BuildUri($"{ResourceUri}/{id}");
+            return _client.Get<TicketFormResponse>(requestUri);
         }
 
         public async Task<IResponse<TicketForm>> GetAsync(long id)
         {
-            return await GetAsync<TicketFormResponse>(id).ConfigureAwait(false);
+            var requestUri = _client.BuildUri($"{ResourceUri}/{id}");
+            return await _client.GetAsync<TicketFormResponse>(requestUri);
         }
 
         public IListResponse<TicketForm> GetAll()
         {
-            return GetAll<TicketFormListResponse>();
+            var requestUri = _client.BuildUri(ResourceUri);
+            return _client.Get<TicketFormListResponse>(requestUri);
         }
 
         public async Task<IListResponse<TicketForm>> GetAllAsync()
         {
-            return await GetAllAsync<TicketFormListResponse>().ConfigureAwait(false);
+            var requestUri = _client.BuildUri(ResourceUri);
+            return await _client.GetAsync<TicketFormListResponse>(requestUri).ConfigureAwait(false);
         }
     }
 }

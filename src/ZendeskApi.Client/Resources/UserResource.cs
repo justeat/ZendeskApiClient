@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Http;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
@@ -7,53 +9,78 @@ using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class UserResource : ZendeskResource<User>, IUserResource
+    public class UserResource : IUserResource
     {
-        protected override string ResourceUri => @"/api/v2/users/";
+        private readonly IRestClient _client;
+        private const string ResourceUri = "/api/v2/users/";
 
         public UserResource(IRestClient client)
         {
-            Client = client;
+            _client = client;
+        }
+
+        public void Delete(long id)
+        {
+            if (id <= 0)
+                throw new ArgumentException("Item must exist in Zendesk");
+
+            var requestUri = _client.BuildUri($"{ResourceUri}/{id}");
+            _client.Delete(requestUri);
         }
 
         public IResponse<User> Get(long id)
         {
-            return Get<UserResponse>(id);
+            var requestUri = _client.BuildUri($"{ResourceUri}/{id}");
+            return _client.Get<UserResponse>(requestUri);
         }
 
         public async Task<IResponse<User>> GetAsync(long id)
         {
-            return await GetAsync<UserResponse>(id).ConfigureAwait(false);
+            var requestUri = _client.BuildUri($"{ResourceUri}/{id}");
+            return await _client.GetAsync<UserResponse>(requestUri).ConfigureAwait(false);
         }
 
         public IListResponse<User> GetAll(List<long> ids)
         {
-            return GetAll<UserListResponse>(ids);
+            var requestUri = _client.BuildUri($"{ResourceUri}/show_many", $"ids={ZendeskFormatter.ToCsv(ids)}");
+            return _client.Get<UserListResponse>(requestUri);
         }
 
         public async Task<IListResponse<User>> GetAllAsync(List<long> ids)
         {
-            return await GetAllAsync<UserListResponse>(ids).ConfigureAwait(false);
+            var requestUri = _client.BuildUri($"{ResourceUri}/show_many", $"ids={ZendeskFormatter.ToCsv(ids)}");
+            return await _client.GetAsync<UserListResponse>(requestUri).ConfigureAwait(false);
         }
 
         public IResponse<User> Post(UserRequest request)
         {
-            return Post<UserRequest, UserResponse>(request);
+            var requestUri = _client.BuildUri(ResourceUri);
+            return _client.Post<UserResponse>(requestUri, request);
         }
 
         public async Task<IResponse<User>> PostAsync(UserRequest request)
         {
-            return await PostAsync<UserRequest, UserResponse>(request).ConfigureAwait(false);
+            var requestUri = _client.BuildUri(ResourceUri);
+            return await _client.PostAsync<UserResponse>(requestUri, request).ConfigureAwait(false);
         }
 
         public IResponse<User> Put(UserRequest request)
         {
-            return Put<UserRequest, UserResponse>(request);
+            if (!request.Item.Id.HasValue || request.Item.Id <= 0)
+                throw new ArgumentException("Item must exist in Zendesk");
+
+            var requestUri = _client.BuildUri($"{ResourceUri}/{request.Item.Id}");
+
+            return _client.Put<UserResponse>(requestUri, request);
         }
 
         public async Task<IResponse<User>> PutAsync(UserRequest request)
         {
-            return await PutAsync<UserRequest, UserResponse>(request).ConfigureAwait(false);
+            if (!request.Item.Id.HasValue || request.Item.Id <= 0)
+                throw new ArgumentException("Item must exist in Zendesk");
+
+            var requestUri = _client.BuildUri($"{ResourceUri}/{request.Item.Id}");
+            return await _client.PutAsync<UserResponse>(requestUri, request).ConfigureAwait(false);
         }
     }
 }

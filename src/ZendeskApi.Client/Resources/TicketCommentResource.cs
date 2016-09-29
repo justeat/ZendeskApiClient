@@ -5,23 +5,25 @@ using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class TicketCommentResource : ZendeskResource<TicketComment>, ITicketCommentResource
+    public class TicketCommentResource : ITicketCommentResource
     {
-        protected override string ResourceUri => @"/api/v2/tickets/{0}/comments";
+        private readonly IRestClient _client;
 
         public TicketCommentResource(IRestClient client)
         {
-            Client = client;
+            _client = client;
         }
 
         public IListResponse<TicketComment> GetAll(long parentId)
         {
-            return GetAll<TicketCommentListResponse>(parentId);
+            var requestUri = _client.BuildUri($"/api/v2/tickets/{parentId}/comments");
+            return _client.Get<TicketCommentListResponse>(requestUri);
         }
 
         public async Task<IListResponse<TicketComment>> GetAllAsync(long parentId)
         {
-            return await GetAllAsync<TicketCommentListResponse>(parentId).ConfigureAwait(false);
+            var requestUri = _client.BuildUri($"/api/v2/tickets/{parentId}/comments");
+            return await _client.GetAsync<TicketCommentListResponse>(requestUri).ConfigureAwait(false);
         }
     }
 }

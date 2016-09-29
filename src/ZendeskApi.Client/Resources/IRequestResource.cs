@@ -16,5 +16,8 @@ namespace ZendeskApi.Client.Resources
         Task<IResponse<Request>> PutAsync(RequestRequest request);
         IResponse<Request> Post(RequestRequest request);
         Task<IResponse<Request>> PostAsync(RequestRequest request);
+        void Delete(long id);
+        Task DeleteAsync(long id);
+
     }
 }
