@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
@@ -6,7 +7,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class TicketFormResource : ZendeskResource<TicketForm>, ITicketFormResource
     {
-        protected override string ResourceUri => @"/api/v2/ticket_forms";
+        private const string ResourceUri = "/api/v2/ticket_forms";
 
         public TicketFormResource(IZendeskClient client)
         {
@@ -15,22 +16,22 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<TicketForm> Get(long id)
         {
-            return Get<TicketFormResponse>(id);
+            return Get<TicketFormResponse>($"{ResourceUri}/{id}");
         }
 
         public async Task<IResponse<TicketForm>> GetAsync(long id)
         {
-            return await GetAsync<TicketFormResponse>(id).ConfigureAwait(false);
+            return await GetAsync<TicketFormResponse>($"{ResourceUri}/{id}").ConfigureAwait(false);
         }
 
         public IListResponse<TicketForm> GetAll()
         {
-            return GetAll<TicketFormListResponse>();
+            return GetAll<TicketFormListResponse>(ResourceUri);
         }
 
         public async Task<IListResponse<TicketForm>> GetAllAsync()
         {
-            return await GetAllAsync<TicketFormListResponse>().ConfigureAwait(false);
+            return await GetAllAsync<TicketFormListResponse>(ResourceUri).ConfigureAwait(false);
         }
     }
 }

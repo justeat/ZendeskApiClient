@@ -8,6 +8,7 @@ namespace ZendeskApi.Client.Resources
     public interface IOrganizationResource
     {
         void Delete(long id);
+        Task DeleteAsync(long id);
         IResponse<Organization> Get(long id);
         Task<IResponse<Organization>> GetAsync(long id);
         IResponse<Organization> Put(OrganizationRequest request);

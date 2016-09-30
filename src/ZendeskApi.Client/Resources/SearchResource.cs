@@ -8,7 +8,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class SearchResource : ISearchResource
     {
-        private const string SearchUri = @"/api/v2/search";
+        private const string SearchUri = "/api/v2/search";
 
         private readonly IRestClient _client;
 
