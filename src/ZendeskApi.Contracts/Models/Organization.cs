@@ -36,6 +36,9 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "external_id", EmitDefaultValue = false)]
         public string external_id { get; set; }
 
+        [DataMember(Name = "domain_names", EmitDefaultValue = false)]
+        public List<string> DomainNames { get; set; }
+
 // ReSharper disable InconsistentNaming       
         [IgnoreDataMember]
         public bool shared_tickets { get; set; }
@@ -51,10 +54,6 @@ namespace ZendeskApi.Contracts.Models
 
         [IgnoreDataMember]
         public long group_id { get; set; }
-
-        [IgnoreDataMember]
-        public object domain_names { get; set; }
-
 // ReSharper restore InconsistentNaming
     }
 }
