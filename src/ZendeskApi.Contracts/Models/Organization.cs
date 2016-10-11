@@ -33,6 +33,9 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "organization_fields", EmitDefaultValue = true)]
         public Dictionary<object, object> CustomFields { get; set; }
         
+        [DataMember(Name = "tags", EmitDefaultValue = true)]
+        public List<string> Tags { get; set; }
+        
         [DataMember(Name = "external_id", EmitDefaultValue = false)]
         public string external_id { get; set; }
 
@@ -42,9 +45,6 @@ namespace ZendeskApi.Contracts.Models
 
         [IgnoreDataMember]
         public bool shared_comments { get; set; }
-
-        [IgnoreDataMember]
-        public List<string> Tags { get; set; }
 
         [IgnoreDataMember]
         public Uri Url { get; set; }
