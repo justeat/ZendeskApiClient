@@ -33,8 +33,14 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "organization_fields", EmitDefaultValue = true)]
         public Dictionary<object, object> CustomFields { get; set; }
         
+        [DataMember(Name = "tags", EmitDefaultValue = true)]
+        public List<string> Tags { get; set; }
+        
         [DataMember(Name = "external_id", EmitDefaultValue = false)]
         public string external_id { get; set; }
+
+        [DataMember(Name = "domain_names", EmitDefaultValue = false)]
+        public List<string> DomainNames { get; set; }
 
 // ReSharper disable InconsistentNaming       
         [IgnoreDataMember]
@@ -44,17 +50,10 @@ namespace ZendeskApi.Contracts.Models
         public bool shared_comments { get; set; }
 
         [IgnoreDataMember]
-        public List<string> Tags { get; set; }
-
-        [IgnoreDataMember]
         public Uri Url { get; set; }
 
         [IgnoreDataMember]
         public long group_id { get; set; }
-
-        [IgnoreDataMember]
-        public object domain_names { get; set; }
-
 // ReSharper restore InconsistentNaming
     }
 }

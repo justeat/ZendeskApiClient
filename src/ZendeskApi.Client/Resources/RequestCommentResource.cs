@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ZendeskApi.Client.Http;
+using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
@@ -7,7 +9,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class RequestCommentResource : ZendeskResource<TicketComment>, IRequestCommentResource
     {
-        protected override string ResourceUri => @"/api/v2/requests/{0}/comments";
+        private const string ResourceUri = "/api/v2/requests/{0}/comments";
 
         public RequestCommentResource(IRestClient client)
         {
@@ -16,22 +18,26 @@ namespace ZendeskApi.Client.Resources
 
         public IResponse<TicketComment> Get(long id, long parentId)
         {
-            return Get<TicketCommentResponse>(id, parentId);
+            string url = $"{string.Format(ResourceUri, parentId)}/{id}";
+            return Get<TicketCommentResponse>(url);
         }
 
         public async Task<IResponse<TicketComment>> GetAsync(long id, long parentId)
         {
-            return await GetAsync<TicketCommentResponse>(id, parentId).ConfigureAwait(false);
+            string url = $"{string.Format(ResourceUri, parentId)}/{id}";
+            return await GetAsync<TicketCommentResponse>(url).ConfigureAwait(false);
         }
 
         public IListResponse<TicketComment> GetAll(long parentId)
         {
-            return GetAll<TicketCommentListResponse>(parentId);
+            string url = string.Format(ResourceUri, parentId);
+            return GetAll<TicketCommentListResponse>(url);
         }
 
         public async Task<IListResponse<TicketComment>> GetAllAsync(long parentId)
         {
-            return await GetAllAsync<TicketCommentListResponse>(parentId).ConfigureAwait(false);
+            string url = string.Format(ResourceUri, parentId);
+            return await GetAllAsync<TicketCommentListResponse>(url).ConfigureAwait(false);
         }
     }
 }

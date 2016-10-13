@@ -135,8 +135,8 @@
     <Compile Include="Resources\UploadResource.cs" />
     <Compile Include="Resources\UserIdentityResource.cs" />
     <Compile Include="Resources\UserResource.cs" />
-    <Compile Include="Resources\ZendeskResource.cs" />
     <Compile Include="Resources\TicketResource.cs" />
+    <Compile Include="Resources\ZendeskResource.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="ClientBase.cs" />
     <Compile Include="ZendeskClient.cs" />

@@ -104,6 +104,21 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public async Task GetAllByUser_MultipleCallsAreMade_UrlIsStillCorrect()
+        {
+            // Given
+            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            // When
+            await organizationMembershipResource.GetAllByOrganizationAsync(1);
+            organizationMembershipResource.GetAllByUser(4321);
+
+            // Then
+            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/users/")), ""));
+        }
+
+        [Test]
         public async void GetAllByUserAsync_Called_CallsBuildUriWithFieldIdAndType()
         {
             // Given
