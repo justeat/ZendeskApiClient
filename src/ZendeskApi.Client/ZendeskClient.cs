@@ -25,7 +25,12 @@ namespace ZendeskApi.Client
         public IRequestResource Request { get; private set; }
         public ISatisfactionRatingResource SatisfactionRating { get; private set; }
 
-        public ZendeskClient(Uri baseUri, ZendeskDefaultConfiguration configuration, ISerializer serializer = null, IHttpChannel httpChannel = null, ILogAdapter logger = null)
+        public ZendeskClient(
+            Uri baseUri, 
+            ZendeskDefaultConfiguration configuration, 
+            ISerializer serializer = null, 
+            IHttpChannel httpChannel = null, 
+            ILogAdapter logger = null)
             :base(baseUri, configuration, serializer, httpChannel, logger)
         {
             Tickets = new TicketResource(this);

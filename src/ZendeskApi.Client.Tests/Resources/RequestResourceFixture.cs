@@ -53,7 +53,12 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new RequestResponse { Item = new Request { Id = 1 } };
-            _client.Setup(b => b.Get<RequestResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.Get<RequestResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(response);
+
             var resource = new RequestResource(_client.Object);
 
             // When
@@ -68,7 +73,12 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new RequestResponse { Item = new Request { Id = 1 } };
-            _client.Setup(b => b.GetAsync<RequestResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.GetAsync<RequestResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(TaskHelper.CreateTaskFromResult(response));
+
             var resource = new RequestResource(_client.Object);
 
             // When
@@ -142,7 +152,14 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
             var request = new RequestRequest { Item = new Request { Subject = "blah blah", Id = 123 } };
-            _client.Setup(b => b.Put<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.Put<RequestResponse>(
+                It.IsAny<Uri>(), 
+                request, 
+                "application/json",
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(response);
+
             var resource = new RequestResource(_client.Object);
 
             // When
@@ -158,7 +175,13 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
             var request = new RequestRequest { Item = new Request { Subject = "blah blah", Id = 123 } };
-            _client.Setup(b => b.PutAsync<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.PutAsync<RequestResponse>(
+                It.IsAny<Uri>(), 
+                request, 
+                "application/json",
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(TaskHelper.CreateTaskFromResult(response));
             var resource = new RequestResource(_client.Object);
 
             // When
@@ -174,7 +197,14 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
             var request = new RequestRequest { Item = new Request { Subject = "blah blah" } };
-            _client.Setup(b => b.Put<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.Put<RequestResponse>(
+                It.IsAny<Uri>(),
+                request, 
+                "application/json",
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(response);
+
             var requestResource = new RequestResource(_client.Object);
 
             // When, Then
@@ -187,7 +217,14 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
             var request = new RequestRequest { Item = new Request { Subject = "blah blah" } };
-            _client.Setup(b => b.PutAsync<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.PutAsync<RequestResponse>(
+                It.IsAny<Uri>(), 
+                request, 
+                "application/json",
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(TaskHelper.CreateTaskFromResult(response));
+
             var requestResource = new RequestResource(_client.Object);
 
             // When, Then
@@ -228,7 +265,14 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
             var request = new RequestRequest { Item = new Request { Subject = "blah blah" } };
-            _client.Setup(b => b.Post<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(response);
+            _client.Setup(b => b.Post<RequestResponse>(
+                It.IsAny<Uri>(), 
+                request,
+                "application/json",
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(response);
+
             var requestResource = new RequestResource(_client.Object);
 
             // When
@@ -244,7 +288,14 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new RequestResponse { Item = new Request { Subject = "blah blah" } };
             var request = new RequestRequest { Item = new Request { Subject = "blah blah" } };
-            _client.Setup(b => b.PostAsync<RequestResponse>(It.IsAny<Uri>(), request, "application/json")).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.PostAsync<RequestResponse>(
+                It.IsAny<Uri>(), 
+                request, 
+                "application/json",
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(TaskHelper.CreateTaskFromResult(response));
+
             var requestResource = new RequestResource(_client.Object);
 
             // When
@@ -287,14 +338,19 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new RequestResponse { Item = new Request { Id = 1 } };
-            _client.Setup(b => b.Get<RequestResponse>(It.IsAny<Uri>())).Returns(response);
+            _client.Setup(b => b.Get<RequestResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(response);
+
             var requestResource = new RequestResource(_client.Object);
 
             // When
             requestResource.Delete(321);
 
             // Then
-            _client.Verify(c => c.Delete(It.IsAny<Uri>()));
+            _client.Verify(c => c.Delete<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
         [Test]
@@ -302,14 +358,14 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var response = new RequestResponse { Item = new Request { Id = 1 } };
-            _client.Setup(b => b.GetAsync<RequestResponse>(It.IsAny<Uri>())).Returns(TaskHelper.CreateTaskFromResult(response));
+            _client.Setup(b => b.GetAsync<RequestResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
             var requestResource = new RequestResource(_client.Object);
 
             // When
             await requestResource.DeleteAsync(321);
 
             // Then
-            _client.Verify(c => c.DeleteAsync(It.IsAny<Uri>()));
+            _client.Verify(c => c.DeleteAsync<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
     }
 }

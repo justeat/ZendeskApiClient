@@ -24,7 +24,21 @@ namespace ZendeskApi.Client
 
         private readonly ISerializer _serializer;
 
-        protected ClientBase(Uri baseUri, ZendeskDefaultConfiguration configuration, ISerializer serializer = null, IHttpChannel httpChannel = null, ILogAdapter loggerAdapter = null)
+        private string _clientName;
+        protected string ClientName
+        {
+            private get { return _clientName ?? (_clientName = GetType().Name); }
+            set { _clientName = value; }
+        }
+
+
+        protected ClientBase(
+            Uri baseUri, 
+            ZendeskDefaultConfiguration configuration, 
+            ISerializer serializer = null, 
+            IHttpChannel httpChannel = null, 
+            ILogAdapter loggerAdapter = null
+            )
         {
             if (baseUri == null)
                 throw new ArgumentNullException("baseUri");
@@ -47,71 +61,75 @@ namespace ZendeskApi.Client
             }.Uri;
         }
 
-        public T Get<T>(Uri requestUri)
+        public T Get<T>(Uri requestUri, string resource, string operation)
         {
-            var response = _http.Get(BuildRequest(requestUri));
+            var response = _http.Get(BuildRequest(requestUri), this.ClientName, resource, operation);
             ValidateResponse(response);
             return DeserializeContent<T>(response);
         }
 
-        public async Task<T> GetAsync<T>(Uri requestUri)
+        public async Task<T> GetAsync<T>(Uri requestUri, string resource, string operation)
         {
             var request = BuildRequest(requestUri);
-            var response = await _http.GetAsync(request).ConfigureAwait(false);
+            var response = await _http.GetAsync(request, this.ClientName, resource, operation).ConfigureAwait(false);
             ValidateResponse(response);
             return DeserializeContent<T>(response);
         }
 
-        public T Post<T>(Uri requestUri, object item = null, string contentType = "application/json")
+        public T Post<T>(Uri requestUri, object item, string contentType, string resource, string operation)
         {
-            var response = _http.Post(BuildRequest(requestUri, item, contentType));
+            var response = _http.Post(BuildRequest(requestUri, item, contentType), this.ClientName, resource, operation);
             ValidateResponse(response);
             return DeserializeContent<T>(response);
         }
 
-        public T PostFile<T>(Uri requestUri, IHttpPostedFile file)
+        public T PostFile<T>(Uri requestUri, IHttpPostedFile file, string resource, string operation)
         {
-            var response = _http.Post(BuildRequest(requestUri, file.ContentType), file);
+            var response = _http.Post(BuildRequest(requestUri, file.ContentType), file, this.ClientName, resource, operation);
 
             ValidateResponse(response);
 
             return DeserializeContent<T>(response);
         }
 
-        public async Task<T> PostAsync<T>(Uri requestUri, object item = null, string contentType = "application/json")
+        public async Task<T> PostAsync<T>(Uri requestUri, object item, string contentType, string resource, string operation)
         {
             var request = BuildRequest(requestUri, item, contentType);
-            var response = await _http.PostAsync(request).ConfigureAwait(false);
+            var response = await _http.PostAsync(request, this.ClientName, resource, operation).ConfigureAwait(false);
             ValidateResponse(response);
             return DeserializeContent<T>(response);
         }
 
-        public T Put<T>(Uri requestUri, object item = null, string contentType = "application/json")
+        public T Put<T>(Uri requestUri, object item, string contentType, string resource, string operation)
         {
             var response = _http.Put(
-                BuildRequest(requestUri, item, contentType));
+                BuildRequest(requestUri, item, contentType), this.ClientName, resource, operation);
             ValidateResponse(response);
             return DeserializeContent<T>(response);
         }
 
-        public async Task<T> PutAsync<T>(Uri requestUri, object item = null, string contentType = "application/json")
+        public async Task<T> PutAsync<T>(Uri requestUri, object item, string contentType, string resource, string operation)
         {
             var request = BuildRequest(requestUri, item, contentType);
-            var response = await _http.PutAsync(request).ConfigureAwait(false);
+            var response = await _http.PutAsync(request, this.ClientName, resource, operation).ConfigureAwait(false);
             ValidateResponse(response);
             return DeserializeContent<T>(response);
         }
 
-        public void Delete(Uri requestUri)
-        {
-            ValidateResponse(_http.Delete(BuildRequest(requestUri)));
-        }
-
-        public async Task DeleteAsync(Uri requestUri)
+        public T Delete<T>(Uri requestUri, object item, string contentType, string resource, string operation)
         {
             var request = BuildRequest(requestUri);
-            var response = await _http.DeleteAsync(request).ConfigureAwait(false);
+            var response = _http.Delete(request, this.ClientName, resource, operation);
             ValidateResponse(response);
+            return DeserializeContent<T>(response);
+        }
+
+        public async Task<T> DeleteAsync<T>(Uri requestUri, object item, string contentType, string resource, string operation)
+        {
+            var request = BuildRequest(requestUri);
+            var response = await _http.DeleteAsync(request, this.ClientName, resource, operation).ConfigureAwait(false);
+            ValidateResponse(response);
+            return DeserializeContent<T>(response);
         }
 
         private IHttpRequest BuildRequest(Uri requestUri)

@@ -1,12 +1,12 @@
 # Zendesk Api Client #
-====================
-
-
 
 A .net Zendesk Api Client NuGet package for use with the ZendeskApi v2
 
 #Breaking Changes#
-* 2.x.x - .Net Framework version 4.0 is no longer supported
+
+## 2.x.x
+ - .Net Framework version 4.0 is no longer supported
+ - In October 2016 there has been a change to the [IRestClient](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Client/Http/IRestClient.cs) interface, adding parameters for request logging. This change does not affect most users of this library; it is a drop-in replacement for consumers. Only if you implement your own version of `IRestClient` beware that there will be a small change. If you do not perform per-call logging of ReST-y calls, feel free to ignore the parameters in your implementation.
 
 ##Creating a client:##
 

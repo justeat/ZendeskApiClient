@@ -34,10 +34,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Get(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.Get(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_successResponse);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When
             var result = client.Get<string>(new Uri("http://someurl.co.uk/resource"));
@@ -53,10 +53,10 @@ namespace ZendeskApi.Client.Tests
             var http = new Mock<IHttpChannel>();
             var httpResponseTask = new TaskCompletionSource<IHttpResponse>();
             httpResponseTask.SetResult(_successResponse);
-            http.Setup(h => h.GetAsync(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.GetAsync(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(httpResponseTask.Task);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When
             var result = client.GetAsync<string>(new Uri("http://someurl.co.uk/resource"));
@@ -70,10 +70,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Get(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.Get(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_failureResponse);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When, Then
             Assert.Throws<HttpException>(() => client.Get<string>(new Uri("http://someurl.co.uk/resource")));
@@ -84,10 +84,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.GetAsync(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.GetAsync(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(TaskHelper.CreateTaskFromResult(_failureResponse));
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When, Then
             Assert.Throws<HttpException>(async () => await client.GetAsync<string>(new Uri("http://someurl.co.uk/resource")));
@@ -98,10 +98,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Put(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.Put(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_successResponse);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When
             var result = client.Put<string>(new Uri("http://someurl.co.uk/resource"));
@@ -117,10 +117,10 @@ namespace ZendeskApi.Client.Tests
             var http = new Mock<IHttpChannel>();
             var httpResponseTask = new TaskCompletionSource<IHttpResponse>();
             httpResponseTask.SetResult(_successResponse);
-            http.Setup(h => h.PutAsync(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.PutAsync(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(httpResponseTask.Task);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When
             var result = client.PutAsync<string>(new Uri("http://someurl.co.uk/resource"));
@@ -134,10 +134,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Put(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.Put(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_failureResponse);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When, Then
             Assert.Throws<HttpException>(() => client.Put<string>(new Uri("http://someurl.co.uk/resource")));
@@ -148,10 +148,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Post(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_successResponse);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When
             var result = client.Post<string>(new Uri("http://someurl.co.uk/resource"));
@@ -165,12 +165,12 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<IHttpPostedFile>()))
+            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<IHttpPostedFile>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_successResponse);
 
             var file = new Mock<IHttpPostedFile>();
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When
             var result = client.PostFile<string>(new Uri("http://someurl.co.uk/resource"), file.Object);
@@ -186,10 +186,10 @@ namespace ZendeskApi.Client.Tests
             var http = new Mock<IHttpChannel>();
             var httpResponseTask = new TaskCompletionSource<IHttpResponse>();
             httpResponseTask.SetResult(_successResponse);
-            http.Setup(h => h.PostAsync(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.PostAsync(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(httpResponseTask.Task);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When
             var result = client.PostAsync<string>(new Uri("http://someurl.co.uk/resource"));
@@ -203,10 +203,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Post(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_failureResponse);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When, Then
             Assert.Throws<HttpException>(() => client.Post<string>(new Uri("http://someurl.co.uk/resource")));
@@ -217,10 +217,10 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.PostAsync(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.PostAsync(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(TaskHelper.CreateTaskFromResult(_failureResponse));
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When, Then
             Assert.Throws<HttpException>(async () => await client.PostAsync<string>(new Uri("http://someurl.co.uk/resource")));
@@ -231,12 +231,12 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<IHttpPostedFile>()))
+            http.Setup(h => h.Post(It.IsAny<IHttpRequest>(), It.IsAny<IHttpPostedFile>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_failureResponse);
 
             var file = new Mock<IHttpPostedFile>();
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When, Then
             Assert.Throws<HttpException>(
@@ -249,16 +249,16 @@ namespace ZendeskApi.Client.Tests
         {
             // Given
             var http = new Mock<IHttpChannel>();
-            http.Setup(h => h.Delete(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.Delete(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(_successResponse);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When
-            client.Delete(new Uri("http://someurl.co.uk/resource"));
+            client.Delete<object>(new Uri("http://someurl.co.uk/resource"));
 
             // Then
-            http.Verify(h => h.Delete(It.IsAny<HttpRequest>()));
+            http.Verify(h => h.Delete(It.IsAny<HttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
         [Test]
@@ -268,16 +268,16 @@ namespace ZendeskApi.Client.Tests
             var http = new Mock<IHttpChannel>();
             var httpResponseTask = new TaskCompletionSource<IHttpResponse>();
             httpResponseTask.SetResult(_successResponse);
-            http.Setup(h => h.DeleteAsync(It.IsAny<IHttpRequest>()))
+            http.Setup(h => h.DeleteAsync(It.IsAny<IHttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(httpResponseTask.Task);
 
-            var client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
+            IRestClient client = new ZendeskClient(new Uri("http://someurl.co.uk"), new ZendeskDefaultConfiguration("bob", "x1234//#"), _serializer.Object, http.Object);
 
             // When
-            var result = client.DeleteAsync(new Uri("http://someurl.co.uk/resource"));
+            var result = client.DeleteAsync<object>(new Uri("http://someurl.co.uk/resource"));
 
             // Then
-            http.Verify(h => h.DeleteAsync(It.IsAny<HttpRequest>()));
+            http.Verify(h => h.DeleteAsync(It.IsAny<HttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
             Assert.That(result.IsCompleted, Is.EqualTo(true));
         }
     }

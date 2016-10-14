@@ -16,53 +16,60 @@ namespace ZendeskApi.Client.Resources
         {
             protected IRestClient Client;
 
+            private string _resourceName;
+            protected string ResourceName
+            {
+                private get { return _resourceName ?? (_resourceName = GetType().Name); }
+                set { _resourceName = value; }
+            }
+
             protected IResponse<T> Get<TResponse>(string url) where TResponse : IResponse<T>
             {
                 var requestUri = Client.BuildUri(url);
-                return Client.Get<TResponse>(requestUri);
+                return Client.Get<TResponse>(requestUri, resource: ResourceName);
             }
 
             protected async Task<IResponse<T>> GetAsync<TResponse>(string url) where TResponse : IResponse<T>
             {
                 var requestUri = Client.BuildUri(url);
-                return await Client.GetAsync<TResponse>(requestUri).ConfigureAwait(false);
+                return await Client.GetAsync<TResponse>(requestUri, resource: ResourceName).ConfigureAwait(false);
             }
 
             protected IResponse<T> Get<TResponse>(string url, string query) where TResponse : IResponse<T>
             {
                 var requestUri = Client.BuildUri(url, query);
-                return Client.Get<TResponse>(requestUri);
+                return Client.Get<TResponse>(requestUri, resource: ResourceName);
             }
 
             protected async Task<IResponse<T>> GetAsync<TResponse>(string url, string query) where TResponse : IResponse<T>
             {
                 var requestUri = Client.BuildUri(url, query);
-                return await Client.GetAsync<TResponse>(requestUri).ConfigureAwait(false);
+                return await Client.GetAsync<TResponse>(requestUri, resource: ResourceName).ConfigureAwait(false);
             }
 
             protected TResponse GetAll<TResponse>(string url, IEnumerable<long> ids) where TResponse : IListResponse<T>
             {
                 var requestUri = Client.BuildUri(url, $"ids={ZendeskFormatter.ToCsv(ids)}");
 
-                return Client.Get<TResponse>(requestUri);
+                return Client.Get<TResponse>(requestUri, resource: ResourceName);
             }
 
             protected async Task<TResponse> GetAllAsync<TResponse>(string url, IEnumerable<long> ids) where TResponse : IListResponse<T>
             {
                 var requestUri = Client.BuildUri(url, $"ids={ZendeskFormatter.ToCsv(ids)}");
-                return await Client.GetAsync<TResponse>(requestUri).ConfigureAwait(false);
+                return await Client.GetAsync<TResponse>(requestUri, resource: ResourceName).ConfigureAwait(false);
             }
 
             protected TResponse GetAll<TResponse>(string url) where TResponse : IListResponse<T>
             {
                 var requestUri = Client.BuildUri(url);
-                return Client.Get<TResponse>(requestUri);
+                return Client.Get<TResponse>(requestUri, resource: ResourceName);
             }
 
             protected async Task<TResponse> GetAllAsync<TResponse>(string url) where TResponse : IListResponse<T>
             {
                 var requestUri = Client.BuildUri(url);
-                return await Client.GetAsync<TResponse>(requestUri).ConfigureAwait(false);
+                return await Client.GetAsync<TResponse>(requestUri, resource: ResourceName).ConfigureAwait(false);
             }
 
             protected IResponse<T> Put<TRequest, TResponse>(TRequest request, string url)
@@ -73,7 +80,7 @@ namespace ZendeskApi.Client.Resources
                     throw new ArgumentException("Item must exist in Zendesk");
 
                 var requestUri = Client.BuildUri(url);
-                return Client.Put<TResponse>(requestUri, request);
+                return Client.Put<TResponse>(requestUri, request, resource: ResourceName);
             }
 
             protected async Task<IResponse<T>> PutAsync<TRequest, TResponse>(TRequest request, string url)
@@ -84,7 +91,7 @@ namespace ZendeskApi.Client.Resources
                     throw new ArgumentException("Item must exist in Zendesk");
 
                 var requestUri = Client.BuildUri(url);
-                return await Client.PutAsync<TResponse>(requestUri, request).ConfigureAwait(false);
+                return await Client.PutAsync<TResponse>(requestUri, request, resource: ResourceName).ConfigureAwait(false);
             }
 
             protected TResponse Post<TRequest, TResponse>(TRequest request, string url)
@@ -92,7 +99,7 @@ namespace ZendeskApi.Client.Resources
                 where TResponse : IResponse<T>
             {
                 var requestUri = Client.BuildUri(url);
-                return Client.Post<TResponse>(requestUri, request);
+                return Client.Post<TResponse>(requestUri, request, resource: ResourceName);
             }
 
             protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request, string url)
@@ -100,19 +107,19 @@ namespace ZendeskApi.Client.Resources
                 where TResponse : IResponse<T>
             {
                 var requestUri = Client.BuildUri(url);
-                return await Client.PostAsync<TResponse>(requestUri, request).ConfigureAwait(false);
+                return await Client.PostAsync<TResponse>(requestUri, request, resource: ResourceName).ConfigureAwait(false);
             }
 
             public void Delete(string url)
             {
                 var requestUri = Client.BuildUri(url);
-                Client.Delete(requestUri);
+                Client.Delete<object>(requestUri, null, "application/json", resource: ResourceName);
             }
 
             public async Task DeleteAsync(string url)
             {
                 var requestUri = Client.BuildUri(url);
-                await Client.DeleteAsync(requestUri).ConfigureAwait(false);
+                await Client.DeleteAsync<object>(requestUri, null, resource: ResourceName).ConfigureAwait(false);
             }
 
             protected void ValidateRequest<T>(IRequest<T> request) where T : IZendeskEntity
