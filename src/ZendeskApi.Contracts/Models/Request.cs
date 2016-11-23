@@ -45,7 +45,7 @@ namespace ZendeskApi.Contracts.Models
         [DataMember(Name = "type", EmitDefaultValue = false)]
         public TicketType? Type { get; set; }
         
-        [DataMember(EmitDefaultValue = false)]
+        [DataMember(Name = "priority", EmitDefaultValue = false)]
         public string Priority { get; set; }
 
         [DataMember(Name = "comment")]
