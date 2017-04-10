@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
@@ -9,6 +10,8 @@ namespace ZendeskApi.Client.Resources
     {
         void Delete(long id);
         Task DeleteAsync(long id);
+        IListResponse<Organization> SearchByExtenalIds(params string[] externalIds);
+        Task<IListResponse<Organization>> SearchByExtenalIdsAsync(params string[] externalIds);
         IResponse<Organization> Get(long id);
         Task<IResponse<Organization>> GetAsync(long id);
         IResponse<Organization> Put(OrganizationRequest request);

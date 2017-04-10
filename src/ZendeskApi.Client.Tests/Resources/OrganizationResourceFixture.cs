@@ -48,6 +48,31 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Test]
+        public void SearchByExternalIds_Called_ReturnsResponse()
+        {
+            // Given
+            var response = new OrganizationListResponse
+            {
+                Results = new[] { new Organization { Id = 1 } },
+                TotalCount = 1
+            };
+
+            _client.Setup(b => b.Get<OrganizationListResponse>(
+                It.IsAny<Uri>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+                .Returns(response);
+
+            var resource = new OrganizationResource(_client.Object);
+
+            // When
+            var result = resource.SearchByExtenalIds("321");
+
+            // Then
+            Assert.That(result, Is.EqualTo(response));
+        }
+
+        [Test]
         public void Get_Called_ReturnsResponse()
         {
             // Given

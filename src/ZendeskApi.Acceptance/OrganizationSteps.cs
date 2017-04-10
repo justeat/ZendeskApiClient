@@ -50,7 +50,12 @@ namespace ZendeskApi.Acceptance
             _savedSingleOrganization =
                 _client.Organizations.Post(new OrganizationRequest
                 {
-                    Item = new Organization { Name = name + Guid.NewGuid(), Details = name, Notes = "new item" }
+                    Item = new Organization
+                    {
+                        Name = name + Guid.NewGuid(),
+                        Details = name, Notes = "new item",
+                        external_id = Guid.NewGuid().ToString()
+                    }
                 }).Item;
         }
 
@@ -63,6 +68,17 @@ namespace ZendeskApi.Acceptance
 
             _singleOrganizationResponse = _client.Organizations.Get(_savedSingleOrganization.Id.Value).Item;
         }
+
+        [Scope(Feature = "Organization")]
+        [When(@"I call search by external ids on the ZendeskApiClient")]
+        public void WhenICallSearchByExternalIdsOnTheZendeskApiClient()
+        {
+            if (!_savedSingleOrganization.Id.HasValue)
+                throw new ArgumentException("Cannot get by id when id is null");
+
+            _singleOrganizationResponse = _client.Organizations.SearchByExtenalIds(_savedSingleOrganization.external_id).Results.Single();
+        }
+        
 
         [When(@"I update the organization with the name '(.*)'")]
         public void WhenIUpdateTheOrganizationWithTheSubjectAndDescriptionTWorkInTheseConditions(string name)

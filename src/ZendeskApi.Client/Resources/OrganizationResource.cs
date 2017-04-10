@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Http;
 using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
@@ -11,10 +13,21 @@ namespace ZendeskApi.Client.Resources
     public class OrganizationResource : ZendeskResource<Organization>, IOrganizationResource
     {
         private const string ResourceUri = "/api/v2/organizations";
+        private const string ResourceUriSearch = "/api/v2/organizations/show_many";
 
         public OrganizationResource(IRestClient client)
         {
             Client = client;
+        }
+ 
+        public IListResponse<Organization> SearchByExtenalIds(params string[] externalIds)
+        {
+            return GetAllByExtenalId<OrganizationListResponse>(ResourceUriSearch, externalIds);
+        }
+
+        public async Task<IListResponse<Organization>> SearchByExtenalIdsAsync(params string[] externalIds)
+        {
+            return await GetAllByExtenalIdAsync<OrganizationListResponse>(ResourceUriSearch, externalIds);
         }
 
         public IResponse<Organization> Get(long id)
@@ -66,5 +79,7 @@ namespace ZendeskApi.Client.Resources
             ValidateRequest(id);
             Delete($"{ResourceUri}/{id}");
         }
+
+
     }
 }
