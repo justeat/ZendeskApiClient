@@ -73,9 +73,6 @@ namespace ZendeskApi.Acceptance
         [When(@"I call search by external ids on the ZendeskApiClient")]
         public void WhenICallSearchByExternalIdsOnTheZendeskApiClient()
         {
-            if (!_savedSingleOrganization.Id.HasValue)
-                throw new ArgumentException("Cannot get by id when id is null");
-
             _singleOrganizationResponse = _client.Organizations.SearchByExtenalIds(_savedSingleOrganization.external_id).Results.Single();
         }
         
