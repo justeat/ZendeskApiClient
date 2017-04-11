@@ -69,7 +69,7 @@ namespace ZendeskApi.Client.Resources
 
             protected async Task<TResponse> GetAllByExtenalIdAsync<TResponse>(string url, IEnumerable<string> externalIds) where TResponse : IListResponse<T>
             {
-                var requestUri = Client.BuildUri(url, $"ids={ZendeskFormatter.ToCsv(externalIds)}");
+                var requestUri = Client.BuildUri(url, $"external_ids={ZendeskFormatter.ToCsv(externalIds)}");
                 return await Client.GetAsync<TResponse>(requestUri, resource: ResourceName).ConfigureAwait(false);
             }
 
