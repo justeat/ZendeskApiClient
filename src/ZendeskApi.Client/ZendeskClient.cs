@@ -1,4 +1,5 @@
-﻿using ZendeskApi.Client.Options;
+﻿using Microsoft.Extensions.Options;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Client.Resources;
 
 
@@ -22,8 +23,10 @@ namespace ZendeskApi.Client
         public IRequestResource Request { get; private set; }
         public ISatisfactionRatingResource SatisfactionRating { get; private set; }
         
-        public ZendeskClient(ZendeskOptions options)
+        public ZendeskClient(IOptions<ZendeskOptions> optionsAccessor)
         {
+            var options = optionsAccessor.Value;
+
             Tickets = new TicketResource(options);
             TicketComments = new TicketCommentResource(options);
             RequestComments = new RequestCommentResource(options);
