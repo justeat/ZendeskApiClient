@@ -2,7 +2,6 @@
 
 namespace ZendeskApi.Contracts.Models
 {
-    [DataContract]
     public enum TicketStatus
     {
         [EnumMember(Value = "new")]

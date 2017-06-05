@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    [DataContract]
-    internal class OrganizationListResponse : ListResponse<Organization> 
+    public class OrganizationListResponse : ListResponse<Organization> 
     {
-        [DataMember(Name = "organizations")]
+        [JsonProperty("organizations")]
         public override IEnumerable<Organization> Results { get; set; }
     }
 }

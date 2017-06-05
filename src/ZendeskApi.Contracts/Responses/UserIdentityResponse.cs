@@ -1,12 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    [DataContract]
-    internal class UserIdentityResponse : IResponse<UserIdentity>
+    public class UserIdentityResponse : IResponse<UserIdentity>
     {
-        [DataMember(Name = "identity")]
+        [JsonProperty("identity")]
         public UserIdentity Item { get; set; }
     }
 }

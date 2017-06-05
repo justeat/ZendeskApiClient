@@ -1,41 +1,40 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
     [Description("User Identity")]
-    [DataContract]
     public class UserIdentity : IZendeskEntity
     {
-        [DataMember(EmitDefaultValue = false)]
+        [JsonProperty]
         public long? Id { get; set; }
 
-        [DataMember(Name = "url", EmitDefaultValue = false)]
+        [JsonProperty("url")]
         public string Url { get; set; }
 
-        [DataMember(Name = "user_id", EmitDefaultValue = false)]
+        [JsonProperty("user_id")]
         public long? UserId { get; set; }
 
-        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "type", EmitDefaultValue = false)]
+        [JsonProperty("type")]
         public string Type { get; set; }
 
-        [DataMember(Name = "value", EmitDefaultValue = false)]
+        [JsonProperty("value")]
         public string Value { get; set; }
 
-        [DataMember(Name = "verified", EmitDefaultValue = false)]
+        [JsonProperty("verified")]
         public bool Verified { get; set; }
 
-        [DataMember(Name = "primary", EmitDefaultValue = false)]
+        [JsonProperty("primary")]
         public bool Primary { get; set; }
 
-        [DataMember(Name = "created_at", EmitDefaultValue = false)]
+        [JsonProperty("created_at")]
         public DateTime? Created { get; set; }
 
-        [DataMember(Name = "updated_at", EmitDefaultValue = false)]
+        [JsonProperty("updated_at")]
         public DateTime? Updated { get; set; }
 
     }

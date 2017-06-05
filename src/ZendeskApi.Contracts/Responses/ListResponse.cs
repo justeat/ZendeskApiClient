@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    [DataContract]
     public class ListResponse<T> : IListResponse<T> where T : IZendeskEntity
     {
-        [DataMember(Name = "results")]
+        [JsonProperty("results")]
         public virtual IEnumerable<T> Results { get; set; }
 
-        [DataMember(Name = "count")]
+        [JsonProperty("count")]
         public int TotalCount { get; set; }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public object Facets { get; set; }
 
-        [DataMember(Name = "next_page")]
+        [JsonProperty("next_page")]
         public Uri NextPage { get; set; }
 
-        [DataMember(Name = "previous_page")]
+        [JsonProperty("previous_page")]
         public Uri PreviousPage { get; set; }
     }
 }

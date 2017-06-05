@@ -1,33 +1,23 @@
 ﻿using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class AssignableGroupResource : IAssignableGroupResource
+    public class AssignableGroupResource : ZendeskResource<Group>, IAssignableGroupResource
     {
         private const string AssignableGroupUri = @"/api/v2/groups/assignable";
-
-        private readonly IRestClient _client;
-
-        public AssignableGroupResource(IRestClient client)
-        {
-            _client = client;
-        }
-
-        public ListResponse<Group> GetAll()
-        {
-            var requestUri = _client.BuildUri(AssignableGroupUri);
-
-            return _client.Get<GroupListResponse>(requestUri);
-        }
-
+        
+        public AssignableGroupResource(ZendeskOptions options) : base(options) { }
+        
         public async Task<ListResponse<Group>> GetAllAsync()
         {
-            var requestUri = _client.BuildUri(AssignableGroupUri);
-
-            return await _client.GetAsync<GroupListResponse>(requestUri).ConfigureAwait(false);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.GetAsync(AssignableGroupUri).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<GroupListResponse>();
+            }
         }
     }
 }

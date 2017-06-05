@@ -1,59 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Organization")]
-    [DataContract]
     public class Organization : IZendeskEntity
     {
-        [DataMember(Name = "id")]
+        [JsonProperty("id")]
         public long? Id { get; set; }
 
-        [DataMember(Name = "name", EmitDefaultValue = true)]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "details", EmitDefaultValue = true)]
+        [JsonProperty("details")]
         public string Details { get; set; }
 
-        [DataMember(Name = "notes", EmitDefaultValue = true)]
+        [JsonProperty("notes")]
         public string Notes { get; set; }
 
-        [DataMember(Name = "created_at", EmitDefaultValue = false)]
+        [JsonProperty("created_at")]
         public DateTime? Created { get; set; }
 
-        [DataMember(Name = "updated_at", EmitDefaultValue = false)]
+        [JsonProperty("updated_at")]
         public DateTime? Updated { get; set; }
 
-        [DataMember(Name = "due_at", EmitDefaultValue = false)]
+        [JsonProperty("due_at")]
         public DateTime? Due { get; set; }
 
-        [DataMember(Name = "organization_fields", EmitDefaultValue = true)]
+        [JsonProperty("organization_fields")]
         public Dictionary<object, object> CustomFields { get; set; }
         
-        [DataMember(Name = "tags", EmitDefaultValue = true)]
+        [JsonProperty("tags")]
         public List<string> Tags { get; set; }
         
-        [DataMember(Name = "external_id", EmitDefaultValue = false)]
+        [JsonProperty("external_id")]
         public string external_id { get; set; }
 
-        [DataMember(Name = "domain_names", EmitDefaultValue = false)]
+        [JsonProperty("domain_names")]
         public List<string> DomainNames { get; set; }
 
-// ReSharper disable InconsistentNaming       
-        [IgnoreDataMember]
+        [JsonIgnore]
         public bool shared_tickets { get; set; }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public bool shared_comments { get; set; }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public Uri Url { get; set; }
 
-        [IgnoreDataMember]
+        [JsonIgnore]
         public long group_id { get; set; }
-// ReSharper restore InconsistentNaming
     }
 }

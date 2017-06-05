@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Formatters;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
@@ -14,63 +12,50 @@ namespace ZendeskApi.Client.Resources
     {
         private const string ResourceUri = "/api/v2/tickets";
 
-        public TicketResource(IRestClient client)
-        {
-            Client = client;
-        }
-
-        public void Delete(long id)
-        {
-            ValidateRequest(id);
-            Delete($"{ResourceUri}/{id}");
-        }
-
-        public async Task DeleteAsync(long id)
-        {
-            ValidateRequest(id);
-            await DeleteAsync($"{ResourceUri}/{id}").ConfigureAwait(false);
-        }
-
-        public IResponse<Ticket> Get(long id)
-        {
-            return Get<TicketResponse>($"{ResourceUri}/{id}");
-        }
-
+        public TicketResource(ZendeskOptions options) : base(options) { }
+        
         public async Task<IResponse<Ticket>> GetAsync(long id)
         {
-            return await GetAsync<TicketResponse>($"{ResourceUri}/{id}").ConfigureAwait(false);
-        }
-
-        public IListResponse<Ticket> GetAll(List<long> ids)
-        {
-            return GetAll<TicketListResponse>($"{ResourceUri}/show_many", ids);
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<TicketResponse>();
+            }
         }
 
         public async Task<IListResponse<Ticket>> GetAllAsync(List<long> ids)
         {
-            return await GetAllAsync<TicketListResponse>($"{ResourceUri}/show_many", ids).ConfigureAwait(false);
-        }
-
-        public IResponse<Ticket> Put(TicketRequest request)
-        {
-            ValidateRequest(request);
-            return Put<TicketRequest, TicketResponse>(request, $"{ResourceUri}/{request.Item.Id}");
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ids)}").ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<TicketListResponse>();
+            }
         }
 
         public async Task<IResponse<Ticket>> PutAsync(TicketRequest request)
         {
-            ValidateRequest(request);
-            return await PutAsync<TicketRequest, TicketResponse>(request, $"{ResourceUri}/{request.Item.Id}").ConfigureAwait(false);
-        }
-
-        public IResponse<Ticket> Post(TicketRequest request)
-        {
-            return Post<TicketRequest, TicketResponse>(request, ResourceUri);
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<TicketResponse>();
+            }
         }
 
         public async Task<IResponse<Ticket>> PostAsync(TicketRequest request)
         {
-            return await PostAsync<TicketRequest, TicketResponse>(request, ResourceUri).ConfigureAwait(false);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<TicketResponse>();
+            }
+        }
+
+        public Task DeleteAsync(long id)
+        {
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                return client.DeleteAsync(id.ToString());
+            }
         }
     }
 }

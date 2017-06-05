@@ -1,44 +1,42 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Contracts.Models
 {
     [Description("satisfaction_rating")]
-    [DataContract]
     public class SatisfactionRating : IZendeskEntity
     {
-        [DataMember(EmitDefaultValue = false)]
+        [JsonProperty]
         public long? Id { get; set; }
 
-        [DataMember(Name = "group_id", EmitDefaultValue = false)]
+        [JsonProperty("group_id")]
         public long GroupId { get; set; }
 
-        [DataMember(Name = "assignee_id", EmitDefaultValue = false)]
+        [JsonProperty("assignee_id")]
         public long AssigneeId { get; set; }
 
-        [DataMember(Name = "requester_id", EmitDefaultValue = false)]
+        [JsonProperty("requester_id")]
         public long RequesterId { get; set; }
 
-        [DataMember(Name = "ticket_id", EmitDefaultValue = false)]
+        [JsonProperty("ticket_id")]
         public long TicketId { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [DataMember(Name = "score", EmitDefaultValue = false)]
+        [JsonProperty("score")]
         public SatisfactionRatingScore Score { get; set; }
 
-        [DataMember(Name = "created_at", EmitDefaultValue = false)]
+        [JsonProperty("created_at")]
         public DateTime? Created { get; set; }
 
-        [DataMember(Name = "updated_at", EmitDefaultValue = false)]
+        [JsonProperty("updated_at")]
         public DateTime? Updated { get; set; }
 
-        [DataMember(Name = "comment")]
+        [JsonProperty("comment")]
         public TicketComment Comment { get; set; }
 
-        [DataMember(Name = "url", EmitDefaultValue = false)]
+        [JsonProperty("url")]
         public string Url { get; set; }
     }
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
+﻿using System.Threading.Tasks;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
@@ -12,56 +10,41 @@ namespace ZendeskApi.Client.Resources
     {
         private const string ResourceUri = "/api/v2/users/{0}/identities";
 
-        public UserIdentityResource(IRestClient client)
-        {
-            Client = client;
-        }
-
-        public IListResponse<UserIdentity> GetAll(long id)
-        {
-            return GetAll<UserIdentityListResponse>(string.Format(ResourceUri, id));
-        }
-
+        public UserIdentityResource(ZendeskOptions options) : base(options) { }
+        
         public async Task<IListResponse<UserIdentity>> GetAllAsync(long id)
         {
-            return await GetAllAsync<UserIdentityListResponse>(string.Format(ResourceUri, id)).ConfigureAwait(false);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.GetAsync(string.Format(ResourceUri, id)).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<UserIdentityListResponse>();
+            }
         }
-
-        public IResponse<UserIdentity> Post(UserIdentityRequest request)
-        {
-            return Post<UserIdentityRequest, UserIdentityResponse>(request, 
-                string.Format(ResourceUri, request.Item.UserId));
-        }
-
+        
         public async Task<IResponse<UserIdentity>> PostAsync(UserIdentityRequest request)
         {
-            return await PostAsync<UserIdentityRequest, UserIdentityResponse>(request, 
-                string.Format(ResourceUri, request.Item.UserId)).ConfigureAwait(false);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.PostAsJsonAsync(string.Format(ResourceUri, request.Item.UserId), request).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<UserIdentityResponse>();
+            }
         }
-
-        public IResponse<UserIdentity> Put(UserIdentityRequest request)
-        {
-            ValidateRequest(request);
-            return Put<UserIdentityRequest, UserIdentityResponse>(request, 
-                string.Format(ResourceUri, request.Item.UserId));
-        }
-
+        
         public async Task<IResponse<UserIdentity>> PutAsync(UserIdentityRequest request)
         {
-            return await PutAsync<UserIdentityRequest, UserIdentityResponse>(request,
-                string.Format(ResourceUri, request.Item.UserId)).ConfigureAwait(false);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.PutAsJsonAsync(string.Format(ResourceUri, request.Item.UserId), request).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<UserIdentityResponse>();
+            }
         }
-
-        public void Delete(long id, long parentId)
+        
+        public Task DeleteAsync(long id, long parentId)
         {
-            ValidateRequest(id);
-            Delete($"{string.Format(ResourceUri, parentId)}/{id}");
-        }
-
-        public async Task DeleteAsync(long id, long parentId)
-        {
-            ValidateRequest(id);
-            await DeleteAsync($"{string.Format(ResourceUri, parentId)}/{id}").ConfigureAwait(false); ;
+            using (var client = CreateZendeskClient(string.Format(ResourceUri, parentId) + "/"))
+            {
+                return client.DeleteAsync(id.ToString());
+            }
         }
     }
 }

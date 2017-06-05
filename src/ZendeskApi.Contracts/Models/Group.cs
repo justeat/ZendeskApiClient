@@ -1,32 +1,31 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Group")]
-    [DataContract]
     public class Group : IZendeskEntity
     {
-        [DataMember(EmitDefaultValue = false)]
+        [JsonProperty]
         public long? Id { get; set; }
 
-        [DataMember(Name = "name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "created_at", EmitDefaultValue = false)]
+        [JsonProperty("created_at")]
         public DateTime? Created { get; set; }
 
-        [DataMember(Name = "updated_at", EmitDefaultValue = false)]
+        [JsonProperty("updated_at")]
         public DateTime? Updated { get; set; }
 
-        [DataMember(Name = "deleted", EmitDefaultValue = false)]
+        [JsonProperty("deleted")]
         public bool Deleted { get; set; }
 
-        [DataMember(Name = "url", EmitDefaultValue = false)]
+        [JsonProperty("url")]
         public Uri Url { get; set; }
 
-        [DataMember(Name = "has_incidents", EmitDefaultValue = false)]
+        [JsonProperty("has_incidents")]
         public bool HasIncidents { get; set; }
     }
 }

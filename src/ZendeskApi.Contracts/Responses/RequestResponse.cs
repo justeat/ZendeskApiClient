@@ -1,12 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    [DataContract]
     public class RequestResponse : IResponse<Request>
     {
-        [DataMember(Name = "request")]
+        [JsonProperty("request")]
         public Request Item { get; set; }
     }
 }

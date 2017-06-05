@@ -1,12 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Requests
 {
-    [DataContract]
     public class UserIdentityRequest : IRequest<UserIdentity>
     {
-        [DataMember(Name = "identity")]
+        [JsonProperty("identity")]
         public UserIdentity Item { get; set; }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    [DataContract]
-    internal class TicketFormListResponse : ListResponse<TicketForm>
+    public class TicketFormListResponse : ListResponse<TicketForm>
     {
-        [DataMember(Name = "ticket_forms")]
+        [JsonProperty("ticket_forms")]
         public override IEnumerable<TicketForm> Results { get; set; }
     }
 }

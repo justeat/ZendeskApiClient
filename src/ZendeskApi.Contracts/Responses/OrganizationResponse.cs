@@ -1,12 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    [DataContract]
     public class OrganizationResponse : IResponse<Organization>
     {
-        [DataMember(Name = "organization")]
+        [JsonProperty("organization")]
         public Organization Item { get; set; }
     }
 }

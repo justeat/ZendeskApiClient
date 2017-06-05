@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
     [Description("custom_field")]
-    [DataContract]
     public class CustomField
     {
-        [DataMember(Name = "id")]
+        [JsonProperty("id")]
         public long Id { get; set; }
 
-        [DataMember(Name = "value")]
+        [JsonProperty("value")]
         public string Value { get; set; }
     }
 }

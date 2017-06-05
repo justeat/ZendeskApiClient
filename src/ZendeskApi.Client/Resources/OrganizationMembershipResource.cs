@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
+﻿using System.Threading.Tasks;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
@@ -13,52 +11,35 @@ namespace ZendeskApi.Client.Resources
         private const string UsersUrl = "/api/v2/users/{0}/organization_memberships";
         private const string OrganisationsUrl = "/api/v2/organizations/{0}/organization_memberships";
 
-        public OrganizationMembershipResource(IRestClient client)
-        {
-            Client = client;
-        }
-
-        public IListResponse<OrganizationMembership> GetAllByOrganization(long organizationId)
-        {
-            string url = string.Format(OrganisationsUrl, organizationId);
-            return GetAll<OrganizationMembershipListResponse>(url);
-        }
+        public OrganizationMembershipResource(ZendeskOptions options) : base(options) { }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByOrganizationAsync(long organizationId)
         {
-            string url = string.Format(OrganisationsUrl, organizationId);
-            return await GetAllAsync<OrganizationMembershipListResponse>(url).ConfigureAwait(false); ;
-        }
-
-        public IListResponse<OrganizationMembership> GetAllByUser(long userId)
-        {
-            string url = string.Format(UsersUrl, userId);
-            return GetAll<OrganizationMembershipListResponse>(url);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.GetAsync(string.Format(OrganisationsUrl, organizationId)).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<OrganizationMembershipListResponse>();
+            }
         }
 
         public async Task<IListResponse<OrganizationMembership>> GetAllByUserAsync(long userId)
         {
-            string url = string.Format(UsersUrl, userId);
-            return await GetAllAsync<OrganizationMembershipListResponse>(url).ConfigureAwait(false);
-        }
-
-        public IResponse<OrganizationMembership> Post(OrganizationMembershipRequest request)
-        {
-            string url = string.Format(UsersUrl, request.Item.UserId);
-            return Post<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, url);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.GetAsync(string.Format(UsersUrl, userId)).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<OrganizationMembershipListResponse>();
+            }
         }
 
         public async Task<IResponse<OrganizationMembership>> PostAsync(OrganizationMembershipRequest request)
         {
-            string url = string.Format(UsersUrl, request.Item.UserId);
-            return await PostAsync<OrganizationMembershipRequest, OrganizationMembershipResponse>(request, url).ConfigureAwait(false);
-        }
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client
+                    .PostAsJsonAsync(string.Format(UsersUrl, request.Item.UserId), request).ConfigureAwait(false);
 
-        [Obsolete("GetAll is deprecated, please use GetAllByUser or GetAllByOrganization instead.")]
-        public IListResponse<OrganizationMembership> GetAll(long id)
-        {
-            string url = string.Format(UsersUrl, id);
-            return GetAll<OrganizationMembershipListResponse>(url);
+                return await response.Content.ReadAsAsync<OrganizationMembershipResponse>();
+            }
         }
     }
 }

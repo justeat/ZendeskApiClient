@@ -7,7 +7,6 @@ namespace ZendeskApi.Client.Resources
 {
     public interface ISearchResource
     {
-        IListResponse<T> Find<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity;
         Task<IListResponse<T>> FindAsync<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity;
     }
 }

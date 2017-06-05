@@ -1,22 +1,20 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
     // partially documented under 
     // https://developer.zendesk.com/rest_api/docs/core/tickets#creating-a-ticket-with-a-new-requester
     [Description("Requester")]
-    [DataContract]
     public class TicketRequester
     {
-        [DataMember(Name = "name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "email")]
+        [JsonProperty("email")]
         public string Email { get; set; }
 
-        [DataMember(Name = "locale_id")]
+        [JsonProperty("locale_id")]
         public int? Locale { get; set; }
     }
 }

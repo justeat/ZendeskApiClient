@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
-    [DataContract]
     public class Upload : IZendeskEntity
     {
-        [IgnoreDataMember]
+        [JsonIgnore]
         public long? Id { get; set; }
 
-        [DataMember(Name = "token", EmitDefaultValue = false)]
+        [JsonProperty("token")]
         public string Token { get; set; }
 
-        [DataMember(Name = "expires_at", EmitDefaultValue = false)]
+        [JsonProperty("expires_at")]
         public DateTime ExpiresAt { get; set; }
 
-        [DataMember(Name = "attachment", EmitDefaultValue = false)]
+        [JsonProperty("attachment")]
         public Attachment Attachment { get; set; }
     }
 }

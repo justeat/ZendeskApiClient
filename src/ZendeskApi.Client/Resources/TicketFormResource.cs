@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
@@ -9,29 +9,24 @@ namespace ZendeskApi.Client.Resources
     {
         private const string ResourceUri = "/api/v2/ticket_forms";
 
-        public TicketFormResource(IZendeskClient client)
-        {
-            Client = client;
-        }
-
-        public IResponse<TicketForm> Get(long id)
-        {
-            return Get<TicketFormResponse>($"{ResourceUri}/{id}");
-        }
+        public TicketFormResource(ZendeskOptions options) : base(options) { }
 
         public async Task<IResponse<TicketForm>> GetAsync(long id)
         {
-            return await GetAsync<TicketFormResponse>($"{ResourceUri}/{id}").ConfigureAwait(false);
-        }
-
-        public IListResponse<TicketForm> GetAll()
-        {
-            return GetAll<TicketFormListResponse>(ResourceUri);
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<TicketFormResponse>();
+            }
         }
 
         public async Task<IListResponse<TicketForm>> GetAllAsync()
         {
-            return await GetAllAsync<TicketFormListResponse>(ResourceUri).ConfigureAwait(false);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<TicketFormListResponse>();
+            }
         }
     }
 }

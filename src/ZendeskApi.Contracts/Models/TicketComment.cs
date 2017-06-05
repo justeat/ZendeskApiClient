@@ -1,46 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Comment")]
-    [DataContract]
     public class TicketComment : IZendeskEntity
     {
-        [DataMember(EmitDefaultValue = false)]
+        [JsonProperty]
         public long? Id { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        [DataMember(EmitDefaultValue = false)]
+        [JsonProperty()]
         public TicketEventType Type { get; set; }
 
-        [DataMember(Name = "html_body")]
+        [JsonProperty("html_body")]
         public string HtmlBody { get; set; }
 
-        [DataMember(Name = "body")]
+        [JsonProperty("body")]
         public string Body { get; set; }
 
-        [DataMember(Name = "author_id")]
+        [JsonProperty("author_id")]
         public long? Author { get; set; }
 
-        [DataMember(Name = "public")]
+        [JsonProperty("public")]
         public bool IsPublic { get; set; }
 
-        [DataMember(Name = "created_at", EmitDefaultValue = false)]
+        [JsonProperty("created_at")]
         public DateTime? Created { get; set; }
 
-        [DataMember(Name = "attachments")]
+        [JsonProperty("attachments")]
         public List<Attachment> Attachments { get; private set; }
 
-        [DataMember(Name = "uploads")]
+        [JsonProperty("uploads")]
         public List<string> Uploads { get; set; }
 
 
-        [DataMember(Name = "via")]
+        [JsonProperty("via")]
         public Via Via { get; set; }
         public void AddAttachmentToComment(string attachmentToken)
         {

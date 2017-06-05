@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
+﻿using System.Threading.Tasks;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
@@ -11,33 +9,24 @@ namespace ZendeskApi.Client.Resources
     {
         private const string ResourceUri = "/api/v2/requests/{0}/comments";
 
-        public RequestCommentResource(IRestClient client)
-        {
-            Client = client;
-        }
-
-        public IResponse<TicketComment> Get(long id, long parentId)
-        {
-            string url = $"{string.Format(ResourceUri, parentId)}/{id}";
-            return Get<TicketCommentResponse>(url);
-        }
+        public RequestCommentResource(ZendeskOptions options) : base(options) { }
 
         public async Task<IResponse<TicketComment>> GetAsync(long id, long parentId)
         {
-            string url = $"{string.Format(ResourceUri, parentId)}/{id}";
-            return await GetAsync<TicketCommentResponse>(url).ConfigureAwait(false);
-        }
-
-        public IListResponse<TicketComment> GetAll(long parentId)
-        {
-            string url = string.Format(ResourceUri, parentId);
-            return GetAll<TicketCommentListResponse>(url);
+            using (var client = CreateZendeskClient(string.Format(ResourceUri, parentId) + "/"))
+            {
+                var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<TicketCommentResponse>();
+            }
         }
 
         public async Task<IListResponse<TicketComment>> GetAllAsync(long parentId)
         {
-            string url = string.Format(ResourceUri, parentId);
-            return await GetAllAsync<TicketCommentListResponse>(url).ConfigureAwait(false);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.GetAsync(string.Format(ResourceUri, parentId)).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<TicketCommentListResponse>();
+            }
         }
     }
 }

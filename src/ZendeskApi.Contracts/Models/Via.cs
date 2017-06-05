@@ -1,27 +1,25 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
-    [DataContract]
     public class Via
     {
-        [DataMember(Name = "channel")]
+        [JsonProperty("channel")]
         public string Channel { get; set; }
 
-        [DataMember(Name = "source")]
+        [JsonProperty("source")]
         public Source Source { get; set; }
     }
-
-    [DataContract]
+    
     public class Source
     {
-        [DataMember(Name = "to")]
+        [JsonProperty("to")]
         public dynamic To { get; set; }
 
-        [DataMember(Name = "from")]
+        [JsonProperty("from")]
         public dynamic From { get; set; }
 
-        [DataMember(Name = "rel")]
+        [JsonProperty("rel")]
         public string Rel { get; set; }
     }
 }

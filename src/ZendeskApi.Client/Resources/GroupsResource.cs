@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
@@ -10,19 +9,15 @@ namespace ZendeskApi.Client.Resources
     {
         private const string ResourceUri = "/api/v2/groups";
 
-        public GroupsResource(IRestClient client)
-        {
-            Client = client;
-        }
-
-        public IResponse<Group> Get(long id)
-        {
-            return Get<GroupResponse>($"{ResourceUri}/{id}");
-        }
+        public GroupsResource(ZendeskOptions options) : base(options) { }
 
         public async Task<IResponse<Group>> GetAsync(long id)
         {
-            return await GetAsync<GroupResponse>($"{ResourceUri}/{id}").ConfigureAwait(false);
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<GroupResponse>();
+            }
         }
     }
 }

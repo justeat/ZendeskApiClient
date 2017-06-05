@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Text;
-using System.Web;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Queries
@@ -26,10 +26,12 @@ namespace ZendeskApi.Contracts.Queries
 
         public IZendeskQuery<T> WithCustomFilter(string field, string value, FilterOperator filterOperator = FilterOperator.Equals)
         {
-            Filter nFilter = new Filter();
-            nFilter.Field = field;
-            nFilter.Value = value;
-            nFilter.FilterOperator = filterOperator;
+            var nFilter = new Filter()
+            {
+                Field = field,
+                Value = value,
+                FilterOperator = filterOperator
+            };
             _customFilters.Add(nFilter);
             return this;
         }
@@ -58,7 +60,7 @@ namespace ZendeskApi.Contracts.Queries
 
             foreach (var filter in _customFilters)
             {
-                string operatorAndField = String.Empty;
+                var operatorAndField = string.Empty;
                 switch (filter.FilterOperator)
                 {
                     case FilterOperator.LessThan:
@@ -76,7 +78,8 @@ namespace ZendeskApi.Contracts.Queries
                     default:
                         break;
                 }
-                sb.Append(string.Format("{0}{1}{2}", HttpUtility.UrlEncode(" "), operatorAndField, HttpUtility.UrlEncode(filter.Value)));
+
+                sb.Append(string.Format("{0}{1}{2}", System.Net.WebUtility.UrlEncode(" "), operatorAndField, System.Net.WebUtility.UrlEncode(filter.Value)));
             }
             sb.Append(string.Format("&sort_by={0}&sort_order={1}", _orderBy.ToString().ToLower(), _order.ToString().ToLower()));
 
@@ -87,7 +90,7 @@ namespace ZendeskApi.Contracts.Queries
 
         static string GetDescription(Type type)
         {
-            var descriptions = (DescriptionAttribute[])type.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var descriptions = (DescriptionAttribute[])type.GetTypeInfo().GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             if (descriptions.Length == 0)
             {

@@ -1,12 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    [DataContract]
     public class TicketFormResponse : IResponse<TicketForm>
     {
-        [DataMember(Name = "ticket_form")]
+        [JsonProperty("ticket_form")]
         public TicketForm Item { get; set; }
     }
 }

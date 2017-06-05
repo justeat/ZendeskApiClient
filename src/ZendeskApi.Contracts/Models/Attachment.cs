@@ -1,33 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Attachment")]
-    [DataContract]
     public class Attachment : Thumbnail
     {
-        [DataMember(Name = "thumbnails", EmitDefaultValue = false)]
+        [JsonProperty("thumbnails")]
         public List<Thumbnail> Thumbnails { get; set; }
     }
-
-    [DataContract]
+    
     public class Thumbnail : IZendeskEntity
     {
-        [DataMember(Name = "id", EmitDefaultValue = false)]
+        [JsonProperty("id")]
         public long? Id { get; set; }
 
-        [DataMember(Name = "filename", EmitDefaultValue = false)]
+        [JsonProperty("filename")]
         public string FileName { get; set; }
 
-        [DataMember(Name = "content_url", EmitDefaultValue = false)]
+        [JsonProperty("content_url")]
         public string ContentUrl { get; set; }
 
-        [DataMember(Name = "content_type", EmitDefaultValue = false)]
+        [JsonProperty("content_type")]
         public string ContentType { get; set; }
 
-        [DataMember(Name = "size", EmitDefaultValue = false)]
+        [JsonProperty("size")]
         public int Size { get; set; }
     }
 }

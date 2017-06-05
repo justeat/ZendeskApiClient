@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
@@ -13,65 +11,52 @@ namespace ZendeskApi.Client.Resources
     {
         private const string ResourceUri = "/api/v2/requests";
 
-        public RequestResource(IRestClient client)
-        {
-            Client = client;
-        }
-
-        public IResponse<Request> Get(long id)
-        {
-            return Get<RequestResponse>($"{ResourceUri}/{id}");
-        }
+        public RequestResource(ZendeskOptions options) : base(options) { }
 
         public async Task<IResponse<Request>> GetAsync(long id)
         {
-            return await GetAsync<RequestResponse>($"{ResourceUri}/{id}").ConfigureAwait(false);
-        }
-
-        public IResponse<Request> Get(IEnumerable<TicketStatus> requestedStatuses)
-        {
-            string query = $"status={string.Join(",", requestedStatuses).ToLower()}";
-            return Get<RequestResponse>(ResourceUri, query);
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<RequestResponse>();
+            }
         }
 
         public async Task<IResponse<Request>> GetAsync(IEnumerable<TicketStatus> requestedStatuses)
         {
-            string query = $"status={string.Join(",", requestedStatuses).ToLower()}";
-            return await GetAsync<RequestResponse>(ResourceUri, query).ConfigureAwait(false);
-        }
-
-        public IResponse<Request> Put(RequestRequest request)
-        {
-            ValidateRequest(request);
-            return Put<RequestRequest, RequestResponse>(request, $"{ResourceUri}/{request.Item.Id}");
+            using (var client = CreateZendeskClient("/"))
+            {
+                // TODO: ngm make nicer
+                var query = $"status={string.Join(",", requestedStatuses).ToLower()}";
+                var response = await client.GetAsync($"{ResourceUri}?{query}").ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<RequestResponse>();
+            }
         }
 
         public async Task<IResponse<Request>> PutAsync(RequestRequest request)
         {
-            ValidateRequest(request);
-            return await PutAsync<RequestRequest, RequestResponse>(request, $"{ResourceUri}/{request.Item.Id}").ConfigureAwait(false);
-        }
-
-        public IResponse<Request> Post(RequestRequest request)
-        {
-            return Post<RequestRequest, RequestResponse>(request, ResourceUri);
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<RequestResponse>();
+            }
         }
 
         public async Task<IResponse<Request>> PostAsync(RequestRequest request)
         {
-            return await PostAsync<RequestRequest, RequestResponse>(request, ResourceUri).ConfigureAwait(false);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<RequestResponse>();
+            }
         }
 
-        public void Delete(long id)
+        public Task DeleteAsync(long id)
         {
-            ValidateRequest(id);
-            Delete($"{ResourceUri}/{id}");
-        }
-
-        public async Task DeleteAsync(long id)
-        {
-            ValidateRequest(id);
-            await DeleteAsync($"{ResourceUri}/{id}").ConfigureAwait(false);
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                return client.DeleteAsync(id.ToString());
+            }
         }
     }
 }

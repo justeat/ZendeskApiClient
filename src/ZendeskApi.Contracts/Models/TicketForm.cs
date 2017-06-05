@@ -1,45 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
-    [DataContract]
-    [DebuggerDisplay("Id:{Id} Name:{Name}")]
     public class TicketForm : IZendeskEntity
     {
-        [DataMember(Name = "id", EmitDefaultValue = false)]
+        [JsonProperty("id")]
         public long? Id { get; set; }
 
-        [DataMember(Name = "url", EmitDefaultValue = false)]
+        [JsonProperty("url")]
         public Uri Url { get; set; }
 
-        [DataMember(Name = "name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "raw_name", EmitDefaultValue = false)]
+        [JsonProperty("raw_name")]
         public string RawName { get; set; }
 
-        [DataMember(Name = "display_name", EmitDefaultValue = false)]
+        [JsonProperty("display_name")]
         public string DisplayName { get; set; }
 
-        [DataMember(Name = "raw_display_name", EmitDefaultValue = false)]
+        [JsonProperty("raw_display_name")]
         public string RawDisplayName { get; set; }
 
-        [DataMember(Name = "position", EmitDefaultValue = false)]
+        [JsonProperty("position")]
         public int? Position { get; set; }
 
-        [DataMember(Name = "end_user_visible", EmitDefaultValue = false)]
+        [JsonProperty("end_user_visible")]
         public bool? EndUserVisible { get; set; }
 
-        [DataMember(Name = "ticket_field_ids", EmitDefaultValue = false)]
+        [JsonProperty("ticket_field_ids")]
         public List<long> TicketFieldIds { get; set; }
 
-        [DataMember(Name = "active", EmitDefaultValue = false)]
+        [JsonProperty("active")]
         public bool? Active { get; set; }
 
-        [DataMember(Name = "default", EmitDefaultValue = false)]
+        [JsonProperty("default")]
         public bool? Default { get; set; }
 
     }

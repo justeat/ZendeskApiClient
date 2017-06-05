@@ -1,78 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Ticket Field")]
-    [DataContract]
     public class TicketField : IZendeskEntity
     {
-        [DataMember(EmitDefaultValue = false)]
+        [JsonProperty]
         public long? Id { get; set; }
 
-        [DataMember(Name = "url", EmitDefaultValue = false)]
+        [JsonProperty("url")]
         public Uri Url { get; set; }
 
-        [DataMember(Name = "type")]
+        [JsonProperty("type")]
         public string Type { get; set; }
 
-        [DataMember(Name = "title")]
+        [JsonProperty("title")]
         public string Title { get; set; }
 
-        [DataMember(Name = "raw_title", EmitDefaultValue = false)]
+        [JsonProperty("raw_title")]
         public string RawTitle { get; set; }
 
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
-        [DataMember(Name = "raw_description", EmitDefaultValue = false)]
+        [JsonProperty("raw_description")]
         public string RawDescription { get; set; }
 
-        [DataMember(Name = "position", EmitDefaultValue = false)]
+        [JsonProperty("position")]
         public int? Position { get; set; }
 
-        [DataMember(Name = "active", EmitDefaultValue = false)]
+        [JsonProperty("active")]
         public bool? Active { get; set; }
 
-        [DataMember(Name = "required", EmitDefaultValue = false)]
+        [JsonProperty("required")]
         public bool? Required { get; set; }
 
-        [DataMember(Name = "collapsed_for_agents", EmitDefaultValue = false)]
+        [JsonProperty("collapsed_for_agents")]
         public bool? CollapsedForAgents { get; set; }
 
-        [DataMember(Name = "regexp_for_validation", EmitDefaultValue = false)]
+        [JsonProperty("regexp_for_validation")]
         public string RegexpForValidation { get; set; }
 
-        [DataMember(Name = "title_in_portal", EmitDefaultValue = false)]
+        [JsonProperty("title_in_portal")]
         public string TitleInPortal { get; set; }
 
-        [DataMember(Name = "raw_title_in_portal", EmitDefaultValue = false)]
+        [JsonProperty("raw_title_in_portal")]
         public string RawTitleInPortal { get; set; }
 
-        [DataMember(Name = "visible_in_portal", EmitDefaultValue = false)]
+        [JsonProperty("visible_in_portal")]
         public bool? VisibleInPortal { get; set; }
 
-        [DataMember(Name = "editable_in_portal", EmitDefaultValue = false)]
+        [JsonProperty("editable_in_portal")]
         public bool? EditableInPortal { get; set; }
 
-        [DataMember(Name = "required_in_portal", EmitDefaultValue = false)]
+        [JsonProperty("required_in_portal")]
         public bool? RequiredInPortal { get; set; }
 
-        [DataMember(Name = "tag", EmitDefaultValue = false)]
+        [JsonProperty("tag")]
         public string Tag { get; set; }
 
-        [DataMember(Name = "created_at", EmitDefaultValue = false)]
+        [JsonProperty("created_at")]
         public DateTime? CreatedAt { get; set; }
 
-        [DataMember(Name = "updated_at", EmitDefaultValue = false)]
+        [JsonProperty("updated_at")]
         public DateTime? UpdatedAt { get; set; }
 
-        [DataMember(Name = "removable", EmitDefaultValue = false)]
+        [JsonProperty("removable")]
         public bool? Removable { get; set; }
 
-        [DataMember(Name = "custom_field_options", EmitDefaultValue = false)]
+        [JsonProperty("custom_field_options")]
         public List<CustomFieldOption> CustomFieldOptions { get; set; }
     }
 }

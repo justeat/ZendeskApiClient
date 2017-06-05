@@ -1,12 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    [DataContract]
     public class UploadResponse : IResponse<Upload>
     {
-        [DataMember(Name = "upload")]
+        [JsonProperty("upload")]
         public Upload Item { get; set; }
     }
 }

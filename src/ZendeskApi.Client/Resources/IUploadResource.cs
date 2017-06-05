@@ -7,9 +7,8 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IUploadResource
     {
-        void Delete(string token);
-        IResponse<Upload> Get(long id);
+        Task DeleteAsync(string token);
         Task<IResponse<Upload>> GetAsync(long id);
-        IResponse<Upload> Post(UploadRequest request);
+        Task<IResponse<Upload>> PostAsync(UploadRequest request);
     }
 }

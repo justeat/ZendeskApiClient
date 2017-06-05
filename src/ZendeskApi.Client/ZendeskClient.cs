@@ -1,13 +1,10 @@
-﻿using System;
-using ZendeskApi.Client.Http;
+﻿using ZendeskApi.Client.Options;
 using ZendeskApi.Client.Resources;
-using ILogAdapter = ZendeskApi.Client.Logging.ILogAdapter;
-using ISerializer = ZendeskApi.Client.Serialization.ISerializer;
 
 
 namespace ZendeskApi.Client
 {
-    public class ZendeskClient : ClientBase, IZendeskClient
+    public class ZendeskClient : IZendeskClient
     {
         public ITicketResource Tickets { get; private set; }
         public ITicketCommentResource TicketComments { get; private set; }
@@ -24,30 +21,24 @@ namespace ZendeskApi.Client
         public IOrganizationMembershipResource OrganizationMemberships { get; private set; }
         public IRequestResource Request { get; private set; }
         public ISatisfactionRatingResource SatisfactionRating { get; private set; }
-
-        public ZendeskClient(
-            Uri baseUri, 
-            ZendeskDefaultConfiguration configuration, 
-            ISerializer serializer = null, 
-            IHttpChannel httpChannel = null, 
-            ILogAdapter logger = null)
-            :base(baseUri, configuration, serializer, httpChannel, logger)
+        
+        public ZendeskClient(ZendeskOptions options)
         {
-            Tickets = new TicketResource(this);
-            TicketComments = new TicketCommentResource(this);
-            RequestComments = new RequestCommentResource(this);
-            Organizations = new OrganizationResource(this);
-            Search = new SearchResource(this);
-            Groups = new GroupsResource(this);
-            AssignableGroups = new AssignableGroupResource(this);
-            Users = new UserResource(this);
-            UserIdentities = new UserIdentityResource(this);
-            Upload = new UploadResource(this);
-            TicketFields = new TicketFieldResource(this);
-            TicketForms = new TicketFormResource(this);
-            OrganizationMemberships = new OrganizationMembershipResource(this);
-            Request = new RequestResource(this);
-            SatisfactionRating = new SatisfactionRatingResource(this);
+            Tickets = new TicketResource(options);
+            TicketComments = new TicketCommentResource(options);
+            RequestComments = new RequestCommentResource(options);
+            Organizations = new OrganizationResource(options);
+            Search = new SearchResource(options);
+            Groups = new GroupsResource(options);
+            AssignableGroups = new AssignableGroupResource(options);
+            Users = new UserResource(options);
+            UserIdentities = new UserIdentityResource(options);
+            Upload = new UploadResource(options);
+            TicketFields = new TicketFieldResource(options);
+            TicketForms = new TicketFormResource(options);
+            OrganizationMemberships = new OrganizationMembershipResource(options);
+            Request = new RequestResource(options);
+            SatisfactionRating = new SatisfactionRatingResource(options);
         }
     }
 }

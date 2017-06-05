@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources.ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
@@ -11,30 +10,32 @@ namespace ZendeskApi.Client.Resources
     {
         private const string ResourceUri = "/api/v2/uploads";
 
-        public UploadResource(IRestClient client)
-        {
-            Client = client;
-        }
+        public UploadResource(ZendeskOptions options) : base(options) { }
 
-        public void Delete(string token)
+        public Task DeleteAsync(string token)
         {
-            Delete($"{ResourceUri}/{token}");
-        }
-
-        public IResponse<Upload> Get(long id)
-        {
-            return Get<UploadResponse>($"{ResourceUri}/{id}");
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                return client.DeleteAsync(token);
+            }
         }
 
         public async Task<IResponse<Upload>> GetAsync(long id)
         {
-            return await GetAsync<UploadResponse>($"{ResourceUri}/{id}").ConfigureAwait(false); ;
+            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            {
+                var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<UploadResponse>();
+            }
         }
 
-        public IResponse<Upload> Post(UploadRequest request)
+        public async Task<IResponse<Upload>> PostAsync(UploadRequest request)
         {
-            var requestUri = Client.BuildUri(ResourceUri, $"filename={request.Item.FileName}{request.Token ?? ""}");
-            return Client.PostFile<UploadResponse>(requestUri, request.Item);
+            using (var client = CreateZendeskClient("/"))
+            {
+                var response = await client.PostAsJsonAsync($"{ResourceUri}?filename={request.Item.FileName}{request.Token ?? string.Empty}", request).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<UploadResponse>();
+            }
         }
     }
 }

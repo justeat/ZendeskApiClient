@@ -1,12 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Requests
 {
-    [DataContract]
     public class TicketRequest : IRequest<Ticket>
     {
-        [DataMember(Name = "ticket")]
+        [JsonProperty("ticket")]
         public Ticket Item { get; set; }
     }
 }

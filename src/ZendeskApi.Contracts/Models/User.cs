@@ -1,99 +1,98 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
     [Description("User")]
-    [DataContract]
     public class User : IZendeskEntity
     {
-        [DataMember(EmitDefaultValue = false)]
+        [JsonProperty()]
         public long? Id { get; set; }
 
-        [DataMember(Name = "name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "created_at", EmitDefaultValue = false)]
+        [JsonProperty("created_at")]
         public DateTime? Created { get; set; }
 
-        [DataMember(Name = "updated_at", EmitDefaultValue = false)]
+        [JsonProperty("updated_at")]
         public DateTime? Updated { get; set; }
 
-        [DataMember(Name = "last_login_at", EmitDefaultValue = false)]
+        [JsonProperty("last_login_at")]
         public DateTime? LastLoginAt { get; set; }
 
-        [DataMember(Name = "time_zone", EmitDefaultValue = false)]
+        [JsonProperty("time_zone")]
         public string TimeZone { get; set; }
 
-        [DataMember(Name = "url", EmitDefaultValue = false)]
+        [JsonProperty("url")]
         public string Url { get; set; }
 
-        [DataMember(Name = "email", EmitDefaultValue = false)]
+        [JsonProperty("email")]
         public string Email { get; set; }
 
-        [DataMember(Name = "phone", EmitDefaultValue = false)]
+        [JsonProperty("phone")]
         public string Phone { get; set; }
 
-        [DataMember(Name = "locale", EmitDefaultValue = false)]
+        [JsonProperty("locale")]
         public string Locale { get; set; }
 
-        [DataMember(Name = "locale_id", EmitDefaultValue = false)]
+        [JsonProperty("locale_id")]
         public int? LocalId { get; set; }
 
-        [DataMember(Name = "organization_id", EmitDefaultValue = false)]
+        [JsonProperty("organization_id")]
         public long? OrganizationId { get; set; }
 
-        [DataMember(Name = "role", EmitDefaultValue = false)]
+        [JsonProperty("role")]
         public string Role { get; set; }
 
-        [DataMember(Name = "verified", EmitDefaultValue = false)]
+        [JsonProperty("verified")]
         public bool Verified { get; set; }
 
-        [DataMember(Name = "external_id", EmitDefaultValue = false)]
+        [JsonProperty("external_id")]
         public string ExternalId { get; set; }
 
-        [DataMember(Name = "tags", EmitDefaultValue = false)]
+        [JsonProperty("tags")]
         public List<string> Tags { get; set; }
 
-        [DataMember(Name = "active", EmitDefaultValue = false)]
+        [JsonProperty("active")]
         public bool Active { get; set; }
 
-        [DataMember(Name = "shared", EmitDefaultValue = false)]
+        [JsonProperty("shared")]
         public bool Shared { get; set; }
 
-        [DataMember(Name = "shared_agent", EmitDefaultValue = false)]
+        [JsonProperty("shared_agent")]
         public bool SharedAgent { get; set; }
 
-        [DataMember(Name = "signature", EmitDefaultValue = false)]
+        [JsonProperty("signature")]
         public string Signature { get; set; }
 
-        [DataMember(Name = "details", EmitDefaultValue = false)]
+        [JsonProperty("details")]
         public string Details { get; set; }
 
-        [DataMember(Name = "notes", EmitDefaultValue = false)]
+        [JsonProperty("notes")]
         public string Notes { get; set; }
 
-        [DataMember(Name = "custom_role_id", EmitDefaultValue = false)]
+        [JsonProperty("custom_role_id")]
         public long? CustomRoleId { get; set; }
 
-        [DataMember(Name = "moderator", EmitDefaultValue = false)]
+        [JsonProperty("moderator")]
         public bool Moderator { get; set; }
 
-        [DataMember(Name = "only_private_comments", EmitDefaultValue = false)]
+        [JsonProperty("only_private_comments")]
         public bool OnlyPrivateComments { get; set; }
 
-        [DataMember(Name = "restricted_agent", EmitDefaultValue = false)]
+        [JsonProperty("restricted_agent")]
         public bool RestrictedAgent { get; set; }
 
-        [DataMember(Name = "suspended", EmitDefaultValue = false)]
+        [JsonProperty("suspended")]
         public bool Suspended { get; set; }
 
-        [DataMember(Name = "ticket_restriction", EmitDefaultValue = false)]
+        [JsonProperty("ticket_restriction")]
         public string TicketRestriction { get; set; }
 
-        [DataMember(Name = "user_fields", EmitDefaultValue = false)]
+        [JsonProperty("user_fields")]
         public Dictionary<string, object> UserFields { get; set; }
     }
 }
