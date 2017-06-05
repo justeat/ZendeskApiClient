@@ -5,7 +5,7 @@ using ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client = new Mock<IRestClient>();
         }
 
-        [Test]
+        [Fact]
         public void GetAll_CalledWithId_ReturnsListOfComments()
         {
             //Given
@@ -42,7 +42,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllAsync_CalledWithId_ReturnsListOfComments()
         {
             //Given
@@ -63,7 +63,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void GetAll_Called_UrlIsCorrect()
         {
             //Given
@@ -78,7 +78,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(u => u.Contains("tickets/123/comments")), It.IsAny<string>()));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllAsync_Called_UrlIsCorrect()
         {
             //Given

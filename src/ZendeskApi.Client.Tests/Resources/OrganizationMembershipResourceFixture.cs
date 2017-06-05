@@ -7,7 +7,7 @@ using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -21,7 +21,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client = new Mock<IRestClient>();
         }
 
-        [Test]
+        [Fact]
         public void GetAllByOrganization_Called_CallsBuildUriWithFieldIdAndType()
         {
             // Given
@@ -35,7 +35,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/organizations/")), ""));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllByOrganizationAsync_Called_CallsBuildUriWithFieldIdAndType()
         {
             // Given
@@ -49,7 +49,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/organizations/")), ""));
         }
 
-        [Test]
+        [Fact]
         public void GetAllByOrganization_Called_ReturnsOrganizationMembershipResponse()
         {
             // Given
@@ -69,7 +69,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllByOrganizationAsync_Called_ReturnsOrganizationMembershipResponse()
         {
             // Given
@@ -89,7 +89,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void GetAllByUser_Called_CallsBuildUriWithFieldIdAndType()
         {
             // Given
@@ -103,7 +103,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/users/")), ""));
         }
 
-        [Test]
+        [Fact]
         public async Task GetAllByUser_MultipleCallsAreMade_UrlIsStillCorrect()
         {
             // Given
@@ -118,7 +118,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/users/")), ""));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllByUserAsync_Called_CallsBuildUriWithFieldIdAndType()
         {
             // Given
@@ -132,7 +132,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/users/")), ""));
         }
 
-        [Test]
+        [Fact]
         public void GetAllByUser_Called_ReturnsOrganizationMembershipResponse()
         {
             // Given
@@ -152,7 +152,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllByUserAsync_Called_ReturnsOrganizationMembershipResponse()
         {
             // Given
@@ -172,7 +172,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void GetAllAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -186,7 +186,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321")),""));
         }
 
-        [Test]
+        [Fact]
         public void GetAll_Called_ReturnsOrganizationMembershipResponse()
         {
             // Given
@@ -206,7 +206,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Post_Called_BuildsUriWithFieldUserId()
         {
             // Given
@@ -220,7 +220,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.Is<string>(s => s.Contains("1234")), ""));
         }
 
-        [Test]
+        [Fact]
         public async void PostAsync_Called_BuildsUriWithFieldUserId()
         {
             // Given
@@ -234,7 +234,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.Is<string>(s => s.Contains("1234")), ""));
         }
 
-        [Test]
+        [Fact]
         public void Post_CalledWithId_ReturnsReponseWithId()
         {
             // Given
@@ -257,7 +257,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void PostAsync_CalledWithId_ReturnsReponseWithId()
         {
             // Given

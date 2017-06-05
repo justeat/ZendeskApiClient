@@ -1,8 +1,5 @@
 ﻿using System;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources;
-using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -16,7 +13,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client = new Mock<IRestClient>();
         }
 
-        [Test]
+        [Fact]
         public void GetAll_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -31,7 +28,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
 
-        [Test]
+        [Fact]
         public async void GetAllAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given

@@ -1,20 +1,23 @@
 ﻿using System.Threading.Tasks;
-using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class UploadResource : ZendeskResource<Upload>, IUploadResource
+    public class UploadResource : IUploadResource
     {
         private const string ResourceUri = "/api/v2/uploads";
+        private readonly IZendeskApiClient _apiClient;
 
-        public UploadResource(ZendeskOptions options) : base(options) { }
+        public UploadResource(IZendeskApiClient apiClient)
+        {
+            _apiClient = apiClient;
+        }
 
         public Task DeleteAsync(string token)
         {
-            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 return client.DeleteAsync(token);
             }
@@ -22,7 +25,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<Upload>> GetAsync(long id)
         {
-            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<UploadResponse>();
@@ -31,7 +34,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<Upload>> PostAsync(UploadRequest request)
         {
-            using (var client = CreateZendeskClient("/"))
+            using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PostAsJsonAsync($"{ResourceUri}?filename={request.Item.FileName}{request.Token ?? string.Empty}", request).ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<UploadResponse>();

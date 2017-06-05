@@ -1,22 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Formatters;
-using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class TicketResource : ZendeskResource<Ticket>, ITicketResource
+    public class TicketResource : ITicketResource
     {
         private const string ResourceUri = "/api/v2/tickets";
+        private readonly IZendeskApiClient _apiClient;
 
-        public TicketResource(ZendeskOptions options) : base(options) { }
+        public TicketResource(IZendeskApiClient apiClient)
+        {
+            _apiClient = apiClient;
+        }
         
         public async Task<IResponse<Ticket>> GetAsync(long id)
         {
-            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<TicketResponse>();
@@ -25,7 +28,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IListResponse<Ticket>> GetAllAsync(List<long> ids)
         {
-            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ids)}").ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<TicketListResponse>();
@@ -34,7 +37,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<Ticket>> PutAsync(TicketRequest request)
         {
-            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<TicketResponse>();
@@ -43,7 +46,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IResponse<Ticket>> PostAsync(TicketRequest request)
         {
-            using (var client = CreateZendeskClient("/"))
+            using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<TicketResponse>();
@@ -52,7 +55,7 @@ namespace ZendeskApi.Client.Resources
 
         public Task DeleteAsync(long id)
         {
-            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 return client.DeleteAsync(id.ToString());
             }

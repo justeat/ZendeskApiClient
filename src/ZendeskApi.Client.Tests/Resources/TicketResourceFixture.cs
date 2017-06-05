@@ -6,7 +6,7 @@ using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -20,7 +20,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client = new Mock<IRestClient>();
         }
 
-        [Test]
+        [Fact]
         public void Get_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -34,7 +34,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
-        [Test]
+        [Fact]
         public async void GetAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -48,7 +48,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
-        [Test]
+        [Fact]
         public void Get_Called_ReturnsTicketResponse()
         {
             // Given
@@ -63,7 +63,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void GetAsync_Called_ReturnsTicketResponse()
         {
             // Given
@@ -78,7 +78,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void GetAll_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -92,7 +92,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -106,7 +106,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
         }
 
-        [Test]
+        [Fact]
         public void GetAll_Called_ReturnsTicketResponse()
         {
             // Given
@@ -121,7 +121,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllAsync_Called_ReturnsTicketResponse()
         {
             // Given
@@ -136,7 +136,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Put_Called_BuildsUri()
         {
             // Given
@@ -150,7 +150,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public async void PutAsync_Called_BuildsUri()
         {
             // Given
@@ -164,7 +164,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public void Put_CalledWithTicket_ReturnsTicketReponse()
         {
             // Given
@@ -180,7 +180,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void PutAsync_CalledWithTicket_ReturnsTicketReponse()
         {
             // Given
@@ -196,7 +196,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Put_TicketHasNoId_ThrowsException()
         {
             // Given
@@ -209,7 +209,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Throws<ArgumentException>(() => ticketResource.Put(request));
         }
 
-        [Test]
+        [Fact]
         public void PutAsync_TicketHasNoId_ThrowsException()
         {
             // Given
@@ -222,7 +222,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Throws<ArgumentException>(async () => await ticketResource.PutAsync(request));
         }
 
-        [Test]
+        [Fact]
         public void Post_Called_BuildsUri()
         {
             // Given
@@ -236,7 +236,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public async void PostAsync_Called_BuildsUri()
         {
             // Given
@@ -250,7 +250,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public void Post_CalledWithTicket_ReturnsTicketReponse()
         {
             // Given
@@ -266,7 +266,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void PostAsync_CalledWithTicket_ReturnsTicketReponse()
         {
             // Given
@@ -282,7 +282,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Delete_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -296,7 +296,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
-        [Test]
+        [Fact]
         public async void DeleteAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -310,7 +310,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
-        [Test]
+        [Fact]
         public void Delete_Called_CallsDeleteOnClient()
         {
             // Given
@@ -325,7 +325,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.Delete<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
-        [Test]
+        [Fact]
         public async void DeleteAsync_Called_CallsDeleteOnClient()
         {
             // Given

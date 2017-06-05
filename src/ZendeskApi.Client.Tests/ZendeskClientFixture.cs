@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Web;
 using ZendeskApi.Client.Http;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 using ZendeskApi.Client.Serialization;
 using ZendeskApi.Contracts.Models;
 using HttpRequest = ZendeskApi.Client.Http.HttpRequest;
@@ -29,7 +29,7 @@ namespace ZendeskApi.Client.Tests
                 .Returns("cheese");
         }
 
-        [Test]
+        [Fact]
         public void Get_Success_ReturnsSuccessResult()
         {
             // Given
@@ -46,7 +46,7 @@ namespace ZendeskApi.Client.Tests
             Assert.That(result, Is.EqualTo(_successResponse.Content));
         }
 
-        [Test]
+        [Fact]
         public void GetAsync_Success_ReturnsSuccessResult()
         {
             // Given
@@ -65,7 +65,7 @@ namespace ZendeskApi.Client.Tests
             Assert.That(result.Result, Is.EqualTo(_successResponse.Content));
         }
 
-        [Test]
+        [Fact]
         public void Get_HttpReturnsFailResult_ThrowsException()
         {
             // Given
@@ -79,7 +79,7 @@ namespace ZendeskApi.Client.Tests
             Assert.Throws<HttpException>(() => client.Get<string>(new Uri("http://someurl.co.uk/resource")));
         }
 
-        [Test]
+        [Fact]
         public void GetAsync_HttpReturnsFailResult_ThrowsException()
         {
             // Given
@@ -93,7 +93,7 @@ namespace ZendeskApi.Client.Tests
             Assert.Throws<HttpException>(async () => await client.GetAsync<string>(new Uri("http://someurl.co.uk/resource")));
         }
 
-        [Test]
+        [Fact]
         public void Put_Success_ReturnsSuccessResult()
         {
             // Given
@@ -110,7 +110,7 @@ namespace ZendeskApi.Client.Tests
             Assert.That(result, Is.EqualTo(_successResponse.Content));
         }
 
-        [Test]
+        [Fact]
         public void PutAsync_Success_ReturnsSuccessResult()
         {
             // Given
@@ -129,7 +129,7 @@ namespace ZendeskApi.Client.Tests
             Assert.That(result.Result, Is.EqualTo(_successResponse.Content));
         }
 
-        [Test]
+        [Fact]
         public void Put_HttpReturnsFailResult_ThrowsException()
         {
             // Given
@@ -143,7 +143,7 @@ namespace ZendeskApi.Client.Tests
             Assert.Throws<HttpException>(() => client.Put<string>(new Uri("http://someurl.co.uk/resource")));
         }
 
-        [Test]
+        [Fact]
         public void Post_Success_ReturnsSuccessResult()
         {
             // Given
@@ -160,7 +160,7 @@ namespace ZendeskApi.Client.Tests
             Assert.That(result, Is.EqualTo(_successResponse.Content));
         }
 
-        [Test]
+        [Fact]
         public void PostFile_Success_ReturnsSuccessResult()
         {
             // Given
@@ -179,7 +179,7 @@ namespace ZendeskApi.Client.Tests
             Assert.That(result, Is.EqualTo(_successResponse.Content));
         }
 
-        [Test]
+        [Fact]
         public void PostAsync_Success_ReturnsSuccessResult()
         {
             // Given
@@ -198,7 +198,7 @@ namespace ZendeskApi.Client.Tests
             Assert.That(result.Result, Is.EqualTo(_successResponse.Content));
         }
 
-        [Test]
+        [Fact]
         public void Post_HttpReturnsFailResult_ThrowsException()
         {
             // Given
@@ -212,7 +212,7 @@ namespace ZendeskApi.Client.Tests
             Assert.Throws<HttpException>(() => client.Post<string>(new Uri("http://someurl.co.uk/resource")));
         }
 
-        [Test]
+        [Fact]
         public void PostAsync_HttpReturnsFailResult_ThrowsException()
         {
             // Given
@@ -226,7 +226,7 @@ namespace ZendeskApi.Client.Tests
             Assert.Throws<HttpException>(async () => await client.PostAsync<string>(new Uri("http://someurl.co.uk/resource")));
         }
 
-        [Test]
+        [Fact]
         public void PostFile_HttpReturnsFailResult_ThrowsException()
         {
             // Given
@@ -244,7 +244,7 @@ namespace ZendeskApi.Client.Tests
         }
 
 
-        [Test]
+        [Fact]
         public void Delete_Success_CallsDeleteOnHttp()
         {
             // Given
@@ -261,7 +261,7 @@ namespace ZendeskApi.Client.Tests
             http.Verify(h => h.Delete(It.IsAny<HttpRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
-        [Test]
+        [Fact]
         public void DeleteAsync_Success_CallsDeleteOnHttp()
         {
             // Given

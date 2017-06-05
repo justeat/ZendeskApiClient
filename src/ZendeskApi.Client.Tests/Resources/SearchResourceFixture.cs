@@ -5,7 +5,7 @@ using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Queries;
 using ZendeskApi.Contracts.Responses;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -21,7 +21,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _query = new Mock<IZendeskQuery<Organization>>();
         }
 
-        [Test]
+        [Fact]
         public void Find_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -37,7 +37,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("search")), It.Is<string>(s => s.Contains("query"))));
         }
 
-        [Test]
+        [Fact]
         public async void FindAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("search")), It.Is<string>(s => s.Contains("query"))));
         }
 
-        [Test]
+        [Fact]
         public void Find_Called_CallsGetOnClient()
         {
             // Given
@@ -72,7 +72,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 It.IsAny<string>()));
         }
 
-        [Test]
+        [Fact]
         public async void FindAsync_Called_CallsGetOnClient()
         {
             // Given

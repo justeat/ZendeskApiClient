@@ -1,4 +1,4 @@
-using NUnit.Framework;
+using Xunit;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Queries;
 
@@ -6,7 +6,7 @@ namespace ZendeskApi.Contracts.Tests.Queries
 {
     public class ZendeskQueryFixture
     {
-        [Test]
+        [Fact]
         public void CalledWithCustomFieldsEquals_BuildsQuery()
         {
             // Given
@@ -17,10 +17,10 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:organization+name:cheese+factory&sort_by=created_at&sort_order=desc&page=1&per_page=15"));
+            Assert.Equal("query=type:organization+name:cheese+factory&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
         }
 
-        [Test]
+        [Fact]
         public void CalledWithCustomFieldsLessThan_BuildsQuery()
         {
             // Given
@@ -31,10 +31,10 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:organization+updated_at>10%2f15%2f14&sort_by=created_at&sort_order=desc&page=1&per_page=15"));
+            Assert.Equal("query=type:organization+updated_at>10%2f15%2f14&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
         }
 
-        [Test]
+        [Fact]
         public void CalledWithCustomFieldsGreaterThan_BuildsQuery()
         {
             // Given
@@ -45,10 +45,10 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:organization+updated_at<10%2f15%2f14&sort_by=created_at&sort_order=desc&page=1&per_page=15"));
+            Assert.Equal("query=type:organization+updated_at<10%2f15%2f14&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
         }
 
-        [Test]
+        [Fact]
         public void CalledWithCustomFieldsAndPage_BuildsQuery()
         {
             // Given
@@ -59,10 +59,10 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:organization+name:cheese+factory&sort_by=created_at&sort_order=desc&page=3&per_page=15"));
+            Assert.Equal("query=type:organization+name:cheese+factory&sort_by=created_at&sort_order=desc&page=3&per_page=15", queryString);
         }
 
-        [Test]
+        [Fact]
         public void CalledWithDifferentType_BuildsQuery()
         {
             // Given
@@ -73,10 +73,10 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:ticket+name:cheese+factory&sort_by=created_at&sort_order=desc&page=3&per_page=15"));
+            Assert.Equal("query=type:ticket+name:cheese+factory&sort_by=created_at&sort_order=desc&page=3&per_page=15", queryString);
         }
 
-        [Test]
+        [Fact]
         public void CalledWithOrderSet_BuildsQuery()
         {
             // Given
@@ -87,10 +87,10 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:ticket+name:cheese+factory&sort_by=priority&sort_order=asc&page=3&per_page=15"));
+            Assert.Equal("query=type:ticket+name:cheese+factory&sort_by=priority&sort_order=asc&page=3&per_page=15", queryString);
         }
 
-        [Test]
+        [Fact]
         public void CalledWithNotEqual_BuildsQuery()
         {
             // Given
@@ -101,7 +101,7 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.That(queryString, Is.EqualTo("query=type:ticket+-name:cheese+factory&sort_by=priority&sort_order=asc&page=3&per_page=15"));
+            Assert.Equal("query=type:ticket+-name:cheese+factory&sort_by=priority&sort_order=asc&page=3&per_page=15", queryString);
         }
     }
 }

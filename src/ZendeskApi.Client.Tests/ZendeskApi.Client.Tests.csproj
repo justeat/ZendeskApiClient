@@ -1,156 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <NugetFrameworkVersion>net45</NugetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release40'">
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <NugetFrameworkVersion>net40</NugetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <NugetFrameworkVersion>net45</NugetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug40'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <NugetFrameworkVersion>net40</NugetFrameworkVersion>
-  </PropertyGroup>
-  <!--DEFAULT CONFIG-->
-  <PropertyGroup Condition="'$(Configuration)' == ''">
-    <Configuration>Debug</Configuration>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <NugetFrameworkVersion>net45</NugetFrameworkVersion>
-  </PropertyGroup>
-  <!--Global Configurations -->
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <FileAlignment>512</FileAlignment>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{182231A6-213B-4F9B-851D-ED5B7E6DA53D}</ProjectGuid>
-    <ContractsAssemblyName>ZendeskApi.Contracts</ContractsAssemblyName>
-    <RootNamespace>ZendeskApi.Client.Tests</RootNamespace>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>ZendeskApi.Client.Tests</AssemblyName>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <!--If configuration is not provided, default to Debug build-->
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <OutputPath>bin\$(Configuration)\$(NugetFrameworkVersion)\</OutputPath>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <PackageId>ZendeskApi.Client.Tests</PackageId>
   </PropertyGroup>
-  <Choose>
-    <When Condition="$(Configuration.Contains('Debug'))">
-      <PropertyGroup>
-        <DebugSymbols>true</DebugSymbols>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <DebugType>full</DebugType>
-        <ErrorReport>prompt</ErrorReport>
-        <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-        <Optimize>false</Optimize>
-        <WarningLevel>4</WarningLevel>
-        <Prefer32Bit>false</Prefer32Bit>
-        <UseVSHostingProcess>false</UseVSHostingProcess>
-      </PropertyGroup>
-    </When>
-  </Choose>
+  
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq, Version=4.5.21.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.5.21\lib\net45\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\$(NugetFrameworkVersion)\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.1" />
+    <PackageReference Include="Moq" Version="4.7.25" />
+    <PackageReference Include="xunit" Version="2.3.0-beta2-build3683" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0-beta2-build1317" />
+    <PackageReference Include="xunit.analyzers" Version="0.3.0" />
   </ItemGroup>
+  
   <ItemGroup>
-    <Compile Include="Resources\SatisfactionRatingResourceFixture.cs" />
-    <Compile Include="Resources\RequestCommentResourceFixture.cs" />
-    <Compile Include="Resources\RequestResourceFixture.cs" />
-    <Compile Include="TaskHelper.cs" />
-    <Compile Include="ZendeskClientFixture.cs" />
-    <Compile Include="Formatters\ZendeskFormatterFixture.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\AssignableGroupResourceFixture.cs" />
-    <Compile Include="Resources\GroupResourceFixture.cs" />
-    <Compile Include="Resources\SearchResourceFixture.cs" />
-    <Compile Include="Resources\OrganizationResourceFixture.cs" />
-    <Compile Include="Resources\TicketCommentResourceFixture.cs" />
-    <Compile Include="Resources\OrganizationMembershipResourceFixture.cs" />
-    <Compile Include="Resources\UserIdentityResourceFixture.cs" />
-    <Compile Include="Resources\UserResourceFixture.cs" />
-    <Compile Include="Resources\TicketResourceFixture.cs" />
+    <ProjectReference Include="..\ZendeskApi.Client\ZendeskApi.Client.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\ZendeskApi.Client\ZendeskApi.Client.csproj">
-      <Project>{710e1917-ac01-4877-9683-af47a7dbdf84}</Project>
-      <Name>ZendeskApi.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ZendeskApi.Contracts\ZendeskApi.Contracts.csproj">
-      <Project>{bea9e134-91ff-40d6-9b5d-bd57006dbbc6}</Project>
-      <Name>ZendeskApi.Contracts</Name>
-    </ProjectReference>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-  <ItemGroup Condition="$(Configuration.Contains('40'))">
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
-    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
-    <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
-  </Target>
-  <Target Name="Clean">
-    <RemoveDir Directories="bin" />
-  </Target>
-  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-  </Target>
+
 </Project>

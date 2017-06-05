@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using ZendeskApi.Client.Formatters;
-using NUnit.Framework;
+using Xunit;
 
 namespace ZendeskApi.Client.Tests.Formatters
 {
     public class ZendeskFormatterFixture
     {
-        [Test]
+        [Fact]
         public void ToCsv_Called_ReturnsItemsAsZendeskCompliantCsv()
         {
             // Given
@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Tests.Formatters
             Assert.That(result, Is.EqualTo("a,bb,ccc"));
         }
 
-        [Test]
+        [Fact]
         public void ToCsv_Called_ReturnsItemsTrimmed()
         {
             // Given
@@ -32,7 +32,7 @@ namespace ZendeskApi.Client.Tests.Formatters
             Assert.That(result, Is.EqualTo("a,bb,c cc"));
         }
 
-        [Test]
+        [Fact]
         public void ToCsv_Called_ReturnsNumericItemsAsZendeskCompliantCsv()
         {
             // Given

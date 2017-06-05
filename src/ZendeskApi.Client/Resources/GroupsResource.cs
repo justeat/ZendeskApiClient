@@ -1,19 +1,22 @@
 ﻿using System.Threading.Tasks;
-using ZendeskApi.Client.Options;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class GroupsResource : ZendeskResource<Group>, IGroupResource
+    public class GroupsResource : IGroupResource
     {
         private const string ResourceUri = "/api/v2/groups";
+        private readonly IZendeskApiClient _apiClient;
 
-        public GroupsResource(ZendeskOptions options) : base(options) { }
+        public GroupsResource(IZendeskApiClient apiClient)
+        {
+            _apiClient = apiClient;
+        }
 
         public async Task<IResponse<Group>> GetAsync(long id)
         {
-            using (var client = CreateZendeskClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<GroupResponse>();

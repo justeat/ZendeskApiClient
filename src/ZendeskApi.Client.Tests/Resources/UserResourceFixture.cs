@@ -6,7 +6,7 @@ using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -20,7 +20,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client = new Mock<IRestClient>();
         }
 
-        [Test]
+        [Fact]
         public void Get_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -34,7 +34,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("4321")), ""));
         }
 
-        [Test]
+        [Fact]
         public async void GetAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -48,7 +48,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("4321")), ""));
         }
 
-        [Test]
+        [Fact]
         public void Get_Called_ReturnsUserResponse()
         {
             // Given
@@ -63,7 +63,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void GetAsync_Called_ReturnsUserResponse()
         {
             // Given
@@ -78,7 +78,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void GetAll_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -92,7 +92,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.Is<string>(st => st.Contains("4321,3456,6789"))));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -106,7 +106,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.Is<string>(st => st.Contains("4321,3456,6789"))));
         }
 
-        [Test]
+        [Fact]
         public void GetAll_Called_ReturnsUserResponse()
         {
             // Given
@@ -121,7 +121,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void GetAllAsync_Called_ReturnsUserResponse()
         {
             // Given
@@ -136,7 +136,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Post_Called_BuildsUri()
         {
             // Given
@@ -150,7 +150,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public async void PostAsync_Called_BuildsUri()
         {
             // Given
@@ -164,7 +164,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public void Post_CalledWithUser_ReturnsUserReponse()
         {
             // Given
@@ -180,7 +180,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void PostAsync_CalledWithUser_ReturnsUserReponse()
         {
             // Given
@@ -196,7 +196,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Put_Called_BuildsUri()
         {
             // Given
@@ -210,7 +210,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public async void PutAsync_Called_BuildsUri()
         {
             // Given
@@ -224,7 +224,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public void Put_CalledWithUser_ReturnsUserReponse()
         {
             // Given
@@ -240,7 +240,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void PutAsync_CalledWithUser_ReturnsUserReponse()
         {
             // Given

@@ -5,7 +5,7 @@ using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client = new Mock<IRestClient>();
         }
 
-        [Test]
+        [Fact]
         public void Get_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
-        [Test]
+        [Fact]
         public async void GetAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -47,7 +47,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
-        [Test]
+        [Fact]
         public void SearchByExternalIds_Called_ReturnsResponse()
         {
             // Given
@@ -72,7 +72,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Get_Called_ReturnsResponse()
         {
             // Given
@@ -92,7 +92,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void GetAsync_Called_ReturnsResponse()
         {
             // Given
@@ -112,7 +112,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Put_Called_BuildsUri()
         {
             // Given
@@ -126,7 +126,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public async void PutAsync_Called_BuildsUri()
         {
             // Given
@@ -140,7 +140,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public void Put_CalledWithItem_ReturnsReponse()
         {
             // Given
@@ -162,7 +162,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public async void PutAsync_CalledWithItem_ReturnsReponse()
         {
             // Given
@@ -185,7 +185,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Put_HasNoId_ThrowsException()
         {
             // Given
@@ -205,7 +205,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Throws<ArgumentException>(() => resource.Put(request));
         }
 
-        [Test]
+        [Fact]
         public void PutAsync_HasNoId_ThrowsException()
         {
             // Given
@@ -225,7 +225,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Throws<ArgumentException>(async () => await resource.PutAsync(request));
         }
 
-        [Test]
+        [Fact]
         public void Post_Called_BuildsUri()
         {
             // Given
@@ -239,7 +239,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public async void PostAsync_Called_BuildsUri()
         {
             // Given
@@ -253,7 +253,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
         }
 
-        [Test]
+        [Fact]
         public void Post_CalledWithItem_ReturnsReponse()
         {
             // Given
@@ -277,7 +277,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
 
-        [Test]
+        [Fact]
         public async void PostAsync_CalledWithItem_ReturnsReponse()
         {
             // Given
@@ -300,7 +300,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.That(result, Is.EqualTo(response));
         }
 
-        [Test]
+        [Fact]
         public void Delete_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -314,7 +314,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
-        [Test]
+        [Fact]
         public async void DeleteAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
@@ -328,7 +328,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
         }
 
-        [Test]
+        [Fact]
         public void Delete_Called_CallsDeleteOnClient()
         {
             // Given
@@ -346,7 +346,7 @@ namespace ZendeskApi.Client.Tests.Resources
             _client.Verify(c => c.Delete<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
-        [Test]
+        [Fact]
         public async void DeleteAsync_Called_CallsDeleteOnClient()
         {
             // Given

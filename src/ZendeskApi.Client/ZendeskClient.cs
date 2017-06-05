@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using ZendeskApi.Client.Options;
-using ZendeskApi.Client.Resources;
+﻿using ZendeskApi.Client.Resources;
 
 
 namespace ZendeskApi.Client
@@ -23,25 +21,23 @@ namespace ZendeskApi.Client
         public IRequestResource Request { get; private set; }
         public ISatisfactionRatingResource SatisfactionRating { get; private set; }
         
-        public ZendeskClient(IOptions<ZendeskOptions> optionsAccessor)
+        public ZendeskClient(IZendeskApiClient apiClient)
         {
-            var options = optionsAccessor.Value;
-
-            Tickets = new TicketResource(options);
-            TicketComments = new TicketCommentResource(options);
-            RequestComments = new RequestCommentResource(options);
-            Organizations = new OrganizationResource(options);
-            Search = new SearchResource(options);
-            Groups = new GroupsResource(options);
-            AssignableGroups = new AssignableGroupResource(options);
-            Users = new UserResource(options);
-            UserIdentities = new UserIdentityResource(options);
-            Upload = new UploadResource(options);
-            TicketFields = new TicketFieldResource(options);
-            TicketForms = new TicketFormResource(options);
-            OrganizationMemberships = new OrganizationMembershipResource(options);
-            Request = new RequestResource(options);
-            SatisfactionRating = new SatisfactionRatingResource(options);
+            Tickets = new TicketResource(apiClient);
+            TicketComments = new TicketCommentResource(apiClient);
+            RequestComments = new RequestCommentResource(apiClient);
+            Organizations = new OrganizationResource(apiClient);
+            Search = new SearchResource(apiClient);
+            Groups = new GroupsResource(apiClient);
+            AssignableGroups = new AssignableGroupResource(apiClient);
+            Users = new UserResource(apiClient);
+            UserIdentities = new UserIdentityResource(apiClient);
+            Upload = new UploadResource(apiClient);
+            TicketFields = new TicketFieldResource(apiClient);
+            TicketForms = new TicketFormResource(apiClient);
+            OrganizationMemberships = new OrganizationMembershipResource(apiClient);
+            Request = new RequestResource(apiClient);
+            SatisfactionRating = new SatisfactionRatingResource(apiClient);
         }
     }
 }

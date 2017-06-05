@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
+using Microsoft.Extensions.Options;
 using ZendeskApi.Client.Options;
-using ZendeskApi.Contracts.Models;
 
-namespace ZendeskApi.Client.Resources
+namespace ZendeskApi.Client
 {
-    public abstract class ZendeskResource<T> where T : IZendeskEntity
+    public class ZendeskApiClient : IZendeskApiClient
     {
         private readonly ZendeskOptions _options;
 
-        public ZendeskResource(ZendeskOptions options) {
-            _options = options;
+        public ZendeskApiClient(IOptions<ZendeskOptions> options)
+        {
+            _options = options.Value;
         }
 
-        protected HttpClient CreateZendeskClient(string resource)
+        public HttpClient CreateClient(string resource)
         {
             var handler = new HttpClientHandler();
             if (handler.SupportsAutomaticDecompression)

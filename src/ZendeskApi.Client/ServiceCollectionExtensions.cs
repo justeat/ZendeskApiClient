@@ -12,6 +12,7 @@ namespace ZendeskApi.Client
             )
         {
             services.AddScoped<IZendeskClient, ZendeskClient>();
+            services.AddScoped<IZendeskApiClient, ZendeskApiClient>();
 
             services.Configure<ZendeskOptions>(options => {
                 options.EndpointUri = endpointUri;

@@ -1,94 +1,59 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
+using Moq;
+using Newtonsoft.Json;
+using Xunit;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Responses;
-using Moq;
-using NUnit.Framework;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
     public class GroupResourceFixture
     {
-        private Mock<IRestClient> _client;
+        private Mock<IZendeskApiClient> _apiClient;
+        private Mock<HttpClient> _httpClient;
 
-        [SetUp]
-        public void SetUp()
+        public GroupResourceFixture()
         {
-            _client = new Mock<IRestClient>();
+            _apiClient = new Mock<IZendeskApiClient>();
+            _httpClient = new Mock<HttpClient>();
         }
 
-        [Test]
-        public async void GetAsync_Called_CallsBuildUriWithFieldId()
+        [Fact]
+        public async Task GetAsync_Called_CallsBuildUriWithFieldId()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
-            var groupResource = new GroupsResource(_client.Object);
+            _apiClient.Setup(b => b.CreateClient(It.IsAny<string>())).Returns(_httpClient.Object);
+
+            var groupResource = new GroupsResource(_apiClient.Object);
 
             // When
             await groupResource.GetAsync(321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/groups/321")), ""));
+            _apiClient.Verify(c => c.CreateClient("/api/v2/groups"), "");
+            _httpClient.Verify(c => c.GetAsync("321"), "");
         }
-
-        [Test]
-        public void Get_Called_CallsBuildUriWithFieldId()
+        
+        [Fact]
+        public async Task GetAsync_Called_ReturnsResponse()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
-            var groupResource = new GroupsResource(_client.Object);
+            var response = new GroupResponse { Item = new Group { Id = 1 } };
+            var message = new HttpResponseMessage { Content = new StringContent(JsonConvert.SerializeObject(response)) };
+            _httpClient.Setup(b => b.GetAsync(It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(message));
 
-            // When
-            groupResource.Get(321);
-
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/groups/321")), ""));
-        }
-
-
-        [Test]
-        public async void GetAsync_Called_ReturnsResponse()
-        {
-            // Given
-            var response = new GroupResponse { Item = new Group { Id = 1 }};
-            _client.Setup(b => b.GetAsync<GroupResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()
-                ))
-                .Returns(TaskHelper.CreateTaskFromResult(response));
-
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
-            var groupResource = new GroupsResource(_client.Object);
+            _apiClient.Setup(b => b.CreateClient(It.IsAny<string>())).Returns(_httpClient.Object);
+            
+            var groupResource = new GroupsResource(_apiClient.Object);
 
             // When
             var result = await groupResource.GetAsync(321);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Test]
-        public void Get_Called_ReturnsResponse()
-        {
-            // Given
-            var response = new GroupResponse { Item = new Group { Id = 1 }};
-            _client.Setup(b => b.Get<GroupResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
-
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://zendesk"));
-            var groupResource = new GroupsResource(_client.Object);
-
-            // When
-            var result = groupResource.Get(321);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
     }
 }
