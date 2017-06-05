@@ -60,7 +60,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = ticketResource.Get(321);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await ticketResource.GetAsync(321);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = ticketResource.GetAll(new List<long> { 321, 456, 789 });
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await ticketResource.GetAllAsync(new List<long> { 321, 456, 789 });
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -177,7 +177,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = ticketResource.Put(request);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -193,7 +193,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await ticketResource.PutAsync(request);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -263,7 +263,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = ticketResource.Post(request);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -279,7 +279,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await ticketResource.PostAsync(request);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]

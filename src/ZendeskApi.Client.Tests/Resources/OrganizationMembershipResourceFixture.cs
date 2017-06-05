@@ -1,223 +1,92 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
+using Moq;
+using Newtonsoft.Json;
+using Xunit;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
-using Moq;
-using Xunit;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
     public class OrganizationMembershipResourceFixture
     {
-        private Mock<IRestClient> _client;
+        private Mock<IZendeskApiClient> _apiClient;
+        private Mock<HttpClient> _httpClient;
 
-        [SetUp]
-        public void SetUp()
+        public OrganizationMembershipResourceFixture()
         {
-            _client = new Mock<IRestClient>();
+            _apiClient = new Mock<IZendeskApiClient>();
+            _httpClient = new Mock<HttpClient>();
         }
 
         [Fact]
-        public void GetAllByOrganization_Called_CallsBuildUriWithFieldIdAndType()
+        public async Task GetAllByOrganizationAsync_Called_CallsBuildUriWithFieldIdAndType()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
-
-            // When
-            organizationMembershipResource.GetAllByOrganization(4321);
-
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/organizations/")), ""));
-        }
-
-        [Fact]
-        public async void GetAllByOrganizationAsync_Called_CallsBuildUriWithFieldIdAndType()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+            _apiClient.Setup(b => b.CreateClient(It.IsAny<string>())).Returns(_httpClient.Object);
+            var organizationMembershipResource = new OrganizationMembershipResource(_apiClient.Object);
 
             // When
             await organizationMembershipResource.GetAllByOrganizationAsync(4321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/organizations/")), ""));
+            _apiClient.Verify(c => c.CreateClient(It.Is<string>(x => x.Contains("organizations"))), "");
+            _httpClient.Verify(c => c.GetAsync("4321"), "");
         }
 
         [Fact]
-        public void GetAllByOrganization_Called_ReturnsOrganizationMembershipResponse()
+        public async Task GetAllByOrganization_Called_ReturnsOrganizationMembershipResponse()
         {
             // Given
             var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
+            var message = new HttpResponseMessage { Content = new StringContent(JsonConvert.SerializeObject(response)) };
+            _httpClient.Setup(b => b.GetAsync(It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(message));
+            _apiClient.Setup(b => b.CreateClient(It.IsAny<string>())).Returns(_httpClient.Object);
 
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
-
-            // When
-            var result = organizationMembershipResource.GetAllByOrganization(4321);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Fact]
-        public async void GetAllByOrganizationAsync_Called_ReturnsOrganizationMembershipResponse()
-        {
-            // Given
-            var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(
-                It.IsAny<Uri>(), 
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(TaskHelper.CreateTaskFromResult(response));
-
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+            var organizationMembershipResource = new OrganizationMembershipResource(_apiClient.Object);
 
             // When
             var result = await organizationMembershipResource.GetAllByOrganizationAsync(4321);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Fact]
-        public void GetAllByUser_Called_CallsBuildUriWithFieldIdAndType()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
-
-            // When
-            organizationMembershipResource.GetAllByUser(4321);
-
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/users/")), ""));
-        }
-
-        [Fact]
-        public async Task GetAllByUser_MultipleCallsAreMade_UrlIsStillCorrect()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
-
-            // When
-            await organizationMembershipResource.GetAllByOrganizationAsync(1);
-            organizationMembershipResource.GetAllByUser(4321);
-
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/users/")), ""));
+            Assert.Equal(response, result);
         }
 
         [Fact]
         public async void GetAllByUserAsync_Called_CallsBuildUriWithFieldIdAndType()
         {
             // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+            _apiClient.Setup(b => b.CreateClient(It.IsAny<string>())).Returns(_httpClient.Object);
+            var organizationMembershipResource = new OrganizationMembershipResource(_apiClient.Object);
 
             // When
             await organizationMembershipResource.GetAllByUserAsync(4321);
 
             // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321") && st.Contains("/users/")), ""));
-        }
-
-        [Fact]
-        public void GetAllByUser_Called_ReturnsOrganizationMembershipResponse()
-        {
-            // Given
-            var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
-
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
-
-            // When
-            var result = organizationMembershipResource.GetAllByUser(4321);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
+            _apiClient.Verify(c => c.CreateClient(It.Is<string>(x => x.Contains("users"))), "");
+            _httpClient.Verify(c => c.GetAsync("4321"), "");
         }
 
         [Fact]
         public async void GetAllByUserAsync_Called_ReturnsOrganizationMembershipResponse()
         {
             // Given
-            var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<OrganizationMembershipListResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(TaskHelper.CreateTaskFromResult(response));
+            var response = new OrganizationMembershipListResponse {
+                Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
+            var message = new HttpResponseMessage { Content = new StringContent(JsonConvert.SerializeObject(response)) };
+            _httpClient.Setup(b => b.GetAsync(It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(message));
+            _apiClient.Setup(b => b.CreateClient(It.IsAny<string>())).Returns(_httpClient.Object);
 
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+            var organizationMembershipResource = new OrganizationMembershipResource(_apiClient.Object);
 
             // When
             var result = await organizationMembershipResource.GetAllByUserAsync(4321);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Fact]
-        public void GetAllAsync_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
-
-            // When
-            organizationMembershipResource.GetAll(4321);
-
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(st => st.Contains("4321")),""));
-        }
-
-        [Fact]
-        public void GetAll_Called_ReturnsOrganizationMembershipResponse()
-        {
-            // Given
-            var response = new OrganizationMembershipListResponse { Results = new List<OrganizationMembership> { new OrganizationMembership { Id = 1 } } };
-            _client.Setup(b => b.Get<OrganizationMembershipListResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
-
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
-
-            // When
-            var result = organizationMembershipResource.GetAll(4321);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Fact]
-        public void Post_Called_BuildsUriWithFieldUserId()
-        {
-            // Given
-            var request = new OrganizationMembershipRequest { Item = new OrganizationMembership { UserId = 1234 } };
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
-
-            // When
-            organizationMembershipResource.Post(request);
-
-            // Then
-            _client.Setup(b => b.BuildUri(It.Is<string>(s => s.Contains("1234")), ""));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -225,36 +94,13 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             // Given
             var request = new OrganizationMembershipRequest { Item = new OrganizationMembership { UserId = 1234 } };
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+            var organizationMembershipResource = new OrganizationMembershipResource(_apiClient.Object);
 
             // When
             await organizationMembershipResource.PostAsync(request);
 
             // Then
-            _client.Setup(b => b.BuildUri(It.Is<string>(s => s.Contains("1234")), ""));
-        }
-
-        [Fact]
-        public void Post_CalledWithId_ReturnsReponseWithId()
-        {
-            // Given
-            var response = new OrganizationMembershipResponse { Item = new OrganizationMembership { Id = 123 } };
-            var request = new OrganizationMembershipRequest { Item = new OrganizationMembership { Id = 123 } };
-            _client.Setup(b => b.Post<OrganizationMembershipResponse>(
-                It.IsAny<Uri>(),
-                request, 
-                "application/json",
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
-
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
-
-            // When
-            var result = organizationMembershipResource.Post(request);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
+            _httpClient.Verify(c => c.GetAsync("4321"), "");
         }
 
         [Fact]
@@ -263,14 +109,17 @@ namespace ZendeskApi.Client.Tests.Resources
             // Given
             var response = new OrganizationMembershipResponse { Item = new OrganizationMembership { Id = 123 } };
             var request = new OrganizationMembershipRequest { Item = new OrganizationMembership { Id = 123 } };
-            _client.Setup(b => b.PostAsync<OrganizationMembershipResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
-            var organizationMembershipResource = new OrganizationMembershipResource(_client.Object);
+
+            _httpClient.Setup(b => b.PostAsync(It.IsAny<string>(), new StringContent(JsonConvert.SerializeObject(response))));
+            _apiClient.Setup(b => b.CreateClient(It.IsAny<string>())).Returns(_httpClient.Object);
+
+            var organizationMembershipResource = new OrganizationMembershipResource(_apiClient.Object);
 
             // When
             var result = await organizationMembershipResource.PostAsync(request);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
     }
 }

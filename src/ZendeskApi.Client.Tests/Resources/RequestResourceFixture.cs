@@ -65,7 +65,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = resource.Get(321);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await resource.GetAsync(321);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = resource.Put(request);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -188,7 +188,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await resource.PutAsync(request);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -279,7 +279,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = requestResource.Post(request);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -302,7 +302,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await requestResource.PostAsync(request);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]

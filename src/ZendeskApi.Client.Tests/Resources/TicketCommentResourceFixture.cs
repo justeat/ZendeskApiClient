@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = resource.GetAll(123);
 
             //Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await resource.GetAllAsync(123);
 
             //Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]

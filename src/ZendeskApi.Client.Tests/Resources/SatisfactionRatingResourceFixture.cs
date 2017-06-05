@@ -80,7 +80,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = resource.Get(321);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
 
             //check the resource and operation are correctly populated
             _client.Verify(c => c.Get<SatisfactionRatingResponse>(
@@ -107,7 +107,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await resource.GetAsync(321);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = resource.Post(request, 21);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var result = await resource.PostAsync(request, 21);
 
             // Then
-            Assert.That(result, Is.EqualTo(response));
+            Assert.Equal(response, result);
         }
     }
 }
