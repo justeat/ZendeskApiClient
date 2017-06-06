@@ -1,0 +1,67 @@
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using ZendeskApi.Contracts.Requests;
+using ZendeskApi.Contracts.Responses;
+
+namespace ZendeskApi.Client.Tests
+{
+    public class ZendeskSampleSite : IDisposable
+    {
+        public static Action<IRouteBuilder> MatchesRequest
+        {
+            get
+            {
+                return rb => rb
+                    .MapPost("api/v2/tickets", (req, resp, routeData) => {
+                        var ticket = req.Body.Deserialize<TicketRequest>().Item;
+
+                        ticket.Id = long.Parse(new Random().Next().ToString());
+
+                        resp.StatusCode = (int)HttpStatusCode.Created;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
+
+                        return Task.CompletedTask;
+                    });
+            }
+        }
+
+        private readonly TestServer _server;
+
+        public HttpClient Client { get; }
+
+        public ZendeskSampleSite(string resource)
+        {
+            var webhostbuilder = new WebHostBuilder();
+            webhostbuilder
+                .ConfigureServices(services => services.AddRouting())
+                .Configure(app =>
+                {
+                    app.UseRouter(MatchesRequest);
+                });
+
+            _server = new TestServer(webhostbuilder);
+            Client = _server.CreateClient();
+            Client.BaseAddress = new Uri($"http://localhost/{resource.TrimStart('/')}");
+        }
+
+        public Uri BaseUri
+        {
+            get { return Client.BaseAddress; }
+        }
+
+        public void Dispose()
+        {
+            Client.Dispose();
+            _server.Dispose();
+        }
+    }
+}

@@ -1,369 +1,121 @@
-﻿using System;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources;
-using ZendeskApi.Contracts.Models;
-using ZendeskApi.Contracts.Requests;
-using ZendeskApi.Contracts.Responses;
-using Moq;
-using Xunit;
+﻿//using System;
+//using System.Net.Http;
+//using System.Threading.Tasks;
+//using Moq;
+//using Newtonsoft.Json;
+//using Xunit;
+//using ZendeskApi.Client.Resources;
+//using ZendeskApi.Contracts.Models;
+//using ZendeskApi.Contracts.Requests;
+//using ZendeskApi.Contracts.Responses;
 
-namespace ZendeskApi.Client.Tests.Resources
-{
-    public class OrganizationResourceFixture
-    {
-        private Mock<IRestClient> _client;
+//namespace ZendeskApi.Client.Tests.Resources
+//{
+//    public class OrganizationResourceFixture
+//    {
+//        private Mock<IZendeskApiClient> _apiClient;
+//        private Mock<HttpClient> _httpClient;
 
-        [SetUp]
-        public void SetUp()
-        {
-            _client = new Mock<IRestClient>();
-        }
+//        public OrganizationResourceFixture()
+//        {
+//            _apiClient = new Mock<IZendeskApiClient>();
+//            _httpClient = new Mock<HttpClient>();
+//            _apiClient.Setup(b => b.CreateClient(It.IsAny<string>())).Returns(_httpClient.Object);
+//        }
 
-        [Fact]
-        public void Get_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
-            var resource = new OrganizationResource(_client.Object);
+//        [Fact]
+//        public async Task GetAsync_Called_CallsBuildUriWithFieldId()
+//        {
+//            // Given
+//            var resource = new OrganizationResource(_apiClient.Object);
 
-            // When
-            resource.Get(321);
+//            // When
+//            await resource.GetAsync(321);
 
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
-        }
+//            // Then
+//            _httpClient.Verify(c => c.GetAsync("321"), "");
+//        }
 
-        [Fact]
-        public async void GetAsync_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
-            var resource = new OrganizationResource(_client.Object);
+//        [Fact]
+//        public async Task GetAsync_Called_ReturnsResponse()
+//        {
+//            // Given
+//            var response = new OrganizationResponse { Item = new Organization { Id = 1 } };
+//            var message = new HttpResponseMessage { Content = new StringContent(JsonConvert.SerializeObject(response)) };
+//            _httpClient.Setup(b => b.GetAsync(It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(message));
 
-            // When
-            await resource.GetAsync(321);
+//            var resource = new OrganizationResource(_apiClient.Object);
 
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
-        }
+//            // When
+//            var result = await resource.GetAsync(321);
 
-        [Fact]
-        public void SearchByExternalIds_Called_ReturnsResponse()
-        {
-            // Given
-            var response = new OrganizationListResponse
-            {
-                Results = new[] { new Organization { Id = 1 } },
-                TotalCount = 1
-            };
+//            // Then
+//            Assert.Equal(response, result);
+//        }
 
-            _client.Setup(b => b.Get<OrganizationListResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
-
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            var result = resource.SearchByExtenalIds("321");
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Fact]
-        public void Get_Called_ReturnsResponse()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Id = 1 } };
-            _client.Setup(b => b.Get<OrganizationResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
-
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            var result = resource.Get(321);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Fact]
-        public async void GetAsync_Called_ReturnsResponse()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Id = 1 } };
-            _client.Setup(b => b.GetAsync<OrganizationResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(TaskHelper.CreateTaskFromResult(response));
-
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            var result = await resource.GetAsync(321);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Fact]
-        public void Put_Called_BuildsUri()
-        {
-            // Given
-            var request = new OrganizationRequest { Item = new Organization { Name = "Organizations", Id = 123 } };
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            resource.Put(request);
-
-            // Then
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
-        }
-
-        [Fact]
-        public async void PutAsync_Called_BuildsUri()
-        {
-            // Given
-            var request = new OrganizationRequest { Item = new Organization { Name = "Organizations", Id = 123 } };
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            await resource.PutAsync(request);
-
-            // Then
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
-        }
-
-        [Fact]
-        public void Put_CalledWithItem_ReturnsReponse()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
-            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah", Id = 123 } };
-            _client.Setup(b => b.Put<OrganizationResponse>(
-                It.IsAny<Uri>(),
-                request, 
-                "application/json",
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            var result = resource.Put(request);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Fact]
-        public async void PutAsync_CalledWithItem_ReturnsReponse()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
-            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah", Id = 123 } };
-            _client.Setup(b => b.PutAsync<OrganizationResponse>(
-                It.IsAny<Uri>(), 
-                request, 
-                "application/json",
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(TaskHelper.CreateTaskFromResult(response));
-
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            var result = await resource.PutAsync(request);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
-
-        [Fact]
-        public void Put_HasNoId_ThrowsException()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
-            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
-            _client.Setup(b => b.Put<OrganizationResponse>(
-                It.IsAny<Uri>(), 
-                request, 
-                "application/json",
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
-
-            var resource = new OrganizationResource(_client.Object);
-
-            // When, Then
-            Assert.Throws<ArgumentException>(() => resource.Put(request));
-        }
-
-        [Fact]
-        public void PutAsync_HasNoId_ThrowsException()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
-            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
-            _client.Setup(b => b.PutAsync<OrganizationResponse>(
-                It.IsAny<Uri>(), 
-                request, 
-                "application/json",
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(TaskHelper.CreateTaskFromResult(response));
-
-            var resource = new OrganizationResource(_client.Object);
-
-            // When, Then
-            Assert.Throws<ArgumentException>(async () => await resource.PutAsync(request));
-        }
-
-        [Fact]
-        public void Post_Called_BuildsUri()
-        {
-            // Given
-            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
-            var resource = new OrganizationResource(_client.Object);
+//        [Fact]
+//        public async Task PutAsync_CalledWithItem_ReturnsReponse()
+//        {
+//            // Given
+//            var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
+//            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah", Id = 123 } };
+//            var message = new HttpResponseMessage { Content = new StringContent(JsonConvert.SerializeObject(response)) };
+//            _httpClient.Setup(b => b.PutAsync("123", new StringContent(JsonConvert.SerializeObject(request)))).Returns(TaskHelper.CreateTaskFromResult(message));
             
-            // When
-            resource.Post(request);
+//            var resource = new OrganizationResource(_apiClient.Object);
 
-            // Then
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
-        }
+//            // When
+//            var result = await resource.PutAsync(request);
 
-        [Fact]
-        public async void PostAsync_Called_BuildsUri()
-        {
-            // Given
-            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
-            var resource = new OrganizationResource(_client.Object);
-            
-            // When
-            await resource.PostAsync(request);
+//            // Then
+//            Assert.Equal(response, result);
+//        }
 
-            // Then
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
-        }
-
-        [Fact]
-        public void Post_CalledWithItem_ReturnsReponse()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
-            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
-            _client.Setup(b => b.Post<OrganizationResponse>(
-                It.IsAny<Uri>(), 
-                request, 
-                "application/json",
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(response);
-
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            var result = resource.Post(request);
-
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
+//        [Fact]
+//        public async Task PutAsync_HasNoId_ThrowsException()
+//        {
+//            // Given
+//            var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
+//            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
+//            var message = new HttpResponseMessage { Content = new StringContent(JsonConvert.SerializeObject(response)) };
+//            _httpClient.Setup(b => b.PutAsync(It.IsAny<string>(), new StringContent(JsonConvert.SerializeObject(request)))).Returns(TaskHelper.CreateTaskFromResult(message));
 
 
-        [Fact]
-        public async void PostAsync_CalledWithItem_ReturnsReponse()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
-            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
-            _client.Setup(b => b.PostAsync<OrganizationResponse>(
-                It.IsAny<Uri>(),
-                request,
-                "application/json",
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(TaskHelper.CreateTaskFromResult(response));
+//            var resource = new OrganizationResource(_apiClient.Object);
 
-            var resource = new OrganizationResource(_client.Object);
+//            // When, Then
+//            await Assert.ThrowsAsync<ArgumentException>(async () => await resource.PutAsync(request));
+//        }
+        
+//        [Fact]
+//        public async Task PostAsync_CalledWithItem_ReturnsReponse()
+//        {
+//            // Given
+//            var response = new OrganizationResponse { Item = new Organization { Name = "blah blah" } };
+//            var request = new OrganizationRequest { Item = new Organization { Name = "blah blah" } };
+//            var message = new HttpResponseMessage { Content = new StringContent(JsonConvert.SerializeObject(response)) };
+//            _httpClient.Setup(b => b.PostAsync(It.IsAny<string>(), new StringContent(JsonConvert.SerializeObject(request)))).Returns(TaskHelper.CreateTaskFromResult(message));
 
-            // When
-            var result = await resource.PostAsync(request);
+//            var resource = new OrganizationResource(_apiClient.Object);
 
-            // Then
-            Assert.That(result, Is.EqualTo(response));
-        }
+//            // When
+//            var result = await resource.PostAsync(request);
 
-        [Fact]
-        public void Delete_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
-            var resource = new OrganizationResource(_client.Object);
+//            // Then
+//            Assert.Equal(response, result);
+//        }
 
-            // When
-            resource.Delete(321);
+//        [Fact]
+//        public async Task DeleteAsync_Called_CallsBuildUriWithFieldId()
+//        {
+//            // Given
+//            var resource = new OrganizationResource(_apiClient.Object);
 
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
-        }
+//            // When
+//            await resource.DeleteAsync(321);
 
-        [Fact]
-        public async void DeleteAsync_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            await resource.DeleteAsync(321);
-
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
-        }
-
-        [Fact]
-        public void Delete_Called_CallsDeleteOnClient()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Id = 1 } };
-            _client.Setup(b => b.Get<OrganizationResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>())).Returns(response);
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            resource.Delete(321);
-
-            // Then
-            _client.Verify(c => c.Delete<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
-        }
-
-        [Fact]
-        public async void DeleteAsync_Called_CallsDeleteOnClient()
-        {
-            // Given
-            var response = new OrganizationResponse { Item = new Organization { Id = 1 } };
-            _client.Setup(b => b.GetAsync<OrganizationResponse>(
-                It.IsAny<Uri>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .Returns(TaskHelper.CreateTaskFromResult(response));
-
-            var resource = new OrganizationResource(_client.Object);
-
-            // When
-            await resource.DeleteAsync(321);
-
-            // Then
-            _client.Verify(c => c.DeleteAsync<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
-        }
-    }
-}
+//            // Then
+//            _httpClient.Verify(c => c.DeleteAsync("321"), "");
+//        }
+//    }
+//}

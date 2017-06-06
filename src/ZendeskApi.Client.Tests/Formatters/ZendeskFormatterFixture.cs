@@ -16,7 +16,7 @@ namespace ZendeskApi.Client.Tests.Formatters
             var result = ZendeskFormatter.ToCsv(list);
 
             // Then
-            Assert.That(result, Is.EqualTo("a,bb,ccc"));
+            Assert.Equal("a,bb,ccc", result);
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace ZendeskApi.Client.Tests.Formatters
             var result = ZendeskFormatter.ToCsv(list);
 
             // Then
-            Assert.That(result, Is.EqualTo("a,bb,c cc"));
+            Assert.Equal("a,bb,c cc", result);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace ZendeskApi.Client.Tests.Formatters
             var result = ZendeskFormatter.ToCsv(list);
 
             // Then
-            Assert.That(result, Is.EqualTo("1,22,333"));
+            Assert.Equal("1,22,333", result);
         }
     }
 }

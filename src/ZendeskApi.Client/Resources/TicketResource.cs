@@ -9,7 +9,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class TicketResource : ITicketResource
     {
-        private const string ResourceUri = "/api/v2/tickets";
+        private const string ResourceUri = "api/v2/tickets";
         private readonly IZendeskApiClient _apiClient;
 
         public TicketResource(IZendeskApiClient apiClient)
@@ -49,7 +49,13 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<TicketResponse>();
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Created)
+                {
+                    return await response.Content.ReadAsAsync<TicketResponse>();
+                }
+
+                return null;
             }
         }
 

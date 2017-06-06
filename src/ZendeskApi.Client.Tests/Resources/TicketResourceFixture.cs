@@ -1,343 +1,368 @@
 ﻿using System;
-using System.Collections.Generic;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Client.Resources;
-using ZendeskApi.Contracts.Models;
-using ZendeskApi.Contracts.Requests;
-using ZendeskApi.Contracts.Responses;
-using Moq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Xunit;
+using ZendeskApi.Client.Resources;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
-    public class TicketResourceFixture
+    public class TicketResourceFixture : IDisposable
     {
-        private Mock<IRestClient> _client;
+        private readonly IZendeskApiClient _client;
+        private readonly TicketResource _resource;
 
-        [SetUp]
-        public void SetUp()
+        public TicketResourceFixture()
         {
-            _client = new Mock<IRestClient>();
+            _client = new DisposableZendeskApiClient();
+            _resource = new TicketResource(_client);
         }
 
         [Fact]
-        public void Get_Called_CallsBuildUriWithFieldId()
+        public async Task ShouldCreateTicket()
         {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
-            var ticketResource = new TicketResource(_client.Object);
+            var response = await _resource.PostAsync(
+                new Contracts.Requests.TicketRequest
+                {
+                    Item = new Contracts.Models.Ticket
+                    {
+                        Subject = "My printer is on fire!",
+                        Comment = new Contracts.Models.TicketComment
+                        {
+                            Body = "The smoke is very colorful."
+                        }
+                    }
+                });
 
-            // When
-            ticketResource.Get(321);
+            var item = response.Item;
 
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+            Assert.NotNull(item.Id);
+            Assert.Equal("My printer is on fire!", item.Subject);
+            Assert.Equal("The smoke is very colorful.", item.Comment.Body);
         }
 
-        [Fact]
-        public async void GetAsync_Called_CallsBuildUriWithFieldId()
+        public void Dispose()
         {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
-            var ticketResource = new TicketResource(_client.Object);
-
-            // When
-            await ticketResource.GetAsync(321);
-
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+            ((IDisposable)_client).Dispose();
         }
 
-        [Fact]
-        public void Get_Called_ReturnsTicketResponse()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Id = 1 }};
-            _client.Setup(b => b.Get<TicketResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(response);
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public void Get_Called_CallsBuildUriWithFieldId()
+        //{
+        //    // Given
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            var result = ticketResource.Get(321);
+        //    // When
+        //    ticketResource.Get(321);
 
-            // Then
-            Assert.Equal(response, result);
-        }
+        //    // Then
+        //    _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+        //}
 
-        [Fact]
-        public async void GetAsync_Called_ReturnsTicketResponse()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Id = 1 }};
-            _client.Setup(b => b.GetAsync<TicketResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public async Task GetAsync_Called_CallsBuildUriWithFieldId()
+        //{
+        //    // Given
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            var result = await ticketResource.GetAsync(321);
+        //    // When
+        //    await ticketResource.GetAsync(321);
 
-            // Then
-            Assert.Equal(response, result);
-        }
+        //    // Then
+        //    _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+        //}
 
-        [Fact]
-        public void GetAll_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public void Get_Called_ReturnsTicketResponse()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Id = 1 } };
+        //    _client.Setup(b => b.Get<TicketResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(response);
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            ticketResource.GetAll(new List<long> { 321, 456, 789 });
+        //    // When
+        //    var result = ticketResource.Get(321);
 
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
-        }
+        //    // Then
+        //    Assert.Equal(response, result);
+        //}
 
-        [Fact]
-        public async void GetAllAsync_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public async Task GetAsync_Called_ReturnsTicketResponse()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Id = 1 } };
+        //    _client.Setup(b => b.GetAsync<TicketResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            await ticketResource.GetAllAsync(new List<long> { 321, 456, 789 });
+        //    // When
+        //    var result = await ticketResource.GetAsync(321);
 
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
-        }
+        //    // Then
+        //    Assert.Equal(response, result);
+        //}
 
-        [Fact]
-        public void GetAll_Called_ReturnsTicketResponse()
-        {
-            // Given
-            var response = new TicketListResponse { Results = new List<Ticket> { new Ticket { Id = 1 } } };
-            _client.Setup(b => b.Get<TicketListResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(response);
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public void GetAll_Called_CallsBuildUriWithFieldId()
+        //{
+        //    // Given
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            var result = ticketResource.GetAll(new List<long> { 321, 456, 789 });
+        //    // When
+        //    ticketResource.GetAll(new List<long> { 321, 456, 789 });
 
-            // Then
-            Assert.Equal(response, result);
-        }
+        //    // Then
+        //    _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
+        //}
 
-        [Fact]
-        public async void GetAllAsync_Called_ReturnsTicketResponse()
-        {
-            // Given
-            var response = new TicketListResponse { Results = new List<Ticket> { new Ticket { Id = 1 } } };
-            _client.Setup(b => b.GetAsync<TicketListResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public async Task GetAllAsync_Called_CallsBuildUriWithFieldId()
+        //{
+        //    // Given
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri("http://search"));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            var result = await ticketResource.GetAllAsync(new List<long> { 321, 456, 789 });
+        //    // When
+        //    await ticketResource.GetAllAsync(new List<long> { 321, 456, 789 });
 
-            // Then
-            Assert.Equal(response, result);
-        }
+        //    // Then
+        //    _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("/show_many")), It.IsAny<string>()));
+        //}
 
-        [Fact]
-        public void Put_Called_BuildsUri()
-        {
-            // Given
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public void GetAll_Called_ReturnsTicketResponse()
+        //{
+        //    // Given
+        //    var response = new TicketListResponse { Results = new List<Ticket> { new Ticket { Id = 1 } } };
+        //    _client.Setup(b => b.Get<TicketListResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(response);
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            ticketResource.Put(request);
+        //    // When
+        //    var result = ticketResource.GetAll(new List<long> { 321, 456, 789 });
 
-            // Then
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
-        }
+        //    // Then
+        //    Assert.Equal(response, result);
+        //}
 
-        [Fact]
-        public async void PutAsync_Called_BuildsUri()
-        {
-            // Given
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public async Task GetAllAsync_Called_ReturnsTicketResponse()
+        //{
+        //    // Given
+        //    var response = new TicketListResponse { Results = new List<Ticket> { new Ticket { Id = 1 } } };
+        //    _client.Setup(b => b.GetAsync<TicketListResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            await ticketResource.PutAsync(request);
+        //    // When
+        //    var result = await ticketResource.GetAllAsync(new List<long> { 321, 456, 789 });
 
-            // Then
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
-        }
+        //    // Then
+        //    Assert.Equal(response, result);
+        //}
 
-        [Fact]
-        public void Put_CalledWithTicket_ReturnsTicketReponse()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
-            _client.Setup(b => b.Put<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(response);
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public void Put_Called_BuildsUri()
+        //{
+        //    // Given
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            var result = ticketResource.Put(request);
+        //    // When
+        //    ticketResource.Put(request);
 
-            // Then
-            Assert.Equal(response, result);
-        }
+        //    // Then
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        //}
 
-        [Fact]
-        public async void PutAsync_CalledWithTicket_ReturnsTicketReponse()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
-            _client.Setup(b => b.PutAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public async Task PutAsync_Called_BuildsUri()
+        //{
+        //    // Given
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            var result = await ticketResource.PutAsync(request);
+        //    // When
+        //    await ticketResource.PutAsync(request);
 
-            // Then
-            Assert.Equal(response, result);
-        }
+        //    // Then
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        //}
 
-        [Fact]
-        public void Put_TicketHasNoId_ThrowsException()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
-            _client.Setup(b => b.Put<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(response);
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public void Put_CalledWithTicket_ReturnsTicketReponse()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
+        //    _client.Setup(b => b.Put<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(response);
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When, Then
-            Assert.Throws<ArgumentException>(() => ticketResource.Put(request));
-        }
+        //    // When
+        //    var result = ticketResource.Put(request);
 
-        [Fact]
-        public void PutAsync_TicketHasNoId_ThrowsException()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
-            _client.Setup(b => b.PutAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
-            var ticketResource = new TicketResource(_client.Object);
+        //    // Then
+        //    Assert.Equal(response, result);
+        //}
 
-            // When, Then
-            Assert.Throws<ArgumentException>(async () => await ticketResource.PutAsync(request));
-        }
+        //[Fact]
+        //public async Task PutAsync_CalledWithTicket_ReturnsTicketReponse()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah", Id = 123 } };
+        //    _client.Setup(b => b.PutAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-        [Fact]
-        public void Post_Called_BuildsUri()
-        {
-            // Given
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
-            var ticketResource = new TicketResource(_client.Object);
-            
-            // When
-            ticketResource.Post(request);
+        //    // When
+        //    var result = await ticketResource.PutAsync(request);
 
-            // Then
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
-        }
+        //    // Then
+        //    Assert.Equal(response, result);
+        //}
 
-        [Fact]
-        public async void PostAsync_Called_BuildsUri()
-        {
-            // Given
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
-            var ticketResource = new TicketResource(_client.Object);
+        //[Fact]
+        //public void Put_TicketHasNoId_ThrowsException()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
+        //    _client.Setup(b => b.Put<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(response);
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // When
-            await ticketResource.PostAsync(request);
+        //    // When, Then
+        //    Assert.Throws<ArgumentException>(() => ticketResource.Put(request));
+        //}
 
-            // Then
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
-        }
+        //[Fact]
+        //public void PutAsync_TicketHasNoId_ThrowsException()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
+        //    _client.Setup(b => b.PutAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-        [Fact]
-        public void Post_CalledWithTicket_ReturnsTicketReponse()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
-            _client.Setup(b => b.Post<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(response);
-            var ticketResource = new TicketResource(_client.Object);
+        //    // When, Then
+        //    Assert.Throws<ArgumentException>(async () => await ticketResource.PutAsync(request));
+        //}
 
-            // When
-            var result = ticketResource.Post(request);
+        //[Fact]
+        //public void Post_Called_BuildsUri()
+        //{
+        //    // Given
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // Then
-            Assert.Equal(response, result);
-        }
+        //    // When
+        //    ticketResource.Post(request);
 
-        [Fact]
-        public async void PostAsync_CalledWithTicket_ReturnsTicketReponse()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
-            var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
-            _client.Setup(b => b.PostAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
-            var ticketResource = new TicketResource(_client.Object);
+        //    // Then
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        //}
 
-            // When
-            var result = await ticketResource.PostAsync(request);
+        //[Fact]
+        //public async Task PostAsync_Called_BuildsUri()
+        //{
+        //    // Given
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // Then
-            Assert.Equal(response, result);
-        }
+        //    // When
+        //    await ticketResource.PostAsync(request);
 
-        [Fact]
-        public void Delete_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
-            var ticketResource = new TicketResource(_client.Object);
+        //    // Then
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), ""));
+        //}
 
-            // When
-            ticketResource.Delete(321);
+        //[Fact]
+        //public void Post_CalledWithTicket_ReturnsTicketReponse()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
+        //    _client.Setup(b => b.Post<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(response);
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
-        }
+        //    // When
+        //    var result = ticketResource.Post(request);
 
-        [Fact]
-        public async void DeleteAsync_Called_CallsBuildUriWithFieldId()
-        {
-            // Given
-            _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
-            var ticketResource = new TicketResource(_client.Object);
+        //    // Then
+        //    Assert.Equal(response, result);
+        //}
 
-            // When
-            await ticketResource.DeleteAsync(321);
+        //[Fact]
+        //public async Task PostAsync_CalledWithTicket_ReturnsTicketReponse()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Subject = "blah blah" } };
+        //    var request = new TicketRequest { Item = new Ticket { Subject = "blah blah" } };
+        //    _client.Setup(b => b.PostAsync<TicketResponse>(It.IsAny<Uri>(), request, "application/json", It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // Then
-            _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
-        }
+        //    // When
+        //    var result = await ticketResource.PostAsync(request);
 
-        [Fact]
-        public void Delete_Called_CallsDeleteOnClient()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Id = 1 } };
-            _client.Setup(b => b.Get<TicketResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(response);
-            var ticketResource = new TicketResource(_client.Object);
+        //    // Then
+        //    Assert.Equal(response, result);
+        //}
 
-            // When
-            ticketResource.Delete(321);
+        //[Fact]
+        //public void Delete_Called_CallsBuildUriWithFieldId()
+        //{
+        //    // Given
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // Then
-            _client.Verify(c => c.Delete<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
-        }
+        //    // When
+        //    ticketResource.Delete(321);
 
-        [Fact]
-        public async void DeleteAsync_Called_CallsDeleteOnClient()
-        {
-            // Given
-            var response = new TicketResponse { Item = new Ticket { Id = 1 } };
-            _client.Setup(b => b.GetAsync<TicketResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
-            var ticketResource = new TicketResource(_client.Object);
+        //    // Then
+        //    _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+        //}
 
-            // When
-            await ticketResource.DeleteAsync(321);
+        //[Fact]
+        //public async Task DeleteAsync_Called_CallsBuildUriWithFieldId()
+        //{
+        //    // Given
+        //    _client.Setup(b => b.BuildUri(It.IsAny<string>(), It.Is<string>(s => s.Contains("321")))).Returns(new Uri("http://search"));
+        //    var ticketResource = new TicketResource(_client.Object);
 
-            // Then
-            _client.Verify(c => c.DeleteAsync<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
-        }
+        //    // When
+        //    await ticketResource.DeleteAsync(321);
+
+        //    // Then
+        //    _client.Verify(c => c.BuildUri(It.Is<string>(s => s.Contains("321")), ""));
+        //}
+
+        //[Fact]
+        //public void Delete_Called_CallsDeleteOnClient()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Id = 1 } };
+        //    _client.Setup(b => b.Get<TicketResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(response);
+        //    var ticketResource = new TicketResource(_client.Object);
+
+        //    // When
+        //    ticketResource.Delete(321);
+
+        //    // Then
+        //    _client.Verify(c => c.Delete<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+        //}
+
+        //[Fact]
+        //public async Task DeleteAsync_Called_CallsDeleteOnClient()
+        //{
+        //    // Given
+        //    var response = new TicketResponse { Item = new Ticket { Id = 1 } };
+        //    _client.Setup(b => b.GetAsync<TicketResponse>(It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>())).Returns(TaskHelper.CreateTaskFromResult(response));
+        //    var ticketResource = new TicketResource(_client.Object);
+
+        //    // When
+        //    await ticketResource.DeleteAsync(321);
+
+        //    // Then
+        //    _client.Verify(c => c.DeleteAsync<object>(It.IsAny<Uri>(), It.IsAny<object>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+        //}
     }
 }

@@ -31,7 +31,7 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+updated_at>10%2f15%2f14&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
+            Assert.Equal("query=type:organization+updated_at>10%2F15%2F14&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace ZendeskApi.Contracts.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+updated_at<10%2f15%2f14&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
+            Assert.Equal("query=type:organization+updated_at<10%2F15%2F14&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
         }
 
         [Fact]
