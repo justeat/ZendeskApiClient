@@ -9,7 +9,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class TicketResource : ITicketResource
     {
-        private const string ResourceUri = "api/v2/tickets";
+        private const string ResourceUri = "/api/v2/tickets";
         private readonly IZendeskApiClient _apiClient;
 
         public TicketResource(IZendeskApiClient apiClient)
