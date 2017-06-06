@@ -52,6 +52,30 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal("The smoke is very colorful.", item.Comment.Body);
         }
 
+        [Fact]
+        public async Task ShouldUpdateTicket()
+        {
+            var response = await _resource.PutAsync(
+                new Contracts.Requests.TicketRequest
+                {
+                    Item = new Contracts.Models.Ticket
+                    {
+                        Id = 491,
+                        Subject = "My printer is no longer on fire!",
+                        Comment = new Contracts.Models.TicketComment
+                        {
+                            Body = "The smoke is gone."
+                        }
+                    }
+                });
+
+            var item = response.Item;
+
+            Assert.NotNull(item.Id);
+            Assert.Equal("My printer is no longer on fire!", item.Subject);
+            Assert.Equal("The smoke is gone.", item.Comment.Body);
+        }
+
         public void Dispose()
         {
             ((IDisposable)_client).Dispose();

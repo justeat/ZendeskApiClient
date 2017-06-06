@@ -93,6 +93,36 @@ namespace Microsoft.AspNetCore.Routing
             return builder.MapVerb("POST", template, handler);
         }
 
+
+        /// <summary>
+        /// Adds a route to the <see cref="IRouteBuilder"/> that only matches HTTP PUT requests for the given
+        /// <paramref name="template"/>, and <paramref name="handler"/>.
+        /// </summary>
+        /// <param name="builder">The <see cref="IRouteBuilder"/>.</param>
+        /// <param name="template">The route template.</param>
+        /// <param name="handler">The route handler.</param>
+        /// <returns>A reference to the <paramref name="builder"/> after this operation has completed.</returns>
+        public static IRouteBuilder MapPut(
+            this IRouteBuilder builder,
+            string template,
+            Func<HttpRequest, HttpResponse, RouteData, Task> handler)
+        {
+            return builder.MapVerb("PUT", template, handler);
+        }
+
+        /// <summary>
+        /// Adds a route to the <see cref="IRouteBuilder"/> that only matches HTTP PUT requests for the given
+        /// <paramref name="template"/>, and <paramref name="handler"/>.
+        /// </summary>
+        /// <param name="builder">The <see cref="IRouteBuilder"/>.</param>
+        /// <param name="template">The route template.</param>
+        /// <param name="handler">The <see cref="RequestDelegate"/> route handler.</param>
+        /// <returns>A reference to the <paramref name="builder"/> after this operation has completed.</returns>
+        public static IRouteBuilder MapPut(this IRouteBuilder builder, string template, RequestDelegate handler)
+        {
+            return builder.MapVerb("PUT", template, handler);
+        }
+
         private static IInlineConstraintResolver GetConstraintResolver(IRouteBuilder builder)
         {
             return builder.ServiceProvider.GetRequiredService<IInlineConstraintResolver>();

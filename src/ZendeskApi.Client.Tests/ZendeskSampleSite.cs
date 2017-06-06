@@ -33,6 +33,15 @@ namespace ZendeskApi.Client.Tests
 
                         return Task.CompletedTask;
                     })
+                    .MapPut("api/v2/tickets/491", (req, resp, routeData) =>
+                    {
+                        var ticket = req.Body.Deserialize<TicketRequest>().Item;
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
+
+                        return Task.CompletedTask;
+                    })
                     .MapGet("api/v2/tickets/435", (req, resp, routeData) =>
                     {
                         var ticket = new Ticket
