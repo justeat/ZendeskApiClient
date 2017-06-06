@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ZendeskApi.Client.Tests.Formatters
 {
-    public class ZendeskFormatterFixture
+    public class ZendeskFormatterTests
     {
         [Fact]
         public void ToCsv_Called_ReturnsItemsAsZendeskCompliantCsv()

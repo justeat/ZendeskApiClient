@@ -6,12 +6,12 @@ using ZendeskApi.Client.Resources;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
-    public class TicketResourceFixture : IDisposable
+    public class TicketResourceTests : IDisposable
     {
         private readonly IZendeskApiClient _client;
         private readonly TicketResource _resource;
 
-        public TicketResourceFixture()
+        public TicketResourceTests()
         {
             _client = new DisposableZendeskApiClient();
             _resource = new TicketResource(_client);
@@ -38,6 +38,26 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.NotNull(item.Id);
             Assert.Equal("My printer is on fire!", item.Subject);
             Assert.Equal("The smoke is very colorful.", item.Comment.Body);
+        }
+
+        [Fact]
+        public Task ShouldThrowErrorWhenNot201()
+        {
+            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.PostAsync(
+                new Contracts.Requests.TicketRequest
+                {
+                    Item = new Contracts.Models.Ticket
+                    {
+                        Subject = "My printer is no longer on fire!",
+                        Comment = new Contracts.Models.TicketComment
+                        {
+                            Body = "The smoke is gone."
+                        },
+                        Tags = new System.Collections.Generic.List<string> { "error" }
+                    }
+                }));
+
+            // could use tags to simulate httpstatus codes in fake client?
         }
 
         [Fact]

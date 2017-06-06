@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Contracts.Models;
@@ -49,13 +51,16 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.Created)
+                
+                if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    return await response.Content.ReadAsAsync<TicketResponse>();
+                    throw new HttpRequestException(
+                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" + 
+                        Environment.NewLine + 
+                        "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
                 }
 
-                return null;
+                return await response.Content.ReadAsAsync<TicketResponse>();
             }
         }
 

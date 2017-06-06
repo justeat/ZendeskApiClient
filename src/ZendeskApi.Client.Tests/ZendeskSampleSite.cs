@@ -26,6 +26,13 @@ namespace ZendeskApi.Client.Tests
                     {
                         var ticket = req.Body.Deserialize<TicketRequest>().Item;
 
+                        if (ticket.Tags != null && ticket.Tags.Contains("error"))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
+
+                            return Task.CompletedTask;
+                        }
+
                         ticket.Id = long.Parse(new Random().Next().ToString());
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
