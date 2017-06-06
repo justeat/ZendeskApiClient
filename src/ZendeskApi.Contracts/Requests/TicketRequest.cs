@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Requests
@@ -7,5 +8,11 @@ namespace ZendeskApi.Contracts.Requests
     {
         [JsonProperty("ticket")]
         public Ticket Item { get; set; }
+    }
+
+    public class TicketsRequest : IBatchRequest<IEnumerable<Ticket>>
+    {
+        [JsonProperty("tickets")]
+        public IEnumerable<Ticket> Item { get; set; }
     }
 }

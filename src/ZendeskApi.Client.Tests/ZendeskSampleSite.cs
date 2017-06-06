@@ -40,6 +40,16 @@ namespace ZendeskApi.Client.Tests
 
                         return Task.CompletedTask;
                     })
+                    .MapPost("api/v2/tickets/create_many", (req, resp, routeData) =>
+                    {
+                        var ticket = req.Body.Deserialize<TicketsRequest>().Item;
+
+                        resp.StatusCode = (int)HttpStatusCode.Created;
+                        
+                        resp.WriteAsync(JsonConvert.SerializeObject(new JobStatusResponse { Item = new JobStatus { Id = "sadasdsadsa" }  }));
+
+                        return Task.CompletedTask;
+                    })
                     .MapPut("api/v2/tickets/491", (req, resp, routeData) =>
                     {
                         var ticket = req.Body.Deserialize<TicketRequest>().Item;

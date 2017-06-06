@@ -61,6 +61,33 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task ShouldJobWhenCreatingMultipleTicket()
+        {
+            var response = await _resource.PostAsync(
+                new Contracts.Requests.TicketsRequest
+                {
+                    Item = new[] {
+                        new Contracts.Models.Ticket {
+                            Subject = "My printer is on fire!",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful."
+                            }
+                        },
+                        new Contracts.Models.Ticket {
+                            Subject = "My printer is somehow on fire again!",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is not very colorful."
+                            }
+                        }
+                    }
+                });
+            
+            Assert.NotNull(response.Id);
+        }
+
+        [Fact]
         public async Task ShouldGetTicket()
         {
             var response = await _resource.GetAsync(435L);

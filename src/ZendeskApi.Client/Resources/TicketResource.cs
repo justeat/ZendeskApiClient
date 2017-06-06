@@ -12,6 +12,7 @@ namespace ZendeskApi.Client.Resources
     public class TicketResource : ITicketResource
     {
         private const string ResourceUri = "/api/v2/tickets";
+        private const string BatchResourceUri = "/api/v2/tickets/create_many";
         private readonly IZendeskApiClient _apiClient;
 
         public TicketResource(IZendeskApiClient apiClient)
@@ -61,6 +62,24 @@ namespace ZendeskApi.Client.Resources
                 }
 
                 return await response.Content.ReadAsAsync<TicketResponse>();
+            }
+        }
+
+        public async Task<JobStatus> PostAsync(TicketsRequest request)
+        {
+            using (var client = _apiClient.CreateClient("/"))
+            {
+                var response = await client.PostAsJsonAsync(BatchResourceUri, request).ConfigureAwait(false);
+
+                if (response.StatusCode != System.Net.HttpStatusCode.Created)
+                {
+                    throw new HttpRequestException(
+                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
+                        Environment.NewLine +
+                        "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
+                }
+
+                return (await response.Content.ReadAsAsync<JobStatusResponse>()).Item;
             }
         }
 
