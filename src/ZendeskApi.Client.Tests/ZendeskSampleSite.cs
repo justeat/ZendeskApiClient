@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 
@@ -21,12 +22,30 @@ namespace ZendeskApi.Client.Tests
             get
             {
                 return rb => rb
-                    .MapPost("api/v2/tickets", (req, resp, routeData) => {
+                    .MapPost("api/v2/tickets", (req, resp, routeData) =>
+                    {
                         var ticket = req.Body.Deserialize<TicketRequest>().Item;
 
                         ticket.Id = long.Parse(new Random().Next().ToString());
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
+
+                        return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/tickets/435", (req, resp, routeData) =>
+                    {
+                        var ticket = new Ticket
+                        {
+                            Id = 435L,
+                            Subject = "My printer is on fire!",
+                            Comment = new TicketComment
+                            {
+                                Body = "The smoke is very colorful."
+                            }
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
                         resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
 
                         return Task.CompletedTask;
