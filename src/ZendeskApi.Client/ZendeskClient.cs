@@ -1,4 +1,5 @@
-﻿using ZendeskApi.Client.Resources;
+﻿using Microsoft.Extensions.Logging;
+using ZendeskApi.Client.Resources;
 
 
 namespace ZendeskApi.Client
@@ -20,14 +21,14 @@ namespace ZendeskApi.Client
         public IRequestResource Request { get; private set; }
         public ISatisfactionRatingResource SatisfactionRating { get; private set; }
         
-        public ZendeskClient(IZendeskApiClient apiClient)
+        public ZendeskClient(IZendeskApiClient apiClient, ILogger logger)
         {
             Tickets = new TicketResource(apiClient);
             TicketComments = new TicketCommentResource(apiClient);
             RequestComments = new RequestCommentResource(apiClient);
             Organizations = new OrganizationResource(apiClient);
             Search = new SearchResource(apiClient);
-            Groups = new GroupsResource(apiClient);
+            Groups = new GroupsResource(apiClient, logger);
             Users = new UserResource(apiClient);
             UserIdentities = new UserIdentityResource(apiClient);
             Upload = new UploadResource(apiClient);

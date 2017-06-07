@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Resources;
@@ -17,7 +18,7 @@ namespace ZendeskApi.Client.Tests.Resources
         public GroupsResourceTests()
         {
             _client = new DisposableZendeskApiClient((resource) => new GroupsResourceSampleSite(resource));
-            _resource = new GroupsResource(_client);
+            _resource = new GroupsResource(_client, NullLogger.Instance);
         }
 
         [Fact]

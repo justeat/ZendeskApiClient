@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
@@ -18,14 +19,22 @@ namespace ZendeskApi.Client.Resources
         private const string AssignableGroupUri = @"api/v2/groups/assignable";
 
         private readonly IZendeskApiClient _apiClient;
+        private readonly ILogger _logger;
 
-        public GroupsResource(IZendeskApiClient apiClient)
+        private Func<ILogger, string, IDisposable> _loggerScope = 
+            LoggerMessage.DefineScope<string>("GroupsResource: {0}");
+
+        public GroupsResource(IZendeskApiClient apiClient,
+            ILogger logger)
         {
+            
             _apiClient = apiClient;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Group>> GetAllAsync()
         {
+            using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(GroupsResourceUri).ConfigureAwait(false);
@@ -38,6 +47,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IEnumerable<Group>> GetAllAsync(long userId)
         {
+            using (_loggerScope(_logger, $"GetAllAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(string.Format(GroupsByUserResourceUriFormat, userId)).ConfigureAwait(false);
@@ -50,6 +60,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IEnumerable<Group>> GetAllAssignableAsync()
         {
+            using (_loggerScope(_logger, "GetAllAssignableAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(AssignableGroupUri).ConfigureAwait(false);
@@ -62,6 +73,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Group> GetAsync(long groupId)
         {
+            using (_loggerScope(_logger, $"GetAsync({groupId})"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
                 var response = await client.GetAsync(groupId.ToString()).ConfigureAwait(false);
@@ -74,6 +86,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Group> PostAsync(GroupRequest request)
         {
+            using (_loggerScope(_logger, "PostAsync")) // Maybe incluse the request in the log?
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.PostAsJsonAsync(GroupsResourceUri, request).ConfigureAwait(false);
@@ -85,13 +98,14 @@ namespace ZendeskApi.Client.Resources
                         Environment.NewLine +
                         "See: https://developer.zendesk.com/rest_api/docs/core/groups#create-groups");
                 }
-
+                
                 return (await response.Content.ReadAsAsync<GroupResponse>()).Item;
             }
         }
 
         public async Task<Group> PutAsync(GroupRequest request)
         {
+            using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
@@ -101,6 +115,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(long groupId)
         {
+            using (_loggerScope(_logger, $"DeleteAsync({groupId})"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
                 var response = await client.DeleteAsync(groupId.ToString());
