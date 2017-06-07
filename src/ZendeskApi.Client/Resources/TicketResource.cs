@@ -9,6 +9,9 @@ using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
+    /// <summary>
+    /// <see cref="https://developer.zendesk.com/rest_api/docs/core/tickets"/>
+    /// </summary>
     public class TicketResource : ITicketResource
     {
         private const string ResourceUri = "api/v2/tickets";
