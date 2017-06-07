@@ -140,6 +140,77 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
         }
 
+
+        [Fact]
+        public async Task ShouldListAllForAssignedForUserTickets()
+        {
+            var tickets = (await _resource.GetAllAssignedForUserAsync(423L)).ToArray();
+
+            var ticket1 = new Contracts.Models.Ticket
+            {
+                Id = 63453,
+                Subject = "My printer is on fire! 1",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 1"
+                }
+            };
+
+            var ticket2 = new Contracts.Models.Ticket
+            {
+                Id = 235,
+                Subject = "My printer is on fire! 2",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 2"
+                }
+            };
+
+            Assert.Equal(2, tickets.Length);
+            Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
+        }
+
+        [Fact]
+        public async Task ShouldGetTicket()
+        {
+            var response = await _resource.GetAsync(435L);
+
+            Assert.NotNull(response.Id);
+            Assert.Equal("My printer is on fire!", response.Subject);
+            Assert.Equal("The smoke is very colorful.", response.Comment.Body);
+        }
+
+        [Fact]
+        public async Task ShouldGetAllTicketsForIds()
+        {
+            var tickets = (await _resource.GetAllAsync(new long[] { 123L, 869L })).ToArray();
+
+            var ticket1 = new Contracts.Models.Ticket
+            {
+                Id = 123,
+                Subject = "My printer is on fire! 1",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 1"
+                }
+            };
+
+            var ticket2 = new Contracts.Models.Ticket
+            {
+                Id = 863,
+                Subject = "My printer is on fire! 2",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 2"
+                }
+            };
+
+            Assert.Equal(2, tickets.Length);
+            Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
+        }
+
         [Fact]
         public async Task ShouldCreateTicket()
         {
@@ -208,15 +279,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.NotNull(response.Id);
         }
 
-        [Fact]
-        public async Task ShouldGetTicket()
-        {
-            var response = await _resource.GetAsync(435L);
-            
-            Assert.NotNull(response.Id);
-            Assert.Equal("My printer is on fire!", response.Subject);
-            Assert.Equal("The smoke is very colorful.", response.Comment.Body);
-        }
+
 
         [Fact]
         public async Task ShouldUpdateTicket()

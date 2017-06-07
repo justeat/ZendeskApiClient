@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -131,6 +132,81 @@ namespace ZendeskApi.Client.Tests
 
                         return Task.CompletedTask;
                     })
+                    .MapGet("api/v2/users/423/tickets/assigned", (req, resp, routeData) =>
+                    {
+                        var ticket1 = new Contracts.Models.Ticket
+                        {
+                            Id = 63453,
+                            Subject = "My printer is on fire! 1",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 1"
+                            }
+                        };
+
+                        var ticket2 = new Contracts.Models.Ticket
+                        {
+                            Id = 235,
+                            Subject = "My printer is on fire! 2",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 2"
+                            }
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
+
+                        return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/tickets/435", (req, resp, routeData) =>
+                    {
+                        var ticket = new Ticket
+                        {
+                            Id = 435L,
+                            Subject = "My printer is on fire!",
+                            Comment = new TicketComment
+                            {
+                                Body = "The smoke is very colorful."
+                            }
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
+
+                        return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/tickets/show_many", (req, resp, routeData) =>
+                    {
+                        var ids = req.Query["ids"].ToString().Split(',');
+                        Debug.Assert(long.Parse(ids[0]) == 123);
+                        Debug.Assert(long.Parse(ids[1]) == 869);
+
+                        var ticket1 = new Contracts.Models.Ticket
+                        {
+                            Id = 123,
+                            Subject = "My printer is on fire! 1",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 1"
+                            }
+                        };
+
+                        var ticket2 = new Contracts.Models.Ticket
+                        {
+                            Id = 863,
+                            Subject = "My printer is on fire! 2",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 2"
+                            }
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
+
+                        return Task.CompletedTask;
+                    })
                     .MapPost("api/v2/tickets", (req, resp, routeData) =>
                     {
                         var ticket = req.Body.Deserialize<TicketRequest>().Item;
@@ -168,23 +244,7 @@ namespace ZendeskApi.Client.Tests
 
                         return Task.CompletedTask;
                     })
-                    .MapGet("api/v2/tickets/435", (req, resp, routeData) =>
-                    {
-                        var ticket = new Ticket
-                        {
-                            Id = 435L,
-                            Subject = "My printer is on fire!",
-                            Comment = new TicketComment
-                            {
-                                Body = "The smoke is very colorful."
-                            }
-                        };
 
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
-
-                        return Task.CompletedTask;
-                    })
                     ;
             }
         }
