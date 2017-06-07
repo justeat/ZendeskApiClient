@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Resources;
 
-
 namespace ZendeskApi.Client
 {
     public class ZendeskClient : IZendeskClient
     {
-        public ITicketResource Tickets { get; private set; }
+        public ITicketsResource Tickets { get; private set; }
         public ITicketCommentResource TicketComments { get; private set; }
         public IRequestCommentResource RequestComments { get; private set; }
         public IOrganizationResource Organizations { get; private set; }
@@ -23,7 +22,7 @@ namespace ZendeskApi.Client
         
         public ZendeskClient(IZendeskApiClient apiClient, ILogger logger)
         {
-            Tickets = new TicketResource(apiClient);
+            Tickets = new TicketsResource(apiClient, logger);
             TicketComments = new TicketCommentResource(apiClient);
             RequestComments = new RequestCommentResource(apiClient);
             Organizations = new OrganizationResource(apiClient);

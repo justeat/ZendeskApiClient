@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Contracts.Models;
 using ZendeskApi.Contracts.Requests;
@@ -12,7 +13,7 @@ namespace ZendeskApi.Client.Resources
     /// <summary>
     /// <see cref="https://developer.zendesk.com/rest_api/docs/core/tickets"/>
     /// </summary>
-    public class TicketResource : ITicketResource
+    public class TicketsResource : ITicketsResource
     {
         private const string ResourceUri = "api/v2/tickets";
 
@@ -20,14 +21,21 @@ namespace ZendeskApi.Client.Resources
         private const string UserResourceUriFormat = "api/v2/{0}/tickets";
 
         private readonly IZendeskApiClient _apiClient;
+        private readonly ILogger _logger;
 
-        public TicketResource(IZendeskApiClient apiClient)
+        private Func<ILogger, string, IDisposable> _loggerScope =
+            LoggerMessage.DefineScope<string>("TicketsResource: {0}");
+
+        public TicketsResource(IZendeskApiClient apiClient,
+            ILogger logger)
         {
             _apiClient = apiClient;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Ticket>> GetAllAsync()
         {
+            using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
@@ -40,6 +48,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<IEnumerable<Ticket>> GetAllForOrganizationAsync(long organizationId)
         {
+            using (_loggerScope(_logger, $"GetAllForOrganizationAsync({organizationId})"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(string.Format(OrganizationResourceUriFormat, organizationId)).ConfigureAwait(false);
@@ -52,6 +61,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IEnumerable<Ticket>> GetAllRequestedForUserAsync(long userId)
         {
+            using (_loggerScope(_logger, $"GetAllRequestedForUserAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
             {
                 var response = await client.GetAsync("requested").ConfigureAwait(false);
@@ -64,6 +74,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IEnumerable<Ticket>> GetAllCCDForUserAsync(long userId)
         {
+            using (_loggerScope(_logger, $"GetAllCCDForUserAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
             {
                 var response = await client.GetAsync("ccd").ConfigureAwait(false);
@@ -76,6 +87,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IEnumerable<Ticket>> GetAllAssignedForUserAsync(long userId)
         {
+            using (_loggerScope(_logger, $"GetAllAssignedForUserAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
             {
                 var response = await client.GetAsync("assigned").ConfigureAwait(false);
@@ -88,6 +100,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<Ticket> GetAsync(long ticketId)
         {
+            using (_loggerScope(_logger, $"GetAsync({ticketId})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync(ticketId.ToString()).ConfigureAwait(false);
@@ -100,6 +113,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IEnumerable<Ticket>> GetAllAsync(long[] ticketIds)
         {
+            using (_loggerScope(_logger, $"GetAllAsync({ZendeskFormatter.ToCsv(ticketIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ticketIds)}").ConfigureAwait(false);
@@ -112,6 +126,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Ticket> PostAsync(TicketRequest request)
         {
+            using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
@@ -130,6 +145,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<JobStatus> PostAsync(TicketsRequest request)
         {
+            using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PostAsJsonAsync("create_many", request).ConfigureAwait(false);
@@ -148,6 +164,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Ticket> PutAsync(TicketRequest request)
         {
+            using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
@@ -160,6 +177,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<JobStatus> PutAsync(TicketsRequest request)
         {
+            using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync("update_many", request).ConfigureAwait(false);
@@ -170,8 +188,9 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task MarkTicketAsSpanAndSuspendRequester(long ticketId)
+        public async Task MarkTicketAsSpamAndSuspendRequester(long ticketId)
         {
+            using (_loggerScope(_logger, $"MarkTicketAsSpamAndSuspendRequester"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync($"{ticketId}/mark_as_spam", "{ }").ConfigureAwait(false);
@@ -180,8 +199,9 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> MarkTicketAsSpanAndSuspendRequester(long[] ticketIds)
+        public async Task<JobStatus> MarkTicketAsSpamAndSuspendRequester(long[] ticketIds)
         {
+            using (_loggerScope(_logger, $"MarkTicketAsSpamAndSuspendRequester({ZendeskFormatter.ToCsv(ticketIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync($"mark_many_as_spam?ids={ZendeskFormatter.ToCsv(ticketIds)}", "{ }").ConfigureAwait(false);
@@ -194,6 +214,7 @@ namespace ZendeskApi.Client.Resources
 
         public Task DeleteAsync(long ticketId)
         {
+            using (_loggerScope(_logger, $"DeleteAsync({ticketId})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 return client.DeleteAsync(ticketId.ToString());

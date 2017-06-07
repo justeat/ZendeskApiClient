@@ -5,7 +5,7 @@ using ZendeskApi.Contracts.Requests;
 
 namespace ZendeskApi.Client.Resources
 {
-    public interface ITicketResource
+    public interface ITicketsResource
     {
         Task<IEnumerable<Ticket>> GetAllAsync();
         Task<IEnumerable<Ticket>> GetAllForOrganizationAsync(long organizationId);
@@ -18,8 +18,8 @@ namespace ZendeskApi.Client.Resources
         Task<JobStatus> PostAsync(TicketsRequest request);
         Task<Ticket> PutAsync(TicketRequest request);
         Task<JobStatus> PutAsync(TicketsRequest request);
-        Task MarkTicketAsSpanAndSuspendRequester(long ticketId);
-        Task<JobStatus> MarkTicketAsSpanAndSuspendRequester(long[] ticketIds);
+        Task MarkTicketAsSpamAndSuspendRequester(long ticketId);
+        Task<JobStatus> MarkTicketAsSpamAndSuspendRequester(long[] ticketIds);
         Task DeleteAsync(long ticketId);
     }
 }

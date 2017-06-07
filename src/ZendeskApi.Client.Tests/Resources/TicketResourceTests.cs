@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Resources;
@@ -11,12 +12,12 @@ namespace ZendeskApi.Client.Tests.Resources
     public class TicketResourceTests : IDisposable
     {
         private readonly IZendeskApiClient _client;
-        private readonly TicketResource _resource;
+        private readonly TicketsResource _resource;
 
         public TicketResourceTests()
         {
             _client = new DisposableZendeskApiClient((resource) => new TicketResourceSampleSite(resource));
-            _resource = new TicketResource(_client);
+            _resource = new TicketsResource(_client, NullLogger.Instance);
         }
 
         [Fact]
