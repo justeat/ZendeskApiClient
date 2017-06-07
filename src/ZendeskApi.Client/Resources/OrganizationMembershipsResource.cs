@@ -153,21 +153,37 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public Task DeleteAsync(long organizationMembershipId)
+        public async Task DeleteAsync(long organizationMembershipId)
         {
             using (_loggerScope(_logger, $"DeleteAsync({organizationMembershipId})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                return client.DeleteAsync(organizationMembershipId.ToString());
+                var response = await client.DeleteAsync(organizationMembershipId.ToString());
+
+                if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
+                {
+                    throw new HttpRequestException(
+                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
+                        Environment.NewLine +
+                        "See: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#delete-membership");
+                }
             }
         }
 
-        public Task DeleteAsync(long userId, long organizationMembershipId)
+        public async Task DeleteAsync(long userId, long organizationMembershipId)
         {
             using (_loggerScope(_logger, $"DeleteAsync({userId},{organizationMembershipId})"))
             using (var client = _apiClient.CreateClient())
             {
-                return client.DeleteAsync(string.Format(UsersUrlFormat, userId, organizationMembershipId));
+                var response = await client.DeleteAsync(string.Format(UsersUrlFormat, userId, organizationMembershipId));
+
+                if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
+                {
+                    throw new HttpRequestException(
+                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
+                        Environment.NewLine +
+                        "See: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#delete-membership");
+                }
             }
         }
     }

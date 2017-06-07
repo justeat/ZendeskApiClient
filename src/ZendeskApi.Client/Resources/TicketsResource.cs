@@ -212,12 +212,20 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public Task DeleteAsync(long ticketId)
+        public async Task DeleteAsync(long ticketId)
         {
             using (_loggerScope(_logger, $"DeleteAsync({ticketId})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                return client.DeleteAsync(ticketId.ToString());
+                var response = await client.DeleteAsync(ticketId.ToString());
+
+                if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
+                {
+                    throw new HttpRequestException(
+                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
+                        Environment.NewLine +
+                        "See: https://developer.zendesk.com/rest_api/docs/core/tickets#delete-ticket");
+                }
             }
         }
     }

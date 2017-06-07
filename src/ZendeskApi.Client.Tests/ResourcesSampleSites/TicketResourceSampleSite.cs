@@ -76,6 +76,33 @@ namespace ZendeskApi.Client.Tests
                         resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
 
                         return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/tickets", (req, resp, routeData) =>
+                    {
+                        var ticket1 = new Contracts.Models.Ticket
+                        {
+                            Id = 123,
+                            Subject = "My printer is on fire! 1",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 1"
+                            }
+                        };
+
+                        var ticket2 = new Contracts.Models.Ticket
+                        {
+                            Id = 3253,
+                            Subject = "My printer is on fire! 2",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 2"
+                            }
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
+
+                        return Task.CompletedTask;
                     });
             }
         }
