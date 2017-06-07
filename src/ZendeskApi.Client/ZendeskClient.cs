@@ -26,7 +26,7 @@ namespace ZendeskApi.Client
             TicketComments = new TicketCommentResource(apiClient);
             RequestComments = new RequestCommentResource(apiClient);
             Organizations = new OrganizationResource(apiClient);
-            Search = new SearchResource(apiClient);
+            Search = new SearchResource(apiClient, logger);
             Groups = new GroupsResource(apiClient, logger);
             Users = new UserResource(apiClient);
             UserIdentities = new UserIdentityResource(apiClient);

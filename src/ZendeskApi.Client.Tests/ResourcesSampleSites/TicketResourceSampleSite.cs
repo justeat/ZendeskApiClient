@@ -23,6 +23,114 @@ namespace ZendeskApi.Client.Tests
             get
             {
                 return rb => rb
+                    .MapGet("api/v2/tickets", (req, resp, routeData) =>
+                    {
+                        var ticket1 = new Contracts.Models.Ticket
+                        {
+                            Id = 123,
+                            Subject = "My printer is on fire! 1",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 1"
+                            }
+                        };
+
+                        var ticket2 = new Contracts.Models.Ticket
+                        {
+                            Id = 3253,
+                            Subject = "My printer is on fire! 2",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 2"
+                            }
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
+
+                        return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/organizations/23241/tickets", (req, resp, routeData) =>
+                    {
+                        var ticket1 = new Contracts.Models.Ticket
+                        {
+                            Id = 5555,
+                            Subject = "My printer is on fire! 1",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 1"
+                            }
+                        };
+
+                        var ticket2 = new Contracts.Models.Ticket
+                        {
+                            Id = 23423,
+                            Subject = "My printer is on fire! 2",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 2"
+                            }
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
+
+                        return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/users/23241/tickets/requested", (req, resp, routeData) =>
+                    {
+                        var ticket1 = new Contracts.Models.Ticket
+                        {
+                            Id = 534,
+                            Subject = "My printer is on fire! 1",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 1"
+                            }
+                        };
+
+                        var ticket2 = new Contracts.Models.Ticket
+                        {
+                            Id = 123,
+                            Subject = "My printer is on fire! 2",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 2"
+                            }
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
+
+                        return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/users/241/tickets/ccd", (req, resp, routeData) =>
+                    {
+                        var ticket1 = new Contracts.Models.Ticket
+                        {
+                            Id = 534534,
+                            Subject = "My printer is on fire! 1",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 1"
+                            }
+                        };
+
+                        var ticket2 = new Contracts.Models.Ticket
+                        {
+                            Id = 44,
+                            Subject = "My printer is on fire! 2",
+                            Comment = new Contracts.Models.TicketComment
+                            {
+                                Body = "The smoke is very colorful. 2"
+                            }
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
+
+                        return Task.CompletedTask;
+                    })
                     .MapPost("api/v2/tickets", (req, resp, routeData) =>
                     {
                         var ticket = req.Body.Deserialize<TicketRequest>().Item;
@@ -77,33 +185,7 @@ namespace ZendeskApi.Client.Tests
 
                         return Task.CompletedTask;
                     })
-                    .MapGet("api/v2/tickets", (req, resp, routeData) =>
-                    {
-                        var ticket1 = new Contracts.Models.Ticket
-                        {
-                            Id = 123,
-                            Subject = "My printer is on fire! 1",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 1"
-                            }
-                        };
-
-                        var ticket2 = new Contracts.Models.Ticket
-                        {
-                            Id = 3253,
-                            Subject = "My printer is on fire! 2",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 2"
-                            }
-                        };
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
-
-                        return Task.CompletedTask;
-                    });
+                    ;
             }
         }
 

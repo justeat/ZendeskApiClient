@@ -17,8 +17,8 @@ namespace ZendeskApi.Client.Resources
     {
         private const string ResourceUri = "api/v2/tickets";
 
-        private const string OrganizationResourceUriFormat = "api/v2/organizations/{organization_id}/tickets.json";
-        private const string UserResourceUriFormat = "api/v2/{0}/tickets";
+        private const string OrganizationResourceUriFormat = "api/v2/organizations/{0}/tickets";
+        private const string UserResourceUriFormat = "api/v2/users/{0}/tickets";
 
         private readonly IZendeskApiClient _apiClient;
         private readonly ILogger _logger;
