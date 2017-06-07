@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ZendeskApi.Client.Resources
+namespace ZendeskApi.Client
 {
     public static class HttpContentExtensions
     {

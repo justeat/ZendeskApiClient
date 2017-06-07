@@ -4,9 +4,9 @@ using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    public class OrganizationMembershipListResponse : ListResponse<OrganizationMembership>
+    public class OrganizationMembershipsResponse
     {
         [JsonProperty("organization_memberships")]
-        public override IEnumerable<OrganizationMembership> Results { get; set; }
+        public IEnumerable<OrganizationMembership> Item { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace ZendeskApi.Client
         public IAttachmentsResource Attachments { get; private set; }
         public ITicketFieldResource TicketFields { get; private set; }
         public ITicketFormResource TicketForms { get; private set; }
-        public IOrganizationMembershipResource OrganizationMemberships { get; private set; }
+        public IOrganizationMembershipsResource OrganizationMemberships { get; private set; }
         public IRequestResource Request { get; private set; }
         public ISatisfactionRatingResource SatisfactionRating { get; private set; }
         
@@ -33,7 +33,7 @@ namespace ZendeskApi.Client
             Attachments = new AttachmentsResource(apiClient, logger);
             TicketFields = new TicketFieldResource(apiClient);
             TicketForms = new TicketFormResource(apiClient);
-            OrganizationMemberships = new OrganizationMembershipResource(apiClient);
+            OrganizationMemberships = new OrganizationMembershipsResource(apiClient, logger);
             Request = new RequestResource(apiClient);
             SatisfactionRating = new SatisfactionRatingResource(apiClient);
         }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace ZendeskApi.Client.Resources
+namespace ZendeskApi.Client
 {
     /// <summary>
     /// The http request extensions.
