@@ -13,7 +13,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public TicketResourceTests()
         {
-            _client = new DisposableZendeskApiClient();
+            _client = new DisposableZendeskApiClient((resource) => new TicketResourceSampleSite(resource));
             _resource = new TicketResource(_client);
         }
 

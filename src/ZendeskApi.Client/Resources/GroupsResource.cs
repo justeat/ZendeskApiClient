@@ -1,12 +1,22 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 using ZendeskApi.Contracts.Models;
+using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class GroupsResource : IGroupResource
+    /// <summary>
+    /// <see cref="https://developer.zendesk.com/rest_api/docs/core/groups"/>
+    /// </summary>
+    public class GroupsResource : IGroupsResource
     {
-        private const string ResourceUri = "api/v2/groups";
+        private const string GroupsResourceUri = "api/v2/groups";
+        private const string GroupsByUserResourceUriFormat = "api/v2/users/{0}/groups";
+        private const string AssignableGroupUri = @"api/v2/groups/assignable";
+
         private readonly IZendeskApiClient _apiClient;
 
         public GroupsResource(IZendeskApiClient apiClient)
@@ -14,12 +24,86 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
         }
 
-        public async Task<Group> GetAsync(long id)
+        public async Task<IEnumerable<Group>> GetAllAsync()
         {
-            using (var client = _apiClient.CreateClient(ResourceUri))
+            using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
+                var response = await client.GetAsync(GroupsResourceUri).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<GroupsResponse>()).Item;
+            }
+        }
+
+        public async Task<IEnumerable<Group>> GetAllAsync(long userId)
+        {
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync(string.Format(GroupsByUserResourceUriFormat, userId)).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<GroupsResponse>()).Item;
+            }
+        }
+
+        public async Task<IEnumerable<Group>> GetAllAssignableAsync()
+        {
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync(AssignableGroupUri).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<GroupsResponse>()).Item;
+            }
+        }
+
+        public async Task<Group> GetAsync(long groupId)
+        {
+            using (var client = _apiClient.CreateClient(GroupsResourceUri))
+            {
+                var response = await client.GetAsync(groupId.ToString()).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
                 return (await response.Content.ReadAsAsync<GroupResponse>()).Item;
+            }
+        }
+
+        public async Task<Group> PostAsync(GroupRequest request)
+        {
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.PostAsJsonAsync(GroupsResourceUri, request).ConfigureAwait(false);
+
+                if (response.StatusCode != System.Net.HttpStatusCode.Created)
+                {
+                    throw new HttpRequestException(
+                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
+                        Environment.NewLine +
+                        "See: https://developer.zendesk.com/rest_api/docs/core/groups#create-groups");
+                }
+
+                return (await response.Content.ReadAsAsync<GroupResponse>()).Item;
+            }
+        }
+
+        public async Task<Group> PutAsync(GroupRequest request)
+        {
+            using (var client = _apiClient.CreateClient(GroupsResourceUri))
+            {
+                var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
+                return (await response.Content.ReadAsAsync<GroupResponse>()).Item;
+            }
+        }
+
+        public Task DeleteAsync(long groupId)
+        {
+            using (var client = _apiClient.CreateClient(GroupsResourceUri))
+            {
+                return client.DeleteAsync(groupId.ToString());
             }
         }
     }

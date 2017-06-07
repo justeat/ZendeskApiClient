@@ -1,26 +1,34 @@
 ﻿using System;
 using System.Net.Http;
+using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests
 {
     public class DisposableZendeskApiClient : IZendeskApiClient, IDisposable
     {
-        private ZendeskSampleSite _sampleSite;
+        private readonly Func<string, SampleSite> _siteCreator;
 
-        public HttpClient CreateClient(string resource = "")
+        public DisposableZendeskApiClient(Func<string, SampleSite> siteCreator)
         {
-            if (_sampleSite != null)
+            _siteCreator = siteCreator;
+        }
+
+        private SampleSite _createdSite;
+
+        public HttpClient CreateClient(string resource = null)
+        {
+            if (_createdSite != null)
             {
-                return _sampleSite.Client;
+                return _createdSite.Client;
             }
 
-            _sampleSite = new ZendeskSampleSite(resource);
-            return _sampleSite.Client;
+            _createdSite = _siteCreator(resource);
+            return _createdSite.Client;
         }
 
         public void Dispose()
         {
-            _sampleSite.Dispose();
+            _createdSite.Dispose();
         }
     }
 }

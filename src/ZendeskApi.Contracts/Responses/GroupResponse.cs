@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
@@ -7,5 +8,11 @@ namespace ZendeskApi.Contracts.Responses
     {
         [JsonProperty("group")]
         public Group Item { get; set; }
+    }
+
+    public class GroupsResponse
+    {
+        [JsonProperty("groups")]
+        public IEnumerable<Group> Item { get; set; }
     }
 }

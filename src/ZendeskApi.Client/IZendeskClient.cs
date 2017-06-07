@@ -9,8 +9,7 @@ namespace ZendeskApi.Client
         IRequestCommentResource RequestComments { get; }
         IOrganizationResource Organizations { get; }
         ISearchResource Search { get; }
-        IGroupResource Groups { get; }
-        IAssignableGroupResource AssignableGroups { get; }
+        IGroupsResource Groups { get; }
         IUserResource Users { get; }
         IUserIdentityResource UserIdentities { get; }
         IUploadResource Upload { get; }
