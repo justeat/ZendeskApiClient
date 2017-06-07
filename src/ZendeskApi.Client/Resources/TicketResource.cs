@@ -15,38 +15,98 @@ namespace ZendeskApi.Client.Resources
     public class TicketResource : ITicketResource
     {
         private const string ResourceUri = "api/v2/tickets";
-        private const string BatchResourceUri = "api/v2/tickets/create_many";
+
+        private const string OrganizationResourceUriFormat = "api/v2/organizations/{organization_id}/tickets.json";
+        private const string UserResourceUriFormat = "api/v2/{0}/tickets";
+
         private readonly IZendeskApiClient _apiClient;
 
         public TicketResource(IZendeskApiClient apiClient)
         {
             _apiClient = apiClient;
         }
+
+        public async Task<IEnumerable<Ticket>> GetAllAsync()
+        {
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+            }
+        }
         
-        public async Task<Ticket> GetAsync(long id)
+        public async Task<IEnumerable<Ticket>> GetAllForOrganizationAsync(long organizationId)
+        {
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync(string.Format(OrganizationResourceUriFormat, organizationId)).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+            }
+        }
+
+        public async Task<IEnumerable<Ticket>> GetAllRequestedForUserAsync(long userId)
+        {
+            using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
+            {
+                var response = await client.GetAsync("requested").ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+            }
+        }
+
+        public async Task<IEnumerable<Ticket>> GetAllCCDForUserAsync(long userId)
+        {
+            using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
+            {
+                var response = await client.GetAsync("ccd").ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+            }
+        }
+
+        public async Task<IEnumerable<Ticket>> GetAllAssignedForUserAsync(long userId)
+        {
+            using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
+            {
+                var response = await client.GetAsync("assigned").ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+            }
+        }
+        
+        public async Task<Ticket> GetAsync(long ticketId)
         {
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
+                var response = await client.GetAsync(ticketId.ToString()).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
                 return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
             }
         }
 
-        public async Task<IListResponse<Ticket>> GetAllAsync(List<long> ids)
+        public async Task<IEnumerable<Ticket>> GetAllAsync(long[] ticketIds)
         {
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ids)}").ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<TicketListResponse>();
-            }
-        }
+                var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ticketIds)}").ConfigureAwait(false);
 
-        public async Task<Ticket> PutAsync(TicketRequest request)
-        {
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
-                return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
             }
         }
 
@@ -55,12 +115,12 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
-                
+
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
                     throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" + 
-                        Environment.NewLine + 
+                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
+                        Environment.NewLine +
                         "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
                 }
 
@@ -70,9 +130,9 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<JobStatus> PostAsync(TicketsRequest request)
         {
-            using (var client = _apiClient.CreateClient())
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PostAsJsonAsync(BatchResourceUri, request).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync("create_many", request).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -86,11 +146,57 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public Task DeleteAsync(long id)
+        public async Task<Ticket> PutAsync(TicketRequest request)
         {
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                return client.DeleteAsync(id.ToString());
+                var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
+            }
+        }
+
+        public async Task<JobStatus> PutAsync(TicketsRequest request)
+        {
+            using (var client = _apiClient.CreateClient(ResourceUri))
+            {
+                var response = await client.PutAsJsonAsync("update_many", request).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<JobStatusResponse>()).Item;
+            }
+        }
+
+        public async Task MarkTicketAsSpanAndSuspendRequester(long ticketId)
+        {
+            using (var client = _apiClient.CreateClient(ResourceUri))
+            {
+                var response = await client.PutAsJsonAsync($"{ticketId}/mark_as_spam", "{ }").ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+            }
+        }
+
+        public async Task<JobStatus> MarkTicketAsSpanAndSuspendRequester(long[] ticketIds)
+        {
+            using (var client = _apiClient.CreateClient(ResourceUri))
+            {
+                var response = await client.PutAsJsonAsync($"mark_many_as_spam?ids={ZendeskFormatter.ToCsv(ticketIds)}", "{ }").ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<JobStatusResponse>()).Item;
+            }
+        }
+
+        public Task DeleteAsync(long ticketId)
+        {
+            using (var client = _apiClient.CreateClient(ResourceUri))
+            {
+                return client.DeleteAsync(ticketId.ToString());
             }
         }
     }

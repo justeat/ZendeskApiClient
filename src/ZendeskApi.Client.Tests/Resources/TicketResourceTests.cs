@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Resources;
 
@@ -15,6 +17,36 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             _client = new DisposableZendeskApiClient((resource) => new TicketResourceSampleSite(resource));
             _resource = new TicketResource(_client);
+        }
+
+        [Fact]
+        public async Task ShouldListAllTickets()
+        {
+            var tickets = (await _resource.GetAllAsync()).ToArray();
+
+            var ticket1 = new Contracts.Models.Ticket
+            {
+                Id = 123,
+                Subject = "My printer is on fire! 1",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 1"
+                }
+            };
+
+            var ticket2 = new Contracts.Models.Ticket
+            {
+                Id = 3253,
+                Subject = "My printer is on fire! 2",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 2"
+                }
+            };
+
+            Assert.Equal(2, tickets.Length);
+            Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
         }
 
         [Fact]
