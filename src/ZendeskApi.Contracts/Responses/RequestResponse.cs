@@ -3,7 +3,7 @@ using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    public class RequestResponse : IResponse<Request>
+    public class RequestResponse
     {
         [JsonProperty("request")]
         public Request Item { get; set; }

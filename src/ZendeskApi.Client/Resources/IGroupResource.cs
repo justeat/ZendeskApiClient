@@ -6,6 +6,6 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IGroupResource
     {
-        Task<IResponse<Group>> GetAsync(long id);
+        Task<Group> GetAsync(long id);
     }
 }

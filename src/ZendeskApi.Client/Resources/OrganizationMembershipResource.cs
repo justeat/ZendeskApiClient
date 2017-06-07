@@ -34,14 +34,13 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IResponse<OrganizationMembership>> PostAsync(OrganizationMembershipRequest request)
+        public async Task<OrganizationMembership> PostAsync(OrganizationMembershipRequest request)
         {
             using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client
                     .PostAsJsonAsync(string.Format(UsersUrl, request.Item.UserId), request).ConfigureAwait(false);
-
-                return await response.Content.ReadAsAsync<OrganizationMembershipResponse>();
+                return (await response.Content.ReadAsAsync<OrganizationMembershipResponse>()).Item;
             }
         }
     }

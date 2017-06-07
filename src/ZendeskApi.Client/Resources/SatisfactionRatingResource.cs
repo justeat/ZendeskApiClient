@@ -16,21 +16,21 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
         }
 
-        public async Task<IResponse<SatisfactionRating>> GetAsync(long id)
+        public async Task<SatisfactionRating> GetAsync(long id)
         {
             using (var client = _apiClient.CreateClient(GetResourceUrl + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<SatisfactionRatingResponse>();
+                return (await response.Content.ReadAsAsync<SatisfactionRatingResponse>()).Item;
             }
         }
 
-        public async Task<IResponse<SatisfactionRating>> PostAsync(SatisfactionRatingRequest request, long ticketId)
+        public async Task<SatisfactionRating> PostAsync(SatisfactionRatingRequest request, long ticketId)
         {
             using (var client = _apiClient.CreateClient(GetResourceUrl + "/"))
             {
                 var response = await client.PostAsJsonAsync(string.Format(PostResourceUrl, ticketId), request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<SatisfactionRatingResponse>();
+                return (await response.Content.ReadAsAsync<SatisfactionRatingResponse>()).Item;
             }
         }
     }

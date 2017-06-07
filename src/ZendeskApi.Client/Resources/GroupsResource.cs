@@ -14,12 +14,12 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
         }
 
-        public async Task<IResponse<Group>> GetAsync(long id)
+        public async Task<Group> GetAsync(long id)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<GroupResponse>();
+                return (await response.Content.ReadAsAsync<GroupResponse>()).Item;
             }
         }
     }

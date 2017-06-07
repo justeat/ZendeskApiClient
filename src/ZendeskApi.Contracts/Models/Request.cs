@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Request")]
-    public class Request : IZendeskEntity
+    public class Request
     {
         public Request()
         {

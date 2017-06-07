@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace ZendeskApi.Contracts.Models
 {
     [Description("User Identity")]
-    public class UserIdentity : IZendeskEntity
+    public class UserIdentity
     {
         [JsonProperty]
         public long? Id { get; set; }

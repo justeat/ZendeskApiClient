@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Ticket")]
-    public class Ticket : IZendeskEntity
+    public class Ticket
     {
         [JsonProperty]
         public long? Id { get; set; }
@@ -75,34 +75,42 @@ namespace ZendeskApi.Contracts.Models
         public object SatisfactionRating { get; set; }
         
         [JsonProperty("external_id")]
-        public string External_Id { get; set; }
+        public string ExternalId { get; set; }
 
         [JsonIgnore]
-        public List<long> collaborator_ids { get; set; }
+        [JsonProperty("collaborator_ids")]
+        public List<long> CollaboratorIds { get; set; }
 
         [JsonIgnore]
-        public long forum_topic_id { get; set; }
+        [JsonProperty("forum_topic_id")]
+        public long ForumTopicId { get; set; }
 
         [JsonIgnore]
-        public long problem_id { get; set; }
+        [JsonProperty("problem_id")]
+        public long ProblemId { get; set; }
 
         [JsonIgnore]
-        public bool has_incidents { get; set; }
+        [JsonProperty("has_incidents")]
+        public bool HasIncidents { get; set; }
 
         [JsonProperty("tags")]
         public List<string> Tags { get; set; }
 
         [JsonIgnore]
-        public List<object> sharing_agreement_ids { get; set; }
+        [JsonProperty("sharing_agreement_ids")]
+        public List<object> SharingAgreementIds { get; set; }
 
         [JsonIgnore]
-        public List<object> fields { get; set; }
+        [JsonProperty("fields")]
+        public List<object> Fields { get; set; }
 
         [JsonIgnore]
-        public string result_type { get; set; }
+        [JsonProperty("result_type")]
+        public string ResultType { get; set; }
 
         [JsonIgnore]
-        public List<long> followup_ids { get; set; }
+        [JsonProperty("followup_ids")]
+        public List<long> FollowupIds { get; set; }
 
         [JsonProperty("requester")]
         public TicketRequester Requester { get; set; }

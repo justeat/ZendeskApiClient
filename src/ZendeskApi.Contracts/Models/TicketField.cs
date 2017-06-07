@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Ticket Field")]
-    public class TicketField : IZendeskEntity
+    public class TicketField
     {
         [JsonProperty]
         public long? Id { get; set; }

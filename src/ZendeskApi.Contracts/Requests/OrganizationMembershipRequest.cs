@@ -4,7 +4,7 @@ using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Requests
 {
-    public class OrganizationMembershipRequest : IRequest<OrganizationMembership>
+    public class OrganizationMembershipRequest
     {
         [JsonProperty("organization_membership")]
         public OrganizationMembership Item { get; set; }

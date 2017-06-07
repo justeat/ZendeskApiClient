@@ -9,9 +9,9 @@ namespace ZendeskApi.Client.Resources
     public interface ITicketResource
     {
         Task DeleteAsync(long id);
-        Task<IResponse<Ticket>> GetAsync(long id);
+        Task<Ticket> GetAsync(long id);
         Task<IListResponse<Ticket>> GetAllAsync(List<long> ids);
-        Task<IResponse<Ticket>> PutAsync(TicketRequest request);
-        Task<IResponse<Ticket>> PostAsync(TicketRequest request);
+        Task<Ticket> PutAsync(TicketRequest request);
+        Task<Ticket> PostAsync(TicketRequest request);
     }
 }

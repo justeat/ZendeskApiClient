@@ -23,21 +23,21 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IResponse<Upload>> GetAsync(long id)
+        public async Task<Upload> GetAsync(long id)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<UploadResponse>();
+                return (await response.Content.ReadAsAsync<UploadResponse>()).Item;
             }
         }
 
-        public async Task<IResponse<Upload>> PostAsync(UploadRequest request)
+        public async Task<Upload> PostAsync(UploadRequest request)
         {
             using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PostAsJsonAsync($"{ResourceUri}?filename={request.Item.FileName}{request.Token ?? string.Empty}", request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<UploadResponse>();
+                return (await response.Content.ReadAsAsync<UploadResponse>()).Item;
             }
         }
     }

@@ -17,12 +17,12 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
         }
 
-        public async Task<IResponse<User>> GetAsync(long id)
+        public async Task<User> GetAsync(long id)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<UserResponse>();
+                return (await response.Content.ReadAsAsync<UserResponse>()).Item;
             }
         }
         
@@ -35,21 +35,21 @@ namespace ZendeskApi.Client.Resources
             }
         }
         
-        public async Task<IResponse<User>> PostAsync(UserRequest request)
+        public async Task<User> PostAsync(UserRequest request)
         {
             using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<UserResponse>();
+                return (await response.Content.ReadAsAsync<UserResponse>()).Item;
             }
         }
         
-        public async Task<IResponse<User>> PutAsync(UserRequest request)
+        public async Task<User> PutAsync(UserRequest request)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<UserResponse>();
+                return (await response.Content.ReadAsAsync<UserResponse>()).Item;
             }
         }
 

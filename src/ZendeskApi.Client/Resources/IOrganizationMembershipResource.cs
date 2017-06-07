@@ -9,6 +9,6 @@ namespace ZendeskApi.Client.Resources
     {
         Task<IListResponse<OrganizationMembership>> GetAllByOrganizationAsync(long organizationId);
         Task<IListResponse<OrganizationMembership>> GetAllByUserAsync(long userId);
-        Task<IResponse<OrganizationMembership>> PostAsync(OrganizationMembershipRequest request);
+        Task<OrganizationMembership> PostAsync(OrganizationMembershipRequest request);
     }
 }

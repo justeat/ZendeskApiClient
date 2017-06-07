@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    public class ListResponse<T> : IListResponse<T> where T : IZendeskEntity
+    public class ListResponse<T> : IListResponse<T>
     {
         [JsonProperty("results")]
         public virtual IEnumerable<T> Results { get; set; }

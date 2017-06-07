@@ -11,7 +11,7 @@ namespace ZendeskApi.Contracts.Models
         public List<Thumbnail> Thumbnails { get; set; }
     }
     
-    public class Thumbnail : IZendeskEntity
+    public class Thumbnail
     {
         [JsonProperty("id")]
         public long? Id { get; set; }

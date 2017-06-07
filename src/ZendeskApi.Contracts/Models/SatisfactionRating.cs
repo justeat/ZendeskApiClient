@@ -6,7 +6,7 @@ using Newtonsoft.Json.Converters;
 namespace ZendeskApi.Contracts.Models
 {
     [Description("satisfaction_rating")]
-    public class SatisfactionRating : IZendeskEntity
+    public class SatisfactionRating
     {
         [JsonProperty]
         public long? Id { get; set; }

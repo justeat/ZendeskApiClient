@@ -4,13 +4,13 @@ using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    public class TicketResponse : IResponse<Ticket>
+    public class TicketResponse
     {
         [JsonProperty("ticket")]
         public Ticket Item { get; set; }
     }
 
-    public class TicketsResponse : IBatchResponse<IEnumerable<Ticket>>
+    public class TicketsResponse
     {
         [JsonProperty("tickets")]
         public IEnumerable<Ticket> Item { get; set; }

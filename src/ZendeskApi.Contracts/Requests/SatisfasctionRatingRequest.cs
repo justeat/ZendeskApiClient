@@ -3,7 +3,7 @@ using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Requests
 {
-    public class SatisfactionRatingRequest : IRequest<SatisfactionRating>
+    public class SatisfactionRatingRequest
     {
         [JsonProperty("satisfaction_rating")]
         public SatisfactionRating Item { get; set; }

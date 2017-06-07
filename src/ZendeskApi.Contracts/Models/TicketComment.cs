@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Comment")]
-    public class TicketComment : IZendeskEntity
+    public class TicketComment
     {
         [JsonProperty]
         public long? Id { get; set; }

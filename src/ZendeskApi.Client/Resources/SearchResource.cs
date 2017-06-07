@@ -15,7 +15,7 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
         }
 
-        public async Task<IListResponse<T>> FindAsync<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
+        public async Task<IListResponse<T>> FindAsync<T>(IZendeskQuery<T> zendeskQuery)
         {
             using (var client = _apiClient.CreateClient(SearchUri + "/"))
             {

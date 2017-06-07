@@ -3,7 +3,7 @@ using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    public class UploadResponse : IResponse<Upload>
+    public class UploadResponse
     {
         [JsonProperty("upload")]
         public Upload Item { get; set; }

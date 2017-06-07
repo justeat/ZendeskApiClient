@@ -16,41 +16,41 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
         }
 
-        public async Task<IResponse<Request>> GetAsync(long id)
+        public async Task<Request> GetAsync(long id)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<RequestResponse>();
+                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
             }
         }
 
-        public async Task<IResponse<Request>> GetAsync(IEnumerable<TicketStatus> requestedStatuses)
+        public async Task<Request> GetAsync(IEnumerable<TicketStatus> requestedStatuses)
         {
             using (var client = _apiClient.CreateClient("/"))
             {
                 // TODO: ngm make nicer
                 var query = $"status={string.Join(",", requestedStatuses).ToLower()}";
                 var response = await client.GetAsync($"{ResourceUri}?{query}").ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<RequestResponse>();
+                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
             }
         }
 
-        public async Task<IResponse<Request>> PutAsync(RequestRequest request)
+        public async Task<Request> PutAsync(RequestRequest request)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<RequestResponse>();
+                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
             }
         }
 
-        public async Task<IResponse<Request>> PostAsync(RequestRequest request)
+        public async Task<Request> PostAsync(RequestRequest request)
         {
             using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<RequestResponse>();
+                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
             }
         }
 

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Group")]
-    public class Group : IZendeskEntity
+    public class Group
     {
         [JsonProperty]
         public long? Id { get; set; }

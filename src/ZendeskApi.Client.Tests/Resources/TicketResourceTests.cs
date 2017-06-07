@@ -33,11 +33,9 @@ namespace ZendeskApi.Client.Tests.Resources
                     }
                 });
 
-            var item = response.Item;
-
-            Assert.NotNull(item.Id);
-            Assert.Equal("My printer is on fire!", item.Subject);
-            Assert.Equal("The smoke is very colorful.", item.Comment.Body);
+            Assert.NotNull(response.Id);
+            Assert.Equal("My printer is on fire!", response.Subject);
+            Assert.Equal("The smoke is very colorful.", response.Comment.Body);
         }
 
         [Fact]
@@ -91,12 +89,10 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldGetTicket()
         {
             var response = await _resource.GetAsync(435L);
-
-            var item = response.Item;
-
-            Assert.NotNull(item.Id);
-            Assert.Equal("My printer is on fire!", item.Subject);
-            Assert.Equal("The smoke is very colorful.", item.Comment.Body);
+            
+            Assert.NotNull(response.Id);
+            Assert.Equal("My printer is on fire!", response.Subject);
+            Assert.Equal("The smoke is very colorful.", response.Comment.Body);
         }
 
         [Fact]
@@ -115,12 +111,10 @@ namespace ZendeskApi.Client.Tests.Resources
                         }
                     }
                 });
-
-            var item = response.Item;
-
-            Assert.NotNull(item.Id);
-            Assert.Equal("My printer is no longer on fire!", item.Subject);
-            Assert.Equal("The smoke is gone.", item.Comment.Body);
+            
+            Assert.NotNull(response.Id);
+            Assert.Equal("My printer is no longer on fire!", response.Subject);
+            Assert.Equal("The smoke is gone.", response.Comment.Body);
         }
 
         public void Dispose()

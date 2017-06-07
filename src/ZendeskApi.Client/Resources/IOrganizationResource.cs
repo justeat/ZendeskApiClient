@@ -9,8 +9,8 @@ namespace ZendeskApi.Client.Resources
     {
         Task DeleteAsync(long id);
         Task<IListResponse<Organization>> SearchByExtenalIdsAsync(params string[] externalIds);
-        Task<IResponse<Organization>> GetAsync(long id);
-        Task<IResponse<Organization>> PutAsync(OrganizationRequest request);
-        Task<IResponse<Organization>> PostAsync(OrganizationRequest request);
+        Task<Organization> GetAsync(long id);
+        Task<Organization> PutAsync(OrganizationRequest request);
+        Task<Organization> PostAsync(OrganizationRequest request);
     }
 }

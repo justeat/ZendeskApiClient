@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace ZendeskApi.Contracts.Models
 {
-    public class Upload : IZendeskEntity
+    public class Upload
     {
         [JsonIgnore]
         public long? Id { get; set; }

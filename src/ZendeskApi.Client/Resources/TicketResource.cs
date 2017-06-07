@@ -20,12 +20,12 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
         }
         
-        public async Task<IResponse<Ticket>> GetAsync(long id)
+        public async Task<Ticket> GetAsync(long id)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<TicketResponse>();
+                return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
             }
         }
 
@@ -38,16 +38,16 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IResponse<Ticket>> PutAsync(TicketRequest request)
+        public async Task<Ticket> PutAsync(TicketRequest request)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<TicketResponse>();
+                return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
             }
         }
 
-        public async Task<IResponse<Ticket>> PostAsync(TicketRequest request)
+        public async Task<Ticket> PostAsync(TicketRequest request)
         {
             using (var client = _apiClient.CreateClient("/"))
             {
@@ -61,7 +61,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
                 }
 
-                return await response.Content.ReadAsAsync<TicketResponse>();
+                return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
             }
         }
 

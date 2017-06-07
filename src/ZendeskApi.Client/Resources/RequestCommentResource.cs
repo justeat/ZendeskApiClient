@@ -14,12 +14,12 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
         }
 
-        public async Task<IResponse<TicketComment>> GetAsync(long id, long parentId)
+        public async Task<TicketComment> GetAsync(long id, long parentId)
         {
             using (var client = _apiClient.CreateClient(string.Format(ResourceUri, parentId) + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<TicketCommentResponse>();
+                return (await response.Content.ReadAsAsync<TicketCommentResponse>()).Item;
             }
         }
 

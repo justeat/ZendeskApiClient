@@ -7,7 +7,7 @@ using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Queries
 {
-    public class ZendeskQuery<T> : IZendeskQuery<T> where T : IZendeskEntity
+    public class ZendeskQuery<T> : IZendeskQuery<T>
     {
         private readonly List<Filter> _customFilters;
 

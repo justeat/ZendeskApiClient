@@ -24,21 +24,21 @@ namespace ZendeskApi.Client.Resources
             }
         }
         
-        public async Task<IResponse<UserIdentity>> PostAsync(UserIdentityRequest request)
+        public async Task<UserIdentity> PostAsync(UserIdentityRequest request)
         {
             using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PostAsJsonAsync(string.Format(ResourceUri, request.Item.UserId), request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<UserIdentityResponse>();
+                return (await response.Content.ReadAsAsync<UserIdentityResponse>()).Item;
             }
         }
         
-        public async Task<IResponse<UserIdentity>> PutAsync(UserIdentityRequest request)
+        public async Task<UserIdentity> PutAsync(UserIdentityRequest request)
         {
             using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PutAsJsonAsync(string.Format(ResourceUri, request.Item.UserId), request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<UserIdentityResponse>();
+                return (await response.Content.ReadAsAsync<UserIdentityResponse>()).Item;
             }
         }
         

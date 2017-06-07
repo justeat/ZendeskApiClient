@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace ZendeskApi.Contracts.Models
 {
     [Description("Organization")]
-    public class Organization : IZendeskEntity
+    public class Organization
     {
         [JsonProperty("id")]
         public long? Id { get; set; }
@@ -36,21 +36,24 @@ namespace ZendeskApi.Contracts.Models
         public List<string> Tags { get; set; }
         
         [JsonProperty("external_id")]
-        public string external_id { get; set; }
+        public string ExternalId { get; set; }
 
         [JsonProperty("domain_names")]
         public List<string> DomainNames { get; set; }
 
         [JsonIgnore]
-        public bool shared_tickets { get; set; }
+        [JsonProperty("shared_tickets")]
+        public bool SharedTickets { get; set; }
 
         [JsonIgnore]
-        public bool shared_comments { get; set; }
+        [JsonProperty("shared_comments")]
+        public bool SharedComments { get; set; }
 
         [JsonIgnore]
         public Uri Url { get; set; }
 
         [JsonIgnore]
-        public long group_id { get; set; }
+        [JsonProperty("group_id")]
+        public long GroupId { get; set; }
     }
 }

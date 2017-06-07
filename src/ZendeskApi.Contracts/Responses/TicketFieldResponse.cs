@@ -3,7 +3,7 @@ using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Responses
 {
-    public class TicketFieldResponse : IResponse<TicketField>
+    public class TicketFieldResponse
     {
         [JsonProperty("ticket_field")]
         public TicketField Item { get; set; }

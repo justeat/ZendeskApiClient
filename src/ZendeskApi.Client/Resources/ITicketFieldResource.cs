@@ -6,7 +6,7 @@ namespace ZendeskApi.Client.Resources
 {
     public interface ITicketFieldResource
     {
-        Task<IResponse<TicketField>> GetAsync(long id);
+        Task<TicketField> GetAsync(long id);
         Task<IListResponse<TicketField>> GetAllAsync();
     }
 }

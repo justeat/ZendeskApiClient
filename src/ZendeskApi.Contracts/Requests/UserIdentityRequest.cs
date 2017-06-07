@@ -3,7 +3,7 @@ using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Contracts.Requests
 {
-    public class UserIdentityRequest : IRequest<UserIdentity>
+    public class UserIdentityRequest
     {
         [JsonProperty("identity")]
         public UserIdentity Item { get; set; }

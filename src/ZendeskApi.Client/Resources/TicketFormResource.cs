@@ -14,12 +14,12 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
         }
 
-        public async Task<IResponse<TicketForm>> GetAsync(long id)
+        public async Task<TicketForm> GetAsync(long id)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<TicketFormResponse>();
+                return (await response.Content.ReadAsAsync<TicketFormResponse>()).Item;
             }
         }
 

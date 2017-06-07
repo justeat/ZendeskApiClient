@@ -25,30 +25,30 @@ namespace ZendeskApi.Client.Resources
             }
         }
         
-        public async Task<IResponse<Organization>> GetAsync(long id)
+        public async Task<Organization> GetAsync(long id)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<OrganizationResponse>();
+                return (await response.Content.ReadAsAsync<OrganizationResponse>()).Item;
             }
         }
         
-        public async Task<IResponse<Organization>> PutAsync(OrganizationRequest request)
+        public async Task<Organization> PutAsync(OrganizationRequest request)
         {
             using (var client = _apiClient.CreateClient(ResourceUri + "/"))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<OrganizationResponse>();
+                return (await response.Content.ReadAsAsync<OrganizationResponse>()).Item;
             }
         }
         
-        public async Task<IResponse<Organization>> PostAsync(OrganizationRequest request)
+        public async Task<Organization> PostAsync(OrganizationRequest request)
         {
             using (var client = _apiClient.CreateClient("/"))
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<OrganizationResponse>();
+                return (await response.Content.ReadAsAsync<OrganizationResponse>()).Item;
             }
         }
 

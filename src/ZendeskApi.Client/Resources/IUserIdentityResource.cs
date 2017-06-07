@@ -8,8 +8,8 @@ namespace ZendeskApi.Client.Resources
     public interface IUserIdentityResource
     {
         Task<IListResponse<UserIdentity>> GetAllAsync(long id);
-        Task<IResponse<UserIdentity>> PostAsync(UserIdentityRequest request);
-        Task<IResponse<UserIdentity>> PutAsync(UserIdentityRequest request);
+        Task<UserIdentity> PostAsync(UserIdentityRequest request);
+        Task<UserIdentity> PutAsync(UserIdentityRequest request);
         Task DeleteAsync(long id, long parentId);
     }
 }
