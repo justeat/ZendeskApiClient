@@ -27,7 +27,6 @@ namespace ZendeskApi.Client.Resources
         public GroupsResource(IZendeskApiClient apiClient,
             ILogger logger)
         {
-            
             _apiClient = apiClient;
             _logger = logger;
         }
@@ -120,7 +119,13 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.DeleteAsync(groupId.ToString());
 
-                response.EnsureSuccessStatusCode();
+                if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
+                {
+                    throw new HttpRequestException(
+                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
+                        Environment.NewLine +
+                        "See: https://developer.zendesk.com/rest_api/docs/core/attachments#delete-upload");
+                }
             }
         }
     }

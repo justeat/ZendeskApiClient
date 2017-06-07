@@ -4,10 +4,9 @@ using ZendeskApi.Contracts.Requests;
 
 namespace ZendeskApi.Client.Resources
 {
-    public interface IUploadResource
+    public interface IAttachmentsResource
     {
+        Task<Upload> UploadAsync(UploadRequest request, string token = null);
         Task DeleteAsync(string token);
-        Task<Upload> GetAsync(long id);
-        Task<Upload> PostAsync(UploadRequest request);
     }
 }

@@ -14,7 +14,7 @@ namespace ZendeskApi.Client
         public IGroupsResource Groups { get; private set; }
         public IUserResource Users { get; private set; }
         public IUserIdentityResource UserIdentities { get; private set; }
-        public IUploadResource Upload { get; private set; }
+        public IAttachmentsResource Attachments { get; private set; }
         public ITicketFieldResource TicketFields { get; private set; }
         public ITicketFormResource TicketForms { get; private set; }
         public IOrganizationMembershipResource OrganizationMemberships { get; private set; }
@@ -31,7 +31,7 @@ namespace ZendeskApi.Client
             Groups = new GroupsResource(apiClient, logger);
             Users = new UserResource(apiClient);
             UserIdentities = new UserIdentityResource(apiClient);
-            Upload = new UploadResource(apiClient);
+            Attachments = new AttachmentsResource(apiClient, logger);
             TicketFields = new TicketFieldResource(apiClient);
             TicketForms = new TicketFormResource(apiClient);
             OrganizationMemberships = new OrganizationMembershipResource(apiClient);
