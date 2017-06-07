@@ -7,7 +7,7 @@ namespace ZendeskApi.Client.Tests
     {
         private ZendeskSampleSite _sampleSite;
 
-        public HttpClient CreateClient(string resource)
+        public HttpClient CreateClient(string resource = "")
         {
             if (_sampleSite != null)
             {

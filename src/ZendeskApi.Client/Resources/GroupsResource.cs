@@ -6,7 +6,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class GroupsResource : IGroupResource
     {
-        private const string ResourceUri = "/api/v2/groups";
+        private const string ResourceUri = "api/v2/groups";
         private readonly IZendeskApiClient _apiClient;
 
         public GroupsResource(IZendeskApiClient apiClient)
@@ -16,7 +16,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Group> GetAsync(long id)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<GroupResponse>()).Item;

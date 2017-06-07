@@ -95,7 +95,15 @@ namespace ZendeskApi.Client.Tests
 
             _server = new TestServer(webhostbuilder);
             Client = _server.CreateClient();
-            Client.BaseAddress = new Uri($"http://localhost/{resource.TrimStart('/')}");
+
+            resource = resource?.Trim('/');
+
+            if (resource != null)
+            {
+                resource = resource + "/";
+            }
+
+            Client.BaseAddress = new Uri($"http://localhost/{resource}");
         }
 
         public Uri BaseUri

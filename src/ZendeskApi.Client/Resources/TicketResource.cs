@@ -11,8 +11,8 @@ namespace ZendeskApi.Client.Resources
 {
     public class TicketResource : ITicketResource
     {
-        private const string ResourceUri = "/api/v2/tickets";
-        private const string BatchResourceUri = "/api/v2/tickets/create_many";
+        private const string ResourceUri = "api/v2/tickets";
+        private const string BatchResourceUri = "api/v2/tickets/create_many";
         private readonly IZendeskApiClient _apiClient;
 
         public TicketResource(IZendeskApiClient apiClient)
@@ -22,7 +22,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<Ticket> GetAsync(long id)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
@@ -31,7 +31,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IListResponse<Ticket>> GetAllAsync(List<long> ids)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ids)}").ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<TicketListResponse>();
@@ -40,7 +40,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Ticket> PutAsync(TicketRequest request)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
@@ -49,7 +49,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Ticket> PostAsync(TicketRequest request)
         {
-            using (var client = _apiClient.CreateClient("/"))
+            using (var client = _apiClient.CreateClient())
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
                 
@@ -67,7 +67,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<JobStatus> PostAsync(TicketsRequest request)
         {
-            using (var client = _apiClient.CreateClient("/"))
+            using (var client = _apiClient.CreateClient())
             {
                 var response = await client.PostAsJsonAsync(BatchResourceUri, request).ConfigureAwait(false);
 
@@ -85,7 +85,7 @@ namespace ZendeskApi.Client.Resources
 
         public Task DeleteAsync(long id)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 return client.DeleteAsync(id.ToString());
             }

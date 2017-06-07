@@ -8,7 +8,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class OrganizationResource : IOrganizationResource
     {
-        private const string ResourceUri = "/api/v2/organizations";
+        private const string ResourceUri = "api/v2/organizations";
         private readonly IZendeskApiClient _apiClient;
 
         public OrganizationResource(IZendeskApiClient apiClient)
@@ -18,7 +18,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IListResponse<Organization>> SearchByExtenalIdsAsync(params string[] externalIds)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(externalIds)}").ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<OrganizationListResponse>();
@@ -27,7 +27,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<Organization> GetAsync(long id)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<OrganizationResponse>()).Item;
@@ -36,7 +36,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<Organization> PutAsync(OrganizationRequest request)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<OrganizationResponse>()).Item;
@@ -45,7 +45,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<Organization> PostAsync(OrganizationRequest request)
         {
-            using (var client = _apiClient.CreateClient("/"))
+            using (var client = _apiClient.CreateClient())
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<OrganizationResponse>()).Item;
@@ -54,7 +54,7 @@ namespace ZendeskApi.Client.Resources
 
         public Task DeleteAsync(long id)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 return client.DeleteAsync(id.ToString());
             }

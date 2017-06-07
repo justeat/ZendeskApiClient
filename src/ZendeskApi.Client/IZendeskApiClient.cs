@@ -4,6 +4,6 @@ namespace ZendeskApi.Client
 {
     public interface IZendeskApiClient
     {
-        HttpClient CreateClient(string resource);
+        HttpClient CreateClient(string resource = null);
     }
 }

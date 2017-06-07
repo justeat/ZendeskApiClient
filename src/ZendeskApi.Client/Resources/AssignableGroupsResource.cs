@@ -6,7 +6,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class AssignableGroupResource :IAssignableGroupResource
     {
-        private const string AssignableGroupUri = @"/api/v2/groups/assignable";
+        private const string AssignableGroupUri = @"api/v2/groups/assignable";
         private readonly IZendeskApiClient _apiClient;
 
         public AssignableGroupResource(IZendeskApiClient apiClient)
@@ -16,7 +16,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<ListResponse<Group>> GetAllAsync()
         {
-            using (var client = _apiClient.CreateClient("/"))
+            using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(AssignableGroupUri).ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<GroupListResponse>();

@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<User> GetAsync(long id)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<UserResponse>()).Item;
@@ -28,7 +28,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<IListResponse<User>> GetAllAsync(List<long> ids)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ids)}").ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<UserListResponse>();
@@ -37,7 +37,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<User> PostAsync(UserRequest request)
         {
-            using (var client = _apiClient.CreateClient("/"))
+            using (var client = _apiClient.CreateClient())
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<UserResponse>()).Item;
@@ -46,7 +46,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<User> PutAsync(UserRequest request)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<UserResponse>()).Item;
@@ -55,7 +55,7 @@ namespace ZendeskApi.Client.Resources
 
         public Task DeleteAsync(long id)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 return client.DeleteAsync(id.ToString());
             }

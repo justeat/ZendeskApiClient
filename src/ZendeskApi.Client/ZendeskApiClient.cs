@@ -15,12 +15,19 @@ namespace ZendeskApi.Client
             _options = options.Value;
         }
 
-        public HttpClient CreateClient(string resource)
+        public HttpClient CreateClient(string resource = "")
         {
             var handler = new HttpClientHandler();
             if (handler.SupportsAutomaticDecompression)
             {
                 handler.AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate;
+            }
+
+            resource = resource?.Trim('/');
+
+            if (resource != null)
+            {
+                resource = resource + "/";
             }
 
             var client = new HttpClient(handler)

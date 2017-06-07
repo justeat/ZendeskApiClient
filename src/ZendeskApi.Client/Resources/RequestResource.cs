@@ -8,7 +8,7 @@ namespace ZendeskApi.Client.Resources
 {
     public class RequestResource : IRequestResource
     {
-        private const string ResourceUri = "/api/v2/requests";
+        private const string ResourceUri = "api/v2/requests";
         private readonly IZendeskApiClient _apiClient;
 
         public RequestResource(IZendeskApiClient apiClient)
@@ -18,7 +18,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Request> GetAsync(long id)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
@@ -27,7 +27,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Request> GetAsync(IEnumerable<TicketStatus> requestedStatuses)
         {
-            using (var client = _apiClient.CreateClient("/"))
+            using (var client = _apiClient.CreateClient())
             {
                 // TODO: ngm make nicer
                 var query = $"status={string.Join(",", requestedStatuses).ToLower()}";
@@ -38,7 +38,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Request> PutAsync(RequestRequest request)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
@@ -47,7 +47,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Request> PostAsync(RequestRequest request)
         {
-            using (var client = _apiClient.CreateClient("/"))
+            using (var client = _apiClient.CreateClient())
             {
                 var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
                 return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
@@ -56,7 +56,7 @@ namespace ZendeskApi.Client.Resources
 
         public Task DeleteAsync(long id)
         {
-            using (var client = _apiClient.CreateClient(ResourceUri + "/"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 return client.DeleteAsync(id.ToString());
             }
