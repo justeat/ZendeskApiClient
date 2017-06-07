@@ -99,11 +99,13 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public Task DeleteAsync(long groupId)
+        public async Task DeleteAsync(long groupId)
         {
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
-                return client.DeleteAsync(groupId.ToString());
+                var response = await client.DeleteAsync(groupId.ToString());
+
+                response.EnsureSuccessStatusCode();
             }
         }
     }
