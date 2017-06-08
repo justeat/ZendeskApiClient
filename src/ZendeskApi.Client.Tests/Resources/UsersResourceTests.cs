@@ -20,14 +20,9 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         /*
-        Task<IEnumerable<User>> GetAllAsync();
-        Task<IEnumerable<User>> GetAllUsersInGroupAsync(long groupId);
-        Task<IEnumerable<User>> GetAllUsersInOrganizationAsync(long organizationId);
-        Task<User> GetAsync(long userId);
         Task<IEnumerable<User>> GetAllAsync(long[] userIds);
         Task<IEnumerable<User>> GetAllByExternalIdsAsync(long[] externalIds);
         Task<User> GetRelatedUsersAsync(long userId);
-        Task<User> PostAsync(UserRequest request);
         Task<User> PutAsync(UserRequest request);
         Task DeleteAsync(long userId);
          */
@@ -95,7 +90,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ShouldGetTicket()
+        public async Task ShouldGetUser()
         {
             var user = await _resource.PostAsync(
                 new Contracts.Models.User
