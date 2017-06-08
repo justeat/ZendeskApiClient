@@ -19,6 +19,7 @@ namespace ZendeskApi.Client.Tests
         {
             if (_createdSite != null)
             {
+                _createdSite.RefreshClient(resource);
                 return _createdSite.Client;
             }
 

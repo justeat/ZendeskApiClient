@@ -76,8 +76,7 @@ namespace ZendeskApi.Contracts.Models
         
         [JsonProperty("external_id")]
         public string ExternalId { get; set; }
-
-        [JsonIgnore]
+        
         [JsonProperty("collaborator_ids")]
         public List<long> CollaboratorIds { get; set; }
 

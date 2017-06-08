@@ -7,6 +7,8 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
     {
         public abstract HttpClient Client { get; }
 
+        public abstract void RefreshClient(string resource);
+
         public abstract void Dispose();
     }
 }

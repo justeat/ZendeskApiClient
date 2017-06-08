@@ -116,7 +116,8 @@ namespace ZendeskApi.Client.Tests
 
         private readonly TestServer _server;
 
-        public override HttpClient Client { get; }
+        private HttpClient _client;
+        public override HttpClient Client => _client;
 
         public UsersResourceSampleSite(string resource)
         {
@@ -131,16 +132,22 @@ namespace ZendeskApi.Client.Tests
                 });
 
             _server = new TestServer(webhostbuilder);
-            Client = _server.CreateClient();
+            _client = _server.CreateClient();
 
+            RefreshClient(resource);
+        }
+
+        public override void RefreshClient(string resource)
+        {
+            _client = _server.CreateClient();
+            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
+        }
+
+        private string CreateResource(string resource)
+        {
             resource = resource?.Trim('/');
 
-            if (resource != null)
-            {
-                resource = resource + "/";
-            }
-
-            Client.BaseAddress = new Uri($"http://localhost/{resource}");
+            return resource != null ? resource + "/" : resource;
         }
 
         public Uri BaseUri

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,193 +21,102 @@ namespace ZendeskApi.Client.Tests
 {
     public class TicketResourceSampleSite : SampleSite
     {
+        private class State {
+            public IDictionary<long, Ticket> Tickets = new Dictionary<long, Ticket>();
+        }
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
             {
                 return rb => rb
-                    .MapGet("api/v2/tickets", (req, resp, routeData) =>
-                    {
-                        var ticket1 = new Contracts.Models.Ticket
-                        {
-                            Id = 123,
-                            Subject = "My printer is on fire! 1",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 1"
-                            }
-                        };
-
-                        var ticket2 = new Contracts.Models.Ticket
-                        {
-                            Id = 3253,
-                            Subject = "My printer is on fire! 2",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 2"
-                            }
-                        };
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
-
-                        return Task.CompletedTask;
-                    })
-                    .MapGet("api/v2/organizations/23241/tickets", (req, resp, routeData) =>
-                    {
-                        var ticket1 = new Contracts.Models.Ticket
-                        {
-                            Id = 5555,
-                            Subject = "My printer is on fire! 1",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 1"
-                            }
-                        };
-
-                        var ticket2 = new Contracts.Models.Ticket
-                        {
-                            Id = 23423,
-                            Subject = "My printer is on fire! 2",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 2"
-                            }
-                        };
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
-
-                        return Task.CompletedTask;
-                    })
-                    .MapGet("api/v2/users/23241/tickets/requested", (req, resp, routeData) =>
-                    {
-                        var ticket1 = new Contracts.Models.Ticket
-                        {
-                            Id = 534,
-                            Subject = "My printer is on fire! 1",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 1"
-                            }
-                        };
-
-                        var ticket2 = new Contracts.Models.Ticket
-                        {
-                            Id = 123,
-                            Subject = "My printer is on fire! 2",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 2"
-                            }
-                        };
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
-
-                        return Task.CompletedTask;
-                    })
-                    .MapGet("api/v2/users/241/tickets/ccd", (req, resp, routeData) =>
-                    {
-                        var ticket1 = new Contracts.Models.Ticket
-                        {
-                            Id = 534534,
-                            Subject = "My printer is on fire! 1",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 1"
-                            }
-                        };
-
-                        var ticket2 = new Contracts.Models.Ticket
-                        {
-                            Id = 44,
-                            Subject = "My printer is on fire! 2",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 2"
-                            }
-                        };
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
-
-                        return Task.CompletedTask;
-                    })
-                    .MapGet("api/v2/users/423/tickets/assigned", (req, resp, routeData) =>
-                    {
-                        var ticket1 = new Contracts.Models.Ticket
-                        {
-                            Id = 63453,
-                            Subject = "My printer is on fire! 1",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 1"
-                            }
-                        };
-
-                        var ticket2 = new Contracts.Models.Ticket
-                        {
-                            Id = 235,
-                            Subject = "My printer is on fire! 2",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 2"
-                            }
-                        };
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
-
-                        return Task.CompletedTask;
-                    })
-                    .MapGet("api/v2/tickets/435", (req, resp, routeData) =>
-                    {
-                        var ticket = new Ticket
-                        {
-                            Id = 435L,
-                            Subject = "My printer is on fire!",
-                            Comment = new TicketComment
-                            {
-                                Body = "The smoke is very colorful."
-                            }
-                        };
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
-
-                        return Task.CompletedTask;
-                    })
                     .MapGet("api/v2/tickets/show_many", (req, resp, routeData) =>
                     {
-                        var ids = req.Query["ids"].ToString().Split(',');
-                        Debug.Assert(long.Parse(ids[0]) == 123);
-                        Debug.Assert(long.Parse(ids[1]) == 869);
+                        var ids = req.Query["ids"].ToString().Split(',').Select(long.Parse);
 
-                        var ticket1 = new Contracts.Models.Ticket
-                        {
-                            Id = 123,
-                            Subject = "My printer is on fire! 1",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 1"
-                            }
-                        };
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        var ticket2 = new Contracts.Models.Ticket
-                        {
-                            Id = 863,
-                            Subject = "My printer is on fire! 2",
-                            Comment = new Contracts.Models.TicketComment
-                            {
-                                Body = "The smoke is very colorful. 2"
-                            }
-                        };
+                        var tickets = state.Tickets.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = new[] { ticket1, ticket2 } }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = tickets }));
+                    })
+                    .MapGet("api/v2/tickets/{id}", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
 
-                        return Task.CompletedTask;
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var ticket = state.Tickets.Single(x => x.Key == id).Value;
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
+                    })
+                    .MapGet("api/v2/tickets", (req, resp, routeData) =>
+                    {
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = state.Tickets.Values }));
+                    })
+                    .MapGet("api/v2/users/{id}/tickets/assigned", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var tickets = state
+                            .Tickets
+                            .Where(x => x.Value.AssigneeId.HasValue)
+                            .Where(x => x.Value.AssigneeId == id)
+                            .Select(p => p.Value);
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = tickets }));
+                    })
+                    .MapGet("api/v2/users/{id}/tickets/ccd", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var tickets = state
+                            .Tickets
+                            .Where(x => x.Value.CollaboratorIds.Contains(id))
+                            .Select(p => p.Value);
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = tickets }));
+                    })
+                    .MapGet("api/v2/users/{id}/tickets/requested", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var tickets = state
+                            .Tickets
+                            .Where(x => x.Value.RequesterId.HasValue)
+                            .Where(x => x.Value.RequesterId == id)
+                            .Select(p => p.Value);
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = tickets }));
+                    })
+                    .MapGet("api/v2/organizations/{id}/tickets", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var tickets = state
+                            .Tickets
+                            .Where(x => x.Value.OrganisationId.HasValue)
+                            .Where(x => x.Value.OrganisationId == id)
+                            .Select(p => p.Value);
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = tickets }));
                     })
                     .MapPost("api/v2/tickets", (req, resp, routeData) =>
                     {
@@ -218,62 +129,92 @@ namespace ZendeskApi.Client.Tests
                             return Task.CompletedTask;
                         }
 
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
                         ticket.Id = long.Parse(new Random().Next().ToString());
+                        state.Tickets.Add(ticket.Id.Value, ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
-
-                        return Task.CompletedTask;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
                     })
                     .MapPost("api/v2/tickets/create_many", (req, resp, routeData) =>
                     {
-                        var ticket = req.Body.Deserialize<TicketsRequest>().Item;
+                        var tickets = req.Body.Deserialize<TicketsRequest>().Item;
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var rand = new Random();
+
+                        foreach (var ticket in tickets)
+                        {
+                            ticket.Id = long.Parse(rand.Next().ToString());
+                            state.Tickets.Add(ticket.Id.Value, ticket);
+                        }
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
 
-                        resp.WriteAsync(JsonConvert.SerializeObject(new JobStatusResponse { Item = new JobStatus { Id = "sadasdsadsa" } }));
-
-                        return Task.CompletedTask;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new JobStatusResponse
+                        {
+                            Item = new JobStatus
+                            {
+                                Id = Guid.NewGuid().ToString().Replace("-", ""),
+                                Items = tickets.Select(x => new JobStatusResult { Id = x.Id.Value, Title = x.Subject })
+                            }
+                        }));
                     })
-                    .MapPut("api/v2/tickets/491", (req, resp, routeData) =>
+                    .MapPut("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
                         var ticket = req.Body.Deserialize<TicketRequest>().Item;
 
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        state.Tickets[id] = ticket;
+
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
-
-                        return Task.CompletedTask;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = state.Tickets[id] }));
                     })
-
                     ;
             }
         }
 
         private readonly TestServer _server;
 
-        public override HttpClient Client { get; }
-
+        private HttpClient _client;
+        public override HttpClient Client => _client;
+        
         public TicketResourceSampleSite(string resource)
         {
             var webhostbuilder = new WebHostBuilder();
             webhostbuilder
-                .ConfigureServices(services => services.AddRouting())
+                .ConfigureServices(services => {
+                    services.AddSingleton<State>((_) => new State());
+                    services.AddRouting();
+                    services.AddMemoryCache();
+                })
                 .Configure(app =>
                 {
+
                     app.UseRouter(MatchesRequest);
                 });
 
             _server = new TestServer(webhostbuilder);
-            Client = _server.CreateClient();
+            
+            RefreshClient(resource);
+        }
 
+        public override void RefreshClient(string resource)
+        {
+            _client = _server.CreateClient();
+            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
+        }
+
+        private string CreateResource(string resource)
+        {
             resource = resource?.Trim('/');
 
-            if (resource != null)
-            {
-                resource = resource + "/";
-            }
-
-            Client.BaseAddress = new Uri($"http://localhost/{resource}");
+            return resource != null ? resource + "/" : resource;
         }
 
         public Uri BaseUri

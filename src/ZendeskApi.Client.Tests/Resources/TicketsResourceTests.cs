@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Resources;
+using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -23,51 +24,30 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllTickets()
         {
-            var tickets = (await _resource.GetAllAsync()).ToArray();
+            var tickets = await CreateTickets();
 
-            var ticket1 = new Contracts.Models.Ticket
-            {
-                Id = 123,
-                Subject = "My printer is on fire! 1",
-                Comment = new Contracts.Models.TicketComment
-                {
-                    Body = "The smoke is very colorful. 1"
-                }
-            };
+            var retrievedTickets = (await _resource.GetAllAsync()).ToArray();
 
-            var ticket2 = new Contracts.Models.Ticket
-            {
-                Id = 3253,
-                Subject = "My printer is on fire! 2",
-                Comment = new Contracts.Models.TicketComment
-                {
-                    Body = "The smoke is very colorful. 2"
-                }
-            };
-
-            Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(2, retrievedTickets.Length);
+            Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(tickets[1]), JsonConvert.SerializeObject(retrievedTickets[1]));
         }
-
+        
         [Fact]
         public async Task ShouldListAllForOrganizationTickets()
         {
-            var tickets = (await _resource.GetAllForOrganizationAsync(23241L)).ToArray();
-
             var ticket1 = new Contracts.Models.Ticket
             {
-                Id = 5555,
                 Subject = "My printer is on fire! 1",
                 Comment = new Contracts.Models.TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
-                }
+                },
+                OrganisationId = 16230
             };
 
             var ticket2 = new Contracts.Models.Ticket
             {
-                Id = 23423,
                 Subject = "My printer is on fire! 2",
                 Comment = new Contracts.Models.TicketComment
                 {
@@ -75,35 +55,68 @@ namespace ZendeskApi.Client.Tests.Resources
                 }
             };
 
+            var ticket3 = new Contracts.Models.Ticket
+            {
+                Subject = "My printer is on fire! 3",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 3"
+                },
+                OrganisationId = 16230
+            };
+
+            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2, ticket3 });
+
+            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
+            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
+            ticket3.Id = jobStatus.Items.Single(x => x.Title == ticket3.Subject).Id;
+
+            var tickets = (await _resource.GetAllForOrganizationAsync(16230L)).ToArray();
+
             Assert.Equal(2, tickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(JsonConvert.SerializeObject(ticket3), JsonConvert.SerializeObject(tickets[1]));
         }
 
         [Fact]
         public async Task ShouldListAllForRequestedUserTickets()
         {
-            var tickets = (await _resource.GetAllRequestedForUserAsync(23241L)).ToArray();
-
             var ticket1 = new Contracts.Models.Ticket
             {
-                Id = 534,
                 Subject = "My printer is on fire! 1",
                 Comment = new Contracts.Models.TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
-                }
+                },
+                RequesterId = 10000
             };
 
             var ticket2 = new Contracts.Models.Ticket
             {
-                Id = 123,
                 Subject = "My printer is on fire! 2",
                 Comment = new Contracts.Models.TicketComment
                 {
                     Body = "The smoke is very colorful. 2"
+                },
+                RequesterId = 10000
+            };
+
+            var ticket3 = new Contracts.Models.Ticket
+            {
+                Subject = "My printer is on fire! 3",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 3"
                 }
             };
+
+            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2, ticket3 });
+
+            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
+            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
+            ticket3.Id = jobStatus.Items.Single(x => x.Title == ticket3.Subject).Id;
+
+            var tickets = (await _resource.GetAllRequestedForUserAsync(10000L)).ToArray();
 
             Assert.Equal(2, tickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
@@ -113,52 +126,65 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllForCCDUserTickets()
         {
-            var tickets = (await _resource.GetAllCCDForUserAsync(241L)).ToArray();
-
             var ticket1 = new Contracts.Models.Ticket
             {
-                Id = 534534,
                 Subject = "My printer is on fire! 1",
                 Comment = new Contracts.Models.TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
-                }
+                },
+                CollaboratorIds = new System.Collections.Generic.List<long> { }
             };
 
             var ticket2 = new Contracts.Models.Ticket
             {
-                Id = 44,
                 Subject = "My printer is on fire! 2",
                 Comment = new Contracts.Models.TicketComment
                 {
                     Body = "The smoke is very colorful. 2"
-                }
+                },
+                CollaboratorIds = new System.Collections.Generic.List<long> { 2293 }
             };
 
+            var ticket3 = new Contracts.Models.Ticket
+            {
+                Subject = "My printer is on fire! 3",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 3"
+                },
+                CollaboratorIds = new System.Collections.Generic.List<long> { 2293 }
+            };
+
+            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2, ticket3 });
+
+            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
+            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
+            ticket3.Id = jobStatus.Items.Single(x => x.Title == ticket3.Subject).Id;
+
+            var tickets = (await _resource.GetAllCCDForUserAsync(2293L)).ToArray();
+
             Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(ticket3), JsonConvert.SerializeObject(tickets[1]));
         }
 
 
         [Fact]
         public async Task ShouldListAllForAssignedForUserTickets()
         {
-            var tickets = (await _resource.GetAllAssignedForUserAsync(423L)).ToArray();
-
             var ticket1 = new Contracts.Models.Ticket
             {
-                Id = 63453,
                 Subject = "My printer is on fire! 1",
                 Comment = new Contracts.Models.TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
-                }
+                },
+                AssigneeId = 2233
             };
 
             var ticket2 = new Contracts.Models.Ticket
             {
-                Id = 235,
                 Subject = "My printer is on fire! 2",
                 Comment = new Contracts.Models.TicketComment
                 {
@@ -166,49 +192,56 @@ namespace ZendeskApi.Client.Tests.Resources
                 }
             };
 
+            var ticket3 = new Contracts.Models.Ticket
+            {
+                Subject = "My printer is on fire! 3",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 3"
+                },
+                AssigneeId = 2233
+            };
+
+            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2, ticket3 });
+
+            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
+            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
+            ticket3.Id = jobStatus.Items.Single(x => x.Title == ticket3.Subject).Id;
+
+            var tickets = (await _resource.GetAllAssignedForUserAsync(2233L)).ToArray();
+
             Assert.Equal(2, tickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(JsonConvert.SerializeObject(ticket3), JsonConvert.SerializeObject(tickets[1]));
         }
 
         [Fact]
         public async Task ShouldGetTicket()
         {
-            var response = await _resource.GetAsync(435L);
-
-            Assert.NotNull(response.Id);
-            Assert.Equal("My printer is on fire!", response.Subject);
-            Assert.Equal("The smoke is very colorful.", response.Comment.Body);
-        }
-
-        [Fact]
-        public async Task ShouldGetAllTicketsForIds()
-        {
-            var tickets = (await _resource.GetAllAsync(new long[] { 123L, 869L })).ToArray();
-
-            var ticket1 = new Contracts.Models.Ticket
+            var ticket = await _resource.PostAsync(new Contracts.Models.Ticket
             {
-                Id = 123,
                 Subject = "My printer is on fire! 1",
                 Comment = new Contracts.Models.TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
                 }
-            };
+            });
 
-            var ticket2 = new Contracts.Models.Ticket
-            {
-                Id = 863,
-                Subject = "My printer is on fire! 2",
-                Comment = new Contracts.Models.TicketComment
-                {
-                    Body = "The smoke is very colorful. 2"
-                }
-            };
+            var response = await _resource.GetAsync(ticket.Id.Value);
 
+            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(response));
+        }
+
+        [Fact]
+        public async Task ShouldGetAllTicketsForIds()
+        {
+            var tickets = await CreateTickets();
+            
+            var retrievedTickets = (await _resource.GetAllAsync(new long[] { tickets[0].Id.Value, 543521L, tickets[1].Id.Value, 123445L })).ToArray();
+            
             Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(tickets[1]), JsonConvert.SerializeObject(retrievedTickets[1]));
         }
 
         [Fact]
@@ -269,26 +302,54 @@ namespace ZendeskApi.Client.Tests.Resources
             
             Assert.NotNull(response.Id);
         }
-
-
-
+        
         [Fact]
         public async Task ShouldUpdateTicket()
         {
-            var response = await _resource.PutAsync(
-                new Contracts.Models.Ticket
+            var ticket = new Contracts.Models.Ticket
+            {
+                Subject = "My printer is on fire! 1",
+                Comment = new Contracts.Models.TicketComment
                 {
-                    Id = 491,
-                    Subject = "My printer is no longer on fire!",
-                    Comment = new Contracts.Models.TicketComment
-                    {
-                        Body = "The smoke is gone."
-                    }
-                });
-            
-            Assert.NotNull(response.Id);
-            Assert.Equal("My printer is no longer on fire!", response.Subject);
-            Assert.Equal("The smoke is gone.", response.Comment.Body);
+                    Body = "The smoke is very colorful. 1"
+                }
+            };
+
+            ticket = await _resource.PostAsync(ticket);
+
+            ticket.Subject = "I COMMAND YOU TO UPDATE!!!";
+
+            var updatedTicket = await _resource.PutAsync(ticket);
+
+            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(updatedTicket));
+        }
+
+        private async Task<Ticket[]> CreateTickets()
+        {
+            var ticket1 = new Contracts.Models.Ticket
+            {
+                Subject = "My printer is on fire! 1",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 1"
+                }
+            };
+
+            var ticket2 = new Contracts.Models.Ticket
+            {
+                Subject = "My printer is on fire! 2",
+                Comment = new Contracts.Models.TicketComment
+                {
+                    Body = "The smoke is very colorful. 2"
+                }
+            };
+
+            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2 });
+
+            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
+            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
+
+            return new[] { ticket1, ticket2 };
         }
 
         public void Dispose()
