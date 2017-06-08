@@ -1,41 +1,60 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Resources;
 
 namespace ZendeskApi.Client
 {
     public class ZendeskClient : IZendeskClient
     {
-        public ITicketsResource Tickets { get; private set; }
-        public ITicketCommentResource TicketComments { get; private set; }
-        public IRequestCommentResource RequestComments { get; private set; }
-        public IOrganizationResource Organizations { get; private set; }
-        public ISearchResource Search { get; private set; }
-        public IGroupsResource Groups { get; private set; }
-        public IUserResource Users { get; private set; }
-        public IUserIdentityResource UserIdentities { get; private set; }
-        public IAttachmentsResource Attachments { get; private set; }
-        public ITicketFieldResource TicketFields { get; private set; }
-        public ITicketFormResource TicketForms { get; private set; }
-        public IOrganizationMembershipsResource OrganizationMemberships { get; private set; }
-        public IRequestResource Request { get; private set; }
-        public ISatisfactionRatingResource SatisfactionRating { get; private set; }
-        
+        private readonly IZendeskApiClient _apiClient;
+        private readonly ILogger _logger;
+
         public ZendeskClient(IZendeskApiClient apiClient, ILogger logger)
         {
-            Tickets = new TicketsResource(apiClient, logger);
-            TicketComments = new TicketCommentResource(apiClient);
-            RequestComments = new RequestCommentResource(apiClient);
-            Organizations = new OrganizationResource(apiClient);
-            Search = new SearchResource(apiClient, logger);
-            Groups = new GroupsResource(apiClient, logger);
-            Users = new UserResource(apiClient);
-            UserIdentities = new UserIdentityResource(apiClient);
-            Attachments = new AttachmentsResource(apiClient, logger);
-            TicketFields = new TicketFieldResource(apiClient);
-            TicketForms = new TicketFormResource(apiClient);
-            OrganizationMemberships = new OrganizationMembershipsResource(apiClient, logger);
-            Request = new RequestResource(apiClient);
-            SatisfactionRating = new SatisfactionRatingResource(apiClient);
+            _apiClient = apiClient;
+            _logger = logger;
         }
+
+        private Lazy<ITicketsResource> TicketsLazy => new Lazy<ITicketsResource>(() => new TicketsResource(_apiClient, _logger));
+        public ITicketsResource Tickets => TicketsLazy.Value;
+
+        private Lazy<ITicketCommentResource> TicketCommentsLazy => new Lazy<ITicketCommentResource>(() => new TicketCommentResource(_apiClient));
+        public ITicketCommentResource TicketComments => TicketCommentsLazy.Value;
+
+        private Lazy<IRequestCommentResource> RequestCommentsLazy => new Lazy<IRequestCommentResource>(() => new RequestCommentResource(_apiClient));
+        public IRequestCommentResource RequestComments => RequestCommentsLazy.Value;
+
+        private Lazy<IOrganizationResource> OrganizationsLazy => new Lazy<IOrganizationResource>(() => new OrganizationResource(_apiClient));
+        public IOrganizationResource Organizations => OrganizationsLazy.Value;
+
+        private Lazy<ISearchResource> SearchLazy => new Lazy<ISearchResource>(() => new SearchResource(_apiClient, _logger));
+        public ISearchResource Search => SearchLazy.Value;
+
+        private Lazy<IGroupsResource> GroupsLazy => new Lazy<IGroupsResource>(() => new GroupsResource(_apiClient, _logger));
+        public IGroupsResource Groups => GroupsLazy.Value;
+
+        private Lazy<IUsersResource> UsersLazy => new Lazy<IUsersResource>(() => new UsersResource(_apiClient, _logger));
+        public IUsersResource Users => UsersLazy.Value;
+
+        private Lazy<IUserIdentityResource> UserIdentitiesLazy => new Lazy<IUserIdentityResource>(() => new UserIdentityResource(_apiClient));
+        public IUserIdentityResource UserIdentities => UserIdentitiesLazy.Value;
+
+        private Lazy<IAttachmentsResource> AttachmentsLazy => new Lazy<IAttachmentsResource>(() => new AttachmentsResource(_apiClient, _logger));
+        public IAttachmentsResource Attachments => AttachmentsLazy.Value;
+
+        private Lazy<ITicketFieldResource> TicketFieldsLazy => new Lazy<ITicketFieldResource>(() => new TicketFieldResource(_apiClient));
+        public ITicketFieldResource TicketFields => TicketFieldsLazy.Value;
+
+        private Lazy<ITicketFormResource> TicketFormsLazy => new Lazy<ITicketFormResource>(() => new TicketFormResource(_apiClient));
+        public ITicketFormResource TicketForms => TicketFormsLazy.Value;
+
+        private Lazy<IOrganizationMembershipsResource> OrganizationMembershipsLazy => new Lazy<IOrganizationMembershipsResource>(() => new OrganizationMembershipsResource(_apiClient, _logger));
+        public IOrganizationMembershipsResource OrganizationMemberships => OrganizationMembershipsLazy.Value;
+
+        private Lazy<IRequestResource> RequestLazy => new Lazy<IRequestResource>(() => new RequestResource(_apiClient));
+        public IRequestResource Request => RequestLazy.Value;
+
+        private Lazy<ISatisfactionRatingResource> SatisfactionRatingLazy => new Lazy<ISatisfactionRatingResource>(() => new SatisfactionRatingResource(_apiClient));
+        public ISatisfactionRatingResource SatisfactionRating => SatisfactionRatingLazy.Value;
     }
 }
