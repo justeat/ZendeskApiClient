@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using ZendeskApi.Contracts.Models;
-using ZendeskApi.Contracts.Requests;
-using ZendeskApi.Contracts.Responses;
+using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {

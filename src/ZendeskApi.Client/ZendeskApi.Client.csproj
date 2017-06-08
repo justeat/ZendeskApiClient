@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZendeskApi.Contracts\ZendeskApi.Contracts.csproj" />
+    <ProjectReference Include="..\ZendeskApi.Client.Abstractions\ZendeskApi.Client.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

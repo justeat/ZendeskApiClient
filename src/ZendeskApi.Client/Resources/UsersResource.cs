@@ -4,9 +4,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Formatters;
-using ZendeskApi.Contracts.Models;
-using ZendeskApi.Contracts.Requests;
-using ZendeskApi.Contracts.Responses;
+using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {

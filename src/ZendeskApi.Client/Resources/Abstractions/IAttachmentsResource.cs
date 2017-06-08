@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using ZendeskApi.Contracts.Models;
+using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Resources
 {

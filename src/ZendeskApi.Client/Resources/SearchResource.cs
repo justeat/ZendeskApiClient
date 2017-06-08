@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ZendeskApi.Contracts.Queries;
-using ZendeskApi.Contracts.Responses;
+using ZendeskApi.Client.Queries;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {

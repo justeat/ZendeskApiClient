@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Contracts", "src\ZendeskApi.Contracts\ZendeskApi.Contracts.csproj", "{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Client.Tests", "src\ZendeskApi.Client.Tests\ZendeskApi.Client.Tests.csproj", "{182231A6-213B-4F9B-851D-ED5B7E6DA53D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Contracts.Tests", "src\ZendeskApi.Contracts.Tests\ZendeskApi.Contracts.Tests.csproj", "{C53ACF17-3DCD-4A21-B22A-1A8CA47FD85B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Client.Abstractions", "src\ZendeskApi.Client.Abstractions\ZendeskApi.Client.Abstractions.csproj", "{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Client", "src\ZendeskApi.Client\ZendeskApi.Client.csproj", "{710E1917-AC01-4877-9683-AF47A7DBDF84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4F45F768-4D28-4663-830C-42B48819F3F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F5AF59DE-910C-4157-9D38-BD33D18FF780}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZendeskApi.Client.Tests", "test\ZendeskApi.Client.Tests\ZendeskApi.Client.Tests.csproj", "{17374CC7-4B91-4D5B-ADB6-1F9B4A4D6E03}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZendeskApi.Client.Abstractions.Tests", "test\ZendeskApi.Client.Abstractions.Tests\ZendeskApi.Client.Abstractions.Tests.csproj", "{0F7B9424-4F77-47F2-BEF7-287D86C027CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,20 +25,26 @@ Global
 		{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{182231A6-213B-4F9B-851D-ED5B7E6DA53D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{182231A6-213B-4F9B-851D-ED5B7E6DA53D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{182231A6-213B-4F9B-851D-ED5B7E6DA53D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{182231A6-213B-4F9B-851D-ED5B7E6DA53D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C53ACF17-3DCD-4A21-B22A-1A8CA47FD85B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C53ACF17-3DCD-4A21-B22A-1A8CA47FD85B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C53ACF17-3DCD-4A21-B22A-1A8CA47FD85B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C53ACF17-3DCD-4A21-B22A-1A8CA47FD85B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{710E1917-AC01-4877-9683-AF47A7DBDF84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{710E1917-AC01-4877-9683-AF47A7DBDF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{710E1917-AC01-4877-9683-AF47A7DBDF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{710E1917-AC01-4877-9683-AF47A7DBDF84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17374CC7-4B91-4D5B-ADB6-1F9B4A4D6E03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17374CC7-4B91-4D5B-ADB6-1F9B4A4D6E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17374CC7-4B91-4D5B-ADB6-1F9B4A4D6E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17374CC7-4B91-4D5B-ADB6-1F9B4A4D6E03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F7B9424-4F77-47F2-BEF7-287D86C027CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F7B9424-4F77-47F2-BEF7-287D86C027CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F7B9424-4F77-47F2-BEF7-287D86C027CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F7B9424-4F77-47F2-BEF7-287D86C027CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6} = {4F45F768-4D28-4663-830C-42B48819F3F1}
+		{710E1917-AC01-4877-9683-AF47A7DBDF84} = {4F45F768-4D28-4663-830C-42B48819F3F1}
+		{17374CC7-4B91-4D5B-ADB6-1F9B4A4D6E03} = {F5AF59DE-910C-4157-9D38-BD33D18FF780}
+		{0F7B9424-4F77-47F2-BEF7-287D86C027CF} = {F5AF59DE-910C-4157-9D38-BD33D18FF780}
 	EndGlobalSection
 EndGlobal
