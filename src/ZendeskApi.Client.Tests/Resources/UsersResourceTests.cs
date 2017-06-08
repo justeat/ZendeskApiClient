@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
@@ -35,7 +32,7 @@ namespace ZendeskApi.Client.Tests.Resources
          */
 
         [Fact]
-        public async Task ShouldListAllUsers()
+        public async Task ShouldGetAllUsers()
         {
             var obj1 = new Contracts.Models.User
             {
@@ -54,6 +51,60 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(2, objs.Length);
             Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
             Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[1]));
+        }
+
+        [Fact]
+        public async Task ShouldGetAllUsersInGroup()
+        {
+            var obj1 = new Contracts.Models.User
+            {
+                Id = 523,
+                Email = "Fu1@fu.com"
+            };
+
+            var obj2 = new Contracts.Models.User
+            {
+                Id = 552,
+                Email = "Fu2@fu.com"
+            };
+
+            var objs = (await _resource.GetAllUsersInGroupAsync(456)).ToArray();
+
+            Assert.Equal(2, objs.Length);
+            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
+            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[1]));
+        }
+
+        [Fact]
+        public async Task ShouldGetAllUsersInOrganization()
+        {
+            var obj1 = new Contracts.Models.User
+            {
+                Id = 34634,
+                Email = "Fu1@fu.com"
+            };
+
+            var obj2 = new Contracts.Models.User
+            {
+                Id = 2364,
+                Email = "Fu2@fu.com"
+            };
+
+            var objs = (await _resource.GetAllUsersInOrganizationAsync(5002)).ToArray();
+
+            Assert.Equal(2, objs.Length);
+            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
+            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[1]));
+        }
+
+        [Fact]
+        public async Task ShouldGetTicket()
+        {
+            var response = await _resource.GetAsync(445L);
+
+            Assert.NotNull(response.Id);
+            Assert.Equal(445, response.Id);
+            Assert.Equal("found@fu.com", response.Email);
         }
     }
 }

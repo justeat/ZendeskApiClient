@@ -40,7 +40,76 @@ namespace ZendeskApi.Client.Tests
 
                         return Task.CompletedTask;
                     })
-                   
+                    .MapGet("api/v2/groups/456/users", (req, resp, routeData) =>
+                    {
+                        var obj1 = new Contracts.Models.User
+                        {
+                            Id = 523,
+                            Email = "Fu1@fu.com"
+                        };
+
+                        var obj2 = new Contracts.Models.User
+                        {
+                            Id = 552,
+                            Email = "Fu2@fu.com"
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = new[] { obj1, obj2 } }));
+
+                        return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/groups/456/users", (req, resp, routeData) =>
+                    {
+                        var obj1 = new Contracts.Models.User
+                        {
+                            Id = 523,
+                            Email = "Fu1@fu.com"
+                        };
+
+                        var obj2 = new Contracts.Models.User
+                        {
+                            Id = 552,
+                            Email = "Fu2@fu.com"
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = new[] { obj1, obj2 } }));
+
+                        return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/organizations/5002/users", (req, resp, routeData) =>
+                    {
+                        var obj1 = new Contracts.Models.User
+                        {
+                            Id = 34634,
+                            Email = "Fu1@fu.com"
+                        };
+
+                        var obj2 = new Contracts.Models.User
+                        {
+                            Id = 2364,
+                            Email = "Fu2@fu.com"
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = new[] { obj1, obj2 } }));
+
+                        return Task.CompletedTask;
+                    })
+                    .MapGet("api/v2/users/445", (req, resp, routeData) =>
+                    {
+                        var obj1 = new Contracts.Models.User
+                        {
+                            Id = 445,
+                            Email = "found@fu.com"
+                        };
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.WriteAsync(JsonConvert.SerializeObject(new UserResponse { Item = obj1 }));
+
+                        return Task.CompletedTask;
+                    })
                     ;
             }
         }
