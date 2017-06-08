@@ -15,6 +15,7 @@ using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Tests
 {
@@ -31,8 +32,8 @@ namespace ZendeskApi.Client.Tests
                         Debug.Assert(req.Query["token"] == "6bk3gql82em5nmf");
                         Debug.Assert(req.ContentType == "application/binary");
 
-                        List<string> strings = new List<string>();
-                        using (StreamReader inputStreamReader = new StreamReader(req.Body))
+                        var strings = new List<string>();
+                        using (var inputStreamReader = new StreamReader(req.Body))
                         {
                             string line;
                             while ((line = inputStreamReader.ReadLine()) != null)
@@ -47,8 +48,8 @@ namespace ZendeskApi.Client.Tests
 
                         resp.Headers.Add("Location", "https://localhost/api/v2/attachments/498483");
 
-                        resp.WriteAsync(JsonConvert.SerializeObject(new UploadResponse { Item = new Contracts.Models.Upload {
-                            Attachment = new Contracts.Models.Attachment {
+                        resp.WriteAsync(JsonConvert.SerializeObject(new UploadResponse { Item = new Upload {
+                            Attachment = new Attachment {
                                 ContentType = "text/plain",
                                 ContentUrl = "https://company.zendesk.com/attachments/crash.log",
                                 Size = strings[3].Length,

@@ -42,13 +42,13 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetAllUsersInGroup()
         {
-            var obj1 = new Contracts.Models.User
+            var obj1 = new User
             {
                 Email = "Fu1@fu.com", 
                 DefaultGroupId = 1
             };
 
-            var obj2 = new Contracts.Models.User
+            var obj2 = new User
             {
                 Email = "Fu2@fu.com",
                 DefaultGroupId = 2
@@ -67,13 +67,13 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetAllUsersInOrganization()
         {
-            var obj1 = new Contracts.Models.User
+            var obj1 = new User
             {
                 Email = "Fu1@fu.com",
                 OrganizationId = 18
             };
 
-            var obj2 = new Contracts.Models.User
+            var obj2 = new User
             {
                 Email = "Fu2@fu.com",
                 OrganizationId = 12
@@ -93,7 +93,7 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldGetUser()
         {
             var user = await _resource.PostAsync(
-                new Contracts.Models.User
+                new User
                 {
                     Email = "Fu1@fu.com"
                 });
@@ -107,7 +107,7 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldCreateUser()
         {
             var user = await _resource.PostAsync(
-                new Contracts.Models.User
+                new User
                 {
                     Email = "Fu1@fu.com"
                 });
@@ -118,12 +118,12 @@ namespace ZendeskApi.Client.Tests.Resources
 
         private async Task<User[]> CreateUsers()
         {
-            var obj1 = new Contracts.Models.User
+            var obj1 = new User
             {
                 Email = "Fu1@fu.com"
             };
 
-            var obj2 = new Contracts.Models.User
+            var obj2 = new User
             {
                 Email = "Fu2@fu.com"
             };

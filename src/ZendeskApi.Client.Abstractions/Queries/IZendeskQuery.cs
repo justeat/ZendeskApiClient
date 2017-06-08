@@ -1,4 +1,4 @@
-﻿using ZZendeskApi.ClientModels;
+﻿using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Queries
 {

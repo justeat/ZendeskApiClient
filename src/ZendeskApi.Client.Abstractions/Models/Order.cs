@@ -1,4 +1,4 @@
-﻿namespace ZZendeskApi.ClientModels
+﻿namespace ZendeskApi.Client.Models
 {
     public enum Order
     {

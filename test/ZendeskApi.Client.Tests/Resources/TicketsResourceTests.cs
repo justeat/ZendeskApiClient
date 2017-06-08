@@ -36,29 +36,29 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllForOrganizationTickets()
         {
-            var ticket1 = new Contracts.Models.Ticket
+            var ticket1 = new Ticket
             {
                 Subject = "My printer is on fire! 1",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
                 },
                 OrganisationId = 16230
             };
 
-            var ticket2 = new Contracts.Models.Ticket
+            var ticket2 = new Ticket
             {
                 Subject = "My printer is on fire! 2",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 2"
                 }
             };
 
-            var ticket3 = new Contracts.Models.Ticket
+            var ticket3 = new Ticket
             {
                 Subject = "My printer is on fire! 3",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 3"
                 },
@@ -81,30 +81,30 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllForRequestedUserTickets()
         {
-            var ticket1 = new Contracts.Models.Ticket
+            var ticket1 = new Ticket
             {
                 Subject = "My printer is on fire! 1",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
                 },
                 RequesterId = 10000
             };
 
-            var ticket2 = new Contracts.Models.Ticket
+            var ticket2 = new Ticket
             {
                 Subject = "My printer is on fire! 2",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 2"
                 },
                 RequesterId = 10000
             };
 
-            var ticket3 = new Contracts.Models.Ticket
+            var ticket3 = new Ticket
             {
                 Subject = "My printer is on fire! 3",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 3"
                 }
@@ -126,30 +126,30 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllForCCDUserTickets()
         {
-            var ticket1 = new Contracts.Models.Ticket
+            var ticket1 = new Ticket
             {
                 Subject = "My printer is on fire! 1",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
                 },
                 CollaboratorIds = new System.Collections.Generic.List<long> { }
             };
 
-            var ticket2 = new Contracts.Models.Ticket
+            var ticket2 = new Ticket
             {
                 Subject = "My printer is on fire! 2",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 2"
                 },
                 CollaboratorIds = new System.Collections.Generic.List<long> { 2293 }
             };
 
-            var ticket3 = new Contracts.Models.Ticket
+            var ticket3 = new Ticket
             {
                 Subject = "My printer is on fire! 3",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 3"
                 },
@@ -173,29 +173,29 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllForAssignedForUserTickets()
         {
-            var ticket1 = new Contracts.Models.Ticket
+            var ticket1 = new Ticket
             {
                 Subject = "My printer is on fire! 1",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
                 },
                 AssigneeId = 2233
             };
 
-            var ticket2 = new Contracts.Models.Ticket
+            var ticket2 = new Ticket
             {
                 Subject = "My printer is on fire! 2",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 2"
                 }
             };
 
-            var ticket3 = new Contracts.Models.Ticket
+            var ticket3 = new Ticket
             {
                 Subject = "My printer is on fire! 3",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 3"
                 },
@@ -218,10 +218,10 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetTicket()
         {
-            var ticket = await _resource.PostAsync(new Contracts.Models.Ticket
+            var ticket = await _resource.PostAsync(new Ticket
             {
                 Subject = "My printer is on fire! 1",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
                 }
@@ -248,10 +248,10 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldCreateTicket()
         {
             var response = await _resource.PostAsync(
-                new Contracts.Models.Ticket
+                new Ticket
                 {
                     Subject = "My printer is on fire!",
-                    Comment = new Contracts.Models.TicketComment
+                    Comment = new TicketComment
                     {
                         Body = "The smoke is very colorful."
                     }
@@ -266,10 +266,10 @@ namespace ZendeskApi.Client.Tests.Resources
         public Task ShouldThrowErrorWhenNot201()
         {
             return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.PostAsync(
-                new Contracts.Models.Ticket
+                new Ticket
                 {
                     Subject = "My printer is no longer on fire!",
-                    Comment = new Contracts.Models.TicketComment
+                    Comment = new TicketComment
                     {
                         Body = "The smoke is gone."
                     },
@@ -284,16 +284,16 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var response = await _resource.PostAsync(
                 new[] {
-                        new Contracts.Models.Ticket {
+                        new Ticket {
                             Subject = "My printer is on fire!",
-                            Comment = new Contracts.Models.TicketComment
+                            Comment = new TicketComment
                             {
                                 Body = "The smoke is very colorful."
                             }
                         },
-                        new Contracts.Models.Ticket {
+                        new Ticket {
                             Subject = "My printer is somehow on fire again!",
-                            Comment = new Contracts.Models.TicketComment
+                            Comment = new TicketComment
                             {
                                 Body = "The smoke is not very colorful."
                             }
@@ -306,10 +306,10 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldUpdateTicket()
         {
-            var ticket = new Contracts.Models.Ticket
+            var ticket = new Ticket
             {
                 Subject = "My printer is on fire! 1",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
                 }
@@ -326,19 +326,19 @@ namespace ZendeskApi.Client.Tests.Resources
 
         private async Task<Ticket[]> CreateTickets()
         {
-            var ticket1 = new Contracts.Models.Ticket
+            var ticket1 = new Ticket
             {
                 Subject = "My printer is on fire! 1",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 1"
                 }
             };
 
-            var ticket2 = new Contracts.Models.Ticket
+            var ticket2 = new Ticket
             {
                 Subject = "My printer is on fire! 2",
-                Comment = new Contracts.Models.TicketComment
+                Comment = new TicketComment
                 {
                     Body = "The smoke is very colorful. 2"
                 }
