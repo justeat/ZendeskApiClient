@@ -141,13 +141,11 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldCreateGroup()
         {
             var response = await _resource.PostAsync(
-                new Contracts.Requests.GroupRequest
+                new Group
                 {
-                    Item = new Group {
-                        Name = "I'm a group!",
-                        Url = new Uri("http://kung.fu.com"),
-                        HasIncidents = true
-                    }
+                    Name = "I'm a group!",
+                    Url = new Uri("http://kung.fu.com"),
+                    HasIncidents = true
                 });
 
             Assert.NotNull(response.Id);
@@ -160,14 +158,11 @@ namespace ZendeskApi.Client.Tests.Resources
         public Task ShouldThrowErrorWhenNot201()
         {
             return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.PostAsync(
-                new Contracts.Requests.GroupRequest
+                new Group
                 {
-                    Item = new Group
-                    {
-                        Name = "I'm an error group!",
-                        Url = new Uri("http://kung.fu.com"),
-                        HasIncidents = true
-                    }
+                    Name = "I'm an error group!",
+                    Url = new Uri("http://kung.fu.com"),
+                    HasIncidents = true
                 }));
 
             // could use tags to simulate httpstatus codes in fake client?
@@ -177,15 +172,12 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldUpdateGroup()
         {
             var response = await _resource.PutAsync(
-                new Contracts.Requests.GroupRequest
+                new Group
                 {
-                    Item = new Group
-                    {
-                        Id = 213,
-                        Name = "I'm an updated group!",
-                        Url = new Uri("http://kung.f1u.com"),
-                        HasIncidents = false
-                    }
+                    Id = 213,
+                    Name = "I'm an updated group!",
+                    Url = new Uri("http://kung.f1u.com"),
+                    HasIncidents = false
                 });
 
             Assert.Equal(213, response.Id);

@@ -83,12 +83,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Group> PostAsync(GroupRequest request)
+        public async Task<Group> PostAsync(Group group)
         {
             using (_loggerScope(_logger, "PostAsync")) // Maybe incluse the request in the log?
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(GroupsResourceUri, request).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(GroupsResourceUri, new GroupRequest { Item = group }).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -102,12 +102,15 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Group> PutAsync(GroupRequest request)
+        public async Task<Group> PutAsync(Group group)
         {
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
-                var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(group.Id.ToString(), new GroupRequest { Item = group }).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
                 return (await response.Content.ReadAsAsync<GroupResponse>()).Item;
             }
         }

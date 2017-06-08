@@ -9,12 +9,12 @@ using ZendeskApi.Client.Resources;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
-    public class TicketResourceTests : IDisposable
+    public class TicketsResourceTests : IDisposable
     {
         private readonly IZendeskApiClient _client;
         private readonly TicketsResource _resource;
 
-        public TicketResourceTests()
+        public TicketsResourceTests()
         {
             _client = new DisposableZendeskApiClient((resource) => new TicketResourceSampleSite(resource));
             _resource = new TicketsResource(_client, NullLogger.Instance);
@@ -215,15 +215,12 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldCreateTicket()
         {
             var response = await _resource.PostAsync(
-                new Contracts.Requests.TicketRequest
+                new Contracts.Models.Ticket
                 {
-                    Item = new Contracts.Models.Ticket
+                    Subject = "My printer is on fire!",
+                    Comment = new Contracts.Models.TicketComment
                     {
-                        Subject = "My printer is on fire!",
-                        Comment = new Contracts.Models.TicketComment
-                        {
-                            Body = "The smoke is very colorful."
-                        }
+                        Body = "The smoke is very colorful."
                     }
                 });
 
@@ -236,17 +233,14 @@ namespace ZendeskApi.Client.Tests.Resources
         public Task ShouldThrowErrorWhenNot201()
         {
             return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.PostAsync(
-                new Contracts.Requests.TicketRequest
+                new Contracts.Models.Ticket
                 {
-                    Item = new Contracts.Models.Ticket
+                    Subject = "My printer is no longer on fire!",
+                    Comment = new Contracts.Models.TicketComment
                     {
-                        Subject = "My printer is no longer on fire!",
-                        Comment = new Contracts.Models.TicketComment
-                        {
-                            Body = "The smoke is gone."
-                        },
-                        Tags = new System.Collections.Generic.List<string> { "error" }
-                    }
+                        Body = "The smoke is gone."
+                    },
+                    Tags = new System.Collections.Generic.List<string> { "error" }
                 }));
 
             // could use tags to simulate httpstatus codes in fake client?
@@ -256,9 +250,7 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldJobWhenCreatingMultipleTicket()
         {
             var response = await _resource.PostAsync(
-                new Contracts.Requests.TicketsRequest
-                {
-                    Item = new[] {
+                new[] {
                         new Contracts.Models.Ticket {
                             Subject = "My printer is on fire!",
                             Comment = new Contracts.Models.TicketComment
@@ -273,8 +265,7 @@ namespace ZendeskApi.Client.Tests.Resources
                                 Body = "The smoke is not very colorful."
                             }
                         }
-                    }
-                });
+                    });
             
             Assert.NotNull(response.Id);
         }
@@ -285,16 +276,13 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldUpdateTicket()
         {
             var response = await _resource.PutAsync(
-                new Contracts.Requests.TicketRequest
+                new Contracts.Models.Ticket
                 {
-                    Item = new Contracts.Models.Ticket
+                    Id = 491,
+                    Subject = "My printer is no longer on fire!",
+                    Comment = new Contracts.Models.TicketComment
                     {
-                        Id = 491,
-                        Subject = "My printer is no longer on fire!",
-                        Comment = new Contracts.Models.TicketComment
-                        {
-                            Body = "The smoke is gone."
-                        }
+                        Body = "The smoke is gone."
                     }
                 });
             

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -29,22 +30,22 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<Upload> UploadAsync(UploadRequest request, string token = null)
+        public async Task<Upload> UploadAsync(string fileName, Stream inputStream, string token = null)
         {
             using (_loggerScope(_logger, "UploadAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.PostAsBinaryAsync(
-                    UploadsResourceUri + $"?filename={request.FileName}&token={token}", 
-                    request.InputStream, 
-                    request.FileName).ConfigureAwait(false);
+                    UploadsResourceUri + $"?filename={fileName}&token={token}",
+                    inputStream,
+                    fileName).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
                     throw new HttpRequestException(
                         $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
                         Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/groups#create-groups");
+                        "See: https://developer.zendesk.com/rest_api/docs/core/attachments#upload-files");
                 }
 
                 return (await response.Content.ReadAsAsync<UploadResponse>()).Item;

@@ -10,6 +10,9 @@ using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
+    /// <summary>
+    /// <see cref="https://developer.zendesk.com/rest_api/docs/core/users"/>
+    /// </summary>
     public class UsersResource : IUsersResource
     {
         private const string ResourceUri = "api/v2/users";
@@ -120,12 +123,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
         
-        public async Task<User> PostAsync(UserRequest request)
+        public async Task<User> PostAsync(User user)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(ResourceUri, new UserRequest { Item = user }).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -139,12 +142,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
         
-        public async Task<User> PutAsync(UserRequest request)
+        public async Task<User> PutAsync(User user)
         {
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(user.Id.ToString(), new UserRequest { Item = user }).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 

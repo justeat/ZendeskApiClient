@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using ZendeskApi.Contracts.Models;
-using ZendeskApi.Contracts.Requests;
 
 namespace ZendeskApi.Client.Resources
 {
     public interface IAttachmentsResource
     {
-        Task<Upload> UploadAsync(UploadRequest request, string token = null);
+        Task<Upload> UploadAsync(string fileName, Stream inputStream, string token = null);
         Task DeleteAsync(string token);
     }
 }

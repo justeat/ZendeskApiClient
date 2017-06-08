@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZendeskApi.Contracts.Models;
-using ZendeskApi.Contracts.Requests;
 
 namespace ZendeskApi.Client.Resources
 {
@@ -14,8 +13,8 @@ namespace ZendeskApi.Client.Resources
         Task<IEnumerable<User>> GetAllAsync(long[] userIds);
         Task<IEnumerable<User>> GetAllByExternalIdsAsync(long[] externalIds);
         Task<User> GetRelatedUsersAsync(long userId);
-        Task<User> PostAsync(UserRequest request);
-        Task<User> PutAsync(UserRequest request);
+        Task<User> PostAsync(User user);
+        Task<User> PutAsync(User user);
         Task DeleteAsync(long userId);
     }
 }

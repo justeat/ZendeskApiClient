@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -27,11 +26,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var stream = new MemoryStream(byteArray);
 
             var response = await _resource
-                .UploadAsync(new Contracts.Requests.UploadRequest
-                {
-                    FileName = "crash.log",
-                    InputStream = stream
-                }, "6bk3gql82em5nmf");
+                .UploadAsync("crash.log", stream, "6bk3gql82em5nmf");
 
             Assert.Equal("6bk3gql82em5nmf", response.Token);
             Assert.Equal("text/plain", response.Attachment.ContentType);

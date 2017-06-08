@@ -96,12 +96,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<OrganizationMembership> PostAsync(OrganizationMembershipRequest request)
+        public async Task<OrganizationMembership> PostAsync(OrganizationMembership organizationMembership)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(ResourceUri, new OrganizationMembershipRequest { Item = organizationMembership }).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -115,12 +115,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<OrganizationMembership> PostForUserAsync(OrganizationMembershipRequest request, string userId)
+        public async Task<OrganizationMembership> PostForUserAsync(OrganizationMembership organizationMembership, string userId)
         {
             using (_loggerScope(_logger, $"PostAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(string.Format(UsersUrlFormat, userId), request).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(string.Format(UsersUrlFormat, userId), new OrganizationMembershipRequest { Item = organizationMembership }).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -134,12 +134,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> PostAsync(OrganizationMembershipsRequest request)
+        public async Task<JobStatus> PostAsync(IEnumerable<OrganizationMembership> organizationMemberships)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PostAsJsonAsync("create_many", request).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync("create_many", new OrganizationMembershipsRequest { Item = organizationMemberships }).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {

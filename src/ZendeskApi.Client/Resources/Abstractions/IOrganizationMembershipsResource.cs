@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZendeskApi.Contracts.Models;
-using ZendeskApi.Contracts.Requests;
 
 namespace ZendeskApi.Client.Resources
 {
@@ -12,7 +11,10 @@ namespace ZendeskApi.Client.Resources
         Task<IEnumerable<OrganizationMembership>> GetAllForUserAsync(long userId);
         Task<OrganizationMembership> GetAsync(long id);
         Task<OrganizationMembership> GetForUserAndOrganizationAsync(long userId, long organizationId);
-        Task<OrganizationMembership> PostAsync(OrganizationMembershipRequest request);
-        Task<OrganizationMembership> PostForUserAsync(OrganizationMembershipRequest request, string userId);
+        Task<OrganizationMembership> PostAsync(OrganizationMembership organizationMembership);
+        Task<OrganizationMembership> PostForUserAsync(OrganizationMembership organizationMembership, string userId);
+        Task<JobStatus> PostAsync(IEnumerable<OrganizationMembership> organizationMemberships);
+        Task DeleteAsync(long organizationMembershipId);
+        Task DeleteAsync(long userId, long organizationMembershipId);
     }
 }

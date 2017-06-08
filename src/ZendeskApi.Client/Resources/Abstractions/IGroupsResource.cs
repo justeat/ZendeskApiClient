@@ -11,8 +11,8 @@ namespace ZendeskApi.Client.Resources
         Task<IEnumerable<Group>> GetAllAsync(long userId);
         Task<IEnumerable<Group>> GetAllAssignableAsync();
         Task<Group> GetAsync(long groupId);
-        Task<Group> PostAsync(GroupRequest request);
-        Task<Group> PutAsync(GroupRequest request);
+        Task<Group> PostAsync(Group group);
+        Task<Group> PutAsync(Group group);
         Task DeleteAsync(long groupId);
     }
 }

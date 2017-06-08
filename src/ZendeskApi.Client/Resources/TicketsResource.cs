@@ -124,12 +124,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Ticket> PostAsync(TicketRequest request)
+        public async Task<Ticket> PostAsync(Ticket ticket)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(ResourceUri, new TicketRequest { Item = ticket }).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -143,12 +143,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> PostAsync(TicketsRequest request)
+        public async Task<JobStatus> PostAsync(IEnumerable<Ticket> tickets)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PostAsJsonAsync("create_many", request).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync("create_many", new TicketsRequest { Item = tickets }).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -162,12 +162,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Ticket> PutAsync(TicketRequest request)
+        public async Task<Ticket> PutAsync(Ticket ticket)
         {
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync(request.Item.Id.ToString(), request).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(ticket.Id.ToString(), new TicketRequest { Item = ticket }).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -175,12 +175,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> PutAsync(TicketsRequest request)
+        public async Task<JobStatus> PutAsync(IEnumerable<Ticket> tickets)
         {
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync("update_many", request).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync("update_many", new TicketsRequest { Item = tickets }).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
