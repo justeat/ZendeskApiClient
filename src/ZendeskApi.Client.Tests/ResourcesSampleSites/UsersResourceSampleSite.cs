@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,105 +12,102 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+using ZendeskApi.Contracts.Models;
+using ZendeskApi.Contracts.Requests;
 using ZendeskApi.Contracts.Responses;
 
 namespace ZendeskApi.Client.Tests
 {
     public class UsersResourceSampleSite : SampleSite
     {
+        private class State
+        {
+            public IDictionary<long, User> Users = new Dictionary<long, User>();
+        }
+
+        public static Random RAND = new Random();
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
             {
                 return rb => rb
+                    .MapGet("api/v2/users/show_many", (req, resp, routeData) =>
+                    {
+                        var ids = req.Query["ids"].ToString().Split(',').Select(long.Parse);
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var users = state.Users.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = users }));
+                    })
+                    .MapGet("api/v2/users/{id}", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var user = state.Users.Single(x => x.Key == id).Value;
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new UserResponse { Item = user }));
+                    })
                     .MapGet("api/v2/users", (req, resp, routeData) =>
                     {
-                        var obj1 = new Contracts.Models.User
-                        {
-                            Id = 1245,
-                            Email = "Fu1@fu.com"
-                        };
-
-                        var obj2 = new Contracts.Models.User
-                        {
-                            Id = 1245,
-                            Email = "Fu2@fu.com"
-                        };
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = new[] { obj1, obj2 } }));
-
-                        return Task.CompletedTask;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = state.Users.Values }));
                     })
-                    .MapGet("api/v2/groups/456/users", (req, resp, routeData) =>
+                    .MapGet("api/v2/groups/{id}/users", (req, resp, routeData) =>
                     {
-                        var obj1 = new Contracts.Models.User
-                        {
-                            Id = 523,
-                            Email = "Fu1@fu.com"
-                        };
+                        var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var obj2 = new Contracts.Models.User
-                        {
-                            Id = 552,
-                            Email = "Fu2@fu.com"
-                        };
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var users = state
+                            .Users
+                            .Where(x => x.Value.DefaultGroupId == id)
+                            .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = new[] { obj1, obj2 } }));
-
-                        return Task.CompletedTask;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = users }));
                     })
-                    .MapGet("api/v2/groups/456/users", (req, resp, routeData) =>
+                    .MapGet("api/v2/organizations/{id}/users", (req, resp, routeData) =>
                     {
-                        var obj1 = new Contracts.Models.User
-                        {
-                            Id = 523,
-                            Email = "Fu1@fu.com"
-                        };
+                        var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var obj2 = new Contracts.Models.User
-                        {
-                            Id = 552,
-                            Email = "Fu2@fu.com"
-                        };
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var users = state
+                            .Users
+                            .Where(x => x.Value.OrganizationId.HasValue)
+                            .Where(x => x.Value.OrganizationId == id)
+                            .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = new[] { obj1, obj2 } }));
-
-                        return Task.CompletedTask;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = users }));
                     })
-                    .MapGet("api/v2/organizations/5002/users", (req, resp, routeData) =>
+                    .MapPost("api/v2/users", (req, resp, routeData) =>
                     {
-                        var obj1 = new Contracts.Models.User
+                        var user = req.Body.Deserialize<UserRequest>().Item;
+
+                        if (user.Tags != null && user.Tags.Contains("error"))
                         {
-                            Id = 34634,
-                            Email = "Fu1@fu.com"
-                        };
+                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
 
-                        var obj2 = new Contracts.Models.User
-                        {
-                            Id = 2364,
-                            Email = "Fu2@fu.com"
-                        };
+                            return Task.CompletedTask;
+                        }
 
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = new[] { obj1, obj2 } }));
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        return Task.CompletedTask;
-                    })
-                    .MapGet("api/v2/users/445", (req, resp, routeData) =>
-                    {
-                        var obj1 = new Contracts.Models.User
-                        {
-                            Id = 445,
-                            Email = "found@fu.com"
-                        };
+                        user.Id = long.Parse(RAND.Next().ToString());
+                        state.Users.Add(user.Id.Value, user);
 
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        resp.WriteAsync(JsonConvert.SerializeObject(new UserResponse { Item = obj1 }));
-
-                        return Task.CompletedTask;
+                        resp.StatusCode = (int)HttpStatusCode.Created;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new UserResponse { Item = user }));
                     })
                     ;
             }
@@ -124,7 +123,9 @@ namespace ZendeskApi.Client.Tests
             var webhostbuilder = new WebHostBuilder();
             webhostbuilder
                 .ConfigureServices(services => {
+                    services.AddSingleton<State>((_) => new State());
                     services.AddRouting();
+                    services.AddMemoryCache();
                 })
                 .Configure(app =>
                 {

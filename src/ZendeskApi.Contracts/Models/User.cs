@@ -94,5 +94,8 @@ namespace ZendeskApi.Contracts.Models
 
         [JsonProperty("user_fields")]
         public Dictionary<string, object> UserFields { get; set; }
+
+        [JsonProperty("default_group_id")]
+        public int DefaultGroupId { get; set; }
     }
 }

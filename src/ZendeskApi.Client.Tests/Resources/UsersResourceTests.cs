@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Resources;
+using ZendeskApi.Contracts.Models;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -34,23 +35,13 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetAllUsers()
         {
-            var obj1 = new Contracts.Models.User
-            {
-                Id = 1245,
-                Email = "Fu1@fu.com"
-            };
-
-            var obj2 = new Contracts.Models.User
-            {
-                Id = 1245,
-                Email = "Fu2@fu.com"
-            };
+            var users = await CreateUsers();
 
             var objs = (await _resource.GetAllAsync()).ToArray();
 
             Assert.Equal(2, objs.Length);
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[1]));
+            Assert.Equal(JsonConvert.SerializeObject(users[0]), JsonConvert.SerializeObject(objs[0]));
+            Assert.Equal(JsonConvert.SerializeObject(users[1]), JsonConvert.SerializeObject(objs[1]));
         }
 
         [Fact]
@@ -58,21 +49,24 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var obj1 = new Contracts.Models.User
             {
-                Id = 523,
-                Email = "Fu1@fu.com"
+                Email = "Fu1@fu.com", 
+                DefaultGroupId = 1
             };
 
             var obj2 = new Contracts.Models.User
             {
-                Id = 552,
-                Email = "Fu2@fu.com"
+                Email = "Fu2@fu.com",
+                DefaultGroupId = 2
             };
 
-            var objs = (await _resource.GetAllUsersInGroupAsync(456)).ToArray();
+            obj1 = await _resource.PostAsync(obj1);
+            obj2 = await _resource.PostAsync(obj2);
 
-            Assert.Equal(2, objs.Length);
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[1]));
+            var obj1Result = (await _resource.GetAllUsersInGroupAsync(1)).ToArray()[0];
+            var obj2Result = (await _resource.GetAllUsersInGroupAsync(2)).ToArray()[0];
+            
+            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(obj1Result));
+            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(obj2Result));
         }
 
         [Fact]
@@ -80,31 +74,69 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var obj1 = new Contracts.Models.User
             {
-                Id = 34634,
-                Email = "Fu1@fu.com"
+                Email = "Fu1@fu.com",
+                OrganizationId = 18
             };
 
             var obj2 = new Contracts.Models.User
             {
-                Id = 2364,
-                Email = "Fu2@fu.com"
+                Email = "Fu2@fu.com",
+                OrganizationId = 12
             };
 
-            var objs = (await _resource.GetAllUsersInOrganizationAsync(5002)).ToArray();
+            obj1 = await _resource.PostAsync(obj1);
+            obj2 = await _resource.PostAsync(obj2);
 
-            Assert.Equal(2, objs.Length);
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[1]));
+            var obj1Result = (await _resource.GetAllUsersInOrganizationAsync(12)).ToArray()[0];
+            var obj2Result = (await _resource.GetAllUsersInOrganizationAsync(18)).ToArray()[0];
+
+            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(obj2Result));
+            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(obj1Result));
         }
 
         [Fact]
         public async Task ShouldGetTicket()
         {
-            var response = await _resource.GetAsync(445L);
+            var user = await _resource.PostAsync(
+                new Contracts.Models.User
+                {
+                    Email = "Fu1@fu.com"
+                });
 
-            Assert.NotNull(response.Id);
-            Assert.Equal(445, response.Id);
-            Assert.Equal("found@fu.com", response.Email);
+            var user2 = await _resource.GetAsync(user.Id.Value);
+
+            Assert.Equal(JsonConvert.SerializeObject(user), JsonConvert.SerializeObject(user2));
+        }
+        
+        [Fact]
+        public async Task ShouldCreateUser()
+        {
+            var user = await _resource.PostAsync(
+                new Contracts.Models.User
+                {
+                    Email = "Fu1@fu.com"
+                });
+
+            Assert.NotNull(user.Id);
+            Assert.Equal("Fu1@fu.com", user.Email);
+        }
+
+        private async Task<User[]> CreateUsers()
+        {
+            var obj1 = new Contracts.Models.User
+            {
+                Email = "Fu1@fu.com"
+            };
+
+            var obj2 = new Contracts.Models.User
+            {
+                Email = "Fu2@fu.com"
+            };
+
+            obj1 = await _resource.PostAsync(obj1);
+            obj2 = await _resource.PostAsync(obj2);
+
+            return new[] { obj1, obj2 };
         }
     }
 }
