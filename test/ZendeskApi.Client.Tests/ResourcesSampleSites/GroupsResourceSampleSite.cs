@@ -133,7 +133,7 @@ namespace ZendeskApi.Client.Tests
                             return Task.CompletedTask;
                         }
 
-                        group.Id = long.Parse(new Random().Next().ToString());
+                        group.Id = long.Parse(RAND.Next().ToString());
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         resp.WriteAsync(JsonConvert.SerializeObject(new GroupResponse { Item = group }));

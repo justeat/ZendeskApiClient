@@ -24,7 +24,7 @@ namespace ZendeskApi.Client.Tests
         private class State {
             public IDictionary<long, Ticket> Tickets = new Dictionary<long, Ticket>();
         }
-
+        
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
@@ -131,7 +131,7 @@ namespace ZendeskApi.Client.Tests
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        ticket.Id = long.Parse(new Random().Next().ToString());
+                        ticket.Id = long.Parse(RAND.Next().ToString());
                         state.Tickets.Add(ticket.Id.Value, ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
@@ -142,12 +142,10 @@ namespace ZendeskApi.Client.Tests
                         var tickets = req.Body.Deserialize<TicketsRequest>().Item;
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
-
-                        var rand = new Random();
-
+                        
                         foreach (var ticket in tickets)
                         {
-                            ticket.Id = long.Parse(rand.Next().ToString());
+                            ticket.Id = long.Parse(RAND.Next().ToString());
                             state.Tickets.Add(ticket.Id.Value, ticket);
                         }
 

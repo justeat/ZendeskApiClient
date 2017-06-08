@@ -54,7 +54,7 @@ namespace ZendeskApi.Client.Tests
                                 ContentUrl = "https://company.zendesk.com/attachments/crash.log",
                                 Size = strings[3].Length,
                                 FileName = parsedContentDisposition.FileName,
-                                Id = 498482
+                                Id = long.Parse(RAND.Next().ToString())
                             },
                             Token = "6bk3gql82em5nmf"
                         } }));

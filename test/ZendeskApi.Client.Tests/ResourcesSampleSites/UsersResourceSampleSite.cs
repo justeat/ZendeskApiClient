@@ -24,9 +24,7 @@ namespace ZendeskApi.Client.Tests
         {
             public IDictionary<long, User> Users = new Dictionary<long, User>();
         }
-
-        public static Random RAND = new Random();
-
+        
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
