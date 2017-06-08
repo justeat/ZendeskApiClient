@@ -1,0 +1,17 @@
+image: Visual Studio 2017
+environment:
+  nodejs_version: "6.9.1"
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: $env:BuildNumber= $env:APPVEYOR_BUILD_NUMBER
+init:
+  - git config --global core.autocrlf true
+build_script:
+  - dotnet restore
+  - dotnet build -c Release
+test_script:
+  - dotnet test -c Release .\src\ZendeskApi.Client.Tests\ZendeskApi.Client.Tests.csproj
+  - dotnet test -c Release .\src\ZendeskApi.Contracts.Tests\ZendeskApi.Contracts.Tests.csproj
+clone_depth: 1
+test: on
