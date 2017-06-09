@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
@@ -7,5 +8,11 @@ namespace ZendeskApi.Client.Responses
     {
         [JsonProperty("request")]
         public Request Item { get; set; }
+    }
+
+    public class RequestsResponse
+    {
+        [JsonProperty("requests")]
+        public IEnumerable<Request> Item { get; set; }
     }
 }

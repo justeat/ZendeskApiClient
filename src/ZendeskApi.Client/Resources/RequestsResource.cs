@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Queries;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
@@ -25,17 +27,51 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
             _logger = logger;
         }
+        
+        public async Task<IEnumerable<Request>> GetAllAsync()
+        {
+            using (_loggerScope(_logger, "GetAllAsync"))
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
 
-        //public async Task<Request> GetAsync(IEnumerable<TicketStatus> requestedStatuses)
-        //{
-        //    using (var client = _apiClient.CreateClient())
-        //    {
-        //        // TODO: ngm make nicer
-        //        var query = $"status={string.Join(",", requestedStatuses).ToLower()}";
-        //        var response = await client.GetAsync($"{ResourceUri}?{query}").ConfigureAwait(false);
-        //        return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
-        //    }
-        //}
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<RequestsResponse>()).Item;
+            }
+        }
+
+        public async Task<Request> GetAsync(long requestId)
+        {
+            using (_loggerScope(_logger, $"GetAsync({requestId})"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
+            {
+                var response = await client.GetAsync(requestId.ToString()).ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Request {0} not found", requestId);
+                    return null;
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
+            }
+        }
+
+        public async Task<IEnumerable<Request>> SearchAsync(IZendeskQuery<Request> query)
+        {
+            using (_loggerScope(_logger, $"SearchAsync"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
+            {
+                var response = await client.GetAsync("search?" + query.BuildQuery()).ConfigureAwait(false);
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<RequestsResponse>()).Item;
+            }
+        }
 
         public async Task<IEnumerable<TicketComment>> GetAllComments(long requestId)
         {
@@ -72,6 +108,44 @@ namespace ZendeskApi.Client.Resources
                 response.EnsureSuccessStatusCode();
 
                 return (await response.Content.ReadAsAsync<TicketCommentResponse>()).Item;
+            }
+        }
+
+        public async Task<Request> PostAsync(Request request)
+        {
+            using (_loggerScope(_logger, $"PostAsync"))
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.PostAsJsonAsync(ResourceUri, new RequestRequest { Item = request }).ConfigureAwait(false);
+
+                if (response.StatusCode != System.Net.HttpStatusCode.Created)
+                {
+                    throw new HttpRequestException(
+                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
+                        Environment.NewLine +
+                        "See: https://developer.zendesk.com/rest_api/docs/core/requests#create-request");
+                }
+
+                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
+            }
+        }
+
+        public async Task<Request> PutAsync(Request request)
+        {
+            using (_loggerScope(_logger, "PutAsync"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
+            {
+                var response = await client.PutAsJsonAsync(request.Id.ToString(), new RequestRequest { Item = request }).ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Cannot update request as request {0} cannot be found", request.Id);
+                    return null;
+                }
+
+                response.EnsureSuccessStatusCode();
+
+                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
             }
         }
     }
