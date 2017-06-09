@@ -5,7 +5,7 @@ namespace ZendeskApi.Client
     public interface IZendeskClient
     {
         ITicketsResource Tickets { get; }
-        ITicketCommentResource TicketComments { get; }
+        ITicketCommentsResource TicketComments { get; }
         IOrganizationResource Organizations { get; }
         ISearchResource Search { get; }
         IGroupsResource Groups { get; }

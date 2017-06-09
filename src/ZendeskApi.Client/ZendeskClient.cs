@@ -18,8 +18,8 @@ namespace ZendeskApi.Client
         private Lazy<ITicketsResource> TicketsLazy => new Lazy<ITicketsResource>(() => new TicketsResource(_apiClient, _logger));
         public ITicketsResource Tickets => TicketsLazy.Value;
 
-        private Lazy<ITicketCommentResource> TicketCommentsLazy => new Lazy<ITicketCommentResource>(() => new TicketCommentResource(_apiClient, _logger));
-        public ITicketCommentResource TicketComments => TicketCommentsLazy.Value;
+        private Lazy<ITicketCommentsResource> TicketCommentsLazy => new Lazy<ITicketCommentsResource>(() => new TicketCommentsResource(_apiClient, _logger));
+        public ITicketCommentsResource TicketComments => TicketCommentsLazy.Value;
 
         private Lazy<IOrganizationResource> OrganizationsLazy => new Lazy<IOrganizationResource>(() => new OrganizationResource(_apiClient));
         public IOrganizationResource Organizations => OrganizationsLazy.Value;

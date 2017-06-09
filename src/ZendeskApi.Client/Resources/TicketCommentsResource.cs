@@ -9,7 +9,7 @@ using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class TicketCommentResource : ITicketCommentResource
+    public class TicketCommentsResource : ITicketCommentsResource
     {
         private const string ResourceUri = "api/v2/tickets/{0}/comments";
 
@@ -19,19 +19,19 @@ namespace ZendeskApi.Client.Resources
         private Func<ILogger, string, IDisposable> _loggerScope =
             LoggerMessage.DefineScope<string>("TicketsResource: {0}");
 
-        public TicketCommentResource(IZendeskApiClient apiClient,
+        public TicketCommentsResource(IZendeskApiClient apiClient,
             ILogger logger)
         {
             _apiClient = apiClient;
             _logger = logger;
         }
 
-        public async Task<IEnumerable<TicketComment>> GetAllAsync(long parentId)
+        public async Task<IEnumerable<TicketComment>> GetAllAsync(long ticketId)
         {
-            using (_loggerScope(_logger, "GetAllAsync"))
+            using (_loggerScope(_logger, $"GetAllAsync({ticketId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
+                var response = await client.GetAsync(string.Format(ResourceUri, ticketId)).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
