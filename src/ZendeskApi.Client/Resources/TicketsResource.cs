@@ -53,6 +53,12 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(string.Format(OrganizationResourceUriFormat, organizationId)).ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Tickets in organization {0} not found", organizationId);
+                    return null;
+                }
+
                 response.EnsureSuccessStatusCode();
 
                 return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
@@ -65,6 +71,12 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
             {
                 var response = await client.GetAsync("requested").ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Requested tickets for user {0} not found", userId);
+                    return null;
+                }
 
                 response.EnsureSuccessStatusCode();
 
@@ -79,6 +91,12 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync("ccd").ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("CCD tickets for user {0} not found", userId);
+                    return null;
+                }
+
                 response.EnsureSuccessStatusCode();
 
                 return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
@@ -92,6 +110,12 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync("assigned").ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Assigned tickets for user {0} not found", userId);
+                    return null;
+                }
+
                 response.EnsureSuccessStatusCode();
 
                 return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
@@ -104,6 +128,12 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync(ticketId.ToString()).ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Ticket {0} not found", ticketId);
+                    return null;
+                }
 
                 response.EnsureSuccessStatusCode();
 
@@ -169,6 +199,12 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.PutAsJsonAsync(ticket.Id.ToString(), new TicketRequest { Item = ticket }).ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Cannot update ticket as ticket {0} cannot be found", ticket.Id);
+                    return null;
+                }
+
                 response.EnsureSuccessStatusCode();
 
                 return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
@@ -188,14 +224,22 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task MarkTicketAsSpamAndSuspendRequester(long ticketId)
+        public async Task<bool> MarkTicketAsSpamAndSuspendRequester(long ticketId)
         {
             using (_loggerScope(_logger, $"MarkTicketAsSpamAndSuspendRequester"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync($"{ticketId}/mark_as_spam", "{ }").ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Cannot mark ticket {0} as spam as the ticket is not found", ticketId);
+                    return false;
+                }
+
                 response.EnsureSuccessStatusCode();
+
+                return true;
             }
         }
 

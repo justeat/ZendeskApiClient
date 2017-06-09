@@ -47,6 +47,12 @@ namespace ZendeskApi.Client.Tests
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
+                        if (!state.Tickets.ContainsKey(id))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.NotFound;
+                            return Task.CompletedTask;
+                        }
+
                         var ticket = state.Tickets.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
@@ -172,6 +178,17 @@ namespace ZendeskApi.Client.Tests
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = state.Tickets[id] }));
+                    })
+                    .MapDelete("api/v2/tickets/{id}", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        state.Tickets.Remove(id);
+
+                        resp.StatusCode = (int)HttpStatusCode.NoContent;
+                        return Task.CompletedTask;
                     })
                     ;
             }

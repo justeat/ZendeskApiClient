@@ -11,7 +11,7 @@ namespace ZendeskApi.Client.Resources
         Task<IEnumerable<User>> GetAllUsersInOrganizationAsync(long organizationId);
         Task<User> GetAsync(long userId);
         Task<IEnumerable<User>> GetAllAsync(long[] userIds);
-        Task<IEnumerable<User>> GetAllByExternalIdsAsync(long[] externalIds);
+        Task<IEnumerable<User>> GetAllByExternalIdsAsync(string[] externalIds);
         Task<User> GetRelatedUsersAsync(long userId);
         Task<User> PostAsync(User user);
         Task<User> PutAsync(User user);

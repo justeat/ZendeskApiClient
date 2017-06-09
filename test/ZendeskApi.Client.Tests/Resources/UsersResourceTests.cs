@@ -20,11 +20,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         /*
-        Task<IEnumerable<User>> GetAllAsync(long[] userIds);
-        Task<IEnumerable<User>> GetAllByExternalIdsAsync(long[] externalIds);
         Task<User> GetRelatedUsersAsync(long userId);
-        Task<User> PutAsync(UserRequest request);
-        Task DeleteAsync(long userId);
          */
 
         [Fact]
@@ -90,6 +86,34 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task ShouldGetAllUsersById()
+        {
+            var obj1 = await _resource.PostAsync(new User { Email = "Fu1@fu.com" });
+            var obj2 = await _resource.PostAsync(new User { Email = "Fu2@fu.com" });
+            var obj3 = await _resource.PostAsync(new User { Email = "Fu2@fu.com" });
+
+            var objs = (await _resource.GetAllAsync(new[] { obj1.Id.Value, obj3.Id.Value })).ToArray();
+
+            Assert.Equal(2, objs.Length);
+            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
+            Assert.Equal(JsonConvert.SerializeObject(obj3), JsonConvert.SerializeObject(objs[1]));
+        }
+
+        [Fact]
+        public async Task ShouldGetAllUsersByExternalId()
+        {
+            var obj1 = await _resource.PostAsync(new User { Email = "Fu1@fu.com" });
+            var obj2 = await _resource.PostAsync(new User { Email = "Fu2@fu.com", ExternalId = "ATEST1" });
+            var obj3 = await _resource.PostAsync(new User { Email = "Fu2@fu.com", ExternalId = "ATEST2" });
+
+            var objs = (await _resource.GetAllByExternalIdsAsync(new[] { obj1.ExternalId, obj2.ExternalId, obj3.ExternalId })).ToArray();
+
+            Assert.Equal(2, objs.Length);
+            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[0]));
+            Assert.Equal(JsonConvert.SerializeObject(obj3), JsonConvert.SerializeObject(objs[1]));
+        }
+
+        [Fact]
         public async Task ShouldGetUser()
         {
             var user = await _resource.PostAsync(
@@ -114,6 +138,46 @@ namespace ZendeskApi.Client.Tests.Resources
 
             Assert.NotNull(user.Id);
             Assert.Equal("Fu1@fu.com", user.Email);
+        }
+
+        [Fact]
+        public async Task ShouldUpdateUser()
+        {
+            var user = await _resource.PostAsync(
+                new User
+                {
+                    Email = "Fu1@fu.com",
+                    Name = "Kung Fu Wizard"
+                });
+
+            Assert.Equal("Kung Fu Wizard", user.Name);
+
+            user.Name = "Cheese Master";
+
+            user = await _resource.PutAsync(user);
+
+            Assert.Equal("Cheese Master", user.Name);
+        }
+
+        [Fact]
+        public async Task ShouldDeleteUser()
+        {
+            var user = await _resource.PostAsync(
+                new User
+                {
+                    Email = "Fu1@fu.com",
+                    Name = "Kung Fu Wizard"
+                });
+
+            var user1 = await _resource.GetAsync(user.Id.Value);
+
+            Assert.Equal(JsonConvert.SerializeObject(user), JsonConvert.SerializeObject(user1));
+
+            await _resource.DeleteAsync(user.Id.Value);
+
+            var user2 = await _resource.GetAsync(user.Id.Value);
+
+            Assert.Null(user2);
         }
 
         private async Task<User[]> CreateUsers()

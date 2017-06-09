@@ -306,22 +306,47 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldUpdateTicket()
         {
-            var ticket = new Ticket
-            {
-                Subject = "My printer is on fire! 1",
-                Comment = new TicketComment
+            var ticket = await _resource.PostAsync(
+                new Ticket
                 {
-                    Body = "The smoke is very colorful. 1"
-                }
-            };
+                    Subject = "My printer is on fire! 1",
+                    Comment = new TicketComment
+                    {
+                        Body = "The smoke is very colorful. 1"
+                    }
+                });
 
-            ticket = await _resource.PostAsync(ticket);
+            Assert.Equal("My printer is on fire! 1", ticket.Subject);
 
             ticket.Subject = "I COMMAND YOU TO UPDATE!!!";
 
-            var updatedTicket = await _resource.PutAsync(ticket);
+            ticket = await _resource.PutAsync(ticket);
 
-            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(updatedTicket));
+            Assert.Equal("I COMMAND YOU TO UPDATE!!!", ticket.Subject);
+        }
+
+        [Fact]
+        public async Task ShouldDeleteTicket()
+        {
+            var ticket = await _resource.PostAsync(
+                new Ticket
+                {
+                    Subject = "My printer is on fire! 1",
+                    Comment = new TicketComment
+                    {
+                        Body = "The smoke is very colorful. 1"
+                    }
+                });
+
+            var ticket1 = await _resource.GetAsync(ticket.Id.Value);
+
+            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(ticket1));
+
+            await _resource.DeleteAsync(ticket.Id.Value);
+
+            var ticket2 = await _resource.GetAsync(ticket.Id.Value);
+
+            Assert.Null(ticket2);
         }
 
         private async Task<Ticket[]> CreateTickets()

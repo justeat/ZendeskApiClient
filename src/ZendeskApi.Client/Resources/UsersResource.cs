@@ -52,6 +52,12 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(string.Format(GroupUsersResourceUriFormat, groupId)).ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Users in group {0} not found", groupId);
+                    return null;
+                }
+
                 response.EnsureSuccessStatusCode();
 
                 return (await response.Content.ReadAsAsync<UsersResponse>()).Item;
@@ -65,6 +71,12 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(string.Format(OrganizationsUsersResourceUriFormat, organizationId)).ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Users in organization {0} not found", organizationId);
+                    return null;
+                }
+
                 response.EnsureSuccessStatusCode();
 
                 return (await response.Content.ReadAsAsync<UsersResponse>()).Item;
@@ -77,6 +89,12 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync(userId.ToString()).ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("User {0} not found", userId);
+                    return null;
+                }
 
                 response.EnsureSuccessStatusCode();
 
@@ -97,7 +115,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IEnumerable<User>> GetAllByExternalIdsAsync(long[] externalIds)
+        public async Task<IEnumerable<User>> GetAllByExternalIdsAsync(string[] externalIds)
         {
             using (_loggerScope(_logger, $"GetAllByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -116,6 +134,12 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync(userId.ToString() + "/related").ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Related Users for user {0} not found", userId);
+                    return null;
+                }
 
                 response.EnsureSuccessStatusCode();
 
@@ -148,6 +172,12 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PutAsJsonAsync(user.Id.ToString(), new UserRequest { Item = user }).ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Cannot update user as user {0} cannot be found", user.Id);
+                    return null;
+                }
 
                 response.EnsureSuccessStatusCode();
 

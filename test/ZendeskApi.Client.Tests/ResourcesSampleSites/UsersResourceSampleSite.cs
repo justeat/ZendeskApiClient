@@ -32,12 +32,22 @@ namespace ZendeskApi.Client.Tests
                 return rb => rb
                     .MapGet("api/v2/users/show_many", (req, resp, routeData) =>
                     {
-                        var ids = req.Query["ids"].ToString().Split(',').Select(long.Parse);
-
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        var users = state.Users.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
+                        IEnumerable<User> users = Enumerable.Empty<User>();
 
+                        if (req.Query.ContainsKey("ids"))
+                        {
+                            var ids = req.Query["ids"].ToString().Split(',').Select(long.Parse);
+                            users = state.Users.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
+                        }
+
+                        if (req.Query.ContainsKey("external_ids"))
+                        {
+                            var ids = req.Query["external_ids"].ToString().Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
+                            users = state.Users.Where(x => ids.Contains(x.Value.ExternalId)).Select(p => p.Value);
+                        }
+                        
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = users }));
                     })
@@ -46,6 +56,12 @@ namespace ZendeskApi.Client.Tests
                         var id = long.Parse(routeData.Values["id"].ToString());
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        if (!state.Users.ContainsKey(id))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.NotFound;
+                            return Task.CompletedTask;
+                        }
 
                         var user = state.Users.Single(x => x.Key == id).Value;
 
@@ -106,6 +122,37 @@ namespace ZendeskApi.Client.Tests
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsync(JsonConvert.SerializeObject(new UserResponse { Item = user }));
+                    })
+                    .MapPut("api/v2/users/{id}", (req, resp, routeData) =>
+                    {
+                        var user = req.Body.Deserialize<UserRequest>().Item;
+
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        if (user.Tags != null && user.Tags.Contains("error"))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
+
+                            return Task.CompletedTask;
+                        }
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        state.Users[id] = user;
+
+                        resp.StatusCode = (int)HttpStatusCode.Created;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new UserResponse { Item = user }));
+                    })
+                    .MapDelete("api/v2/users/{id}", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        state.Users.Remove(id);
+
+                        resp.StatusCode = (int)HttpStatusCode.NoContent;
+                        return Task.CompletedTask;
                     })
                     ;
             }

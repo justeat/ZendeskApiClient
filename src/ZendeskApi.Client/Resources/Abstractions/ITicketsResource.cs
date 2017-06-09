@@ -17,7 +17,7 @@ namespace ZendeskApi.Client.Resources
         Task<JobStatus> PostAsync(IEnumerable<Ticket> tickets);
         Task<Ticket> PutAsync(Ticket ticket);
         Task<JobStatus> PutAsync(IEnumerable<Ticket> tickets);
-        Task MarkTicketAsSpamAndSuspendRequester(long ticketId);
+        Task<bool> MarkTicketAsSpamAndSuspendRequester(long ticketId);
         Task<JobStatus> MarkTicketAsSpamAndSuspendRequester(long[] ticketIds);
         Task DeleteAsync(long ticketId);
     }
