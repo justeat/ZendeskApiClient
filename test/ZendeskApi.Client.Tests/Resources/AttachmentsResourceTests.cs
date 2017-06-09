@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Resources;
 
@@ -17,6 +18,20 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             _client = new DisposableZendeskApiClient((resource) => new AttachmentsResourceSampleSite(resource));
             _resource = new AttachmentsResource(_client, NullLogger.Instance);
+        }
+
+        [Fact]
+        public async Task ShouldGetAttachmentById()
+        {
+            var byteArray = Encoding.UTF8.GetBytes("Hi there guys!");
+            var stream = new MemoryStream(byteArray);
+
+            var response = await _resource
+                .UploadAsync("crash.log", stream, "6bk3gql82em5nmf");
+
+            var attachment = await _resource.GetAsync(response.Attachment.Id.Value);
+
+            Assert.Equal(JsonConvert.SerializeObject(response.Attachment), JsonConvert.SerializeObject(attachment));
         }
 
         [Fact]

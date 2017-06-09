@@ -16,16 +16,39 @@ using Newtonsoft.Json;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Models;
+using System.Linq;
 
 namespace ZendeskApi.Client.Tests
 {
     public class AttachmentsResourceSampleSite : SampleSite
     {
+        private class State
+        {
+            public IDictionary<long, Attachment> Attachments = new Dictionary<long, Attachment>();
+        }
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
             {
                 return rb => rb
+                    .MapGet("api/v2/attachments/{id}", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        if (!state.Attachments.ContainsKey(id))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.NotFound;
+                            return Task.CompletedTask;
+                        }
+
+                        var obj = state.Attachments.Single(x => x.Key == id).Value;
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new AttachmentResponse { Item = obj }));
+                    })
                     .MapPost("api/v2/uploads", (req, resp, routeData) =>
                     {
                         Debug.Assert(req.Query["filename"] == "crash.log");
@@ -48,14 +71,21 @@ namespace ZendeskApi.Client.Tests
 
                         resp.Headers.Add("Location", "https://localhost/api/v2/attachments/498483");
 
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        
+                        var attachment = new Attachment
+                        {
+                            ContentType = "text/plain",
+                            ContentUrl = "https://company.zendesk.com/attachments/crash.log",
+                            Size = strings[3].Length,
+                            FileName = parsedContentDisposition.FileName,
+                            Id = long.Parse(RAND.Next().ToString())
+                        };
+
+                        state.Attachments.Add(attachment.Id.Value, attachment);
+
                         resp.WriteAsync(JsonConvert.SerializeObject(new UploadResponse { Item = new Upload {
-                            Attachment = new Attachment {
-                                ContentType = "text/plain",
-                                ContentUrl = "https://company.zendesk.com/attachments/crash.log",
-                                Size = strings[3].Length,
-                                FileName = parsedContentDisposition.FileName,
-                                Id = long.Parse(RAND.Next().ToString())
-                            },
+                            Attachment = attachment,
                             Token = "6bk3gql82em5nmf"
                         } }));
 
@@ -73,7 +103,11 @@ namespace ZendeskApi.Client.Tests
         {
             var webhostbuilder = new WebHostBuilder();
             webhostbuilder
-                .ConfigureServices(services => services.AddRouting())
+                .ConfigureServices(services => {
+                    services.AddSingleton<State>((_) => new State());
+                    services.AddRouting();
+                    services.AddMemoryCache();
+                })
                 .Configure(app =>
                 {
                     app.UseRouter(MatchesRequest);
