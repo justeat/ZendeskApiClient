@@ -51,7 +51,7 @@ namespace ZendeskApi.Client
         private Lazy<IRequestsResource> RequestLazy => new Lazy<IRequestsResource>(() => new RequestsResource(_apiClient, _logger));
         public IRequestsResource Requests => RequestLazy.Value;
 
-        private Lazy<ISatisfactionRatingResource> SatisfactionRatingLazy => new Lazy<ISatisfactionRatingResource>(() => new SatisfactionRatingResource(_apiClient));
-        public ISatisfactionRatingResource SatisfactionRating => SatisfactionRatingLazy.Value;
+        private Lazy<ISatisfactionRatingsResource> SatisfactionRatingLazy => new Lazy<ISatisfactionRatingsResource>(() => new SatisfactionRatingsResource(_apiClient, _logger));
+        public ISatisfactionRatingsResource SatisfactionRatings => SatisfactionRatingLazy.Value;
     }
 }

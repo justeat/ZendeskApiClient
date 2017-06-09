@@ -16,6 +16,6 @@ namespace ZendeskApi.Client
         ITicketFormResource TicketForms { get; }
         IOrganizationMembershipsResource OrganizationMemberships { get; }
         IRequestsResource Requests { get; }
-        ISatisfactionRatingResource SatisfactionRating { get; }
+        ISatisfactionRatingsResource SatisfactionRatings { get; }
     }
 }
