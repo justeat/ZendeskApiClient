@@ -6,7 +6,6 @@ namespace ZendeskApi.Client
     {
         ITicketsResource Tickets { get; }
         ITicketCommentResource TicketComments { get; }
-        IRequestCommentResource RequestComments { get; }
         IOrganizationResource Organizations { get; }
         ISearchResource Search { get; }
         IGroupsResource Groups { get; }
@@ -16,7 +15,7 @@ namespace ZendeskApi.Client
         ITicketFieldsResource TicketFields { get; }
         ITicketFormResource TicketForms { get; }
         IOrganizationMembershipsResource OrganizationMemberships { get; }
-        IRequestResource Request { get; }
+        IRequestsResource Requests { get; }
         ISatisfactionRatingResource SatisfactionRating { get; }
     }
 }

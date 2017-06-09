@@ -4,9 +4,9 @@ using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
 {
-    public class TicketCommentListResponse : ListResponse<TicketComment>
+    public class TicketCommentsResponse
     {
         [JsonProperty("comments")]
-        public override IEnumerable<TicketComment> Results { get; set; }
+        public IEnumerable<TicketComment> Item { get; set; }
     }
 }

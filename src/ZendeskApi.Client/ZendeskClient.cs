@@ -18,11 +18,8 @@ namespace ZendeskApi.Client
         private Lazy<ITicketsResource> TicketsLazy => new Lazy<ITicketsResource>(() => new TicketsResource(_apiClient, _logger));
         public ITicketsResource Tickets => TicketsLazy.Value;
 
-        private Lazy<ITicketCommentResource> TicketCommentsLazy => new Lazy<ITicketCommentResource>(() => new TicketCommentResource(_apiClient));
+        private Lazy<ITicketCommentResource> TicketCommentsLazy => new Lazy<ITicketCommentResource>(() => new TicketCommentResource(_apiClient, _logger));
         public ITicketCommentResource TicketComments => TicketCommentsLazy.Value;
-
-        private Lazy<IRequestCommentResource> RequestCommentsLazy => new Lazy<IRequestCommentResource>(() => new RequestCommentResource(_apiClient));
-        public IRequestCommentResource RequestComments => RequestCommentsLazy.Value;
 
         private Lazy<IOrganizationResource> OrganizationsLazy => new Lazy<IOrganizationResource>(() => new OrganizationResource(_apiClient));
         public IOrganizationResource Organizations => OrganizationsLazy.Value;
@@ -51,8 +48,8 @@ namespace ZendeskApi.Client
         private Lazy<IOrganizationMembershipsResource> OrganizationMembershipsLazy => new Lazy<IOrganizationMembershipsResource>(() => new OrganizationMembershipsResource(_apiClient, _logger));
         public IOrganizationMembershipsResource OrganizationMemberships => OrganizationMembershipsLazy.Value;
 
-        private Lazy<IRequestResource> RequestLazy => new Lazy<IRequestResource>(() => new RequestResource(_apiClient));
-        public IRequestResource Request => RequestLazy.Value;
+        private Lazy<IRequestsResource> RequestLazy => new Lazy<IRequestsResource>(() => new RequestsResource(_apiClient, _logger));
+        public IRequestsResource Requests => RequestLazy.Value;
 
         private Lazy<ISatisfactionRatingResource> SatisfactionRatingLazy => new Lazy<ISatisfactionRatingResource>(() => new SatisfactionRatingResource(_apiClient));
         public ISatisfactionRatingResource SatisfactionRating => SatisfactionRatingLazy.Value;
