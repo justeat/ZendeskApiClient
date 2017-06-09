@@ -42,8 +42,8 @@ namespace ZendeskApi.Client
         private Lazy<IAttachmentsResource> AttachmentsLazy => new Lazy<IAttachmentsResource>(() => new AttachmentsResource(_apiClient, _logger));
         public IAttachmentsResource Attachments => AttachmentsLazy.Value;
 
-        private Lazy<ITicketFieldResource> TicketFieldsLazy => new Lazy<ITicketFieldResource>(() => new TicketFieldResource(_apiClient));
-        public ITicketFieldResource TicketFields => TicketFieldsLazy.Value;
+        private Lazy<ITicketFieldsResource> TicketFieldsLazy => new Lazy<ITicketFieldsResource>(() => new TicketFieldsResource(_apiClient, _logger));
+        public ITicketFieldsResource TicketFields => TicketFieldsLazy.Value;
 
         private Lazy<ITicketFormResource> TicketFormsLazy => new Lazy<ITicketFormResource>(() => new TicketFormResource(_apiClient));
         public ITicketFormResource TicketForms => TicketFormsLazy.Value;
