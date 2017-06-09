@@ -13,7 +13,7 @@ namespace ZendeskApi.Client
         IUserIdentityResource UserIdentities { get; }
         IAttachmentsResource Attachments { get; }
         ITicketFieldsResource TicketFields { get; }
-        ITicketFormResource TicketForms { get; }
+        ITicketFormsResource TicketForms { get; }
         IOrganizationMembershipsResource OrganizationMemberships { get; }
         IRequestsResource Requests { get; }
         ISatisfactionRatingsResource SatisfactionRatings { get; }
