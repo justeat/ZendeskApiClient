@@ -51,6 +51,12 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(string.Format(GroupsByUserResourceUriFormat, userId)).ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("User {0} not found", userId);
+                    return null;
+                }
+
                 response.EnsureSuccessStatusCode();
 
                 return (await response.Content.ReadAsAsync<GroupsResponse>()).Item;
@@ -76,6 +82,12 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
                 var response = await client.GetAsync(groupId.ToString()).ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Group {0} not found", groupId);
+                    return null;
+                }
 
                 response.EnsureSuccessStatusCode();
 
@@ -108,6 +120,12 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
                 var response = await client.PutAsJsonAsync(group.Id.ToString(), new GroupRequest { Item = group }).ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Cannot update group as group {0} cannot be found", group.Id);
+                    return null;
+                }
 
                 response.EnsureSuccessStatusCode();
 

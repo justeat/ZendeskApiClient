@@ -24,81 +24,85 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllGroups()
         {
-            var response = await _resource.GetAllAsync();
-
-            var groups = response.ToArray();
-
-            var group1 = new Group
+            var group1 = await _resource.PostAsync(new Group
             {
-                Id = 211L,
                 Name = "DJs",
                 Created = DateTime.Parse("2009-05-13T00:07:08Z"),
                 Updated = DateTime.Parse("2011-07-22T00:11:12Z"),
-            };
+            });
 
-            var group2 = new Group
+            var group2 = await _resource.PostAsync(new Group
             {
                 Id = 122L,
                 Name = "MCs",
                 Created = DateTime.Parse("2009-08-26T00:07:08Z"),
                 Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
-            };
+            });
 
-            Assert.Equal(2, groups.Length);
-            Assert.Equal(JsonConvert.SerializeObject(group1), JsonConvert.SerializeObject(groups[0]));
-            Assert.Equal(JsonConvert.SerializeObject(group2), JsonConvert.SerializeObject(groups[1]));
+            var retrievedGroups = (await _resource.GetAllAsync()).ToArray();
+
+            Assert.Equal(2, retrievedGroups.Length);
+            Assert.Equal(JsonConvert.SerializeObject(group1), JsonConvert.SerializeObject(retrievedGroups[0]));
+            Assert.Equal(JsonConvert.SerializeObject(group2), JsonConvert.SerializeObject(retrievedGroups[1]));
         }
 
         [Fact]
         public async Task ShouldListAllGroupsForUser()
         {
-            var response = await _resource.GetAllAsync(123L);
-
-            var groups = response.ToArray();
-
-            var group1 = new Group
+            // NOTE: Using name rather than calling user api to assign groups.
+            var group1 = await _resource.PostAsync(new Group
             {
-                Id = 321L,
-                Name = "Group For 123",
+                Name = "DJs USER: 1",
                 Created = DateTime.Parse("2009-05-13T00:07:08Z"),
                 Updated = DateTime.Parse("2011-07-22T00:11:12Z"),
-            };
+            });
 
-            var group2 = new Group
+            var group2 = await _resource.PostAsync(new Group
             {
-                Id = 342L,
-                Name = "Group For 123",
+                Name = "MCs USER: 2",
                 Created = DateTime.Parse("2009-08-26T00:07:08Z"),
                 Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
-            };
+            });
 
-            Assert.Equal(2, groups.Length);
-            Assert.Equal(JsonConvert.SerializeObject(group1), JsonConvert.SerializeObject(groups[0]));
-            Assert.Equal(JsonConvert.SerializeObject(group2), JsonConvert.SerializeObject(groups[1]));
+            var group3 = await _resource.PostAsync(new Group
+            {
+                Name = "DJs USER: 1",
+                Created = DateTime.Parse("2009-08-26T00:07:08Z"),
+                Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
+            });
+
+            var retrievedGroups = (await _resource.GetAllAsync(1L)).ToArray();
+
+            Assert.Equal(2, retrievedGroups.Length);
+            Assert.Equal(JsonConvert.SerializeObject(group1), JsonConvert.SerializeObject(retrievedGroups[0]));
+            Assert.Equal(JsonConvert.SerializeObject(group3), JsonConvert.SerializeObject(retrievedGroups[1]));
         }
 
         [Fact]
         public async Task ShouldListAllAssignable()
         {
-            var response = await _resource.GetAllAssignableAsync();
-
-            var groups = response.ToArray();
-
-            var group1 = new Group
+            var group1 = await _resource.PostAsync(new Group
             {
-                Id = 321L,
-                Name = "Group For 123",
+                Name = "DJs Assign:true",
                 Created = DateTime.Parse("2009-05-13T00:07:08Z"),
                 Updated = DateTime.Parse("2011-07-22T00:11:12Z"),
-            };
+            });
 
-            var group2 = new Group
+            var group2 = await _resource.PostAsync(new Group
             {
-                Id = 122L,
-                Name = "MCs",
+                Name = "MCs Assign:true",
                 Created = DateTime.Parse("2009-08-26T00:07:08Z"),
                 Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
-            };
+            });
+
+            var group3 = await _resource.PostAsync(new Group
+            {
+                Name = "DJs Assign:false",
+                Created = DateTime.Parse("2009-08-26T00:07:08Z"),
+                Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
+            });
+
+            var groups = (await _resource.GetAllAssignableAsync()).ToArray();
 
             Assert.Equal(2, groups.Length);
             Assert.Equal(JsonConvert.SerializeObject(group1), JsonConvert.SerializeObject(groups[0]));
@@ -106,35 +110,25 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ShouldGetDifferentGroup1ById()
+        public async Task ShouldGetGroupById()
         {
-            var response = await _resource.GetAsync(1);
-
-            var group = new Group
+            var group1 = await _resource.PostAsync(new Group
             {
-                Id = 1L,
                 Name = "DJs",
                 Created = DateTime.Parse("2009-05-13T00:07:08Z"),
                 Updated = DateTime.Parse("2011-07-22T00:11:12Z"),
-            };
+            });
 
-            Assert.Equal(JsonConvert.SerializeObject(group), JsonConvert.SerializeObject(response));
-        }
-
-        [Fact]
-        public async Task ShouldGetDifferentGroup14ById()
-        {
-            var response = await _resource.GetAsync(14);
-
-            var group = new Group
+            var group2 = await _resource.PostAsync(new Group
             {
-                Id = 14L,
-                Name = "DJs",
-                Created = DateTime.Parse("2009-05-13T00:07:08Z"),
-                Updated = DateTime.Parse("2011-07-22T00:11:12Z"),
-            };
+                Name = "MCs",
+                Created = DateTime.Parse("2009-08-26T00:07:08Z"),
+                Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
+            });
 
-            Assert.Equal(JsonConvert.SerializeObject(group), JsonConvert.SerializeObject(response));
+            var group = await _resource.GetAsync(group2.Id.Value);
+
+            Assert.Equal(JsonConvert.SerializeObject(group2), JsonConvert.SerializeObject(group));
         }
 
         [Fact]
@@ -171,19 +165,43 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldUpdateGroup()
         {
-            var response = await _resource.PutAsync(
+            var group = await _resource.PostAsync(
                 new Group
                 {
-                    Id = 213,
-                    Name = "I'm an updated group!",
-                    Url = new Uri("http://kung.f1u.com"),
-                    HasIncidents = false
+                    Name = "I'm a group!",
+                    Url = new Uri("http://kung.fu.com"),
+                    HasIncidents = true
                 });
 
-            Assert.Equal(213, response.Id);
-            Assert.Equal("I'm an updated group!", response.Name);
-            Assert.Equal(new Uri("http://kung.f1u.com"), response.Url);
-            Assert.False(response.HasIncidents);
+            Assert.Equal("I'm a group!", group.Name);
+
+            group.Name = "Im a new group!";
+
+            group = await _resource.PutAsync(group);
+
+            Assert.Equal("Im a new group!", group.Name);
+        }
+
+        [Fact]
+        public async Task ShouldDeleteGroup()
+        {
+            var group = await _resource.PostAsync(
+                new Group
+                {
+                    Name = "I'm a group!",
+                    Url = new Uri("http://kung.fu.com"),
+                    HasIncidents = true
+                });
+
+            var group1 = await _resource.GetAsync(group.Id.Value);
+
+            Assert.Equal(JsonConvert.SerializeObject(group), JsonConvert.SerializeObject(group1));
+
+            await _resource.DeleteAsync(group.Id.Value);
+
+            var group2 = await _resource.GetAsync(group.Id.Value);
+
+            Assert.Null(group2);
         }
 
         public void Dispose()
