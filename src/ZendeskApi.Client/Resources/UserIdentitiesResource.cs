@@ -18,7 +18,7 @@ namespace ZendeskApi.Client.Resources
         private readonly ILogger _logger;
 
         private Func<ILogger, string, IDisposable> _loggerScope =
-            LoggerMessage.DefineScope<string>("TicketsResource: {0}");
+            LoggerMessage.DefineScope<string>("UserIdentitiesResource: {0}");
 
         public UserIdentitiesResource(IZendeskApiClient apiClient,
             ILogger logger)
@@ -40,9 +40,9 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<UserIdentity> GetIdentifyForUserAsync(long userId, long identityId)
+        public async Task<UserIdentity> GetIdentityForUserAsync(long userId, long identityId)
         {
-            using (_loggerScope(_logger, $"GetIdentifyForUserAsync({userId},{identityId})"))
+            using (_loggerScope(_logger, $"GetIdentityForUserAsync({userId},{identityId})"))
             using (var client = _apiClient.CreateClient(string.Format(ResourceUriFormat, userId)))
             {
                 var response = await client.GetAsync(identityId.ToString()).ConfigureAwait(false);

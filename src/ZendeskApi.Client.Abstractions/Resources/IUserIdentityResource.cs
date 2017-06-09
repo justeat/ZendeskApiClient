@@ -7,7 +7,7 @@ namespace ZendeskApi.Client.Resources
     public interface IUserIdentityResource
     {
         Task<IEnumerable<UserIdentity>> GetAllForUserAsync(long userId);
-        Task<UserIdentity> GetIdentifyForUserAsync(long userId, long identityId);
+        Task<UserIdentity> GetIdentityForUserAsync(long userId, long identityId);
         Task<UserIdentity> CreateUserIdentityAsync(UserIdentity identity, long userId);
         Task<UserIdentity> CreateEndUserIdentityAsync(UserIdentity identity, long endUserId);
         Task<UserIdentity> PutAsync(UserIdentity identity);
