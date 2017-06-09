@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -19,11 +17,15 @@ namespace ZendeskApi.Client.Resources
         private Func<ILogger, string, IDisposable> _loggerScope =
             LoggerMessage.DefineScope<string>("TicketsResource: {0}");
 
+        private ITicketsResource _ticketsResource;
+
         public TicketCommentsResource(IZendeskApiClient apiClient,
             ILogger logger)
         {
             _apiClient = apiClient;
             _logger = logger;
+
+            _ticketsResource = new TicketsResource(apiClient, logger);
         }
 
         public async Task<IEnumerable<TicketComment>> GetAllAsync(long ticketId)
@@ -39,23 +41,20 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<TicketComment> PostAsync(TicketComment ticket)
+        public async Task<TicketComment> AddComment(long ticketId, TicketComment ticketComment)
         {
-            using (_loggerScope(_logger, $"PostAsync"))
-            using (var client = _apiClient.CreateClient())
+            var ticket = await _ticketsResource.GetAsync(ticketId);
+
+            if (ticket == null)
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, new TicketCommentRequest { Item = ticket }).ConfigureAwait(false);
-
-                if (response.StatusCode != System.Net.HttpStatusCode.Created)
-                {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/ticket_comments#create-ticket-comment");
-                }
-
-                return (await response.Content.ReadAsAsync<TicketCommentResponse>()).Item;
+                throw new Exception($"Ticket {ticketId} not found");
             }
+
+            ticket.Comment = ticketComment;
+
+            ticket = await _ticketsResource.PutAsync(ticket);
+
+            return ticketComment;
         }
     }
 }
