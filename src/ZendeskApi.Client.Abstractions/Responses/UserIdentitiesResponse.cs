@@ -4,9 +4,9 @@ using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
 {
-    public class UserIdentityListResponse : ListResponse<UserIdentity>
+    public class UserIdentitiesResponse
     {
         [JsonProperty("identities")]
-        public override IEnumerable<UserIdentity> Results { get; set; }
+        public IEnumerable<UserIdentity> Item { get; set; }
     }
 }
