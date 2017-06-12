@@ -6,7 +6,7 @@ namespace ZendeskApi.Client
     {
         ITicketsResource Tickets { get; }
         ITicketCommentsResource TicketComments { get; }
-        IOrganizationResource Organizations { get; }
+        IOrganizationsResource Organizations { get; }
         ISearchResource Search { get; }
         IGroupsResource Groups { get; }
         IUsersResource Users { get; }
