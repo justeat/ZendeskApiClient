@@ -77,6 +77,12 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(id.ToString()).ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Requested Organization Membership {0} not found", id);
+                    return null;
+                }
+
                 response.EnsureSuccessStatusCode();
 
                 return (await response.Content.ReadAsAsync<OrganizationMembershipResponse>()).Item;
@@ -89,6 +95,12 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient(string.Format(UsersUrlFormat, userId)))
             {
                 var response = await client.GetAsync(organizationId.ToString()).ConfigureAwait(false);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    _logger.LogInformation("Requested Organization Membership ofr user {0} amd organizaion {1} not found", userId, organizationId);
+                    return null;
+                }
 
                 response.EnsureSuccessStatusCode();
 
