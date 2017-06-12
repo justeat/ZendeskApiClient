@@ -23,6 +23,7 @@ namespace ZendeskApi.Client.Tests
     {
         private class State {
             public IDictionary<long, Ticket> Tickets = new Dictionary<long, Ticket>();
+            public IDictionary<long, IList<TicketComment>> TicketComments = new Dictionary<long, IList<TicketComment>>();
         }
         
         public static Action<IRouteBuilder> MatchesRequest
@@ -64,6 +65,17 @@ namespace ZendeskApi.Client.Tests
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = state.Tickets.Values }));
+                    })
+                    .MapGet("api/v2/tickets/{id}/comments", (req, resp, routeData) =>
+                    {
+                        var id = long.Parse(routeData.Values["id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var comments = state.TicketComments.ContainsKey(id) ? state.TicketComments[id] : new List<TicketComment>();
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketCommentsResponse { Item = comments }));
                     })
                     .MapGet("api/v2/users/{id}/tickets/assigned", (req, resp, routeData) =>
                     {
@@ -173,6 +185,21 @@ namespace ZendeskApi.Client.Tests
                         var ticket = req.Body.Deserialize<TicketRequest>().Item;
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        if (ticket.Comment != null)
+                        {
+                            ticket.Comment.Id = long.Parse(RAND.Next().ToString());
+
+                            if (state.TicketComments.ContainsKey(id))
+                            {
+                                state.TicketComments[id].Add(ticket.Comment);
+                            }
+                            else
+                            {
+                                state.TicketComments.Add(id, new List<TicketComment> { ticket.Comment });
+                            }
+                            ticket.Comment = null;
+                        }
 
                         state.Tickets[id] = ticket;
 

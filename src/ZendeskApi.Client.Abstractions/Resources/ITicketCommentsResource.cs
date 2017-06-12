@@ -7,6 +7,6 @@ namespace ZendeskApi.Client.Resources
     public interface ITicketCommentsResource
     {
         Task<IEnumerable<TicketComment>> GetAllAsync(long parentId);
-        Task<TicketComment> AddComment(long ticketId, TicketComment ticketComment);
+        Task AddComment(long ticketId, TicketComment ticketComment);
     }
 }
