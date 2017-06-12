@@ -24,7 +24,7 @@ namespace ZendeskApi.Client.Resources
         private readonly ILogger _logger;
 
         private Func<ILogger, string, IDisposable> _loggerScope =
-            LoggerMessage.DefineScope<string>("TicketsResource: {0}");
+            LoggerMessage.DefineScope<string>(typeof(TicketsResource).Name + ": {0}");
 
         public TicketsResource(IZendeskApiClient apiClient,
             ILogger logger)

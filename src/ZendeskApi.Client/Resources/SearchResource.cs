@@ -14,7 +14,7 @@ namespace ZendeskApi.Client.Resources
         private readonly ILogger _logger;
 
         private Func<ILogger, string, IDisposable> _loggerScope =
-            LoggerMessage.DefineScope<string>("SearchResource: {0}");
+            LoggerMessage.DefineScope<string>(typeof(SearchResource).Name + ": {0}");
 
         public SearchResource(IZendeskApiClient apiClient,
             ILogger logger)

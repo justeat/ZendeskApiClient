@@ -21,8 +21,8 @@ namespace ZendeskApi.Client.Resources
         private readonly IZendeskApiClient _apiClient;
         private readonly ILogger _logger;
 
-        private Func<ILogger, string, IDisposable> _loggerScope = 
-            LoggerMessage.DefineScope<string>("GroupsResource: {0}");
+        private Func<ILogger, string, IDisposable> _loggerScope =
+            LoggerMessage.DefineScope<string>(typeof(GroupsResource).Name + ": {0}");
 
         public GroupsResource(IZendeskApiClient apiClient,
             ILogger logger)

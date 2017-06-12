@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Resources
         private readonly ILogger _logger;
 
         private Func<ILogger, string, IDisposable> _loggerScope =
-            LoggerMessage.DefineScope<string>("RequestsResource: {0}");
+            LoggerMessage.DefineScope<string>(typeof(RequestsResource).Name + ": {0}");
 
         public RequestsResource(IZendeskApiClient apiClient,
             ILogger logger)
