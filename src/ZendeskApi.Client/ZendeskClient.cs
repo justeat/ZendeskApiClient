@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using ZendeskApi.Client.Resources;
 
 namespace ZendeskApi.Client
@@ -9,10 +10,10 @@ namespace ZendeskApi.Client
         private readonly IZendeskApiClient _apiClient;
         private readonly ILogger _logger;
 
-        public ZendeskClient(IZendeskApiClient apiClient, ILogger logger)
+        public ZendeskClient(IZendeskApiClient apiClient, ILogger logger = null)
         {
             _apiClient = apiClient;
-            _logger = logger;
+            _logger = logger ?? NullLogger.Instance;
         }
 
         private Lazy<ITicketsResource> TicketsLazy => new Lazy<ITicketsResource>(() => new TicketsResource(_apiClient, _logger));
