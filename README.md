@@ -14,6 +14,20 @@ services.AddZendeskClient("enpointurl", "username", "token");
 ```
 then you can inject in IZendeskClient anywhere you want to use it. Here you can access all the resources available.
 
+If however you want to use the client in a DI less environment you can do this
+
+```c#
+var zendeskOptions = new ZendeskOptions
+{
+   EndpointUri = "endpoint",
+   Username = "username"
+   Token = "token"
+};
+
+var zendeskOptionsWrapper = new OptionsWrapper<ZendeskOptions>(zendeskOptions);
+var client = new ZendeskClient(new ZendeskApiClient(zendeskOptionsWrapper), _loggerFactory.CreateLogger<ZendeskClient>());
+```
+
 ## Example methods:
 ```c#
 var ticket = await client.Tickets.GetAsync(1234L); // Get ticket by Id
