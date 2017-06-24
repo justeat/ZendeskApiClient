@@ -15,7 +15,7 @@ namespace ZendeskApi.Client
             _options = options.Value;
         }
 
-        public HttpClient CreateClient(string resource = "")
+        public HttpClient CreateClient(string resource = null)
         {
             var handler = new HttpClientHandler();
             if (handler.SupportsAutomaticDecompression)
@@ -25,7 +25,7 @@ namespace ZendeskApi.Client
 
             resource = resource?.Trim('/');
 
-            if (resource != null)
+            if (!string.IsNullOrEmpty(resource))
             {
                 resource = resource + "/";
             }
