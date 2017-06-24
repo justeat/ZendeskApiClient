@@ -6,11 +6,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -45,7 +43,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var identity = state.Identities[new Tuple<long, long>(userId, identityid)];
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(identity));
+                        return resp.WriteAsJson(identity);
                     })
                     .MapGet("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
@@ -62,7 +60,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var identities = state.Identities.Where(x => x.Key.Item1 == userId).Select(x => x.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new UserIdentitiesResponse { Item = identities }));
+                        return resp.WriteAsJson(new UserIdentitiesResponse { Item = identities });
                     })
                     .MapPost("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
@@ -83,7 +81,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(identity));
+                        return resp.WriteAsJson(identity);
                     })
                     .MapPost("api/v2/end_users/{userId}/identities", (req, resp, routeData) =>
                     {
@@ -104,7 +102,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(identity));
+                        return resp.WriteAsJson(identity);
                     })
                     .MapPut("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
@@ -124,7 +122,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Identities[new Tuple<long, long>(userId, identity.Id.Value)] = identity;
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(identity));
+                        return resp.WriteAsJson(identity);
                     })
                     .MapDelete("api/v2/users/{userid}/identities/{identityid}", (req, resp, routeData) =>
                     {

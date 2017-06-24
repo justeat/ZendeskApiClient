@@ -6,11 +6,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -46,14 +44,14 @@ namespace ZendeskApi.Client.Tests
                         var sr = state.SatisfactionRatings.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(sr));
+                        return resp.WriteAsJson(sr);
                     })
                     .MapGet("api/v2/satisfaction_ratings", (req, resp, routeData) =>
                     {
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new SatisfactionRatingsResponse { Item = state.SatisfactionRatings.Values }));
+                        return resp.WriteAsJson(new SatisfactionRatingsResponse { Item = state.SatisfactionRatings.Values });
                     })
                     .MapPost("api/v2/tickets/{ticketId}/satisfaction_rating", (req, resp, routeData) =>
                     {
@@ -81,7 +79,7 @@ namespace ZendeskApi.Client.Tests
                         }
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(sr));
+                        return resp.WriteAsJson(sr);
                     })
                     ;
             }

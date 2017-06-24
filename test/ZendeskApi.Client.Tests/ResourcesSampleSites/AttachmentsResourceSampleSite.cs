@@ -2,21 +2,18 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
-using ZendeskApi.Client.Tests.ResourcesSampleSites;
-using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Models;
-using System.Linq;
+using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests
 {
@@ -47,7 +44,7 @@ namespace ZendeskApi.Client.Tests
                         var obj = state.Attachments.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(obj));
+                        return resp.WriteAsJson(obj);
                     })
                     .MapPost("api/v2/uploads", (req, resp, routeData) =>
                     {
@@ -84,10 +81,10 @@ namespace ZendeskApi.Client.Tests
 
                         state.Attachments.Add(attachment.Id.Value, attachment);
 
-                        resp.WriteAsync(JsonConvert.SerializeObject(new Upload {
+                        resp.WriteAsJson(new Upload {
                             Attachment = attachment,
                             Token = "6bk3gql82em5nmf"
-                        }));
+                        });
 
                         return Task.CompletedTask;
                     });

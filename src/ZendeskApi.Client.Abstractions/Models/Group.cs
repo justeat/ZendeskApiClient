@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
 {
-    [JsonObject("group")]
+    [JsonObject("group", Title = "group")]
     public class Group
     {
         [JsonProperty]

@@ -6,11 +6,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -49,7 +47,7 @@ namespace ZendeskApi.Client.Tests
                         }
                         
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = users }));
+                        return resp.WriteAsJson(new UsersResponse { Item = users });
                     })
                     .MapGet("api/v2/users/{id}", (req, resp, routeData) =>
                     {
@@ -66,14 +64,14 @@ namespace ZendeskApi.Client.Tests
                         var user = state.Users.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(user));
+                        return resp.WriteAsJson(user);
                     })
                     .MapGet("api/v2/users", (req, resp, routeData) =>
                     {
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = state.Users.Values }));
+                        return resp.WriteAsJson(new UsersResponse { Item = state.Users.Values });
                     })
                     .MapGet("api/v2/groups/{id}/users", (req, resp, routeData) =>
                     {
@@ -87,7 +85,7 @@ namespace ZendeskApi.Client.Tests
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = users }));
+                        return resp.WriteAsJson(new UsersResponse { Item = users });
                     })
                     .MapGet("api/v2/organizations/{id}/users", (req, resp, routeData) =>
                     {
@@ -102,7 +100,7 @@ namespace ZendeskApi.Client.Tests
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new UsersResponse { Item = users }));
+                        return resp.WriteAsJson(new UsersResponse { Item = users });
                     })
                     .MapPost("api/v2/users", (req, resp, routeData) =>
                     {
@@ -121,7 +119,7 @@ namespace ZendeskApi.Client.Tests
                         state.Users.Add(user.Id.Value, user);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(user));
+                        return resp.WriteAsJson(user);
                     })
                     .MapPut("api/v2/users/{id}", (req, resp, routeData) =>
                     {
@@ -141,7 +139,7 @@ namespace ZendeskApi.Client.Tests
                         state.Users[id] = user;
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(user));
+                        return resp.WriteAsJson(user);
                     })
                     .MapDelete("api/v2/users/{id}", (req, resp, routeData) =>
                     {
