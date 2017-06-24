@@ -35,7 +35,6 @@ namespace ZendeskApi.Client
                 BaseAddress = new Uri($"{_options.EndpointUri}/{resource}"),
             };
 
-            // TODO: (ngm) add auth key?
             var authorizationHeader = Convert
                 .ToBase64String(
                     Encoding.UTF8.GetBytes($"{_options.Username}/token:{_options.Token}"));
