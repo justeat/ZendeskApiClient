@@ -29,12 +29,12 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<Group>> GetAllAsync()
+        public async Task<IPagination<Group>> GetAllAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(GroupsResourceUri).ConfigureAwait(false);
+                var response = await client.GetAsync(GroupsResourceUri, pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -42,12 +42,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<Group>> GetAllAsync(long userId)
+        public async Task<IPagination<Group>> GetAllAsync(long userId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(string.Format(GroupsByUserResourceUriFormat, userId)).ConfigureAwait(false);
+                var response = await client.GetAsync(string.Format(GroupsByUserResourceUriFormat, userId), pager).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -61,12 +61,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<Group>> GetAllAssignableAsync()
+        public async Task<IPagination<Group>> GetAllAssignableAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, "GetAllAssignableAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(AssignableGroupUri).ConfigureAwait(false);
+                var response = await client.GetAsync(AssignableGroupUri, pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 

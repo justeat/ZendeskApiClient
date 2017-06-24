@@ -31,12 +31,12 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<OrganizationMembership>> GetAllAsync()
+        public async Task<IPagination<OrganizationMembership>> GetAllAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
+                var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -44,12 +44,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<OrganizationMembership>> GetAllForOrganizationAsync(long organizationId)
+        public async Task<IPagination<OrganizationMembership>> GetAllForOrganizationAsync(long organizationId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllForOrganizationAsync({organizationId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(string.Format(OrganisationsUrlFormat, organizationId)).ConfigureAwait(false);
+                var response = await client.GetAsync(string.Format(OrganisationsUrlFormat, organizationId), pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -57,12 +57,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<OrganizationMembership>> GetAllForUserAsync(long userId)
+        public async Task<IPagination<OrganizationMembership>> GetAllForUserAsync(long userId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllForUserAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(string.Format(UsersUrlFormat, userId)).ConfigureAwait(false);
+                var response = await client.GetAsync(string.Format(UsersUrlFormat, userId), pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 

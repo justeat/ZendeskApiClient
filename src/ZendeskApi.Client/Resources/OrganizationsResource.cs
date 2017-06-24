@@ -27,12 +27,12 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<Organization>> GetAllAsync()
+        public async Task<IPagination<Organization>> GetAllAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
+                var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -40,12 +40,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<Organization>> GetAllByUserIdAsync(long userId)
+        public async Task<IPagination<Organization>> GetAllByUserIdAsync(long userId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(string.Format(UserResourceUriFormat, userId)).ConfigureAwait(false);
+                var response = await client.GetAsync(string.Format(UserResourceUriFormat, userId), pager).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -78,12 +78,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<Organization>> GetAllAsync(long[] organizationIds)
+        public async Task<IPagination<Organization>> GetAllAsync(long[] organizationIds, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllAsync({ZendeskFormatter.ToCsv(organizationIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(organizationIds)}").ConfigureAwait(false);
+                var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(organizationIds)}", pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -91,12 +91,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<Organization>> GetAllByExternalIdsAsync(string[] externalIds)
+        public async Task<IPagination<Organization>> GetAllByExternalIdsAsync(string[] externalIds, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.GetAsync($"show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}").ConfigureAwait(false);
+                var response = await client.GetAsync($"show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}", pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 

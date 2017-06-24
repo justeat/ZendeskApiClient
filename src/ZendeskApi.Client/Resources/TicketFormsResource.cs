@@ -25,7 +25,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<TicketForm>> GetAllAsync()
+        public async Task<IPagination<TicketForm>> GetAllAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
@@ -57,12 +57,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<TicketForm>> GetAllAsync(long[] ticketFormsIds)
+        public async Task<IPagination<TicketForm>> GetAllAsync(long[] ticketFormsIds, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllAsync({ZendeskFormatter.ToCsv(ticketFormsIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ticketFormsIds)}").ConfigureAwait(false);
+                var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ticketFormsIds)}", pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
 {
@@ -25,6 +26,22 @@ namespace ZendeskApi.Client.Responses
 
         [JsonProperty("previous_page")]
         public Uri PreviousPage { get; set; } = null;
+
+        [JsonIgnore]
+        public Pager Pager
+        {
+            get {
+                if (NextPage == null)
+                {
+                    return new Pager(null, Count, 100);
+                }
+
+                var next = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(NextPage.Query);
+                var page = int.Parse(next["page"]);
+
+                return new Pager(new PagerParameters { Page = page, PageSize = Count }, 100);
+            }
+        }
 
         public IEnumerator<T> GetEnumerator()
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
@@ -27,12 +28,12 @@ namespace ZendeskApi.Client.Resources
             _ticketsResource = new TicketsResource(apiClient, logger);
         }
 
-        public async Task<IPagination<TicketComment>> GetAllAsync(long ticketId)
+        public async Task<IPagination<TicketComment>> GetAllAsync(long ticketId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllAsync({ticketId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(string.Format(ResourceUri, ticketId)).ConfigureAwait(false);
+                var response = await client.GetAsync(string.Format(ResourceUri, ticketId), pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 

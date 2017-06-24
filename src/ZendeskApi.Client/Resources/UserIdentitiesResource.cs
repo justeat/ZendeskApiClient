@@ -25,12 +25,12 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<UserIdentity>> GetAllForUserAsync(long userId)
+        public async Task<IPagination<UserIdentity>> GetAllForUserAsync(long userId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllForUserAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(string.Format(ResourceUriFormat, userId)).ConfigureAwait(false);
+                var response = await client.GetAsync(string.Format(ResourceUriFormat, userId), pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 

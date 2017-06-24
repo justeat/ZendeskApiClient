@@ -26,12 +26,12 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
         
-        public async Task<IPagination<Request>> GetAllAsync()
+        public async Task<IPagination<Request>> GetAllAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
+                var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -58,12 +58,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<Request>> SearchAsync(IZendeskQuery<Request> query)
+        public async Task<IPagination<Request>> SearchAsync(IZendeskQuery<Request> query, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"SearchAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.GetAsync("search?" + query.BuildQuery()).ConfigureAwait(false);
+                var response = await client.GetAsync("search?" + query.BuildQuery(), pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -71,12 +71,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<TicketComment>> GetAllComments(long requestId)
+        public async Task<IPagination<TicketComment>> GetAllComments(long requestId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllComments({requestId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync(string.Format(CommentsResourceUri, requestId)).ConfigureAwait(false);
+                var response = await client.GetAsync(string.Format(CommentsResourceUri, requestId), pager).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {

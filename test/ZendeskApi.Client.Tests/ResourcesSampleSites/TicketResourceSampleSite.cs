@@ -31,10 +31,15 @@ namespace ZendeskApi.Client.Tests
                     .MapGet("api/v2/tickets/show_many", (req, resp, routeData) =>
                     {
                         var ids = req.Query["ids"].ToString().Split(',').Select(long.Parse);
+                        var pager = new Pager(int.Parse(req.Query["page"]), int.Parse(req.Query["per_page"]), 100);
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        var tickets = state.Tickets.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
+                        var tickets = state
+                            .Tickets
+                            .Where(x => ids.Contains(x.Key)).Select(p => p.Value)
+                            .Skip(pager.GetStartIndex())
+                            .Take(pager.PageSize);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new TicketsResponse { Item = tickets });
@@ -58,10 +63,18 @@ namespace ZendeskApi.Client.Tests
                     })
                     .MapGet("api/v2/tickets", (req, resp, routeData) =>
                     {
+                        var pager = new Pager(int.Parse(req.Query["page"]), int.Parse(req.Query["per_page"]), 100);
+
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
+                        var tickets = state
+                            .Tickets
+                            .Values
+                            .Skip(pager.GetStartIndex())
+                            .Take(pager.PageSize);
+
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsResponse { Item = state.Tickets.Values });
+                        return resp.WriteAsJson(new TicketsResponse { Item = tickets });
                     })
                     .MapGet("api/v2/tickets/{id}/comments", (req, resp, routeData) =>
                     {

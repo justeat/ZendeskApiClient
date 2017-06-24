@@ -6,11 +6,11 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IOrganizationsResource
     {
-        Task<IPagination<Organization>> GetAllAsync();
-        Task<IPagination<Organization>> GetAllByUserIdAsync(long userId);
+        Task<IPagination<Organization>> GetAllAsync(PagerParameters pager = null);
+        Task<IPagination<Organization>> GetAllByUserIdAsync(long userId, PagerParameters pager = null);
         Task<Organization> GetAsync(long organizationId);
-        Task<IPagination<Organization>> GetAllAsync(long[] organizationIds);
-        Task<IPagination<Organization>> GetAllByExternalIdsAsync(string[] externalIds);
+        Task<IPagination<Organization>> GetAllAsync(long[] organizationIds, PagerParameters pager = null);
+        Task<IPagination<Organization>> GetAllByExternalIdsAsync(string[] externalIds, PagerParameters pager = null);
         Task<Organization> PostAsync(Organization organization);
         Task<Organization> PutAsync(Organization organization);
         Task DeleteAsync(long organizationId);

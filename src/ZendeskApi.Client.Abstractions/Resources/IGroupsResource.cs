@@ -6,9 +6,9 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IGroupsResource
     {
-        Task<IPagination<Group>> GetAllAsync();
-        Task<IPagination<Group>> GetAllAsync(long userId);
-        Task<IPagination<Group>> GetAllAssignableAsync();
+        Task<IPagination<Group>> GetAllAsync(PagerParameters pager = null);
+        Task<IPagination<Group>> GetAllAsync(long userId, PagerParameters pager = null);
+        Task<IPagination<Group>> GetAllAssignableAsync(PagerParameters pager = null);
         Task<Group> GetAsync(long groupId);
         Task<Group> PostAsync(Group group);
         Task<Group> PutAsync(Group group);

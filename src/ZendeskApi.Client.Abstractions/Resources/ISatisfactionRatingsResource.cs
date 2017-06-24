@@ -6,7 +6,7 @@ namespace ZendeskApi.Client.Resources
 {
     public interface ISatisfactionRatingsResource
     {
-        Task<IPagination<SatisfactionRating>> GetAllAsync();
+        Task<IPagination<SatisfactionRating>> GetAllAsync(PagerParameters pager = null);
         Task<SatisfactionRating> GetAsync(long satisficationRatingId);
         Task<SatisfactionRating> CreateSatisfactionRatingAsync(SatisfactionRating satisfactionRating, long ticketId);
     }

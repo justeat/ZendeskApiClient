@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Models;
+using System.Collections.Generic;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -24,7 +25,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllTickets()
         {
-            var tickets = await CreateTickets();
+            var tickets = await CreateTickets(2);
 
             var retrievedTickets = (await _resource.GetAllAsync()).ToArray();
 
@@ -32,7 +33,29 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
             Assert.Equal(JsonConvert.SerializeObject(tickets[1]), JsonConvert.SerializeObject(retrievedTickets[1]));
         }
-        
+
+        [Fact]
+        public async Task ShouldPaginateThoughTickets()
+        {
+            var tickets = await CreateTickets(10);
+
+            var retrievedTickets = (await _resource.GetAllAsync(new PagerParameters { Page = 1, PageSize = 5 })).ToArray();
+
+            Assert.Equal(5, retrievedTickets.Length);
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.Equal(JsonConvert.SerializeObject(tickets[i]), JsonConvert.SerializeObject(retrievedTickets[i]));
+            }
+
+            var retrievedTickets2 = (await _resource.GetAllAsync(new PagerParameters { Page = 2, PageSize = 5 })).ToArray();
+
+            Assert.Equal(5, retrievedTickets2.Length);
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.Equal(JsonConvert.SerializeObject(tickets[i + 5]), JsonConvert.SerializeObject(retrievedTickets2[i]));
+            }
+        }
+
         [Fact]
         public async Task ShouldListAllForOrganizationTickets()
         {
@@ -235,7 +258,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetAllTicketsForIds()
         {
-            var tickets = await CreateTickets();
+            var tickets = await CreateTickets(2);
             
             var retrievedTickets = (await _resource.GetAllAsync(new long[] { tickets[0].Id.Value, 543521L, tickets[1].Id.Value, 123445L })).ToArray();
             
@@ -349,32 +372,32 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Null(ticket2);
         }
 
-        private async Task<Ticket[]> CreateTickets()
+        private async Task<Ticket[]> CreateTickets(int numberOfTicketsToCreate)
         {
-            var ticket1 = new Ticket
+            var tickets = new List<Ticket>();
+
+            for (int i = 0; i < numberOfTicketsToCreate; i++)
             {
-                Subject = "My printer is on fire! 1",
-                Comment = new TicketComment
+                var ticket = new Ticket
                 {
-                    Body = "The smoke is very colorful. 1"
-                }
-            };
+                    Subject = "My printer is on fire! " + i,
+                    Comment = new TicketComment
+                    {
+                        Body = "The smoke is very colorful. " + i
+                    }
+                };
 
-            var ticket2 = new Ticket
+                tickets.Add(ticket);
+            }
+
+            var jobStatus = await _resource.PostAsync(tickets);
+
+            for (int i = 0; i < numberOfTicketsToCreate; i++)
             {
-                Subject = "My printer is on fire! 2",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 2"
-                }
-            };
+                tickets[i].Id = jobStatus.Items.Single(x => x.Title == tickets[i].Subject).Id;
+            }
 
-            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2 });
-
-            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
-            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
-
-            return new[] { ticket1, ticket2 };
+            return tickets.ToArray();
         }
 
         public void Dispose()

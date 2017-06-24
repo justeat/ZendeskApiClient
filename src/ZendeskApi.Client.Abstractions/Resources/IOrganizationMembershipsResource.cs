@@ -7,9 +7,9 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IOrganizationMembershipsResource
     {
-        Task<IPagination<OrganizationMembership>> GetAllAsync();
-        Task<IPagination<OrganizationMembership>> GetAllForOrganizationAsync(long organizationId);
-        Task<IPagination<OrganizationMembership>> GetAllForUserAsync(long userId);
+        Task<IPagination<OrganizationMembership>> GetAllAsync(PagerParameters pager = null);
+        Task<IPagination<OrganizationMembership>> GetAllForOrganizationAsync(long organizationId, PagerParameters pager = null);
+        Task<IPagination<OrganizationMembership>> GetAllForUserAsync(long userId, PagerParameters pager = null);
         Task<OrganizationMembership> GetAsync(long id);
         Task<OrganizationMembership> GetForUserAndOrganizationAsync(long userId, long organizationId);
         Task<OrganizationMembership> PostAsync(OrganizationMembership organizationMembership);
