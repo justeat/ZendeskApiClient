@@ -10,6 +10,7 @@ namespace ZendeskApi.Client.Responses
         public Request Item { get; set; }
     }
 
+    [JsonObject]
     public class RequestsResponse : PaginationResponse<Request>
     {
         [JsonProperty("requests")]

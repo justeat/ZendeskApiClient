@@ -10,6 +10,7 @@ namespace ZendeskApi.Client.Responses
         public SatisfactionRating Item { get; set; }
     }
 
+    [JsonObject]
     public class SatisfactionRatingsResponse : PaginationResponse<SatisfactionRating>
     {
         [JsonProperty("satisfaction_ratings")]

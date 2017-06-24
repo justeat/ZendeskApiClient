@@ -15,7 +15,6 @@ namespace ZendeskApi.Client.Responses
 
     public abstract class PaginationResponse<T> : IPagination<T>
     {
-        [JsonIgnore]
         public abstract IEnumerable<T> Item { get; set; }
 
         [JsonProperty("count")]
