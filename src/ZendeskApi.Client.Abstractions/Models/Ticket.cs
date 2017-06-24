@@ -60,7 +60,7 @@ namespace ZendeskApi.Client.Models
         public object Recipient { get; set; }
 
         [JsonProperty("group_id")]
-        public int? GroupId { get; set; }
+        public long? GroupId { get; set; }
 
         [JsonProperty("ticket_form_id")]
         public int? FormId { get; set; }
