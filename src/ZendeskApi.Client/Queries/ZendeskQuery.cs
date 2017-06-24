@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text;
+using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Queries
@@ -54,9 +55,7 @@ namespace ZendeskApi.Client.Queries
         {
             var sb = new StringBuilder();
 
-            var zendeskType = GetDescription(typeof(T));
-
-            sb.Append(string.Format("query=type:{0}", zendeskType.ToLower()));
+            sb.Append(string.Format("query=type:{0}", typeof(T).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id));
 
             foreach (var filter in _customFilters)
             {
@@ -112,17 +111,6 @@ namespace ZendeskApi.Client.Queries
             sb.Append(string.Format("&page={0}&per_page={1}", _pageNumber, _pageSize));
 
             return sb.ToString();
-        }
-
-        static string GetDescription(Type type)
-        {
-            var descriptions = (DescriptionAttribute[])type.GetTypeInfo().GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-            if (descriptions.Length == 0)
-            {
-                return null;
-            }
-            return descriptions[0].Description;
         }
     }
 }

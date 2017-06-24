@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
 {
-    [Description("Attachment")]
+    [JsonObject("attachment")]
     public class Attachment : Thumbnail
     {
         [JsonProperty("thumbnails")]

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
 {
+    [JsonObject("upload")]
     public class Upload
     {
         [JsonIgnore]

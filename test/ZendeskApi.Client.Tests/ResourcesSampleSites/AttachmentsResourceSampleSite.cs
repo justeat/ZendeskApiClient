@@ -47,7 +47,7 @@ namespace ZendeskApi.Client.Tests
                         var obj = state.Attachments.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new AttachmentResponse { Item = obj }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(obj));
                     })
                     .MapPost("api/v2/uploads", (req, resp, routeData) =>
                     {
@@ -84,10 +84,10 @@ namespace ZendeskApi.Client.Tests
 
                         state.Attachments.Add(attachment.Id.Value, attachment);
 
-                        resp.WriteAsync(JsonConvert.SerializeObject(new UploadResponse { Item = new Upload {
+                        resp.WriteAsync(JsonConvert.SerializeObject(new Upload {
                             Attachment = attachment,
                             Token = "6bk3gql82em5nmf"
-                        } }));
+                        }));
 
                         return Task.CompletedTask;
                     });

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
 {
-    [Description("Group")]
+    [JsonObject("group")]
     public class Group
     {
         [JsonProperty]

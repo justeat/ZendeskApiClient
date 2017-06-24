@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Client.Models
 {
-    [Description("Comment")]
+    [JsonObject("comment")]
     public class TicketComment
     {
         [JsonProperty]

@@ -56,7 +56,7 @@ namespace ZendeskApi.Client.Tests
                         var obj = state.TicketForms.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketFormResponse { Item = obj }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(obj));
                     })
                     .MapGet("api/v2/ticket_forms", (req, resp, routeData) =>
                     {
@@ -82,7 +82,7 @@ namespace ZendeskApi.Client.Tests
                         state.TicketForms.Add(obj.Id.Value, obj);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketFormResponse { Item = obj }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(obj));
                     })
                     .MapPut("api/v2/ticket_forms/{id}", (req, resp, routeData) =>
                     {
@@ -95,7 +95,7 @@ namespace ZendeskApi.Client.Tests
                         state.TicketForms[id] = group;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketFormResponse { Item = state.TicketForms[id] }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(state.TicketForms[id]));
                     })
                     .MapDelete("api/v2/ticket_forms/{id}", (req, resp, routeData) =>
                     {

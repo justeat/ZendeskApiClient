@@ -44,7 +44,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<AttachmentResponse>()).Item;
+                return (await response.Content.ReadAsAsync<Attachment>());
             }
         }
 
@@ -66,7 +66,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/attachments#upload-files");
                 }
 
-                return (await response.Content.ReadAsAsync<UploadResponse>()).Item;
+                return (await response.Content.ReadAsAsync<Upload>());
             }
         }
 

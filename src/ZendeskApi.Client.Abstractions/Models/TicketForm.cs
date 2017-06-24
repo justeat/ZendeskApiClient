@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
 {
+    [JsonObject("ticket_form")]
     public class TicketForm
     {
         [JsonProperty("id")]

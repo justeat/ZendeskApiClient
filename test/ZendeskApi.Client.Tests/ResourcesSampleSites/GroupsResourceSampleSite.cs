@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,12 +11,10 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using ZendeskApi.Client.Tests.ResourcesSampleSites;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
-using System.Collections.Generic;
-using System.Linq;
+using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests
 {
@@ -57,7 +57,7 @@ namespace ZendeskApi.Client.Tests
                         var group = state.Groups.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new GroupResponse { Item = group }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(group));
                     })
                     .MapGet("api/v2/groups", (req, resp, routeData) =>
                     {
@@ -97,7 +97,7 @@ namespace ZendeskApi.Client.Tests
                         state.Groups.Add(group.Id.Value, group);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new GroupResponse { Item = group }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(group));
                     })
                     .MapPut("api/v2/groups/{id}", (req, resp, routeData) =>
                     {
@@ -110,7 +110,7 @@ namespace ZendeskApi.Client.Tests
                         state.Groups[id] = group;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new GroupResponse { Item = state.Groups[id] }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(state.Groups[id]));
                     })
                     .MapDelete("api/v2/groups/{id}", (req, resp, routeData) =>
                     {

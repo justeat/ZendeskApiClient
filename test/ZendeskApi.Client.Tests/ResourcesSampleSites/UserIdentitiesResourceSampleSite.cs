@@ -45,7 +45,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var identity = state.Identities[new Tuple<long, long>(userId, identityid)];
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new UserIdentityResponse { Item = identity }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(identity));
                     })
                     .MapGet("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
@@ -83,7 +83,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new UserIdentityResponse { Item = identity }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(identity));
                     })
                     .MapPost("api/v2/end_users/{userId}/identities", (req, resp, routeData) =>
                     {
@@ -104,7 +104,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new UserIdentityResponse { Item = identity }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(identity));
                     })
                     .MapPut("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
@@ -124,7 +124,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Identities[new Tuple<long, long>(userId, identity.Id.Value)] = identity;
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new UserIdentityResponse { Item = identity }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(identity));
                     })
                     .MapDelete("api/v2/users/{userid}/identities/{identityid}", (req, resp, routeData) =>
                     {

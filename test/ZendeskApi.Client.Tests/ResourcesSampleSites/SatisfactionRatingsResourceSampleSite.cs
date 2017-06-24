@@ -46,7 +46,7 @@ namespace ZendeskApi.Client.Tests
                         var sr = state.SatisfactionRatings.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new SatisfactionRatingResponse { Item = sr }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(sr));
                     })
                     .MapGet("api/v2/satisfaction_ratings", (req, resp, routeData) =>
                     {
@@ -81,7 +81,7 @@ namespace ZendeskApi.Client.Tests
                         }
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new SatisfactionRatingResponse { Item = sr }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(sr));
                     })
                     ;
             }

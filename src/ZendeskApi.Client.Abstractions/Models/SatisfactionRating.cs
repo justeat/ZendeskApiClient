@@ -1,11 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Client.Models
 {
-    [Description("satisfaction_rating")]
+    [JsonObject("satisfaction_rating")]
     public class SatisfactionRating
     {
         [JsonProperty]

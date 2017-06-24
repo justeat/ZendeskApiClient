@@ -4,12 +4,6 @@ using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
 {
-    public class OrganizationResponse
-    {
-        [JsonProperty("organization")]
-        public Organization Item { get; set; }
-    }
-
     [JsonObject]
     public class OrganizationsResponse : PaginationResponse<Organization>
     {

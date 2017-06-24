@@ -137,7 +137,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
+                return (await response.Content.ReadAsAsync<Ticket>());
             }
         }
 
@@ -169,7 +169,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
                 }
 
-                return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
+                return (await response.Content.ReadAsAsync<Ticket>());
             }
         }
 
@@ -188,7 +188,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
                 }
 
-                return (await response.Content.ReadAsAsync<JobStatusResponse>()).Item;
+                return (await response.Content.ReadAsAsync<JobStatus>());
             }
         }
 
@@ -207,7 +207,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketResponse>()).Item;
+                return (await response.Content.ReadAsAsync<Ticket>());
             }
         }
 
@@ -220,7 +220,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<JobStatusResponse>()).Item;
+                return (await response.Content.ReadAsAsync<JobStatus>());
             }
         }
 
@@ -252,7 +252,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<JobStatusResponse>()).Item;
+                return (await response.Content.ReadAsAsync<JobStatus>());
             }
         }
 

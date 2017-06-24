@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
 {
-    [Description("Ticket Field")]
+    [JsonObject("ticket_field")]
     public class TicketField
     {
         [JsonProperty]

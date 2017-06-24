@@ -56,7 +56,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
+                return (await response.Content.ReadAsAsync<Request>());
             }
         }
 
@@ -107,7 +107,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketCommentResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketComment>());
             }
         }
 
@@ -126,7 +126,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/requests#create-request");
                 }
 
-                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
+                return (await response.Content.ReadAsAsync<Request>());
             }
         }
 
@@ -145,7 +145,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<RequestResponse>()).Item;
+                return (await response.Content.ReadAsAsync<Request>());
             }
         }
     }

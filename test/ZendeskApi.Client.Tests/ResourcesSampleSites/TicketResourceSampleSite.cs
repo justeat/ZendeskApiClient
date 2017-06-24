@@ -56,7 +56,7 @@ namespace ZendeskApi.Client.Tests
                         var ticket = state.Tickets.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(ticket));
                     })
                     .MapGet("api/v2/tickets", (req, resp, routeData) =>
                     {
@@ -152,7 +152,7 @@ namespace ZendeskApi.Client.Tests
                         state.Tickets.Add(ticket.Id.Value, ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = ticket }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(ticket));
                     })
                     .MapPost("api/v2/tickets/create_many", (req, resp, routeData) =>
                     {
@@ -168,14 +168,12 @@ namespace ZendeskApi.Client.Tests
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
 
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new JobStatusResponse
-                        {
-                            Item = new JobStatus
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new JobStatus
                             {
                                 Id = Guid.NewGuid().ToString().Replace("-", ""),
                                 Items = tickets.Select(x => new JobStatusResult { Id = x.Id.Value, Title = x.Subject })
                             }
-                        }));
+                        ));
                     })
                     .MapPut("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
@@ -203,7 +201,7 @@ namespace ZendeskApi.Client.Tests
                         state.Tickets[id] = ticket;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketResponse { Item = state.Tickets[id] }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(state.Tickets[id]));
                     })
                     .MapDelete("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {

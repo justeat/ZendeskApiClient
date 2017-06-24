@@ -54,7 +54,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<SatisfactionRatingResponse>()).Item;
+                return (await response.Content.ReadAsAsync<SatisfactionRating>());
             }
         }
 
@@ -73,7 +73,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/satisfaction_ratings#create-a-satisfaction-rating");
                 }
 
-                return (await response.Content.ReadAsAsync<SatisfactionRatingResponse>()).Item;
+                return (await response.Content.ReadAsAsync<SatisfactionRating>());
             }
         }
 

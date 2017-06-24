@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +11,10 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using ZendeskApi.Client.Tests.ResourcesSampleSites;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests
 {
@@ -45,7 +44,7 @@ namespace ZendeskApi.Client.Tests
                         var ticketField = state.TicketFields.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketFieldResponse { Item = ticketField }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(ticketField));
                     })
                     .MapGet("api/v2/ticket_fields", (req, resp, routeData) =>
                     {
@@ -71,7 +70,7 @@ namespace ZendeskApi.Client.Tests
                         state.TicketFields.Add(ticket.Id.Value, ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketFieldResponse { Item = ticket }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(ticket));
                     })
                     .MapPut("api/v2/ticket_fields/{id}", (req, resp, routeData) =>
                     {
@@ -84,7 +83,7 @@ namespace ZendeskApi.Client.Tests
                         state.TicketFields[id] = ticket;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketFieldResponse { Item = state.TicketFields[id] }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(state.TicketFields[id]));
                     })
                     .MapDelete("api/v2/ticket_fields/{id}", (req, resp, routeData) =>
                     {

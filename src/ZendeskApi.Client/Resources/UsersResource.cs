@@ -97,7 +97,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UserResponse>()).Item;
+                return (await response.Content.ReadAsAsync<User>());
             }
         }
         
@@ -142,7 +142,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UserResponse>()).Item;
+                return (await response.Content.ReadAsAsync<User>());
             }
         }
         
@@ -161,7 +161,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/users#create-user");
                 }
 
-                return (await response.Content.ReadAsAsync<UserResponse>()).Item;
+                return (await response.Content.ReadAsAsync<User>());
             }
         }
         
@@ -180,7 +180,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UserResponse>()).Item;
+                return (await response.Content.ReadAsAsync<User>());
             }
         }
 

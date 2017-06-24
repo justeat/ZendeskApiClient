@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
 {
-    [Description("Organization")]
+    [JsonObject("organization")]
     public class Organization
     {
         [JsonProperty("id")]

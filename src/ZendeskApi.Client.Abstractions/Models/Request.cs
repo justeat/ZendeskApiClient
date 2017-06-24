@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Client.Models
 {
-    [Description("Request")]
+    [JsonObject("request")]
     public class Request
     {
         public Request()
