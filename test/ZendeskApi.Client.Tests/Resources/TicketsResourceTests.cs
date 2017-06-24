@@ -42,7 +42,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var retrievedTickets = (await _resource.GetAllAsync(new PagerParameters { Page = 1, PageSize = 5 })).ToArray();
 
             Assert.Equal(5, retrievedTickets.Length);
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 Assert.Equal(JsonConvert.SerializeObject(tickets[i]), JsonConvert.SerializeObject(retrievedTickets[i]));
             }
@@ -50,7 +50,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var retrievedTickets2 = (await _resource.GetAllAsync(new PagerParameters { Page = 2, PageSize = 5 })).ToArray();
 
             Assert.Equal(5, retrievedTickets2.Length);
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 Assert.Equal(JsonConvert.SerializeObject(tickets[i + 5]), JsonConvert.SerializeObject(retrievedTickets2[i]));
             }
@@ -376,7 +376,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var tickets = new List<Ticket>();
 
-            for (int i = 0; i < numberOfTicketsToCreate; i++)
+            for (var i = 0; i < numberOfTicketsToCreate; i++)
             {
                 var ticket = new Ticket
                 {
@@ -392,7 +392,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             var jobStatus = await _resource.PostAsync(tickets);
 
-            for (int i = 0; i < numberOfTicketsToCreate; i++)
+            for (var i = 0; i < numberOfTicketsToCreate; i++)
             {
                 tickets[i].Id = jobStatus.Items.Single(x => x.Title == tickets[i].Subject).Id;
             }

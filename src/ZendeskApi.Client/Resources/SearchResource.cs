@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
@@ -24,12 +25,15 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<SearchResult>> SearchAsync<T>(IZendeskQuery<T> zendeskQuery)
+        public async Task<IPagination<SearchResult>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null)
         {
+            var query = new ZendeskQuery();
+            builder(query);
+
             using (_loggerScope(_logger, "Search"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.GetAsync($"{SearchUri}?{zendeskQuery.BuildQuery()}").ConfigureAwait(false);
+                var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager).ConfigureAwait(false);
                 return await response.Content.ReadAsAsync<SearchResultsResponse>();
             }
         }

@@ -5,6 +5,10 @@
         Equals,
         LessThan,
         GreaterThan,
-        NotEqual
+        LessThanOrEqual,
+        GreaterThanOrEqual,
+        Exact,
+        Excludes,
+        Wildcard
     }
 }
