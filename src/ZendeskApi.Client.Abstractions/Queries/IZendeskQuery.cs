@@ -10,6 +10,6 @@ namespace ZendeskApi.Client.Queries
 
         IZendeskQuery<T> WithPaging(int pageNumber, int pageSize);
 
-        IZendeskQuery<T> WithOrdering(OrderBy orderBy, Order order);
+        IZendeskQuery<T> WithOrdering(SortBy sortBy, SortOrder sortOrder);
     }
 }

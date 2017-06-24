@@ -1,4 +1,4 @@
-using Xunit;
+﻿using Xunit;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Queries;
 
@@ -17,7 +17,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+name:cheese+factory&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
+            Assert.Equal("query=type:organization+name:cheese+factory&page=1&per_page=15", queryString);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+updated_at>10%2F15%2F14&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
+            Assert.Equal("query=type:organization+updated_at>10%2F15%2F14&page=1&per_page=15", queryString);
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+updated_at<10%2F15%2F14&sort_by=created_at&sort_order=desc&page=1&per_page=15", queryString);
+            Assert.Equal("query=type:organization+updated_at<10%2F15%2F14&page=1&per_page=15", queryString);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+name:cheese+factory&sort_by=created_at&sort_order=desc&page=3&per_page=15", queryString);
+            Assert.Equal("query=type:organization+name:cheese+factory&page=3&per_page=15", queryString);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:ticket+name:cheese+factory&sort_by=created_at&sort_order=desc&page=3&per_page=15", queryString);
+            Assert.Equal("query=type:ticket+name:cheese+factory&page=3&per_page=15", queryString);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace ZendeskApi.Client.Tests.Queries
         {
             // Given
             var query = new ZendeskQuery<Ticket>();
-            query.WithCustomFilter("name", "cheese factory", FilterOperator.Equals).WithPaging(3, 15).WithOrdering(OrderBy.priority, Order.Asc);
+            query.WithCustomFilter("name", "cheese factory", FilterOperator.Equals).WithPaging(3, 15).WithOrdering(SortBy.Priority, SortOrder.Asc);
 
             // When 
             var queryString = query.BuildQuery();
@@ -95,7 +95,7 @@ namespace ZendeskApi.Client.Tests.Queries
         {
             // Given
             var query = new ZendeskQuery<Ticket>();
-            query.WithCustomFilter("name", "cheese factory", FilterOperator.NotEqual).WithPaging(3, 15).WithOrdering(OrderBy.priority, Order.Asc);
+            query.WithCustomFilter("name", "cheese factory", FilterOperator.NotEqual).WithPaging(3, 15).WithOrdering(SortBy.Priority, SortOrder.Asc);
 
             // When 
             var queryString = query.BuildQuery();

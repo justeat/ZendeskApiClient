@@ -15,9 +15,9 @@ namespace ZendeskApi.Client.Queries
 
         private int _pageSize = 15;
 
-        private Order _order = Order.Desc;
+        private SortOrder _sortOrder = SortOrder.Desc;
 
-        private OrderBy _orderBy = OrderBy.created_at;
+        private SortBy _sortBy = SortBy.Relevance;
 
         public ZendeskQuery()
         {
@@ -43,10 +43,10 @@ namespace ZendeskApi.Client.Queries
             return this;
         }
 
-        public IZendeskQuery<T> WithOrdering(OrderBy orderBy, Order order)
+        public IZendeskQuery<T> WithOrdering(SortBy sortBy, SortOrder sortOrder)
         {
-            _orderBy = orderBy;
-            _order = order;
+            _sortBy = sortBy;
+            _sortOrder = sortOrder;
             return this;
         }
 
@@ -54,7 +54,7 @@ namespace ZendeskApi.Client.Queries
         {
             var sb = new StringBuilder();
 
-            var zendeskType = GetDescription(typeof (T));
+            var zendeskType = GetDescription(typeof(T));
 
             sb.Append(string.Format("query=type:{0}", zendeskType.ToLower()));
 
@@ -81,7 +81,33 @@ namespace ZendeskApi.Client.Queries
 
                 sb.Append(string.Format("{0}{1}{2}", System.Net.WebUtility.UrlEncode(" "), operatorAndField, System.Net.WebUtility.UrlEncode(filter.Value)));
             }
-            sb.Append(string.Format("&sort_by={0}&sort_order={1}", _orderBy.ToString().ToLower(), _order.ToString().ToLower()));
+
+            if (_sortBy != SortBy.Relevance)
+            {
+                switch(_sortBy)
+                {
+                    case SortBy.CreatedAt:
+                        sb.Append("&sort_by=created_at");
+                        break;
+                    case SortBy.Priority:
+                        sb.Append("&sort_by=priority");
+                        break;
+                    case SortBy.UpdateAt:
+                        sb.Append("&sort_by=updated_at");
+                        break;
+                    case SortBy.TicketType:
+                        sb.Append("&sort_by=ticket_type");
+                        break;
+                    case SortBy.Status:
+                        sb.Append("&sort_by=status");
+                        break;
+                }
+            }
+
+            if (_sortOrder == SortOrder.Asc)
+            {
+                sb.Append("&sort_order=asc");
+            }
 
             sb.Append(string.Format("&page={0}&per_page={1}", _pageNumber, _pageSize));
 
