@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
@@ -65,7 +64,7 @@ namespace ZendeskApi.Client.Tests
                     })
                     .MapPost("api/v2/ticket_forms", (req, resp, routeData) =>
                     {
-                        var obj = req.Body.Deserialize<TicketFormRequest>().Item;
+                        var obj = req.Body.ReadAs<TicketForm>();
 
                         if (obj.Name.Contains("error"))
                         {
@@ -86,7 +85,7 @@ namespace ZendeskApi.Client.Tests
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var group = req.Body.Deserialize<TicketFormRequest>().Item;
+                        var group = req.Body.ReadAs<TicketForm>();
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 

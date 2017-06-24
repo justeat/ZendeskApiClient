@@ -27,9 +27,10 @@ namespace ZendeskApi.Client.Converters
         {
             var attribute = objectType.GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>();
 
-            var value = serializer.Deserialize<JObject>(reader);
-
-            return value[attribute.Id].ToObject<T>();
+            return serializer
+                .Deserialize<JObject>(reader)
+                .SelectToken(attribute.Id)
+                .ToObject<T>();
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -39,7 +40,7 @@ namespace ZendeskApi.Client.Converters
             writer.WriteStartObject();
 
             writer.WritePropertyName(attribute.Id);
-            JToken.FromObject(value).WriteTo(writer);
+            JObject.FromObject(value).WriteTo(writer);
 
             writer.WriteEndObject();
         }

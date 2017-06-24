@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -99,7 +98,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "PostAsync")) // Maybe incluse the request in the log?
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(GroupsResourceUri, new GroupRequest { Item = group }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(GroupsResourceUri, group).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -118,7 +117,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
-                var response = await client.PutAsJsonAsync(group.Id.ToString(), new GroupRequest { Item = group }).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(group.Id.ToString(), group).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {

@@ -4,12 +4,6 @@ using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Requests
 {
-    public class TicketRequest
-    {
-        [JsonProperty("ticket")]
-        public Ticket Item { get; set; }
-    }
-
     public class TicketsRequest
     {
         [JsonProperty("tickets")]

@@ -159,7 +159,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, new TicketRequest { Item = ticket }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(ResourceUri, ticket).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -197,7 +197,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync(ticket.Id.ToString(), new TicketRequest { Item = ticket }).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(ticket.Id.ToString(), ticket).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {

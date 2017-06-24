@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
@@ -55,7 +54,7 @@ namespace ZendeskApi.Client.Tests
                     })
                     .MapPost("api/v2/tickets/{ticketId}/satisfaction_rating", (req, resp, routeData) =>
                     {
-                        var sr = req.Body.Deserialize<SatisfactionRatingRequest>().Item;
+                        var sr = req.Body.ReadAs<SatisfactionRating>();
                         var ticketId = long.Parse(routeData.Values["ticketId"].ToString());
 
                         if (sr.Comment != null && sr.Comment.Body.Contains("error"))

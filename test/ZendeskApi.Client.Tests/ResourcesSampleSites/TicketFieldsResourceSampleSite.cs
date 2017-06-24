@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
@@ -53,7 +52,7 @@ namespace ZendeskApi.Client.Tests
                     })
                     .MapPost("api/v2/ticket_fields", (req, resp, routeData) =>
                     {
-                        var ticket = req.Body.Deserialize<TicketFieldRequest>().Item;
+                        var ticket = req.Body.ReadAs<TicketField>();
 
                         if (ticket.Tag != null && ticket.Tag.Contains("error"))
                         {
@@ -74,7 +73,7 @@ namespace ZendeskApi.Client.Tests
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var ticket = req.Body.Deserialize<TicketFieldRequest>().Item;
+                        var ticket = req.Body.ReadAs<TicketField>();
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 

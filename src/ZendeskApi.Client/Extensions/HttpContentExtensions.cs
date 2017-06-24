@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Converters;
@@ -9,12 +10,21 @@ namespace ZendeskApi.Client
     {
         public static async Task<T> ReadAsAsync<T>(this HttpContent content)
         {
-            var data = await content.ReadAsStringAsync();
+            using (var data = await content.ReadAsStreamAsync()) 
+            {
+                return data.ReadAs<T>();
+            }
+        }
 
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(new SingularJsonConverter<T>());
-
-            return JsonConvert.DeserializeObject<T>(data, settings);
+        public static T ReadAs<T>(this Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                var ser = new JsonSerializer();
+                ser.Converters.Insert(0, new SingularJsonConverter<T>());
+                return ser.Deserialize<T>(jsonReader);
+            }
         }
     }
 }

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
@@ -64,7 +63,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
-                        var identity = req.Body.Deserialize<UserIdentityRequest>().Item;
+                        var identity = req.Body.ReadAs<UserIdentity>();
 
                         var userId = long.Parse(routeData.Values["userId"].ToString());
 
@@ -85,7 +84,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/end_users/{userId}/identities", (req, resp, routeData) =>
                     {
-                        var identity = req.Body.Deserialize<UserIdentityRequest>().Item;
+                        var identity = req.Body.ReadAs<UserIdentity>();
 
                         var userId = long.Parse(routeData.Values["userId"].ToString());
 
@@ -106,7 +105,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPut("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
-                        var identity = req.Body.Deserialize<UserIdentityRequest>().Item;
+                        var identity = req.Body.ReadAs<UserIdentity>();
 
                         var userId = long.Parse(routeData.Values["userId"].ToString());
 

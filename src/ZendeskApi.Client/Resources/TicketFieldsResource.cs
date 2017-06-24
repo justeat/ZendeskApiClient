@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -62,7 +61,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, new TicketFieldRequest { Item = ticketField }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(ResourceUri, ticketField).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -81,7 +80,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync(ticketField.Id.ToString(), new TicketFieldRequest { Item = ticketField }).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(ticketField.Id.ToString(), ticketField).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {

@@ -113,7 +113,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, new OrganizationMembershipRequest { Item = organizationMembership }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(ResourceUri, organizationMembership).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -132,7 +132,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(string.Format(UsersUrlFormat, userId), new OrganizationMembershipRequest { Item = organizationMembership }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(string.Format(UsersUrlFormat, userId), organizationMembership).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {

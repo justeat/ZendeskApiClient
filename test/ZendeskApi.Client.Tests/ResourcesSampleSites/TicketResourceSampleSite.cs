@@ -135,7 +135,7 @@ namespace ZendeskApi.Client.Tests
                     })
                     .MapPost("api/v2/tickets", (req, resp, routeData) =>
                     {
-                        var ticket = req.Body.Deserialize<TicketRequest>().Item;
+                        var ticket = req.Body.ReadAs<Ticket>();
 
                         if (ticket.Tags != null && ticket.Tags.Contains("error"))
                         {
@@ -154,7 +154,7 @@ namespace ZendeskApi.Client.Tests
                     })
                     .MapPost("api/v2/tickets/create_many", (req, resp, routeData) =>
                     {
-                        var tickets = req.Body.Deserialize<TicketsRequest>().Item;
+                        var tickets = req.Body.ReadAs<TicketsRequest>().Item;
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
                         
@@ -177,7 +177,7 @@ namespace ZendeskApi.Client.Tests
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var ticket = req.Body.Deserialize<TicketRequest>().Item;
+                        var ticket = req.Body.ReadAs<Ticket>();
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 

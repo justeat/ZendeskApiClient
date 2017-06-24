@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -63,7 +62,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"CreateUserIdentityAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(string.Format(ResourceUriFormat, userId), new UserIdentityRequest { Item = identity }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(string.Format(ResourceUriFormat, userId), identity).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -82,7 +81,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"CreateEndUserIdentityAsync({endUserId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(string.Format(EndUsersResourceUriFormat, endUserId), new UserIdentityRequest { Item = identity }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(string.Format(EndUsersResourceUriFormat, endUserId), identity).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -101,7 +100,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PutAsJsonAsync(string.Format(ResourceUriFormat, identity.UserId), new UserIdentityRequest { Item = identity }).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(string.Format(ResourceUriFormat, identity.UserId), identity).ConfigureAwait(false);
                 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {

@@ -4,15 +4,21 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Converters;
 
 namespace ZendeskApi.Client
 {
     public static class HttpRequestExtensions
     {
-        private readonly static JsonSerializerSettings JsonSettings = new JsonSerializerSettings()
-        {
-            NullValueHandling = NullValueHandling.Ignore
-        };
+        private static JsonSerializerSettings DefaultJsonSettings<T>() {
+            var settings = new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            };
+
+            settings.Converters.Add(new SingularJsonConverter<T>());
+            return settings;
+        }
 
         public static async Task<HttpResponseMessage> PutAsJsonAsync<T>(
             this HttpClient client,
@@ -21,7 +27,7 @@ namespace ZendeskApi.Client
             JsonSerializerSettings settings = null)
         {
             var content = new StringContent(
-                JsonConvert.SerializeObject(value, settings ?? JsonSettings),
+                JsonConvert.SerializeObject(value, settings ?? DefaultJsonSettings<T>()),
                 Encoding.UTF8,
                 "application/json");
 
@@ -35,7 +41,7 @@ namespace ZendeskApi.Client
             JsonSerializerSettings settings = null)
         {
             var content = new StringContent(
-                JsonConvert.SerializeObject(value, settings ?? JsonSettings),
+                JsonConvert.SerializeObject(value, settings ?? DefaultJsonSettings<T>()),
                 Encoding.UTF8,
                 "application/json");
 

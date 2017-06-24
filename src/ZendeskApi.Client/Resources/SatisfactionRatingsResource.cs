@@ -63,7 +63,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(string.Format(PostResourceUrlFormat, ticketId), new SatisfactionRatingRequest { Item = satisfactionRating }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(string.Format(PostResourceUrlFormat, ticketId), satisfactionRating).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {

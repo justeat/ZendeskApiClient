@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
@@ -104,7 +103,7 @@ namespace ZendeskApi.Client.Tests
                     })
                     .MapPost("api/v2/users", (req, resp, routeData) =>
                     {
-                        var user = req.Body.Deserialize<UserRequest>().Item;
+                        var user = req.Body.ReadAs<User>();
 
                         if (user.Tags != null && user.Tags.Contains("error"))
                         {
@@ -123,7 +122,7 @@ namespace ZendeskApi.Client.Tests
                     })
                     .MapPut("api/v2/users/{id}", (req, resp, routeData) =>
                     {
-                        var user = req.Body.Deserialize<UserRequest>().Item;
+                        var user = req.Body.ReadAs<User>();
 
                         var id = long.Parse(routeData.Values["id"].ToString());
 

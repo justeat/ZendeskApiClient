@@ -4,12 +4,6 @@ using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Requests
 {
-    public class OrganizationMembershipRequest
-    {
-        [JsonProperty("organization_membership")]
-        public OrganizationMembership Item { get; set; }
-    }
-
     public class OrganizationMembershipsRequest
     {
         [JsonProperty("organization_memberships")]

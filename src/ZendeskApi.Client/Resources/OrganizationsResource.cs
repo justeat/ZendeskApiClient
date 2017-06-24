@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -111,7 +109,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, new OrganizationRequest { Item = organization }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(ResourceUri, organization).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -130,7 +128,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync(organization.Id.ToString(), new OrganizationRequest { Item = organization }).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(organization.Id.ToString(), organization).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
