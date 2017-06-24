@@ -10,9 +10,9 @@ namespace ZendeskApi.Client.Responses
         public OrganizationMembership Item { get; set; }
     }
 
-    public class OrganizationMembershipsResponse
+    public class OrganizationMembershipsResponse : PaginationResponse<OrganizationMembership>
     {
         [JsonProperty("organization_memberships")]
-        public IEnumerable<OrganizationMembership> Item { get; set; }
+        public override IEnumerable<OrganizationMembership> Item { get; set; }
     }
 }

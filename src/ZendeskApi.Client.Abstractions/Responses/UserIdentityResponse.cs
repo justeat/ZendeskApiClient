@@ -10,9 +10,9 @@ namespace ZendeskApi.Client.Responses
         public UserIdentity Item { get; set; }
     }
 
-    public class UserIdentitiesResponse
+    public class UserIdentitiesResponse : PaginationResponse<UserIdentity>
     {
         [JsonProperty("identities")]
-        public IEnumerable<UserIdentity> Item { get; set; }
+        public override IEnumerable<UserIdentity> Item { get; set; }
     }
 }

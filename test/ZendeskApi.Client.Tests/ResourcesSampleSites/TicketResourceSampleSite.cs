@@ -16,6 +16,7 @@ using ZendeskApi.Client.Tests.ResourcesSampleSites;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
+using System.Reflection;
 
 namespace ZendeskApi.Client.Tests
 {
@@ -25,7 +26,61 @@ namespace ZendeskApi.Client.Tests
             public IDictionary<long, Ticket> Tickets = new Dictionary<long, Ticket>();
             public IDictionary<long, IList<TicketComment>> TicketComments = new Dictionary<long, IList<TicketComment>>();
         }
-        
+
+        public class PaginationJsonConverter<T> : JsonConverter
+        {
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType.GetTypeInfo().BaseType == typeof(PaginationResponse<T>);
+            }
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            {
+                var obj = value as PaginationResponse<T>;
+                var iobj = value as IPagination<T>;
+
+                obj.Count = obj.Item.Count();
+
+                writer.WriteStartObject();
+
+                var attribute = obj
+                    .GetType()
+                    .GetTypeInfo()
+                    .DeclaredProperties
+                    .First(x => x.Name == "Item")
+                    .GetCustomAttribute<JsonPropertyAttribute>();
+                writer.WritePropertyName(attribute.PropertyName);
+
+                writer.WriteStartArray();
+
+                foreach (var item in obj.Item) {
+                    serializer.Serialize(writer, item);
+                }
+                
+                writer.WriteEndArray();
+
+                var iProperties = iobj
+                    .GetType()
+                    .GetTypeInfo();
+
+                writer.WritePropertyName(iProperties.GetMember("Count").First().GetCustomAttribute<JsonPropertyAttribute>().PropertyName);
+                writer.WriteValue(iobj.Count);
+
+                writer.WritePropertyName(iProperties.GetMember("NextPage").First().GetCustomAttribute<JsonPropertyAttribute>().PropertyName);
+                writer.WriteValue(iobj.NextPage);
+
+                writer.WritePropertyName(iProperties.GetMember("PreviousPage").First().GetCustomAttribute<JsonPropertyAttribute>().PropertyName);
+                writer.WriteValue(iobj.PreviousPage);
+
+                writer.WriteEndObject();
+            }
+        }
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
@@ -40,7 +95,11 @@ namespace ZendeskApi.Client.Tests
                         var tickets = state.Tickets.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = tickets }));
+                        return resp.WriteAsync(JsonConvert.SerializeObject(new TicketsResponse { Item = tickets }, 
+                            new JsonSerializerSettings
+                        {
+                            Converters = new List<JsonConverter>(new[] { new PaginationJsonConverter<Ticket>() })
+                        }));
                     })
                     .MapGet("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {

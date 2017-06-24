@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
     public interface IGroupsResource
     {
-        Task<IEnumerable<Group>> GetAllAsync();
-        Task<IEnumerable<Group>> GetAllAsync(long userId);
-        Task<IEnumerable<Group>> GetAllAssignableAsync();
+        Task<IPagination<Group>> GetAllAsync();
+        Task<IPagination<Group>> GetAllAsync(long userId);
+        Task<IPagination<Group>> GetAllAssignableAsync();
         Task<Group> GetAsync(long groupId);
         Task<Group> PostAsync(Group group);
         Task<Group> PutAsync(Group group);

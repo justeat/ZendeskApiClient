@@ -31,7 +31,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IEnumerable<OrganizationMembership>> GetAllAsync()
+        public async Task<IPagination<OrganizationMembership>> GetAllAsync()
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
@@ -40,11 +40,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationMembershipsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<OrganizationMembershipsResponse>());
             }
         }
 
-        public async Task<IEnumerable<OrganizationMembership>> GetAllForOrganizationAsync(long organizationId)
+        public async Task<IPagination<OrganizationMembership>> GetAllForOrganizationAsync(long organizationId)
         {
             using (_loggerScope(_logger, $"GetAllForOrganizationAsync({organizationId})"))
             using (var client = _apiClient.CreateClient())
@@ -53,11 +53,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationMembershipsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<OrganizationMembershipsResponse>());
             }
         }
 
-        public async Task<IEnumerable<OrganizationMembership>> GetAllForUserAsync(long userId)
+        public async Task<IPagination<OrganizationMembership>> GetAllForUserAsync(long userId)
         {
             using (_loggerScope(_logger, $"GetAllForUserAsync({userId})"))
             using (var client = _apiClient.CreateClient())
@@ -66,7 +66,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationMembershipsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<OrganizationMembershipsResponse>());
             }
         }
 

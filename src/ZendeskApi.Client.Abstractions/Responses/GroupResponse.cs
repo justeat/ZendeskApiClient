@@ -10,9 +10,9 @@ namespace ZendeskApi.Client.Responses
         public Group Item { get; set; }
     }
 
-    public class GroupsResponse
+    public class GroupsResponse : PaginationResponse<Group>
     {
         [JsonProperty("groups")]
-        public IEnumerable<Group> Item { get; set; }
+        public override IEnumerable<Group> Item { get; set; }
     }
 }

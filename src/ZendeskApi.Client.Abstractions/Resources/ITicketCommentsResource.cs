@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
     public interface ITicketCommentsResource
     {
-        Task<IEnumerable<TicketComment>> GetAllAsync(long parentId);
+        Task<IPagination<TicketComment>> GetAllAsync(long parentId);
         Task AddComment(long ticketId, TicketComment ticketComment);
     }
 }

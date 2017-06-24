@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Ticket>> GetAllAsync()
+        public async Task<IPagination<Ticket>> GetAllAsync()
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
@@ -42,11 +42,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketsResponse>());
             }
         }
         
-        public async Task<IEnumerable<Ticket>> GetAllForOrganizationAsync(long organizationId)
+        public async Task<IPagination<Ticket>> GetAllForOrganizationAsync(long organizationId)
         {
             using (_loggerScope(_logger, $"GetAllForOrganizationAsync({organizationId})"))
             using (var client = _apiClient.CreateClient())
@@ -61,11 +61,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketsResponse>());
             }
         }
 
-        public async Task<IEnumerable<Ticket>> GetAllRequestedForUserAsync(long userId)
+        public async Task<IPagination<Ticket>> GetAllRequestedForUserAsync(long userId)
         {
             using (_loggerScope(_logger, $"GetAllRequestedForUserAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
@@ -80,11 +80,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketsResponse>());
             }
         }
 
-        public async Task<IEnumerable<Ticket>> GetAllCCDForUserAsync(long userId)
+        public async Task<IPagination<Ticket>> GetAllCCDForUserAsync(long userId)
         {
             using (_loggerScope(_logger, $"GetAllCCDForUserAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
@@ -99,11 +99,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketsResponse>());
             }
         }
 
-        public async Task<IEnumerable<Ticket>> GetAllAssignedForUserAsync(long userId)
+        public async Task<IPagination<Ticket>> GetAllAssignedForUserAsync(long userId)
         {
             using (_loggerScope(_logger, $"GetAllAssignedForUserAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
@@ -118,7 +118,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketsResponse>());
             }
         }
         
@@ -141,7 +141,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IEnumerable<Ticket>> GetAllAsync(long[] ticketIds)
+        public async Task<IPagination<Ticket>> GetAllAsync(long[] ticketIds)
         {
             using (_loggerScope(_logger, $"GetAllAsync({ZendeskFormatter.ToCsv(ticketIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -150,7 +150,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketsResponse>());
             }
         }
 

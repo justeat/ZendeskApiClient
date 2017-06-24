@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -27,7 +26,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IEnumerable<SatisfactionRating>> GetAllAsync()
+        public async Task<IPagination<SatisfactionRating>> GetAllAsync()
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
@@ -36,7 +35,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<SatisfactionRatingsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<SatisfactionRatingsResponse>());
             }
         }
 

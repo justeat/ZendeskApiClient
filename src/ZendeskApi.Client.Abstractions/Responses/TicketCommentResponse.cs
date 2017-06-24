@@ -10,9 +10,9 @@ namespace ZendeskApi.Client.Responses
         public TicketComment Item { get; set; }
     }
 
-    public class TicketCommentsResponse
+    public class TicketCommentsResponse : PaginationResponse<TicketComment>
     {
         [JsonProperty("comments")]
-        public IEnumerable<TicketComment> Item { get; set; }
+        public override IEnumerable<TicketComment> Item { get; set; }
     }
 }

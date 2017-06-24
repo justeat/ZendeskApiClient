@@ -28,7 +28,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
         
-        public async Task<IEnumerable<Request>> GetAllAsync()
+        public async Task<IPagination<Request>> GetAllAsync()
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
@@ -37,7 +37,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<RequestsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<RequestsResponse>());
             }
         }
 
@@ -60,7 +60,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IEnumerable<Request>> SearchAsync(IZendeskQuery<Request> query)
+        public async Task<IPagination<Request>> SearchAsync(IZendeskQuery<Request> query)
         {
             using (_loggerScope(_logger, $"SearchAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -69,11 +69,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<RequestsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<RequestsResponse>());
             }
         }
 
-        public async Task<IEnumerable<TicketComment>> GetAllComments(long requestId)
+        public async Task<IPagination<TicketComment>> GetAllComments(long requestId)
         {
             using (_loggerScope(_logger, $"GetAllComments({requestId})"))
             using (var client = _apiClient.CreateClient())
@@ -88,7 +88,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketCommentsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketCommentsResponse>());
             }
         }
 

@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
     public interface ITicketsResource
     {
-        Task<IEnumerable<Ticket>> GetAllAsync();
-        Task<IEnumerable<Ticket>> GetAllForOrganizationAsync(long organizationId);
-        Task<IEnumerable<Ticket>> GetAllRequestedForUserAsync(long userId);
-        Task<IEnumerable<Ticket>> GetAllCCDForUserAsync(long userId);
-        Task<IEnumerable<Ticket>> GetAllAssignedForUserAsync(long userId);
+        Task<IPagination<Ticket>> GetAllAsync();
+        Task<IPagination<Ticket>> GetAllForOrganizationAsync(long organizationId);
+        Task<IPagination<Ticket>> GetAllRequestedForUserAsync(long userId);
+        Task<IPagination<Ticket>> GetAllCCDForUserAsync(long userId);
+        Task<IPagination<Ticket>> GetAllAssignedForUserAsync(long userId);
         Task<Ticket> GetAsync(long ticketId);
-        Task<IEnumerable<Ticket>> GetAllAsync(long[] ticketIds);
+        Task<IPagination<Ticket>> GetAllAsync(long[] ticketIds);
         Task<Ticket> PostAsync(Ticket ticket);
         Task<JobStatus> PostAsync(IEnumerable<Ticket> tickets);
         Task<Ticket> PutAsync(Ticket ticket);

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
     public interface IUserIdentityResource
     {
-        Task<IEnumerable<UserIdentity>> GetAllForUserAsync(long userId);
+        Task<IPagination<UserIdentity>> GetAllForUserAsync(long userId);
         Task<UserIdentity> GetIdentityForUserAsync(long userId, long identityId);
         Task<UserIdentity> CreateUserIdentityAsync(UserIdentity identity, long userId);
         Task<UserIdentity> CreateEndUserIdentityAsync(UserIdentity identity, long endUserId);

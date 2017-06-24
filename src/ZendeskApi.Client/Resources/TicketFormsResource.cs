@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -27,7 +26,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IEnumerable<TicketForm>> GetAllAsync()
+        public async Task<IPagination<TicketForm>> GetAllAsync()
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
@@ -36,7 +35,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketFormsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketFormsResponse>());
             }
         }
 
@@ -59,7 +58,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IEnumerable<TicketForm>> GetAllAsync(long[] ticketFormsIds)
+        public async Task<IPagination<TicketForm>> GetAllAsync(long[] ticketFormsIds)
         {
             using (_loggerScope(_logger, $"GetAllAsync({ZendeskFormatter.ToCsv(ticketFormsIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -68,7 +67,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketFormsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketFormsResponse>());
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -32,7 +31,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IPagination<User>> GetAllAsync()
         {
             using (_loggerScope(_logger, $"GetAllAsync"))
             using (var client = _apiClient.CreateClient())
@@ -41,11 +40,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>()).Item;
+                return (await response.Content.ReadAsAsync<UsersResponse>());
             }
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersInGroupAsync(long groupId)
+        public async Task<IPagination<User>> GetAllUsersInGroupAsync(long groupId)
         {
             using (_loggerScope(_logger, $"GetAllUsersInGroupAsync({groupId})"))
             using (var client = _apiClient.CreateClient())
@@ -60,11 +59,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>()).Item;
+                return (await response.Content.ReadAsAsync<UsersResponse>());
             }
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersInOrganizationAsync(long organizationId)
+        public async Task<IPagination<User>> GetAllUsersInOrganizationAsync(long organizationId)
         {
             using (_loggerScope(_logger, $"GetAllUsersInOrganizationAsync({organizationId})"))
             using (var client = _apiClient.CreateClient())
@@ -79,7 +78,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>()).Item;
+                return (await response.Content.ReadAsAsync<UsersResponse>());
             }
         }
 
@@ -102,7 +101,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
         
-        public async Task<IEnumerable<User>> GetAllAsync(long[] userIds)
+        public async Task<IPagination<User>> GetAllAsync(long[] userIds)
         {
             using (_loggerScope(_logger, $"GetAllAsync({ZendeskFormatter.ToCsv(userIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -111,11 +110,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>()).Item;
+                return (await response.Content.ReadAsAsync<UsersResponse>());
             }
         }
 
-        public async Task<IEnumerable<User>> GetAllByExternalIdsAsync(string[] externalIds)
+        public async Task<IPagination<User>> GetAllByExternalIdsAsync(string[] externalIds)
         {
             using (_loggerScope(_logger, $"GetAllByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -124,7 +123,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>()).Item;
+                return (await response.Content.ReadAsAsync<UsersResponse>());
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -31,7 +30,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Group>> GetAllAsync()
+        public async Task<IPagination<Group>> GetAllAsync()
         {
             using (_loggerScope(_logger, "GetAllAsync"))
             using (var client = _apiClient.CreateClient())
@@ -40,11 +39,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<GroupsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<GroupsResponse>());
             }
         }
 
-        public async Task<IEnumerable<Group>> GetAllAsync(long userId)
+        public async Task<IPagination<Group>> GetAllAsync(long userId)
         {
             using (_loggerScope(_logger, $"GetAllAsync({userId})"))
             using (var client = _apiClient.CreateClient())
@@ -59,11 +58,11 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<GroupsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<GroupsResponse>());
             }
         }
 
-        public async Task<IEnumerable<Group>> GetAllAssignableAsync()
+        public async Task<IPagination<Group>> GetAllAssignableAsync()
         {
             using (_loggerScope(_logger, "GetAllAssignableAsync"))
             using (var client = _apiClient.CreateClient())
@@ -72,7 +71,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<GroupsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<GroupsResponse>());
             }
         }
 

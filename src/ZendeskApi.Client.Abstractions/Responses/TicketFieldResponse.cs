@@ -10,9 +10,9 @@ namespace ZendeskApi.Client.Responses
         public TicketField Item { get; set; }
     }
 
-    public class TicketFieldsResponse
+    public class TicketFieldsResponse : PaginationResponse<TicketField>
     {
         [JsonProperty("ticket_fields")]
-        public IEnumerable<TicketField> Item { get; set; }
+        public override IEnumerable<TicketField> Item { get; set; }
     }
 }

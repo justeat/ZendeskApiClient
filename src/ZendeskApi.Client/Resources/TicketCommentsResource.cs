@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
@@ -28,7 +27,7 @@ namespace ZendeskApi.Client.Resources
             _ticketsResource = new TicketsResource(apiClient, logger);
         }
 
-        public async Task<IEnumerable<TicketComment>> GetAllAsync(long ticketId)
+        public async Task<IPagination<TicketComment>> GetAllAsync(long ticketId)
         {
             using (_loggerScope(_logger, $"GetAllAsync({ticketId})"))
             using (var client = _apiClient.CreateClient())
@@ -37,7 +36,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketCommentsResponse>()).Item;
+                return (await response.Content.ReadAsAsync<TicketCommentsResponse>());
             }
         }
 
