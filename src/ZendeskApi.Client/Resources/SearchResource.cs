@@ -25,7 +25,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<SearchResult>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null)
+        public async Task<IPagination<SearchResult>> SearchAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
         {
             var query = new ZendeskQuery();
             builder(query);
