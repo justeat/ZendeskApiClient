@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.Options;
 using ZendeskApi.Client.Options;
@@ -40,6 +41,10 @@ namespace ZendeskApi.Client
                     Encoding.UTF8.GetBytes($"{_options.Username}/token:{_options.Token}"));
 
             client.DefaultRequestHeaders.Add("Authorization", $"Basic {authorizationHeader}");
+
+            client.DefaultRequestHeaders
+              .Accept
+              .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             if (_options.Timeout != null)
             {
