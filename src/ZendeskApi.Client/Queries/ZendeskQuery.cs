@@ -24,6 +24,18 @@ namespace ZendeskApi.Client.Queries
             return this;
         }
 
+        public IZendeskQuery WithFilter(int index, string field, string value, FilterOperator filterOperator = FilterOperator.Equals)
+        {
+            _customFilters.Insert(index, new Filter
+            {
+                Field = field,
+                Value = value,
+                FilterOperator = filterOperator
+            });
+            return this;
+        }
+
+
         public IZendeskQuery WithOrdering(SortBy sortBy, SortOrder sortOrder)
         {
             _sortBy = sortBy;
@@ -39,39 +51,41 @@ namespace ZendeskApi.Client.Queries
             for (var i = 0; i < _customFilters.Count; i++)
             {
                 var filter = _customFilters[i];
+                var value = System.Net.WebUtility.UrlEncode(filter.Value);
 
                 var operatorAndField = string.Empty;
                 switch (filter.FilterOperator)
                 {
                     case FilterOperator.Equals:
-                        sb.AppendFormat("{0}:", filter.Field);
+                        sb.AppendFormat("{0}:{1}", filter.Field, value);
                         break;
                     case FilterOperator.LessThan:
-                        sb.AppendFormat("{0}<", filter.Field);
+                        sb.AppendFormat("{0}<{1}", filter.Field, value);
                         break;
                     case FilterOperator.GreaterThan:
-                        sb.AppendFormat("{0}>", filter.Field);
+                        sb.AppendFormat("{0}>{1}", filter.Field, value);
                         break;
                     case FilterOperator.LessThanOrEqual:
-                        sb.AppendFormat("{0}<=", filter.Field);
+                        sb.AppendFormat("{0}<={1}", filter.Field, value);
                         break;
                     case FilterOperator.GreaterThanOrEqual:
-                        sb.AppendFormat("{0}>=", filter.Field);
+                        sb.AppendFormat("{0}>={1}", filter.Field, value);
                         break;
                     case FilterOperator.Exact:
-                        sb.AppendFormat("\"{0}\"", filter.Field);
+                        sb.AppendFormat("{0}\"{1}\"", filter.Field == null ? null : filter.Field + ":", value);
                         break;
                     case FilterOperator.Excludes:
-                        sb.AppendFormat("-{0}:", filter.Field);
+                        sb.AppendFormat("-{0}:{1}", filter.Field, value);
                         break;
                     case FilterOperator.Wildcard:
-                        sb.AppendFormat("{0}*", filter.Field);
+                        sb.AppendFormat("{0}:{1}*", filter.Field, value);
+                        break;
+                    case FilterOperator.None:
+                        sb.Append(value);
                         break;
                     default:
                         break;
                 }
-
-                sb.Append(System.Net.WebUtility.UrlEncode(filter.Value));
 
                 if (i < (_customFilters.Count - 1))
                 {

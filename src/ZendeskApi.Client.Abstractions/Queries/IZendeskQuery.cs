@@ -7,6 +7,7 @@ namespace ZendeskApi.Client.Queries
         string BuildQuery();
 
         IZendeskQuery WithFilter(string field, string value, FilterOperator filterOperator);
+        IZendeskQuery WithFilter(int index, string field, string value, FilterOperator filterOperator);
 
         IZendeskQuery WithOrdering(SortBy sortBy, SortOrder sortOrder);
     }

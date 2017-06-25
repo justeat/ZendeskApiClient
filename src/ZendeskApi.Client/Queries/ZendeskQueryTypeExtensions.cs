@@ -11,5 +11,12 @@ namespace ZendeskApi.Client.Queries
 
             return query.WithFilter("type", id, Models.FilterOperator.Equals);
         }
+
+        public static IZendeskQuery WithWordFromTypeFilter<T>(this IZendeskQuery query, string value, Models.FilterOperator op = Models.FilterOperator.Equals)
+        {
+            var id = typeof(T).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id;
+
+            return query.WithFilter(id, value, op);
+        }
     }
 }
