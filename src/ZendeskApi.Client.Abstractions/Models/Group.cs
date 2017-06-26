@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Reflection;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
 {
-    [JsonObject("group", Title = "group")]
-    public class Group
+    [JsonObject("group")]
+    public class Group : ISearchResult
     {
         [JsonProperty]
         public long? Id { get; set; }
@@ -13,10 +14,10 @@ namespace ZendeskApi.Client.Models
         public string Name { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTime? Created { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         [JsonProperty("updated_at")]
-        public DateTime? Updated { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         [JsonProperty("deleted")]
         public bool Deleted { get; set; }
@@ -26,5 +27,13 @@ namespace ZendeskApi.Client.Models
 
         [JsonProperty("has_incidents")]
         public bool HasIncidents { get; set; }
+
+        DateTime ISearchResult.CreatedAt => CreatedAt.Value;
+        DateTime ISearchResult.UpdatedAt => UpdatedAt.Value;
+        long ISearchResult.Id => Id.Value;
+        Uri ISearchResult.Url => Url;
+
+        [JsonProperty("result_type")]
+        string ISearchResult.Type => typeof(Group).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id;
     }
 }

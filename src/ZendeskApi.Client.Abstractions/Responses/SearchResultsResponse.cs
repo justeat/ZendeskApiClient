@@ -5,9 +5,9 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
-    public class SearchResultsResponse : PaginationResponse<SearchResult>
+    public class SearchResultsResponse : PaginationResponse<ISearchResult>
     {
         [JsonProperty("results")]
-        public override IEnumerable<SearchResult> Item { get; set; }
+        public override IEnumerable<ISearchResult> Item { get; set; }
     }   
 }

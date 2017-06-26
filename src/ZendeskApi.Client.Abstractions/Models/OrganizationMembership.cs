@@ -19,10 +19,10 @@ namespace ZendeskApi.Client.Models
         public bool? Default { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTime? Created { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         [JsonProperty("updated_at")]
-        public DateTime? Updated { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
     }
 }

@@ -28,7 +28,7 @@ namespace ZendeskApi.Client.Models
         public bool IsPublic { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTime? Created { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         [JsonProperty("attachments")]
         public List<Attachment> Attachments { get; private set; }

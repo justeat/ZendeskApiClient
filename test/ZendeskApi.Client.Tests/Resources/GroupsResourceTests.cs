@@ -27,16 +27,16 @@ namespace ZendeskApi.Client.Tests.Resources
             var group1 = await _resource.PostAsync(new Group
             {
                 Name = "DJs",
-                Created = DateTime.Parse("2009-05-13T00:07:08Z"),
-                Updated = DateTime.Parse("2011-07-22T00:11:12Z"),
+                CreatedAt = DateTime.Parse("2009-05-13T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2011-07-22T00:11:12Z"),
             });
 
             var group2 = await _resource.PostAsync(new Group
             {
                 Id = 122L,
                 Name = "MCs",
-                Created = DateTime.Parse("2009-08-26T00:07:08Z"),
-                Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
+                CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2010-05-13T00:07:08Z"),
             });
 
             var retrievedGroups = (await _resource.GetAllAsync()).ToArray();
@@ -53,22 +53,22 @@ namespace ZendeskApi.Client.Tests.Resources
             var group1 = await _resource.PostAsync(new Group
             {
                 Name = "DJs USER: 1",
-                Created = DateTime.Parse("2009-05-13T00:07:08Z"),
-                Updated = DateTime.Parse("2011-07-22T00:11:12Z"),
+                CreatedAt = DateTime.Parse("2009-05-13T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2011-07-22T00:11:12Z"),
             });
 
             var group2 = await _resource.PostAsync(new Group
             {
                 Name = "MCs USER: 2",
-                Created = DateTime.Parse("2009-08-26T00:07:08Z"),
-                Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
+                CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2010-05-13T00:07:08Z"),
             });
 
             var group3 = await _resource.PostAsync(new Group
             {
                 Name = "DJs USER: 1",
-                Created = DateTime.Parse("2009-08-26T00:07:08Z"),
-                Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
+                CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2010-05-13T00:07:08Z"),
             });
 
             var retrievedGroups = (await _resource.GetAllAsync(1L)).ToArray();
@@ -84,22 +84,22 @@ namespace ZendeskApi.Client.Tests.Resources
             var group1 = await _resource.PostAsync(new Group
             {
                 Name = "DJs Assign:true",
-                Created = DateTime.Parse("2009-05-13T00:07:08Z"),
-                Updated = DateTime.Parse("2011-07-22T00:11:12Z"),
+                CreatedAt = DateTime.Parse("2009-05-13T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2011-07-22T00:11:12Z"),
             });
 
             var group2 = await _resource.PostAsync(new Group
             {
                 Name = "MCs Assign:true",
-                Created = DateTime.Parse("2009-08-26T00:07:08Z"),
-                Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
+                CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2010-05-13T00:07:08Z"),
             });
 
             var group3 = await _resource.PostAsync(new Group
             {
                 Name = "DJs Assign:false",
-                Created = DateTime.Parse("2009-08-26T00:07:08Z"),
-                Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
+                CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2010-05-13T00:07:08Z"),
             });
 
             var groups = (await _resource.GetAllAssignableAsync()).ToArray();
@@ -115,15 +115,15 @@ namespace ZendeskApi.Client.Tests.Resources
             var group1 = await _resource.PostAsync(new Group
             {
                 Name = "DJs",
-                Created = DateTime.Parse("2009-05-13T00:07:08Z"),
-                Updated = DateTime.Parse("2011-07-22T00:11:12Z"),
+                CreatedAt = DateTime.Parse("2009-05-13T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2011-07-22T00:11:12Z"),
             });
 
             var group2 = await _resource.PostAsync(new Group
             {
                 Name = "MCs",
-                Created = DateTime.Parse("2009-08-26T00:07:08Z"),
-                Updated = DateTime.Parse("2010-05-13T00:07:08Z"),
+                CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
+                UpdatedAt = DateTime.Parse("2010-05-13T00:07:08Z"),
             });
 
             var group = await _resource.GetAsync(group2.Id.Value);

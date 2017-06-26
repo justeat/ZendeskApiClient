@@ -9,7 +9,7 @@ namespace ZendeskApi.Client.Queries
     {
         public static IZendeskQuery WithTicketId(this IZendeskQuery query, long id)
         {
-            return query.WithFilter(0, null, id.ToString(), Models.FilterOperator.None);
+            return query.WithFilter(0, null, id.ToString(), FilterOperator.None);
         }
 
         public static IZendeskQuery WithWord(this IZendeskQuery query, string value, FilterOperator op = FilterOperator.None)

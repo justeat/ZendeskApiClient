@@ -8,6 +8,11 @@ namespace ZendeskApi.Client
 {
     public static class HttpContentExtensions
     {
+        public static async Task<T> ReadAsAsync<T>(this HttpContent content, JsonConverter jsonConverter)
+        {
+            return JsonConvert.DeserializeObject<T>(await content.ReadAsStringAsync(), jsonConverter);
+        }
+
         public static async Task<T> ReadAsAsync<T>(this HttpContent content)
         {
             using (var data = await content.ReadAsStreamAsync()) 

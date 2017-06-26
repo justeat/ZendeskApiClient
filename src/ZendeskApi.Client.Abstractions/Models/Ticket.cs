@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Client.Models
 {
     [JsonObject("ticket")]
-    public class Ticket
+    public class Ticket : ISearchResult
     {
         [JsonProperty]
         public long? Id { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTime? Created { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         [JsonProperty("updated_at")]
-        public DateTime? Updated { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         [JsonProperty("due_at")]
         public DateTime? Due { get; set; }
@@ -49,7 +50,7 @@ namespace ZendeskApi.Client.Models
         [JsonProperty("organization_id")]
         public long? OrganisationId { get; set; }
 
-        [JsonProperty()]
+        [JsonProperty]
         public Uri Url { get; set; }
 
         [JsonProperty("priority")]
@@ -112,5 +113,13 @@ namespace ZendeskApi.Client.Models
 
         [JsonProperty("requester")]
         public TicketRequester Requester { get; set; }
+
+        DateTime ISearchResult.CreatedAt => CreatedAt.Value;
+        DateTime ISearchResult.UpdatedAt => UpdatedAt.Value;
+        long ISearchResult.Id => Id.Value;
+        Uri ISearchResult.Url => Url;
+
+        [JsonProperty("result_type")]
+        string ISearchResult.Type => typeof(Ticket).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id;
     }
 }
