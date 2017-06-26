@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ZendeskApi.Client.Models
 {
@@ -22,5 +24,8 @@ namespace ZendeskApi.Client.Models
 
         [JsonProperty("url")]
         public Uri Url { get; set; }
+
+        [JsonExtensionData]
+        public IDictionary<string, JToken> AdditionalData { get; set; }
     }
 }

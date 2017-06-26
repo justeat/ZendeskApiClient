@@ -9,5 +9,5 @@ namespace ZendeskApi.Client.Responses
     {
         [JsonProperty("results")]
         public override IEnumerable<SearchResult> Item { get; set; }
-    }
+    }   
 }
