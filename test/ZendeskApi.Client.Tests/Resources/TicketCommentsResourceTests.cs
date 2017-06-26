@@ -21,7 +21,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         [Fact]
         public async Task ShouldGetAllCommentsForTicket() {
-            var ticket = await _ticketResource.PostAsync(new Models.Ticket { Subject = "Test 1" });
+            var ticket = await _ticketResource.CreateAsync(new Models.Ticket { Subject = "Test 1" });
 
             var comments = await _resource.GetAllAsync(ticket.Id.Value);
             Assert.Empty(comments);

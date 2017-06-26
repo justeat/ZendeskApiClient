@@ -107,7 +107,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             obj.Value = "kung fu!";
 
-            obj = await _resource.PutAsync(obj);
+            obj = await _resource.UpdateAsync(obj);
 
             Assert.Equal("kung fu!", obj.Value);
         }

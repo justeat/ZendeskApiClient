@@ -11,8 +11,8 @@ namespace ZendeskApi.Client.Resources
         Task<Organization> GetAsync(long organizationId);
         Task<IPagination<Organization>> GetAllAsync(long[] organizationIds, PagerParameters pager = null);
         Task<IPagination<Organization>> GetAllByExternalIdsAsync(string[] externalIds, PagerParameters pager = null);
-        Task<Organization> PostAsync(Organization organization);
-        Task<Organization> PutAsync(Organization organization);
+        Task<Organization> CreateAsync(Organization organization);
+        Task<Organization> UpdateAsync(Organization organization);
         Task DeleteAsync(long organizationId);
     }
 }

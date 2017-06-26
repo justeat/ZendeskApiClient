@@ -8,8 +8,8 @@ namespace ZendeskApi.Client.Resources
     {
         Task<IPagination<TicketField>> GetAllAsync(PagerParameters pager = null);
         Task<TicketField> GetAsync(long ticketFieldId);
-        Task<TicketField> PostAsync(TicketField ticketField);
-        Task<TicketField> PutAsync(TicketField ticketField);
+        Task<TicketField> CreateAsync(TicketField ticketField);
+        Task<TicketField> UpdateAsync(TicketField ticketField);
         Task DeleteAsync(long ticketFieldId);
     }
 }

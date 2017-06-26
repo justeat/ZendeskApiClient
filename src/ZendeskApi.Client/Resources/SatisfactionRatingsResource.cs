@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -58,7 +57,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<SatisfactionRating> CreateSatisfactionRatingAsync(SatisfactionRating satisfactionRating, long ticketId)
+        public async Task<SatisfactionRating> CreateAsync(SatisfactionRating satisfactionRating, long ticketId)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())

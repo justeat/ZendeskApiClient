@@ -12,7 +12,7 @@ namespace ZendeskApi.Client.Resources
         Task<IPagination<Request>> SearchAsync(IZendeskQuery query, PagerParameters pager = null);
         Task<IPagination<TicketComment>> GetAllComments(long requestId, PagerParameters pager = null);
         Task<TicketComment> GetTicketCommentAsync(long requestId, long commentId);
-        Task<Request> PostAsync(Request request);
-        Task<Request> PutAsync(Request request);
+        Task<Request> CreateAsync(Request request);
+        Task<Request> UpdateAsync(Request request);
     }
 }

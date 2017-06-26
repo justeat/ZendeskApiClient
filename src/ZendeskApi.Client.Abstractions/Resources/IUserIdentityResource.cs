@@ -10,7 +10,7 @@ namespace ZendeskApi.Client.Resources
         Task<UserIdentity> GetIdentityForUserAsync(long userId, long identityId);
         Task<UserIdentity> CreateUserIdentityAsync(UserIdentity identity, long userId);
         Task<UserIdentity> CreateEndUserIdentityAsync(UserIdentity identity, long endUserId);
-        Task<UserIdentity> PutAsync(UserIdentity identity);
+        Task<UserIdentity> UpdateAsync(UserIdentity identity);
         Task DeleteAsync(long userId, long identityId);
     }
 }

@@ -22,12 +22,12 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllTicketFields()
         {
-            var obj1 = await _resource.PostAsync(new TicketField
+            var obj1 = await _resource.CreateAsync(new TicketField
             {
                 RawTitle = "FuBar"
             });
 
-            var obj2 = await _resource.PostAsync(new TicketField
+            var obj2 = await _resource.CreateAsync(new TicketField
             {
                 RawTitle = "FuBar2"
             });
@@ -42,12 +42,12 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetTicketFieldById()
         {
-            var obj1 = await _resource.PostAsync(new TicketField
+            var obj1 = await _resource.CreateAsync(new TicketField
             {
                 RawTitle = "FuBar"
             });
 
-            var obj2 = await _resource.PostAsync(new TicketField
+            var obj2 = await _resource.CreateAsync(new TicketField
             {
                 RawTitle = "FuBar2"
             });
@@ -60,7 +60,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldCreateTicketField()
         {
-            var response = await _resource.PostAsync(
+            var response = await _resource.CreateAsync(
                 new TicketField
                 {
                     RawTitle = "FuBar"
@@ -73,7 +73,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldUpdateTicketField()
         {
-            var ticketField = await _resource.PostAsync(
+            var ticketField = await _resource.CreateAsync(
                 new TicketField
                 {
                     RawTitle = "FuBar"
@@ -83,7 +83,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             ticketField.RawTitle = "BarFu";
 
-            ticketField = await _resource.PutAsync(ticketField);
+            ticketField = await _resource.UpdateAsync(ticketField);
 
             Assert.Equal("BarFu", ticketField.RawTitle);
         }
@@ -91,7 +91,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldDeleteTicketField()
         {
-            var ticketField = await _resource.PostAsync(
+            var ticketField = await _resource.CreateAsync(
                 new TicketField
                 {
                     RawTitle = "FuBar"

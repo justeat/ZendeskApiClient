@@ -24,11 +24,11 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllTicketForms()
         {
-            var obj1 = await _resource.PostAsync(new TicketForm {
+            var obj1 = await _resource.CreateAsync(new TicketForm {
                 Name = "Superman1"
             });
 
-            var obj2 = await _resource.PostAsync(new TicketForm
+            var obj2 = await _resource.CreateAsync(new TicketForm
             {
                 Name = "Superman2"
             });
@@ -43,12 +43,12 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetTicketFormById()
         {
-            var obj1 = await _resource.PostAsync(new TicketForm
+            var obj1 = await _resource.CreateAsync(new TicketForm
             {
                 Name = "Superman1"
             });
 
-            var obj2 = await _resource.PostAsync(new TicketForm
+            var obj2 = await _resource.CreateAsync(new TicketForm
             {
                 Name = "Superman2"
             });
@@ -63,7 +63,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldCreateTicketForm()
         {
-            var obj1 = await _resource.PostAsync(new TicketForm
+            var obj1 = await _resource.CreateAsync(new TicketForm
             {
                 Name = "Superman1"
             });
@@ -75,7 +75,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public Task ShouldThrowErrorWhenNot201()
         {
-            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.PostAsync(new TicketForm
+            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateAsync(new TicketForm
             {
                 Name = "error"
             }));
@@ -86,7 +86,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldUpdateTicketForm()
         {
-            var obj = await _resource.PostAsync(new TicketForm
+            var obj = await _resource.CreateAsync(new TicketForm
             {
                 Name = "Superman1"
             });
@@ -95,7 +95,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             obj.Name = "Superman2";
 
-            obj = await _resource.PutAsync(obj);
+            obj = await _resource.UpdateAsync(obj);
 
             Assert.Equal("Superman2", obj.Name);
         }
@@ -103,7 +103,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldDeleteTicketForm()
         {
-            var obj = await _resource.PostAsync(new TicketForm
+            var obj = await _resource.CreateAsync(new TicketForm
             {
                 Name = "Superman1"
             });

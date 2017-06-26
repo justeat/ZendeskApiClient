@@ -56,7 +56,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<TicketField> PostAsync(TicketField ticketField)
+        public async Task<TicketField> CreateAsync(TicketField ticketField)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
@@ -75,7 +75,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<TicketField> PutAsync(TicketField ticketField)
+        public async Task<TicketField> UpdateAsync(TicketField ticketField)
         {
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))

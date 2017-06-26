@@ -23,8 +23,8 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllSatisfactionRatings()
         {
-            var obj1 = await _resource.CreateSatisfactionRatingAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
-            var obj2 = await _resource.CreateSatisfactionRatingAsync(new SatisfactionRating { Url = "http://fu2.com" }, 1);
+            var obj1 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
+            var obj2 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu2.com" }, 1);
 
             var objs = (await _resource.GetAllAsync()).ToArray();
 
@@ -36,8 +36,8 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetSatisfactionRating()
         {
-            var obj1 = await _resource.CreateSatisfactionRatingAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
-            var obj2 = await _resource.CreateSatisfactionRatingAsync(new SatisfactionRating { Url = "http://fu2.com" }, 1);
+            var obj1 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
+            var obj2 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu2.com" }, 1);
 
             var response = await _resource.GetAsync(obj1.Id.Value);
 
@@ -47,7 +47,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldCreateTicket()
         {
-            var obj1 = await _resource.CreateSatisfactionRatingAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
+            var obj1 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
 
             Assert.NotNull(obj1.Id);
             Assert.Equal("http://fu.com", obj1.Url);

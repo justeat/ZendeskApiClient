@@ -93,7 +93,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Group> PostAsync(Group group)
+        public async Task<Group> CreateAsync(Group group)
         {
             using (_loggerScope(_logger, "PostAsync")) // Maybe incluse the request in the log?
             using (var client = _apiClient.CreateClient())
@@ -112,7 +112,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Group> PutAsync(Group group)
+        public async Task<Group> UpdateAsync(Group group)
         {
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))

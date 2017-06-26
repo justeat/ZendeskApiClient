@@ -24,14 +24,14 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllGroups()
         {
-            var group1 = await _resource.PostAsync(new Group
+            var group1 = await _resource.CreateAsync(new Group
             {
                 Name = "DJs",
                 CreatedAt = DateTime.Parse("2009-05-13T00:07:08Z"),
                 UpdatedAt = DateTime.Parse("2011-07-22T00:11:12Z"),
             });
 
-            var group2 = await _resource.PostAsync(new Group
+            var group2 = await _resource.CreateAsync(new Group
             {
                 Id = 122L,
                 Name = "MCs",
@@ -50,21 +50,21 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldListAllGroupsForUser()
         {
             // NOTE: Using name rather than calling user api to assign groups.
-            var group1 = await _resource.PostAsync(new Group
+            var group1 = await _resource.CreateAsync(new Group
             {
                 Name = "DJs USER: 1",
                 CreatedAt = DateTime.Parse("2009-05-13T00:07:08Z"),
                 UpdatedAt = DateTime.Parse("2011-07-22T00:11:12Z"),
             });
 
-            var group2 = await _resource.PostAsync(new Group
+            var group2 = await _resource.CreateAsync(new Group
             {
                 Name = "MCs USER: 2",
                 CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
                 UpdatedAt = DateTime.Parse("2010-05-13T00:07:08Z"),
             });
 
-            var group3 = await _resource.PostAsync(new Group
+            var group3 = await _resource.CreateAsync(new Group
             {
                 Name = "DJs USER: 1",
                 CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
@@ -81,21 +81,21 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllAssignable()
         {
-            var group1 = await _resource.PostAsync(new Group
+            var group1 = await _resource.CreateAsync(new Group
             {
                 Name = "DJs Assign:true",
                 CreatedAt = DateTime.Parse("2009-05-13T00:07:08Z"),
                 UpdatedAt = DateTime.Parse("2011-07-22T00:11:12Z"),
             });
 
-            var group2 = await _resource.PostAsync(new Group
+            var group2 = await _resource.CreateAsync(new Group
             {
                 Name = "MCs Assign:true",
                 CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
                 UpdatedAt = DateTime.Parse("2010-05-13T00:07:08Z"),
             });
 
-            var group3 = await _resource.PostAsync(new Group
+            var group3 = await _resource.CreateAsync(new Group
             {
                 Name = "DJs Assign:false",
                 CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
@@ -112,14 +112,14 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetGroupById()
         {
-            var group1 = await _resource.PostAsync(new Group
+            var group1 = await _resource.CreateAsync(new Group
             {
                 Name = "DJs",
                 CreatedAt = DateTime.Parse("2009-05-13T00:07:08Z"),
                 UpdatedAt = DateTime.Parse("2011-07-22T00:11:12Z"),
             });
 
-            var group2 = await _resource.PostAsync(new Group
+            var group2 = await _resource.CreateAsync(new Group
             {
                 Name = "MCs",
                 CreatedAt = DateTime.Parse("2009-08-26T00:07:08Z"),
@@ -134,7 +134,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldCreateGroup()
         {
-            var response = await _resource.PostAsync(
+            var response = await _resource.CreateAsync(
                 new Group
                 {
                     Name = "I'm a group!",
@@ -150,7 +150,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public Task ShouldThrowErrorWhenNot201()
         {
-            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.PostAsync(
+            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateAsync(
                 new Group
                 {
                     Name = "I'm an error group!",
@@ -163,7 +163,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldUpdateGroup()
         {
-            var group = await _resource.PostAsync(
+            var group = await _resource.CreateAsync(
                 new Group
                 {
                     Name = "I'm a group!",
@@ -174,7 +174,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             group.Name = "Im a new group!";
 
-            group = await _resource.PutAsync(group);
+            group = await _resource.UpdateAsync(group);
 
             Assert.Equal("Im a new group!", group.Name);
         }
@@ -182,7 +182,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldDeleteGroup()
         {
-            var group = await _resource.PostAsync(
+            var group = await _resource.CreateAsync(
                 new Group
                 {
                     Name = "I'm a group!",

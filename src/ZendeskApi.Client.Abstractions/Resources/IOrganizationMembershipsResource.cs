@@ -12,9 +12,9 @@ namespace ZendeskApi.Client.Resources
         Task<IPagination<OrganizationMembership>> GetAllForUserAsync(long userId, PagerParameters pager = null);
         Task<OrganizationMembership> GetAsync(long id);
         Task<OrganizationMembership> GetForUserAndOrganizationAsync(long userId, long organizationId);
-        Task<OrganizationMembership> PostAsync(OrganizationMembership organizationMembership);
+        Task<OrganizationMembership> CreateAsync(OrganizationMembership organizationMembership);
         Task<OrganizationMembership> PostForUserAsync(OrganizationMembership organizationMembership, string userId);
-        Task<JobStatus> PostAsync(IEnumerable<OrganizationMembership> organizationMemberships);
+        Task<JobStatus> CreateAsync(IEnumerable<OrganizationMembership> organizationMemberships);
         Task DeleteAsync(long organizationMembershipId);
         Task DeleteAsync(long userId, long organizationMembershipId);
     }

@@ -14,10 +14,10 @@ namespace ZendeskApi.Client.Resources
         Task<IPagination<Ticket>> GetAllAssignedForUserAsync(long userId, PagerParameters pager = null);
         Task<Ticket> GetAsync(long ticketId);
         Task<IPagination<Ticket>> GetAllAsync(long[] ticketIds, PagerParameters pager = null);
-        Task<Ticket> PostAsync(Ticket ticket);
-        Task<JobStatus> PostAsync(IEnumerable<Ticket> tickets);
-        Task<Ticket> PutAsync(Ticket ticket);
-        Task<JobStatus> PutAsync(IEnumerable<Ticket> tickets);
+        Task<Ticket> CreateAsync(Ticket ticket);
+        Task<JobStatus> CreateAsync(IEnumerable<Ticket> tickets);
+        Task<Ticket> UpdateAsync(Ticket ticket);
+        Task<JobStatus> UpdateAsync(IEnumerable<Ticket> tickets);
         Task<bool> MarkTicketAsSpamAndSuspendRequester(long ticketId);
         Task<JobStatus> MarkTicketAsSpamAndSuspendRequester(long[] ticketIds);
         Task DeleteAsync(long ticketId);

@@ -13,8 +13,8 @@ namespace ZendeskApi.Client.Resources
         Task<IPagination<User>> GetAllAsync(long[] userIds, PagerParameters pager = null);
         Task<IPagination<User>> GetAllByExternalIdsAsync(string[] externalIds, PagerParameters pager = null);
         Task<User> GetRelatedUsersAsync(long userId);
-        Task<User> PostAsync(User user);
-        Task<User> PutAsync(User user);
+        Task<User> CreateAsync(User user);
+        Task<User> UpdateAsync(User user);
         Task DeleteAsync(long userId);
     }
 }

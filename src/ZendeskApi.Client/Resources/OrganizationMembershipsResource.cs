@@ -108,7 +108,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<OrganizationMembership> PostAsync(OrganizationMembership organizationMembership)
+        public async Task<OrganizationMembership> CreateAsync(OrganizationMembership organizationMembership)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
@@ -146,7 +146,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> PostAsync(IEnumerable<OrganizationMembership> organizationMemberships)
+        public async Task<JobStatus> CreateAsync(IEnumerable<OrganizationMembership> organizationMemberships)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))

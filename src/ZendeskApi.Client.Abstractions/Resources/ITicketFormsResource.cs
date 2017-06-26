@@ -9,8 +9,8 @@ namespace ZendeskApi.Client.Resources
         Task<IPagination<TicketForm>> GetAllAsync(PagerParameters pager = null);
         Task<TicketForm> GetAsync(long ticketformId);
         Task<IPagination<TicketForm>> GetAllAsync(long[] ticketFormsIds, PagerParameters pager = null);
-        Task<TicketForm> PostAsync(TicketForm ticketForm);
-        Task<TicketForm> PutAsync(TicketForm ticketForm);
+        Task<TicketForm> CreateAsync(TicketForm ticketForm);
+        Task<TicketForm> UpdateAsync(TicketForm ticketForm);
         Task DeleteAsync(long ticketFormId);
     }
 }

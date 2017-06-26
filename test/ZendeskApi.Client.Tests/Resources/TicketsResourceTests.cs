@@ -247,7 +247,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldCreateTicket()
         {
-            var response = await _resource.PostAsync(
+            var response = await _resource.CreateAsync(
                 new Ticket
                 {
                     Subject = "My printer is on fire!",
@@ -265,7 +265,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public Task ShouldThrowErrorWhenNot201()
         {
-            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.PostAsync(
+            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateAsync(
                 new Ticket
                 {
                     Subject = "My printer is no longer on fire!",
@@ -282,7 +282,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldJobWhenCreatingMultipleTicket()
         {
-            var response = await _resource.PostAsync(
+            var response = await _resource.CreateAsync(
                 new[] {
                         new Ticket {
                             Subject = "My printer is on fire!",
@@ -312,7 +312,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             ticket.Subject = "I COMMAND YOU TO UPDATE!!!";
 
-            ticket = await _resource.PutAsync(ticket);
+            ticket = await _resource.UpdateAsync(ticket);
 
             Assert.Equal("I COMMAND YOU TO UPDATE!!!", ticket.Subject);
         }
@@ -351,7 +351,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 tickets.Add(ticket);
             }
 
-            var jobStatus = await _resource.PostAsync(tickets);
+            var jobStatus = await _resource.CreateAsync(tickets);
 
             for (var i = 0; i < numberOfTicketsToCreate; i++)
             {
@@ -364,7 +364,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         private async Task<Ticket[]> CreateTickets(params Ticket[] tickets)
         {
-            var jobStatus = await _resource.PostAsync(tickets);
+            var jobStatus = await _resource.CreateAsync(tickets);
 
             for (var i = 0; i < tickets.Length; i++)
             {

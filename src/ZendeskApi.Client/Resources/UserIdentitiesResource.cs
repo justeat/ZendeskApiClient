@@ -95,7 +95,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<UserIdentity> PutAsync(UserIdentity identity)
+        public async Task<UserIdentity> UpdateAsync(UserIdentity identity)
         {
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient())

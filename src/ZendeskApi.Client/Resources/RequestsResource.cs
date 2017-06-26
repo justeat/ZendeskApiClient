@@ -109,7 +109,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Request> PostAsync(Request request)
+        public async Task<Request> CreateAsync(Request request)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
@@ -128,7 +128,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Request> PutAsync(Request request)
+        public async Task<Request> UpdateAsync(Request request)
         {
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))

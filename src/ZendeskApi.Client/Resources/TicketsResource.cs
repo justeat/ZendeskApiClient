@@ -154,7 +154,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Ticket> PostAsync(Ticket ticket)
+        public async Task<Ticket> CreateAsync(Ticket ticket)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
@@ -173,7 +173,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> PostAsync(IEnumerable<Ticket> tickets)
+        public async Task<JobStatus> CreateAsync(IEnumerable<Ticket> tickets)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -192,7 +192,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Ticket> PutAsync(Ticket ticket)
+        public async Task<Ticket> UpdateAsync(Ticket ticket)
         {
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -211,7 +211,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> PutAsync(IEnumerable<Ticket> tickets)
+        public async Task<JobStatus> UpdateAsync(IEnumerable<Ticket> tickets)
         {
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))

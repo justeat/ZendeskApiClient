@@ -50,8 +50,8 @@ namespace ZendeskApi.Client.Tests.Resources
                 DefaultGroupId = 2
             };
 
-            obj1 = await _resource.PostAsync(obj1);
-            obj2 = await _resource.PostAsync(obj2);
+            obj1 = await _resource.CreateAsync(obj1);
+            obj2 = await _resource.CreateAsync(obj2);
 
             var obj1Result = (await _resource.GetAllUsersInGroupAsync(1)).ToArray()[0];
             var obj2Result = (await _resource.GetAllUsersInGroupAsync(2)).ToArray()[0];
@@ -75,8 +75,8 @@ namespace ZendeskApi.Client.Tests.Resources
                 OrganizationId = 12
             };
 
-            obj1 = await _resource.PostAsync(obj1);
-            obj2 = await _resource.PostAsync(obj2);
+            obj1 = await _resource.CreateAsync(obj1);
+            obj2 = await _resource.CreateAsync(obj2);
 
             var obj1Result = (await _resource.GetAllUsersInOrganizationAsync(12)).ToArray()[0];
             var obj2Result = (await _resource.GetAllUsersInOrganizationAsync(18)).ToArray()[0];
@@ -88,9 +88,9 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetAllUsersById()
         {
-            var obj1 = await _resource.PostAsync(new User { Email = "Fu1@fu.com" });
-            var obj2 = await _resource.PostAsync(new User { Email = "Fu2@fu.com" });
-            var obj3 = await _resource.PostAsync(new User { Email = "Fu2@fu.com" });
+            var obj1 = await _resource.CreateAsync(new User { Email = "Fu1@fu.com" });
+            var obj2 = await _resource.CreateAsync(new User { Email = "Fu2@fu.com" });
+            var obj3 = await _resource.CreateAsync(new User { Email = "Fu2@fu.com" });
 
             var objs = (await _resource.GetAllAsync(new[] { obj1.Id.Value, obj3.Id.Value })).ToArray();
 
@@ -102,9 +102,9 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetAllUsersByExternalId()
         {
-            var obj1 = await _resource.PostAsync(new User { Email = "Fu1@fu.com" });
-            var obj2 = await _resource.PostAsync(new User { Email = "Fu2@fu.com", ExternalId = "ATEST1" });
-            var obj3 = await _resource.PostAsync(new User { Email = "Fu2@fu.com", ExternalId = "ATEST2" });
+            var obj1 = await _resource.CreateAsync(new User { Email = "Fu1@fu.com" });
+            var obj2 = await _resource.CreateAsync(new User { Email = "Fu2@fu.com", ExternalId = "ATEST1" });
+            var obj3 = await _resource.CreateAsync(new User { Email = "Fu2@fu.com", ExternalId = "ATEST2" });
 
             var objs = (await _resource.GetAllByExternalIdsAsync(new[] { obj1.ExternalId, obj2.ExternalId, obj3.ExternalId })).ToArray();
 
@@ -116,7 +116,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetUser()
         {
-            var user = await _resource.PostAsync(
+            var user = await _resource.CreateAsync(
                 new User
                 {
                     Email = "Fu1@fu.com"
@@ -130,7 +130,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldCreateUser()
         {
-            var user = await _resource.PostAsync(
+            var user = await _resource.CreateAsync(
                 new User
                 {
                     Email = "Fu1@fu.com"
@@ -143,7 +143,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldUpdateUser()
         {
-            var user = await _resource.PostAsync(
+            var user = await _resource.CreateAsync(
                 new User
                 {
                     Email = "Fu1@fu.com",
@@ -154,7 +154,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             user.Name = "Cheese Master";
 
-            user = await _resource.PutAsync(user);
+            user = await _resource.UpdateAsync(user);
 
             Assert.Equal("Cheese Master", user.Name);
         }
@@ -162,7 +162,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldDeleteUser()
         {
-            var user = await _resource.PostAsync(
+            var user = await _resource.CreateAsync(
                 new User
                 {
                     Email = "Fu1@fu.com",
@@ -192,8 +192,8 @@ namespace ZendeskApi.Client.Tests.Resources
                 Email = "Fu2@fu.com"
             };
 
-            obj1 = await _resource.PostAsync(obj1);
-            obj2 = await _resource.PostAsync(obj2);
+            obj1 = await _resource.CreateAsync(obj1);
+            obj2 = await _resource.CreateAsync(obj2);
 
             return new[] { obj1, obj2 };
         }

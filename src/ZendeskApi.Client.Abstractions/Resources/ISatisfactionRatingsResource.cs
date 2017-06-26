@@ -8,6 +8,6 @@ namespace ZendeskApi.Client.Resources
     {
         Task<IPagination<SatisfactionRating>> GetAllAsync(PagerParameters pager = null);
         Task<SatisfactionRating> GetAsync(long satisficationRatingId);
-        Task<SatisfactionRating> CreateSatisfactionRatingAsync(SatisfactionRating satisfactionRating, long ticketId);
+        Task<SatisfactionRating> CreateAsync(SatisfactionRating satisfactionRating, long ticketId);
     }
 }

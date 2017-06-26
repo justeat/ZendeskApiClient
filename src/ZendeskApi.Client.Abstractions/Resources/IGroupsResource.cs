@@ -10,8 +10,8 @@ namespace ZendeskApi.Client.Resources
         Task<IPagination<Group>> GetAllAsync(long userId, PagerParameters pager = null);
         Task<IPagination<Group>> GetAllAssignableAsync(PagerParameters pager = null);
         Task<Group> GetAsync(long groupId);
-        Task<Group> PostAsync(Group group);
-        Task<Group> PutAsync(Group group);
+        Task<Group> CreateAsync(Group group);
+        Task<Group> UpdateAsync(Group group);
         Task DeleteAsync(long groupId);
     }
 }
