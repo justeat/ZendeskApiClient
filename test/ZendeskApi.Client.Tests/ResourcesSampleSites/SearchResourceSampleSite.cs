@@ -28,7 +28,7 @@ namespace ZendeskApi.Client.Tests
                             new Organization { Id = 3 },
                             new User { Id = 4 }};
 
-                        if (req.Query.ContainsKey("query")) {
+                        if (req.Query.ContainsKey("query") && !string.IsNullOrEmpty(req.Query["query"][0])) {
                             var query = req.Query["query"][0].Split(':');
 
                             if (query[1] == "ticket")
