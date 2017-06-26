@@ -88,11 +88,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 OrganisationId = 16230
             };
 
-            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2, ticket3 });
-
-            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
-            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
-            ticket3.Id = jobStatus.Items.Single(x => x.Title == ticket3.Subject).Id;
+            await CreateTickets(ticket1, ticket2, ticket3);
 
             var tickets = (await _resource.GetAllForOrganizationAsync(16230L)).ToArray();
 
@@ -133,11 +129,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 }
             };
 
-            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2, ticket3 });
-
-            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
-            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
-            ticket3.Id = jobStatus.Items.Single(x => x.Title == ticket3.Subject).Id;
+            await CreateTickets(ticket1, ticket2, ticket3);
 
             var tickets = (await _resource.GetAllRequestedForUserAsync(10000L)).ToArray();
 
@@ -179,11 +171,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 CollaboratorIds = new System.Collections.Generic.List<long> { 2293 }
             };
 
-            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2, ticket3 });
-
-            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
-            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
-            ticket3.Id = jobStatus.Items.Single(x => x.Title == ticket3.Subject).Id;
+            await CreateTickets(ticket1, ticket2, ticket3);
 
             var tickets = (await _resource.GetAllCCDForUserAsync(2293L)).ToArray();
 
@@ -225,11 +213,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 AssigneeId = 2233
             };
 
-            var jobStatus = await _resource.PostAsync(new[] { ticket1, ticket2, ticket3 });
-
-            ticket1.Id = jobStatus.Items.Single(x => x.Title == ticket1.Subject).Id;
-            ticket2.Id = jobStatus.Items.Single(x => x.Title == ticket2.Subject).Id;
-            ticket3.Id = jobStatus.Items.Single(x => x.Title == ticket3.Subject).Id;
+            await CreateTickets(ticket1, ticket2, ticket3);
 
             var tickets = (await _resource.GetAllAssignedForUserAsync(2233L)).ToArray();
 
@@ -241,14 +225,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetTicket()
         {
-            var ticket = await _resource.PostAsync(new Ticket
-            {
-                Subject = "My printer is on fire! 1",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 1"
-                }
-            });
+            var ticket = (await CreateTickets(1)).First();
 
             var response = await _resource.GetAsync(ticket.Id.Value);
 
@@ -329,17 +306,9 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldUpdateTicket()
         {
-            var ticket = await _resource.PostAsync(
-                new Ticket
-                {
-                    Subject = "My printer is on fire! 1",
-                    Comment = new TicketComment
-                    {
-                        Body = "The smoke is very colorful. 1"
-                    }
-                });
+            var ticket = (await CreateTickets(1)).First();
 
-            Assert.Equal("My printer is on fire! 1", ticket.Subject);
+            Assert.Equal("My printer is on fire! 0", ticket.Subject);
 
             ticket.Subject = "I COMMAND YOU TO UPDATE!!!";
 
@@ -351,15 +320,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldDeleteTicket()
         {
-            var ticket = await _resource.PostAsync(
-                new Ticket
-                {
-                    Subject = "My printer is on fire! 1",
-                    Comment = new TicketComment
-                    {
-                        Body = "The smoke is very colorful. 1"
-                    }
-                });
+            var ticket = (await CreateTickets(1)).First();
 
             var ticket1 = await _resource.GetAsync(ticket.Id.Value);
 
@@ -395,6 +356,20 @@ namespace ZendeskApi.Client.Tests.Resources
             for (var i = 0; i < numberOfTicketsToCreate; i++)
             {
                 tickets[i].Id = jobStatus.Items.Single(x => x.Title == tickets[i].Subject).Id;
+                tickets[i].Url = new Uri("https://company.zendesk.com/api/v2/tickets/" + tickets[i].Id + ".json");
+            }
+
+            return tickets.ToArray();
+        }
+
+        private async Task<Ticket[]> CreateTickets(params Ticket[] tickets)
+        {
+            var jobStatus = await _resource.PostAsync(tickets);
+
+            for (var i = 0; i < tickets.Length; i++)
+            {
+                tickets[i].Id = jobStatus.Items.Single(x => x.Title == tickets[i].Subject).Id;
+                tickets[i].Url = new Uri("https://company.zendesk.com/api/v2/tickets/" + tickets[i].Id + ".json");
             }
 
             return tickets.ToArray();

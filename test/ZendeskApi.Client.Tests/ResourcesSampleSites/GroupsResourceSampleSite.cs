@@ -91,6 +91,7 @@ namespace ZendeskApi.Client.Tests
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         group.Id = long.Parse(RAND.Next().ToString());
+                        group.Url = new Uri("https://company.zendesk.com/api/v2/groups/" + group.Id + ".json");
                         state.Groups.Add(group.Id.Value, group);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;

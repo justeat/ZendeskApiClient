@@ -138,13 +138,12 @@ namespace ZendeskApi.Client.Tests.Resources
                 new Group
                 {
                     Name = "I'm a group!",
-                    Url = new Uri("http://kung.fu.com"),
                     HasIncidents = true
                 });
 
             Assert.NotNull(response.Id);
             Assert.Equal("I'm a group!", response.Name);
-            Assert.Equal(new Uri("http://kung.fu.com"), response.Url);
+            Assert.Equal(new Uri("https://company.zendesk.com/api/v2/groups/" + response.Id + ".json"), response.Url);
             Assert.True(response.HasIncidents);
         }
 
@@ -155,7 +154,6 @@ namespace ZendeskApi.Client.Tests.Resources
                 new Group
                 {
                     Name = "I'm an error group!",
-                    Url = new Uri("http://kung.fu.com"),
                     HasIncidents = true
                 }));
 
@@ -169,7 +167,6 @@ namespace ZendeskApi.Client.Tests.Resources
                 new Group
                 {
                     Name = "I'm a group!",
-                    Url = new Uri("http://kung.fu.com"),
                     HasIncidents = true
                 });
 
@@ -189,7 +186,6 @@ namespace ZendeskApi.Client.Tests.Resources
                 new Group
                 {
                     Name = "I'm a group!",
-                    Url = new Uri("http://kung.fu.com"),
                     HasIncidents = true
                 });
 

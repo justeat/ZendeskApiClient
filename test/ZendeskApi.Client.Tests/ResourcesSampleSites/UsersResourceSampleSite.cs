@@ -115,6 +115,7 @@ namespace ZendeskApi.Client.Tests
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         user.Id = long.Parse(RAND.Next().ToString());
+                        user.Url = new Uri("https://company.zendesk.com/api/v2/users/" + user.Id + ".json");
                         state.Users.Add(user.Id.Value, user);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;

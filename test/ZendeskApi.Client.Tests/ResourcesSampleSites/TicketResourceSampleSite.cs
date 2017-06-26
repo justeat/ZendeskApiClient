@@ -160,6 +160,7 @@ namespace ZendeskApi.Client.Tests
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         ticket.Id = long.Parse(RAND.Next().ToString());
+                        ticket.Url = new Uri("https://company.zendesk.com/api/v2/tickets/" + ticket.Id + ".json");
                         state.Tickets.Add(ticket.Id.Value, ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
@@ -174,6 +175,7 @@ namespace ZendeskApi.Client.Tests
                         foreach (var ticket in tickets)
                         {
                             ticket.Id = long.Parse(RAND.Next().ToString());
+                            ticket.Url = new Uri("https://company.zendesk.com/api/v2/tickets/" + ticket.Id + ".json");
                             state.Tickets.Add(ticket.Id.Value, ticket);
                         }
 

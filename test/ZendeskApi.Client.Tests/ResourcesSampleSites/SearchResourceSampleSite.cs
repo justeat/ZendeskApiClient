@@ -23,10 +23,10 @@ namespace ZendeskApi.Client.Tests
                     .MapGet("api/v2/search", (req, resp, routeData) =>
                     {
                         var obj = new ISearchResult[] {
-                            new Ticket { Id = 1 },
-                            new Group { Id = 2 },
-                            new Organization { Id = 3 },
-                            new User { Id = 4 }};
+                            new Ticket { Id = 1, Url = new Uri("https://company.zendesk.com/api/v2/tickets/1.json") },
+                            new Group { Id = 2, Url = new Uri("https://company.zendesk.com/api/v2/groups/2.json") },
+                            new Organization { Id = 3, Url = new Uri("https://company.zendesk.com/api/v2/organizations/3.json") },
+                            new User { Id = 4, Url = new Uri("https://company.zendesk.com/api/v2/users/4.json") }};
 
                         if (req.Query.ContainsKey("query") && !string.IsNullOrEmpty(req.Query["query"][0])) {
                             var query = req.Query["query"][0].Split(':');
