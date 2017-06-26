@@ -38,7 +38,11 @@ namespace ZendeskApi.Client.Tests
                         }
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new SearchResultsResponse { Item = obj, Count = obj.Length });
+                        return resp.WriteAsJson(new SearchResultsResponse {
+                            Item = obj,
+                            Count = obj.Length,
+                            NextPage = new Uri("https://foo.zendesk.com/api/v2/search.json?query=\"type:Group hello\"&sort_by=created_at&sort_order=desc&page=2")
+                        });
                     });
             }
         }

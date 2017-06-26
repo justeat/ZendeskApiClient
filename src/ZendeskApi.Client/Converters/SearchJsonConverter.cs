@@ -35,11 +35,14 @@ namespace ZendeskApi.Client.Converters
                 results.Add((ISearchResult)result.ToObject(keys[result.Value<string>("result_type")]));
             }
 
+            var nextPage = token.Value<string>("next_page");
+            var previousPage = token.Value<string>("previous_page");
+
             return new SearchResultsResponse
             {
                 Count = token.Value<int>("count"),
-                NextPage = token.Value<Uri>("next_page"),
-                PreviousPage = token.Value<Uri>("previous_page"),
+                NextPage = nextPage != null ? new Uri(nextPage) : null,
+                PreviousPage = previousPage != null ? new Uri(previousPage) : null,
                 Item = results
             };
         }
