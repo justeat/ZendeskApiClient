@@ -38,5 +38,20 @@ namespace ZendeskApi.Client.Resources
                 return await response.Content.ReadAsAsync<SearchResultsResponse>(new SearchJsonConverter());
             }
         }
+
+        public async Task<IPagination<T>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null) where T : ISearchResult
+        {
+            var query = new ZendeskQuery();
+            builder(query);
+
+            query.WithTypeFilter<T>();
+
+            using (_loggerScope(_logger, "Search"))
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<SearchResultsResponse<T>>();
+            }
+        }
     }
 }

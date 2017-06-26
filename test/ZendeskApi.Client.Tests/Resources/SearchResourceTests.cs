@@ -28,5 +28,14 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(2, results.OfType<Group>().Single().Id);
             Assert.Equal(4, results.OfType<User>().Single().Id);
         }
+
+        [Fact]
+        public async Task ShouldGetTicket()
+        {
+            var results = await _resource.SearchAsync<Ticket>(query => { });
+
+            Assert.Equal(1, results.Count);
+            Assert.Equal(1, results.OfType<Ticket>().Single().Id);
+        }
     }
 }

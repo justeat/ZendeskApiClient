@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
@@ -21,7 +22,20 @@ namespace ZendeskApi.Client.Tests
                 return rb => rb
                     .MapGet("api/v2/search", (req, resp, routeData) =>
                     {
-                        var obj = new ISearchResult[] { new Ticket { Id = 1 }, new Group { Id = 2 }, new Organization { Id = 3 }, new User { Id = 4 }};
+                        var obj = new ISearchResult[] {
+                            new Ticket { Id = 1 },
+                            new Group { Id = 2 },
+                            new Organization { Id = 3 },
+                            new User { Id = 4 }};
+
+                        if (req.Query.ContainsKey("query")) {
+                            var query = req.Query["query"][0].Split(':');
+
+                            if (query[1] == "ticket")
+                            {
+                                obj = obj.OfType<Ticket>().ToArray();
+                            }
+                        }
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new SearchResultsResponse { Item = obj, Count = obj.Length });
