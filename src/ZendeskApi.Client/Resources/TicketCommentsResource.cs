@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Resources
 
             ticket.Comment = ticketComment;
 
-            await _ticketsResource.CreateAsync(ticket);
+            await _ticketsResource.UpdateAsync(ticket);
         }
     }
 }
