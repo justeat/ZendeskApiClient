@@ -45,8 +45,7 @@ namespace ZendeskApi.Client.Queries
 
         public string BuildQuery()
         {
-            var sb = new StringBuilder();
-            sb.Append("query=");
+            var sb = new StringBuilder("query=");
 
             for (var i = 0; i < _customFilters.Count; i++)
             {
