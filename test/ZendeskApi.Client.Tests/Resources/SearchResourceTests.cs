@@ -35,7 +35,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var results = await _resource.SearchAsync<Ticket>(query => { });
 
             Assert.Equal(1, results.Count);
-            Assert.Equal(1, results.OfType<Ticket>().Single().Id);
+            Assert.Equal(1, results.Single().Id);
         }
     }
 }
