@@ -1,6 +1,6 @@
 # Zendesk Api Client
-[![NuGet](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg)](https://www.nuget.org/packages/ZendeskApi.Client)
-[![NuGet](https://img.shields.io/nuget/vpre/ZendeskApi.Client.Abstractions.svg)](https://www.nuget.org/packages/ZendeskApi.Client.Abstractions)
+[![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg)](https://www.nuget.org/packages/ZendeskApi.Client)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg)](https://www.nuget.org/packages/ZendeskApi.Client)
 [![Build status](https://ci.appveyor.com/api/projects/status/github/justeat/ZendeskApiClient?branch=master&svg=true)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
 
 
