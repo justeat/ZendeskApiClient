@@ -24,7 +24,7 @@ namespace ZendeskApi.Client.Queries
 
         public static IZendeskQuery WithCreatedDate(this IZendeskQuery query, DateTime dateTime, FilterOperator op)
         {
-            return query.WithFilter("created", $"{dateTime.Year}-{dateTime.Month.ToString("d2")}-{dateTime.Day.ToString("d2")}", op);
+            return query.WithFilter("created", $"{dateTime:yyyy-MM-dd}", op);
         }
 
         public static IZendeskQuery FromRequester(this IZendeskQuery query, string email)
