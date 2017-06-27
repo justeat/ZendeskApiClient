@@ -30,11 +30,10 @@ namespace ZendeskApi.Client.Models
 
         [JsonProperty("description")]
         public string Description { get; set; }
-
-        // TODO: Enum
+        
         [JsonConverter(typeof(StringEnumConverter))]
         [JsonProperty("priority")]
-        public Priority Priority { get; set; }
+        public Priority? Priority { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         [JsonProperty("status")]
