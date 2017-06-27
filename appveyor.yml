@@ -1,0 +1,15 @@
+image: Visual Studio 2017
+install:
+  - ps: $env:BuildNumber= $env:APPVEYOR_BUILD_NUMBER
+init:
+  - git config --global core.autocrlf true
+build_script:
+  - dotnet restore
+  - dotnet build -c Release
+  - dotnet pack -c Release
+test_script:
+  - dotnet test -c Release .\test\ZendeskApi.Client.Tests\ZendeskApi.Client.Tests.csproj
+clone_depth: 1
+test: on
+artifacts:
+- path: '**\*.nupkg'

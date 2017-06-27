@@ -1,35 +1,40 @@
 # Zendesk Api Client
 
-A .net Zendesk Api Client NuGet package for use with the ZendeskApi v2
+A .net Zendesk Api Client NuGet package for use with the ZendeskApi v3
 
 # Breaking Changes
 
-## 2.x.x
- - .Net Framework version 4.0 is no longer supported
- - In October 2016 there has been a change to the [IRestClient](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Client/Http/IRestClient.cs) interface, adding parameters for request logging. This change does not affect most users of this library; it is a drop-in replacement for consumers. Only if you implement your own version of `IRestClient` beware that there will be a small change. If you do not perform per-call logging of ReST-y calls, feel free to ignore the parameters in your implementation.
+## 3.x.x
+ This is a complete rewrite. If you are using 2.x, then expect there to be breaking changes (for the better)
 
 ## Creating a client:
-```csharp
-IZendeskClient client = new ZendeskClient(
-    new Uri("https://my-zendesk-api-host-endpoint"),
-    new ZendeskDefaultConfiguration ("my-zendesk-username", 
-    "my-zendesk-token")
-);
+To register this in your DI, you just need to call...
+```c#
+services.AddZendeskClient("enpointurl", "username", "token");
 ```
-## Accessing resources:
-```csharp
-client.Tickets...
-client.Organizations...
-client.Users...
-client.Groups...
+then you can inject in IZendeskClient anywhere you want to use it. Here you can access all the resources available.
+
+If however you want to use the client in a DI less environment you can do this
+
+```c#
+var zendeskOptions = new ZendeskOptions
+{
+   EndpointUri = "endpoint",
+   Username = "username"
+   Token = "token"
+};
+
+var zendeskOptionsWrapper = new OptionsWrapper<ZendeskOptions>(zendeskOptions);
+var client = new ZendeskClient(new ZendeskApiClient(zendeskOptionsWrapper), _loggerFactory.CreateLogger<ZendeskClient>());
 ```
-## Http Methods:
-```csharp
-IResponse<Ticket> response = client.Tickets.Get((long)1234);
-IListResponse<Ticket> response = client.Tickets.GetAll(new List<long> { 1234, 4321 });
-IResponse<Ticket> response = client.Tickets.Put(new TicketRequest { Item = ticket });
-IResponse<Ticket> response = client.Tickets.Post(new TicketRequest { Item = ticket });
-client.Tickets.Delete((long)1234));
+
+## Example methods:
+```c#
+var ticket = await client.Tickets.GetAsync(1234L); // Get ticket by Id
+var tickets = await client.Tickets.GetAllAsync(new [] { 1234L, 4321L }); // 
+var ticket = await client.Tickets.PutAsync(ticket);
+var ticket = await client.Tickets.PostAsync(ticket);
+await client.Tickets.DeleteAsync(1234L);
 ```
 ## Searching, paging and filtering:
 

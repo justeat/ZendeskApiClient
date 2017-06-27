@@ -8,7 +8,7 @@ namespace ZendeskApi.Client.Formatters
     {
         public static string ToCsv(IEnumerable<string> items)
         {
-            return string.Join(",", items.Select(i => i.Trim()));
+            return string.Join(",", items.Where(x => !string.IsNullOrWhiteSpace(x)).Select(i => i.Trim()));
         }
 
         public static string ToCsv(IEnumerable<long> items)

@@ -1,34 +1,57 @@
-﻿using System.Threading.Tasks;
-using ZendeskApi.Client.Http;
-using ZendeskApi.Contracts.Models;
-using ZendeskApi.Contracts.Queries;
-using ZendeskApi.Contracts.Responses;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using ZendeskApi.Client.Converters;
+using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Queries;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
     public class SearchResource : ISearchResource
     {
-        private const string SearchUri = "/api/v2/search";
+        private const string SearchUri = "api/v2/search";
 
-        private readonly IRestClient _client;
+        private readonly IZendeskApiClient _apiClient;
+        private readonly ILogger _logger;
 
-        public SearchResource(IRestClient client)
+        private Func<ILogger, string, IDisposable> _loggerScope =
+            LoggerMessage.DefineScope<string>(typeof(SearchResource).Name + ": {0}");
+
+        public SearchResource(IZendeskApiClient apiClient,
+            ILogger logger)
         {
-            _client = client;
+            _apiClient = apiClient;
+            _logger = logger;
         }
 
-        public IListResponse<T> Find<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
+        public async Task<IPagination<ISearchResult>> SearchAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
         {
-            var requestUri = _client.BuildUri(SearchUri, zendeskQuery.BuildQuery());
+            var query = new ZendeskQuery();
+            builder(query);
 
-            return _client.Get<ListResponse<T>>(requestUri);
+            using (_loggerScope(_logger, "Search"))
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<SearchResultsResponse>(new SearchJsonConverter());
+            }
         }
 
-        public async Task<IListResponse<T>> FindAsync<T>(IZendeskQuery<T> zendeskQuery) where T : IZendeskEntity
+        public async Task<IPagination<T>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null) where T : ISearchResult
         {
-            var requestUri = _client.BuildUri(SearchUri, zendeskQuery.BuildQuery());
+            var query = new ZendeskQuery();
+            builder(query);
 
-            return await _client.GetAsync<ListResponse<T>>(requestUri).ConfigureAwait(false);
+            query.WithTypeFilter<T>();
+
+            using (_loggerScope(_logger, "Search"))
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager).ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<SearchResultsResponse<T>>();
+            }
         }
     }
 }
