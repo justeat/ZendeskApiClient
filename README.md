@@ -1,7 +1,7 @@
 # Zendesk Api Client
-[![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg)](https://www.nuget.org/packages/ZendeskApi.Client)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg)](https://www.nuget.org/packages/ZendeskApi.Client)
-[![Build status](https://ci.appveyor.com/api/projects/status/github/justeat/ZendeskApiClient?branch=master&svg=true)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
+[![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
+[![AppVeyor Build Status](https://img.shields.io/appveyor/ci/justeattech/zendeskapiclient/master.svg?style=flat-square)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
 
 
 A .netstandard NuGet package for use with the  Zendesk v2 API.
@@ -47,6 +47,7 @@ var ticket = await client.Tickets.PutAsync(ticket);
 var ticket = await client.Tickets.PostAsync(ticket);
 await client.Tickets.DeleteAsync(1234L);
 ```
+
 ## Searching and filtering:
 ### Use:
 ```csharp
