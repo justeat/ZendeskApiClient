@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketFieldsResponse>());
+                return await response.Content.ReadAsAsync<TicketFieldsResponse>();
             }
         }
 
@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketField>());
+                return await response.Content.ReadAsAsync<TicketField>();
             }
         }
 
@@ -71,7 +71,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/ticket_fields#create-ticket-field");
                 }
 
-                return (await response.Content.ReadAsAsync<TicketField>());
+                return await response.Content.ReadAsAsync<TicketField>();
             }
         }
 
@@ -90,7 +90,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketField>());
+                return await response.Content.ReadAsAsync<TicketField>();
             }
         }
 

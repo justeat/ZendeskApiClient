@@ -40,7 +40,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationMembershipsResponse>());
+                return await response.Content.ReadAsAsync<OrganizationMembershipsResponse>();
             }
         }
 
@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationMembershipsResponse>());
+                return await response.Content.ReadAsAsync<OrganizationMembershipsResponse>();
             }
         }
 
@@ -66,7 +66,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationMembershipsResponse>());
+                return await response.Content.ReadAsAsync<OrganizationMembershipsResponse>();
             }
         }
 
@@ -85,7 +85,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationMembership>());
+                return await response.Content.ReadAsAsync<OrganizationMembership>();
             }
         }
 
@@ -104,7 +104,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationMembership>());
+                return await response.Content.ReadAsAsync<OrganizationMembership>();
             }
         }
 
@@ -123,7 +123,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
                 }
 
-                return (await response.Content.ReadAsAsync<OrganizationMembership>());
+                return await response.Content.ReadAsAsync<OrganizationMembership>();
             }
         }
 
@@ -142,7 +142,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
                 }
 
-                return (await response.Content.ReadAsAsync<OrganizationMembership>());
+                return await response.Content.ReadAsAsync<OrganizationMembership>();
             }
         }
 

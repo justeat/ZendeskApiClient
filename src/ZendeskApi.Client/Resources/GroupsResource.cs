@@ -38,7 +38,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<GroupsResponse>());
+                return await response.Content.ReadAsAsync<GroupsResponse>();
             }
         }
 
@@ -57,7 +57,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<GroupsResponse>());
+                return await response.Content.ReadAsAsync<GroupsResponse>();
             }
         }
 
@@ -70,7 +70,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<GroupsResponse>());
+                return await response.Content.ReadAsAsync<GroupsResponse>();
             }
         }
 
@@ -89,7 +89,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<Group>());
+                return await response.Content.ReadAsAsync<Group>();
             }
         }
 
@@ -108,7 +108,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/groups#create-groups");
                 }
                 
-                return (await response.Content.ReadAsAsync<Group>());
+                return await response.Content.ReadAsAsync<Group>();
             }
         }
 
@@ -127,7 +127,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<Group>());
+                return await response.Content.ReadAsAsync<Group>();
             }
         }
 

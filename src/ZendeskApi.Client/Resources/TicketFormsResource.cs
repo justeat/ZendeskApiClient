@@ -34,7 +34,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketFormsResponse>());
+                return await response.Content.ReadAsAsync<TicketFormsResponse>();
             }
         }
 
@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketForm>());
+                return await response.Content.ReadAsAsync<TicketForm>();
             }
         }
 
@@ -66,7 +66,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketFormsResponse>());
+                return await response.Content.ReadAsAsync<TicketFormsResponse>();
             }
         }
 
@@ -104,7 +104,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<TicketForm>());
+                return await response.Content.ReadAsAsync<TicketForm>();
             }
         }
 

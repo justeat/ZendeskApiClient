@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>());
+                return await response.Content.ReadAsAsync<UsersResponse>();
             }
         }
 
@@ -58,7 +58,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>());
+                return await response.Content.ReadAsAsync<UsersResponse>();
             }
         }
 
@@ -77,7 +77,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>());
+                return await response.Content.ReadAsAsync<UsersResponse>();
             }
         }
 
@@ -96,7 +96,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<User>());
+                return await response.Content.ReadAsAsync<User>();
             }
         }
         
@@ -109,7 +109,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>());
+                return await response.Content.ReadAsAsync<UsersResponse>();
             }
         }
 
@@ -122,7 +122,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<UsersResponse>());
+                return await response.Content.ReadAsAsync<UsersResponse>();
             }
         }
 
@@ -141,7 +141,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<User>());
+                return await response.Content.ReadAsAsync<User>();
             }
         }
         
@@ -160,7 +160,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/users#create-user");
                 }
 
-                return (await response.Content.ReadAsAsync<User>());
+                return await response.Content.ReadAsAsync<User>();
             }
         }
         
@@ -179,7 +179,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<User>());
+                return await response.Content.ReadAsAsync<User>();
             }
         }
 

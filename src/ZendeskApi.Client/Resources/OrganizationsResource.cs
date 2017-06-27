@@ -36,7 +36,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationsResponse>());
+                return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
         }
 
@@ -55,7 +55,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationsResponse>());
+                return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
         }
 
@@ -74,7 +74,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<Organization>());
+                return await response.Content.ReadAsAsync<Organization>();
             }
         }
 
@@ -87,7 +87,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationsResponse>());
+                return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
         }
 
@@ -100,7 +100,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<OrganizationsResponse>());
+                return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
         }
 
@@ -119,7 +119,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/organizations#create-organization");
                 }
 
-                return (await response.Content.ReadAsAsync<Organization>());
+                return await response.Content.ReadAsAsync<Organization>();
             }
         }
 
@@ -138,7 +138,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return (await response.Content.ReadAsAsync<Organization>());
+                return await response.Content.ReadAsAsync<Organization>();
             }
         }
 
