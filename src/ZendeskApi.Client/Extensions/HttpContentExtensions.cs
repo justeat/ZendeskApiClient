@@ -33,9 +33,6 @@ namespace ZendeskApi.Client
             using (var reader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(reader))
             {
-                //JObject.LoadAsync(jsonReader)
-
-
                 var ser = new JsonSerializer();
                 ser.Converters.Insert(0, new SingularJsonConverter<T>());
                 return ser.Deserialize<T>(jsonReader);
