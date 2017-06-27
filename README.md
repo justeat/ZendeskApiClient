@@ -1,4 +1,8 @@
 # Zendesk Api Client
+[![NuGet](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg)](https://www.nuget.org/packages/ZendeskApi.Client)
+[![NuGet](https://img.shields.io/nuget/vpre/ZendeskApi.Client.Abstractions.svg)](https://www.nuget.org/packages/ZendeskApi.Client.Abstractions)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/justeat/ZendeskApiClient?branch=master&svg=true)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
+
 
 A .net Zendesk Api Client NuGet package for use with the ZendeskApi v3
 
