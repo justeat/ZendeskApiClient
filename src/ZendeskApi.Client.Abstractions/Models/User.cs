@@ -96,7 +96,7 @@ namespace ZendeskApi.Client.Models
         public Dictionary<string, object> UserFields { get; set; }
 
         [JsonProperty("default_group_id")]
-        public int DefaultGroupId { get; set; }
+        public long? DefaultGroupId { get; set; }
 
         DateTime ISearchResult.CreatedAt => CreatedAt.Value;
         DateTime ISearchResult.UpdatedAt => UpdatedAt.Value;
