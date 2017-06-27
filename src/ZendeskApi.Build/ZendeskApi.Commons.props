@@ -1,17 +1,43 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <VersionPrefix>3.0.0</VersionPrefix>
-    <VersionSuffix>preview</VersionSuffix>
-    <VersionSuffix Condition="'$(VersionSuffix)'!='' AND '$(BuildNumber)' != ''">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>portable</DebugType>
-	<PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/justeat/ZendeskApiClient</RepositoryUrl>
+
+    <Authors>Just Eat</Authors>
+    <Company>Just Eat</Company>
+    <Copyright>Copyright (c) Just Eat 2015-$([System.DateTime]::Now.ToString(yyyy))</Copyright>
+    <PackageIconUrl>https://avatars3.githubusercontent.com/u/1516790?s=200</PackageIconUrl>
     <PackageProjectUrl>https://github.com/justeat/ZendeskApiClient</PackageProjectUrl>
+    <PackageLicenseUrl>$(PackageProjectUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageReleaseNotes>$(PackageProjectUrl)/releases</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
   </PropertyGroup>
+  <PropertyGroup>
+      <Major>3</Major>
+      <Minor>0</Minor>
+      <Revision>0</Revision>
 
+      <BuildNumber Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">$(APPVEYOR_BUILD_NUMBER)</BuildNumber>
+      <BuildNumber Condition=" '$(BUILD_NUMBER)' != '' ">$(BUILD_NUMBER)</BuildNumber>
+      <BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
+
+      <!-- Remove for release -->
+      <PrereleaseLabel>-beta</PrereleaseLabel>
+
+      <BuildSuffix Condition=" '$(PrereleaseLabel)' != '' ">$(PrereleaseLabel)-$(BuildNumber)</BuildSuffix>
+      <BuildSuffix Condition=" '$(BuildSuffix)' == '' "></BuildSuffix>
+
+      <AssemblyVersion>$(Major).0.0.0</AssemblyVersion>
+      <AssemblyFileVersion>$(Major).$(Minor).$(Revision).$(BuildNumber)</AssemblyFileVersion>
+      <InformationalVersion>$(Major).$(Minor).$(Revision)$(BuildSuffix)</InformationalVersion>
+      <PackageVersion>$(Major).$(Minor).$(Revision)$(BuildSuffix)</PackageVersion>
+  </PropertyGroup>
 </Project>
