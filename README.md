@@ -17,7 +17,7 @@ Some noteworthy changes include:
 - `Search` resource now uses `SearchAsync` instead of `Find`, and introduces a new fluent api to replace the old `ZendeskQuery<T>` class.
 
 
-## Creating a client:
+## Creating a client
 To register this in your DI, you just need to call...
 ```c#
 services.AddZendeskClient("enpointurl", "username", "token");
@@ -39,7 +39,7 @@ var zendeskOptionsWrapper = new OptionsWrapper<ZendeskOptions>(zendeskOptions);
 var client = new ZendeskClient(new ZendeskApiClient(zendeskOptionsWrapper), loggerFactory.CreateLogger<ZendeskClient>());
 ```
 
-## Example methods:
+## Example methods
 ```c#
 var ticket = await client.Tickets.GetAsync(1234L); // Get ticket by Id
 var tickets = await client.Tickets.GetAllAsync(new [] { 1234L, 4321L }); // 
@@ -48,7 +48,7 @@ var ticket = await client.Tickets.PostAsync(ticket);
 await client.Tickets.DeleteAsync(1234L);
 ```
 
-## Searching and filtering:
+## Searching and filtering
 ```csharp
 await client.Search.SearchAsync<User>(q => 
     q.WithFilter("email", "jazzy.b@just-eat.com")
