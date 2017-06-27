@@ -49,7 +49,6 @@ await client.Tickets.DeleteAsync(1234L);
 ```
 
 ## Searching and filtering:
-### Use:
 ```csharp
 await client.Search.SearchAsync<User>(q => 
     q.WithFilter("email", "jazzy.b@just-eat.com")
