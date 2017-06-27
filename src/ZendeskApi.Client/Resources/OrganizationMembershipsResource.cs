@@ -187,7 +187,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"DeleteAsync({userId},{organizationMembershipId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.DeleteAsync(string.Format(UsersUrlFormat, userId, organizationMembershipId));
+                var response = await client.DeleteAsync(string.Format(UsersUrlFormat, userId, organizationMembershipId)).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {

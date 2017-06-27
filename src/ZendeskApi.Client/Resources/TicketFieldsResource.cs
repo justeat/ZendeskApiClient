@@ -99,7 +99,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"DeleteAsync({ticketFieldId})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.DeleteAsync(ticketFieldId.ToString());
+                var response = await client.DeleteAsync(ticketFieldId.ToString()).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {

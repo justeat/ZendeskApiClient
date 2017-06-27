@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task AddComment(long ticketId, TicketComment ticketComment)
         {
-            var ticket = await _ticketsResource.GetAsync(ticketId);
+            var ticket = await _ticketsResource.GetAsync(ticketId).ConfigureAwait(false);
 
             if (ticket == null)
             {
@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Resources
 
             ticket.Comment = ticketComment;
 
-            await _ticketsResource.UpdateAsync(ticket);
+            await _ticketsResource.UpdateAsync(ticket).ConfigureAwait(false);
         }
     }
 }

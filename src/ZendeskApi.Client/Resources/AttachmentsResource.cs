@@ -74,7 +74,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"DeleteAsync({token})"))
             using (var client = _apiClient.CreateClient(UploadsResourceUri))
             {
-                var response = await client.DeleteAsync(token);
+                var response = await client.DeleteAsync(token).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
