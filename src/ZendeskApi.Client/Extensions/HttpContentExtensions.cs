@@ -10,7 +10,14 @@ namespace ZendeskApi.Client
     {
         public static async Task<T> ReadAsAsync<T>(this HttpContent content, JsonConverter jsonConverter)
         {
-            return JsonConvert.DeserializeObject<T>(await content.ReadAsStringAsync(), jsonConverter);
+            using (var stream = await content.ReadAsStreamAsync())
+            using (var reader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                var ser = new JsonSerializer();
+                ser.Converters.Insert(0, jsonConverter);
+                return ser.Deserialize<T>(jsonReader);
+            }
         }
 
         public static async Task<T> ReadAsAsync<T>(this HttpContent content)
@@ -26,6 +33,9 @@ namespace ZendeskApi.Client
             using (var reader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(reader))
             {
+                //JObject.LoadAsync(jsonReader)
+
+
                 var ser = new JsonSerializer();
                 ser.Converters.Insert(0, new SingularJsonConverter<T>());
                 return ser.Deserialize<T>(jsonReader);
