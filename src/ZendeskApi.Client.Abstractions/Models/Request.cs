@@ -61,13 +61,13 @@ namespace ZendeskApi.Client.Models
         public long? OrganisationId { get; set; }
 
         [JsonProperty("collaborator_ids")]
-        public List<int> CollaboratorIds { get; set; }
+        public List<long> CollaboratorIds { get; set; }
 
         [JsonProperty("group_id")]
-        public int? GroupId { get; set; }
+        public long? GroupId { get; set; }
 
         [JsonProperty("ticket_form_id")]
-        public int? FormId { get; set; }
+        public long? FormId { get; set; }
 
         [JsonProperty("can_be_solved_by_me")]
         public bool CanBeSolvedByMe { get; set; }

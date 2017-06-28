@@ -29,7 +29,7 @@ namespace ZendeskApi.Client.Models
         public string RawDescription { get; set; }
 
         [JsonProperty("position")]
-        public int? Position { get; set; }
+        public long? Position { get; set; }
 
         [JsonProperty("active")]
         public bool? Active { get; set; }
