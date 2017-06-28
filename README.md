@@ -2,6 +2,7 @@
 [![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
 [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/justeattech/zendeskapiclient/master.svg?style=flat-square)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
+[![Gitter](https://img.shields.io/gitter/room/justeat/ZendeskApiClient.svg?style=flat-square)](https://gitter.im/justeat/ZendeskApiClient)
 
 
 A .netstandard NuGet package for use with the  Zendesk v2 API.
