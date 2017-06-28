@@ -26,7 +26,7 @@ namespace ZendeskApi.Client.Models
         public string RawDisplayName { get; set; }
 
         [JsonProperty("position")]
-        public int? Position { get; set; }
+        public long? Position { get; set; }
 
         [JsonProperty("end_user_visible")]
         public bool? EndUserVisible { get; set; }

@@ -91,10 +91,10 @@ namespace ZendeskApi.Client.Models
         public List<long> FollowupIds { get; set; }
 
         [JsonProperty("ticket_form_id")]
-        public int? FormId { get; set; }
+        public long? FormId { get; set; }
 
         [JsonProperty("brand_id")]
-        public int? BrandId { get; set; }
+        public long? BrandId { get; set; }
 
         [JsonProperty("allow_channelback")]
         public bool AllowChannelback { get; set; }
