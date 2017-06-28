@@ -15,6 +15,6 @@ namespace ZendeskApi.Client.Models
         public string Email { get; set; }
 
         [JsonProperty("locale_id")]
-        public int? Locale { get; set; }
+        public long? Locale { get; set; }
     }
 }
