@@ -43,13 +43,13 @@ var client = new ZendeskClient(new ZendeskApiClient(zendeskOptionsWrapper), logg
 ```c#
 var ticket = await client.Tickets.GetAsync(1234L); // Get ticket by Id
 var tickets = await client.Tickets.GetAllAsync(new [] { 1234L, 4321L }); // 
-var ticket = await client.Tickets.PutAsync(ticket);
-var ticket = await client.Tickets.PostAsync(ticket);
+var ticket = await client.Tickets.UpdateAsync(ticket);
+var ticket = await client.Tickets.CreateAsync(ticket);
 await client.Tickets.DeleteAsync(1234L);
 ```
 
 ## Searching and filtering
-```csharp
+```c#
 await client.Search.SearchAsync<User>(q => 
     q.WithFilter("email", "jazzy.b@just-eat.com")
 );
