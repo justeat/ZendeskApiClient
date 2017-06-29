@@ -24,17 +24,22 @@ namespace ZendeskApi.Client.Queries
 
         public static IZendeskQuery WithCreatedDate(this IZendeskQuery query, DateTime dateTime, FilterOperator op)
         {
-            return query.WithFilter("created", $"{dateTime.Year}-{dateTime.Month.ToString("d2")}-{dateTime.Day.ToString("d2")}", op);
+            return query.WithFilter("created", $"{dateTime:yyyy-MM-dd}", op);
         }
 
         public static IZendeskQuery FromRequester(this IZendeskQuery query, string email)
         {
-            return query.WithFilter("requester", email, FilterOperator.Equals);
+            return query.WithFilter("requester", email);
         }
 
         public static IZendeskQuery WithTags(this IZendeskQuery query, params string[] tags)
         {
-            return query.WithFilter("tags", string.Join(",", tags), FilterOperator.Equals);
+            return query.WithFilter("tags", string.Join(",", tags));
+        }
+
+        public static IZendeskQuery WithCustomFieldValue(this IZendeskQuery query, string customFieldValue)
+        {
+            return query.WithFilter("fieldvalue", customFieldValue);
         }
     }
 }

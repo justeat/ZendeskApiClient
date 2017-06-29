@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.Models
         public string Locale { get; set; }
 
         [JsonProperty("locale_id")]
-        public long? LocalId { get; set; }
+        public long? LocaleId { get; set; }
 
         [JsonProperty("organization_id")]
         public long? OrganizationId { get; set; }
@@ -96,7 +96,7 @@ namespace ZendeskApi.Client.Models
         public Dictionary<string, object> UserFields { get; set; }
 
         [JsonProperty("default_group_id")]
-        public long DefaultGroupId { get; set; }
+        public long? DefaultGroupId { get; set; }
 
         DateTime ISearchResult.CreatedAt => CreatedAt.Value;
         DateTime ISearchResult.UpdatedAt => UpdatedAt.Value;

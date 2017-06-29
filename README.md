@@ -1,17 +1,24 @@
 # Zendesk Api Client
-[![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg)](https://www.nuget.org/packages/ZendeskApi.Client)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg)](https://www.nuget.org/packages/ZendeskApi.Client)
-[![Build status](https://ci.appveyor.com/api/projects/status/github/justeat/ZendeskApiClient?branch=master&svg=true)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
+[![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
+[![AppVeyor Build Status](https://img.shields.io/appveyor/ci/justeattech/zendeskapiclient/master.svg?style=flat-square)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
+[![Gitter](https://img.shields.io/gitter/room/justeat/ZendeskApiClient.svg?style=flat-square)](https://gitter.im/justeat/ZendeskApiClient)
 
 
-A .net Zendesk Api Client NuGet package for use with the ZendeskApi v3
+A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 # Breaking Changes
 
 ## 3.x.x
- This is a complete rewrite. If you are using 2.x, then expect there to be breaking changes (for the better)
+This is a complete rewrite so expect breaking changes.
 
-## Creating a client:
+Some noteworthy changes include:
+- `PostAsync` replaced with `CreateAsync`
+- `PutAsync` replaced with `UpdateAsync`
+- `Search` resource now uses `SearchAsync` instead of `Find`, and introduces a new fluent api to replace the old `ZendeskQuery<T>` class.
+
+
+## Creating a client
 To register this in your DI, you just need to call...
 ```c#
 services.AddZendeskClient("enpointurl", "username", "token");
@@ -28,39 +35,31 @@ var zendeskOptions = new ZendeskOptions
    Token = "token"
 };
 
+var loggerFactory = new LoggerFactory();
 var zendeskOptionsWrapper = new OptionsWrapper<ZendeskOptions>(zendeskOptions);
-var client = new ZendeskClient(new ZendeskApiClient(zendeskOptionsWrapper), _loggerFactory.CreateLogger<ZendeskClient>());
+var client = new ZendeskClient(new ZendeskApiClient(zendeskOptionsWrapper), loggerFactory.CreateLogger<ZendeskClient>());
 ```
 
-## Example methods:
+## Example methods
 ```c#
 var ticket = await client.Tickets.GetAsync(1234L); // Get ticket by Id
 var tickets = await client.Tickets.GetAllAsync(new [] { 1234L, 4321L }); // 
-var ticket = await client.Tickets.PutAsync(ticket);
-var ticket = await client.Tickets.PostAsync(ticket);
+var ticket = await client.Tickets.UpdateAsync(ticket);
+var ticket = await client.Tickets.CreateAsync(ticket);
 await client.Tickets.DeleteAsync(1234L);
 ```
-## Searching, paging and filtering:
 
-### Query Options:
-```csharp
-IZendeskQuery query = new ZendeskQuery<Organization>();
-query.WithPaging(pageNumber:2, pageSize:10);
-query.WithCustomFilter(field:"name", value:"Coffee Express");
-query.WithOrdering(orderBy:OrderBy.created_at, order:Order.Relevance);
-IResponse<T> response = client.Search.Find<T>(query);
-```
-### Use:
-```csharp
-IListResponse<User> response = client.Search.Find<User>(
-    new ZendeskQuery<User>()
-    .WithCustomFilter("email", "jazzy.b@just-eat.com")
+## Searching and filtering
+```c#
+await client.Search.SearchAsync<User>(q => 
+    q.WithFilter("email", "jazzy.b@just-eat.com")
 );
-IListResponse<User> response = client.Search.Find(
-    new ZendeskQuery<Organization>()
-    .WithCustomFilter("name", "Cupcake Cafe")
+
+await client.Search.SearchAsync<Organization>(q => 
+    q.WithFilter("name", "Cupcake Cafe")
 );
 ```
+
 ## The Zendesk API
 
 The zendesk api documentation is available at http://developer.zendesk.com/documentation/rest_api/introduction.html
