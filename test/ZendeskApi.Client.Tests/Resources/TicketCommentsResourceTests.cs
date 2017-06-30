@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿/*using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -44,3 +44,4 @@ namespace ZendeskApi.Client.Tests.Resources
         }
     }
 }
+*/

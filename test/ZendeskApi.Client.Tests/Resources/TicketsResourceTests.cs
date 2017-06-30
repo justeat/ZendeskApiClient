@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -227,7 +227,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var ticket = (await CreateTickets(1)).First();
 
-            var response = await _resource.GetAsync(ticket.Id.Value);
+            var response = await _resource.GetAsync(ticket.Id);
 
             Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(response));
         }
@@ -237,7 +237,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var tickets = await CreateTickets(2);
             
-            var retrievedTickets = (await _resource.GetAllAsync(new long[] { tickets[0].Id.Value, 543521L, tickets[1].Id.Value, 123445L })).ToArray();
+            var retrievedTickets = (await _resource.GetAllAsync(new long[] { tickets[0].Id, 543521L, tickets[1].Id, 123445L })).ToArray();
             
             Assert.Equal(2, tickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
@@ -322,13 +322,13 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var ticket = (await CreateTickets(1)).First();
 
-            var ticket1 = await _resource.GetAsync(ticket.Id.Value);
+            var ticket1 = await _resource.GetAsync(ticket.Id);
 
             Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(ticket1));
 
-            await _resource.DeleteAsync(ticket.Id.Value);
+            await _resource.DeleteAsync(ticket.Id);
 
-            var ticket2 = await _resource.GetAsync(ticket.Id.Value);
+            var ticket2 = await _resource.GetAsync(ticket.Id);
 
             Assert.Null(ticket2);
         }
@@ -381,3 +381,4 @@ namespace ZendeskApi.Client.Tests.Resources
         }
     }
 }
+*/
