@@ -1,9 +1,11 @@
 ﻿using System.Runtime.Serialization;
 
-namespace ZendeskApi.Client.Models
+namespace ZendeskApi.Client.Models.Tickets
 {
     public enum Priority
     {
+        [EnumMember(Value = null)]
+        None,
         [EnumMember(Value = "urgent")]
         Urgent,
         [EnumMember(Value = "high")]

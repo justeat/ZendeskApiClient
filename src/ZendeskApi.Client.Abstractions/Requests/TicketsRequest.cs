@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Tickets;
 
 namespace ZendeskApi.Client.Requests
 {
-    public class TicketsRequest
+    public class TicketsRequest<T> where T : BaseWriteTicket
     {
         [JsonProperty("tickets")]
-        public IEnumerable<Ticket> Item { get; set; }
+        public IEnumerable<T> Item { get; set; }
     }
 }

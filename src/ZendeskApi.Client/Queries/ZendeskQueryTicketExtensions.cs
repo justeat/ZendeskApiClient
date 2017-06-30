@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.Serialization;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Tickets;
 
 namespace ZendeskApi.Client.Queries
 {
