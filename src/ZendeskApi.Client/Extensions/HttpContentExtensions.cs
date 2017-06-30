@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using ZendeskApi.Client.Converters;
 
 namespace ZendeskApi.Client
@@ -35,6 +36,8 @@ namespace ZendeskApi.Client
             {
                 var ser = new JsonSerializer();
                 ser.Converters.Insert(0, new SingularJsonConverter<T>());
+                ser.Converters.Insert(1, new StringEnumConverter());
+                ser.NullValueHandling = NullValueHandling.Ignore;
                 return ser.Deserialize<T>(jsonReader);
             }
         }
