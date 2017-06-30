@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Client.Abstractions", "src\ZendeskApi.Client.Abstractions\ZendeskApi.Client.Abstractions.csproj", "{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZendeskApi.Client", "src\ZendeskApi.Client\ZendeskApi.Client.csproj", "{710E1917-AC01-4877-9683-AF47A7DBDF84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZendeskApi.Client", "src\ZendeskApi.Client\ZendeskApi.Client.csproj", "{710E1917-AC01-4877-9683-AF47A7DBDF84}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4F45F768-4D28-4663-830C-42B48819F3F1}"
 EndProject
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{710E1917-AC01-4877-9683-AF47A7DBDF84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{710E1917-AC01-4877-9683-AF47A7DBDF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{710E1917-AC01-4877-9683-AF47A7DBDF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,7 +30,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{BEA9E134-91FF-40D6-9B5D-BD57006DBBC6} = {4F45F768-4D28-4663-830C-42B48819F3F1}
 		{710E1917-AC01-4877-9683-AF47A7DBDF84} = {4F45F768-4D28-4663-830C-42B48819F3F1}
 		{17374CC7-4B91-4D5B-ADB6-1F9B4A4D6E03} = {F5AF59DE-910C-4157-9D38-BD33D18FF780}
 	EndGlobalSection

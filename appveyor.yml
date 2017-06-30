@@ -12,7 +12,6 @@ test_script:
 - dotnet test -c Release .\test\ZendeskApi.Client.Tests\ZendeskApi.Client.Tests.csproj
 after_build:
 - dotnet pack .\src\ZendeskApi.Client\ZendeskApi.Client.csproj -o ../../output --no-build
-- dotnet pack .\src\ZendeskApi.Client.Abstractions\ZendeskApi.Client.Abstractions.csproj -o ../../output --no-build
 artifacts:
 - path: 'output\*.nupkg'
 deploy:
