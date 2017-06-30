@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Tickets;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -43,15 +44,12 @@ namespace ZendeskApi.Client.Resources
 
         public async Task AddComment(long ticketId, TicketComment ticketComment)
         {
-            var ticket = await _ticketsResource.GetAsync(ticketId).ConfigureAwait(false);
-
-            if (ticket == null)
+            var ticket = new UpdateTicketRequest
             {
-                throw new Exception($"Ticket {ticketId} not found");
-            }
-
-            ticket.Comment = ticketComment;
-
+                Id = ticketId,
+                Comment = ticketComment
+            };
+            
             await _ticketsResource.UpdateAsync(ticket).ConfigureAwait(false);
         }
     }

@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Tickets;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
+using Ticket = ZendeskApi.Client.Models.Ticket;
 
 namespace ZendeskApi.Client.Resources
 {
@@ -154,7 +156,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Ticket> CreateAsync(Ticket ticket)
+        public async Task<Ticket> CreateAsync(CreateTicketRequest ticket)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
@@ -173,12 +175,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> CreateAsync(IEnumerable<Ticket> tickets)
+        public async Task<JobStatus> CreateAsync(IEnumerable<CreateTicketRequest> tickets)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PostAsJsonAsync("create_many", new TicketsRequest { Item = tickets }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync("create_many", new TicketsRequest<CreateTicketRequest> { Item = tickets }).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -192,7 +194,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<Ticket> UpdateAsync(Ticket ticket)
+        public async Task<Ticket> UpdateAsync(UpdateTicketRequest ticket)
         {
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -211,12 +213,12 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> UpdateAsync(IEnumerable<Ticket> tickets)
+        public async Task<JobStatus> UpdateAsync(IEnumerable<UpdateTicketRequest> tickets)
         {
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync("update_many", new TicketsRequest { Item = tickets }).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync("update_many", new TicketsRequest<UpdateTicketRequest> { Item = tickets }).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 

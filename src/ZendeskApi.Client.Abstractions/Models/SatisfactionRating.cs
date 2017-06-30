@@ -4,7 +4,6 @@ using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Client.Models
 {
-    [JsonObject("satisfaction_rating")]
     public class SatisfactionRating
     {
         [JsonProperty]

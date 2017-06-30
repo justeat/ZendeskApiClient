@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Tickets;
 using ZendeskApi.Client.Responses;
+using Ticket = ZendeskApi.Client.Models.Ticket;
 
 namespace ZendeskApi.Client.Resources
 {
@@ -14,10 +16,10 @@ namespace ZendeskApi.Client.Resources
         Task<IPagination<Ticket>> GetAllAssignedForUserAsync(long userId, PagerParameters pager = null);
         Task<Ticket> GetAsync(long ticketId);
         Task<IPagination<Ticket>> GetAllAsync(long[] ticketIds, PagerParameters pager = null);
-        Task<Ticket> CreateAsync(Ticket ticket);
-        Task<JobStatus> CreateAsync(IEnumerable<Ticket> tickets);
-        Task<Ticket> UpdateAsync(Ticket ticket);
-        Task<JobStatus> UpdateAsync(IEnumerable<Ticket> tickets);
+        Task<Ticket> CreateAsync(CreateTicketRequest createTicketRequest);
+        Task<JobStatus> CreateAsync(IEnumerable<CreateTicketRequest> createTicketRequests);
+        Task<Ticket> UpdateAsync(UpdateTicketRequest updateTicketRequest);
+        Task<JobStatus> UpdateAsync(IEnumerable<UpdateTicketRequest> updateTicketRequests);
         Task<bool> MarkTicketAsSpamAndSuspendRequester(long ticketId);
         Task<JobStatus> MarkTicketAsSpamAndSuspendRequester(long[] ticketIds);
         Task DeleteAsync(long ticketId);

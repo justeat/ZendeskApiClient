@@ -1,7 +1,9 @@
 ﻿using System;
 using Xunit;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Tickets;
 using ZendeskApi.Client.Queries;
+using Ticket = ZendeskApi.Client.Models.Ticket;
 
 namespace ZendeskApi.Client.Tests.Queries
 {

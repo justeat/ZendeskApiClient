@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using ZendeskApi.Client.Models.Tickets;
 
 namespace ZendeskApi.Client.Models
 {

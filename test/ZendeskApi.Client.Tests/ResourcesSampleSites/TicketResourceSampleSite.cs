@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,9 +10,11 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Tickets;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+using Ticket = ZendeskApi.Client.Models.Ticket;
 
 namespace ZendeskApi.Client.Tests
 {
@@ -124,7 +126,6 @@ namespace ZendeskApi.Client.Tests
 
                         var tickets = state
                             .Tickets
-                            .Where(x => x.Value.RequesterId.HasValue)
                             .Where(x => x.Value.RequesterId == id)
                             .Select(p => p.Value);
 
@@ -139,7 +140,6 @@ namespace ZendeskApi.Client.Tests
 
                         var tickets = state
                             .Tickets
-                            .Where(x => x.Value.OrganisationId.HasValue)
                             .Where(x => x.Value.OrganisationId == id)
                             .Select(p => p.Value);
 
@@ -161,14 +161,14 @@ namespace ZendeskApi.Client.Tests
 
                         ticket.Id = long.Parse(RAND.Next().ToString());
                         ticket.Url = new Uri("https://company.zendesk.com/api/v2/tickets/" + ticket.Id + ".json");
-                        state.Tickets.Add(ticket.Id.Value, ticket);
+                        state.Tickets.Add(ticket.Id, ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(ticket);
                     })
                     .MapPost("api/v2/tickets/create_many", (req, resp, routeData) =>
                     {
-                        var tickets = req.Body.ReadAs<TicketsRequest>().Item;
+                        var tickets = req.Body.ReadAs<TicketsRequest<CreateTicketRequest>>().Item;
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
                         
@@ -281,3 +281,4 @@ namespace ZendeskApi.Client.Tests
         }
     }
 }
+*/
