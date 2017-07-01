@@ -50,7 +50,7 @@ namespace ZendeskApi.Client.Resources
                 throw new Exception($"Ticket {ticketId} not found");
             }
 
-            ticket.Comment = ticketComment;
+            ticket.WithComment(ticketComment);
 
             await _ticketsResource.UpdateAsync(ticket).ConfigureAwait(false);
         }
