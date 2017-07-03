@@ -138,5 +138,12 @@ namespace ZendeskApi.Client.Requests
         /// </summary>
         [JsonProperty("sharing_agreement_ids")]
         public IList<long> SharingAgreementIds { get; set; }
+
+        /// <summary>
+        /// The organization of the requester. You can only specify the ID of an organization associated with the requester. See <see href="https://developer.zendesk.com/rest_api/docs/core/organization_memberships">Organization Memberships</see>
+        /// </summary>
+        [JsonProperty("organization_id")]
+        public long? OrganisationId { get; set; }
+
     }
 }

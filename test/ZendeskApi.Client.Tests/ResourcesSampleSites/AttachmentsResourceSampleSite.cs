@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -76,7 +76,7 @@ namespace ZendeskApi.Client.Tests
                             ContentUrl = "https://company.zendesk.com/attachments/crash.log",
                             Size = strings[3].Length,
                             FileName = parsedContentDisposition.FileName,
-                            Id = long.Parse(RAND.Next().ToString())
+                            Id = long.Parse(Rand.Next().ToString())
                         };
 
                         state.Attachments.Add(attachment.Id.Value, attachment);

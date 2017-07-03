@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Models.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests
@@ -75,7 +75,7 @@ namespace ZendeskApi.Client.Tests
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        obj.Id = long.Parse(RAND.Next().ToString());
+                        obj.Id = long.Parse(Rand.Next().ToString());
                         state.TicketForms.Add(obj.Id.Value, obj);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;

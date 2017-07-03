@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,16 +11,15 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Responses;
 using ZendeskApi.Client.Requests;
-using ZendeskApi.Client.Responses;
-using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
-namespace ZendeskApi.Client.Tests
+namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
     public class TicketResourceSampleSite : SampleSite
     {
         private class State {
-            public IDictionary<long, Ticket> Tickets = new Dictionary<long, Ticket>();
+            public IDictionary<long, dynamic> Tickets = new Dictionary<long, dynamic>();
             public IDictionary<long, IList<TicketComment>> TicketComments = new Dictionary<long, IList<TicketComment>>();
         }
 
@@ -42,7 +42,7 @@ namespace ZendeskApi.Client.Tests
                             .Take(pager.PageSize);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsResponse { Item = tickets });
+                        return resp.WriteAsJson(new TicketsListResponse { Item = tickets });
                     })
                     .MapGet("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
@@ -74,7 +74,7 @@ namespace ZendeskApi.Client.Tests
                             .Take(pager.PageSize);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsResponse { Item = tickets });
+                        return resp.WriteAsJson(new TicketsListResponse { Item = tickets });
                     })
                     .MapGet("api/v2/tickets/{id}/comments", (req, resp, routeData) =>
                     {
@@ -100,7 +100,7 @@ namespace ZendeskApi.Client.Tests
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsResponse { Item = tickets });
+                        return resp.WriteAsJson(new TicketsListResponse { Item = tickets });
                     })
                     .MapGet("api/v2/users/{id}/tickets/ccd", (req, resp, routeData) =>
                     {
@@ -114,7 +114,7 @@ namespace ZendeskApi.Client.Tests
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsResponse { Item = tickets });
+                        return resp.WriteAsJson(new TicketsListResponse { Item = tickets });
                     })
                     .MapGet("api/v2/users/{id}/tickets/requested", (req, resp, routeData) =>
                     {
@@ -129,7 +129,7 @@ namespace ZendeskApi.Client.Tests
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsResponse { Item = tickets });
+                        return resp.WriteAsJson(new TicketsListResponse { Item = tickets });
                     })
                     .MapGet("api/v2/organizations/{id}/tickets", (req, resp, routeData) =>
                     {
@@ -144,77 +144,59 @@ namespace ZendeskApi.Client.Tests
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsResponse { Item = tickets });
+                        return resp.WriteAsJson(new TicketsListResponse { Item = tickets });
                     })
                     .MapPost("api/v2/tickets", (req, resp, routeData) =>
                     {
-                        var ticket = req.Body.ReadAs<Ticket>();
-
-                        if (ticket.Tags != null && ticket.Tags.Contains("error"))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
-
-                            return Task.CompletedTask;
-                        }
+                        var ticket = req.Body.ReadAs<dynamic>();
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        ticket.id = long.Parse(Rand.Next().ToString());
+                        ticket.url = new Uri($"https://company.zendesk.com/api/v2/tickets/{ticket.Id}.json");
 
-                        ticket.Id = long.Parse(RAND.Next().ToString());
-                        ticket.Url = new Uri("https://company.zendesk.com/api/v2/tickets/" + ticket.Id + ".json");
-                        state.Tickets.Add(ticket.Id.Value, ticket);
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(ticket);
-                    })
-                    .MapPost("api/v2/tickets/create_many", (req, resp, routeData) =>
-                    {
-                        var tickets = req.Body.ReadAs<TicketsRequest>().Item;
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
-                        
-                        foreach (var ticket in tickets)
-                        {
-                            ticket.Id = long.Parse(RAND.Next().ToString());
-                            ticket.Url = new Uri("https://company.zendesk.com/api/v2/tickets/" + ticket.Id + ".json");
-                            state.Tickets.Add(ticket.Id.Value, ticket);
-                        }
+                        state.Tickets.Add(ticket.Id, ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
 
-                        return resp.WriteAsJson(new JobStatus
-                            {
-                                Id = Guid.NewGuid().ToString().Replace("-", ""),
-                                Items = tickets.Select(x => new JobStatusResult { Id = x.Id.Value, Title = x.Subject })
-                            }
-                        );
+                        return resp.WriteAsJson((object)ticket);
                     })
                     .MapPut("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var ticket = req.Body.ReadAs<Ticket>();
-
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        if (ticket.Comment != null)
+                        if (!state.Tickets.ContainsKey(id))
                         {
-                            ticket.Comment.Id = long.Parse(RAND.Next().ToString());
+                            resp.StatusCode = (int)HttpStatusCode.NotFound;
+                            return resp.WriteAsJson(new object());
+                        }
+
+                        var ticket = req.Body.ReadAs<dynamic>();
+
+                        if (ticket.comment != null)
+                        {
+                            ticket.comment.Id = long.Parse(Rand.Next().ToString());
 
                             if (state.TicketComments.ContainsKey(id))
                             {
-                                state.TicketComments[id].Add(ticket.Comment);
+                                state.TicketComments[id].Add(ticket.comment);
                             }
                             else
                             {
-                                state.TicketComments.Add(id, new List<TicketComment> { ticket.Comment });
+                                state.TicketComments.Add(id, new List<TicketComment> { ticket.comment });
                             }
                             ticket.Comment = null;
                         }
 
-                        state.Tickets[id] = ticket;
+                        var sourceTicket = state.Tickets[id];
+                        foreach (var memberName in ticket.GetDynamicMemberNames())
+                        {
+                            sourceTicket[memberName] = ticket[memberName];
+                        }
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(state.Tickets[id]);
+                        return resp.WriteAsJson((object)sourceTicket);
                     })
                     .MapDelete("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
@@ -226,8 +208,7 @@ namespace ZendeskApi.Client.Tests
 
                         resp.StatusCode = (int)HttpStatusCode.NoContent;
                         return Task.CompletedTask;
-                    })
-                    ;
+                    }) ;
             }
         }
 

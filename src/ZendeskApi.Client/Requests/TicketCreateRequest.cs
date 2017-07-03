@@ -30,6 +30,11 @@ namespace ZendeskApi.Client.Requests
         [JsonProperty("submitter_id")]
         public long? SubmitterId { get; set; }
 
+        /// <summary>
+        /// The numeric ID of the agent to assign the ticket to
+        /// </summary>
+        [JsonProperty("assignee_id")]
+        public long? AssigneeId { get; set; }
         [JsonProperty("group_id")]
         public long? GroupId { get; set; }
 
@@ -74,5 +79,12 @@ namespace ZendeskApi.Client.Requests
             
         [JsonProperty("requester")]
         public TicketRequester Requester { get; set; }
+
+        /// <summary>
+        /// The organization of the requester. You can only specify the ID of an organization associated with the requester. See <see href="https://developer.zendesk.com/rest_api/docs/core/organization_memberships">Organization Memberships</see>
+        /// </summary>
+        [JsonProperty("organization_id")]
+        public long? OrganisationId { get; set; }
+
     }
 }

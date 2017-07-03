@@ -5,7 +5,10 @@ using ZendeskApi.Client.Models.Responses;
 using ZendeskApi.Client.Requests;
 
 namespace ZendeskApi.Client.Resources
-{
+{   
+    /// <summary>
+    /// <see cref="https://developer.zendesk.com/rest_api/docs/core/tickets"/>
+    /// </summary>
     public interface ITicketsResource
     {
         #region List Tickets
@@ -31,8 +34,13 @@ namespace ZendeskApi.Client.Resources
         Task<JobStatusResponse> UpdateAsync(IEnumerable<TicketUpdateRequest> tickets);
         #endregion
 
+        #region Mark Ticket as Spam and Suspend Requester
         Task<bool> MarkTicketAsSpamAndSuspendRequester(long ticketId);
         Task<JobStatusResponse> MarkTicketAsSpamAndSuspendRequester(long[] ticketIds);
+        #endregion
+
+        #region Delete Tickets
         Task DeleteAsync(long ticketId);
+        #endregion
     }
 }

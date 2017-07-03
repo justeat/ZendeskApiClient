@@ -13,7 +13,7 @@ using ZendeskApi.Client.Requests;
 namespace ZendeskApi.Client.Resources
 {
     /// <summary>
-    /// <see cref="https://developer.zendesk.com/rest_api/docs/core/ticketsResponse"/>
+    /// <see cref="https://developer.zendesk.com/rest_api/docs/core/tickets"/>
     /// </summary>
     public class TicketsResource : ITicketsResource
     {
@@ -32,6 +32,7 @@ namespace ZendeskApi.Client.Resources
             _apiClient = apiClient;
             _logger = logger;
         }
+
 
         #region List Tickets
         public async Task<IPagination<TicketResponse>> ListAsync(PagerParameters pager = null)
@@ -279,6 +280,8 @@ namespace ZendeskApi.Client.Resources
         }
         #endregion
 
+
+        #region Mark Ticket as Spam and Suspend Requester
         public async Task<bool> MarkTicketAsSpamAndSuspendRequester(long ticketId)
         {
             using (_loggerScope(_logger, "MarkTicketAsSpamAndSuspendRequester"))
@@ -310,7 +313,10 @@ namespace ZendeskApi.Client.Resources
                 return await response.Content.ReadAsAsync<JobStatusResponse>();
             }
         }
+        #endregion
 
+
+        #region Delete Tickets
         public async Task DeleteAsync(long ticketId)
         {
             using (_loggerScope(_logger, $"DeleteAsync({ticketId})"))
@@ -320,12 +326,16 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/ticketsResponse#delete-ticketResponse");
+                    throw new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                        .WithHelpDocsLink("core/tickets#delete-ticket")
+                        .Build();
                 }
             }
         }
+
+        //TODO: Bulk Delete
+        #endregion
     }
 }

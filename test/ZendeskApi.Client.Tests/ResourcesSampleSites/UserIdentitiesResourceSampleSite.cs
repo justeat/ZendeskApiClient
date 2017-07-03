@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Models.Responses;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
@@ -76,7 +76,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        identity.Id = long.Parse(RAND.Next().ToString());
+                        identity.Id = long.Parse(Rand.Next().ToString());
                         state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
@@ -97,7 +97,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        identity.Id = long.Parse(RAND.Next().ToString());
+                        identity.Id = long.Parse(Rand.Next().ToString());
                         state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,6 +8,9 @@ using Xunit;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Models;
 using System.Collections.Generic;
+using ZendeskApi.Client.Models.Responses;
+using ZendeskApi.Client.Requests;
+using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -27,7 +30,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var tickets = await CreateTickets(2);
 
-            var retrievedTickets = (await _resource.GetAllAsync()).ToArray();
+            var retrievedTickets = (await _resource.ListAsync()).ToArray();
 
             Assert.Equal(2, retrievedTickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
@@ -39,7 +42,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var tickets = await CreateTickets(10);
 
-            var retrievedTickets = (await _resource.GetAllAsync(new PagerParameters { Page = 1, PageSize = 5 })).ToArray();
+            var retrievedTickets = (await _resource.ListAsync(new PagerParameters { Page = 1, PageSize = 5 })).ToArray();
 
             Assert.Equal(5, retrievedTickets.Length);
             for (var i = 0; i < 5; i++)
@@ -47,7 +50,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 Assert.Equal(JsonConvert.SerializeObject(tickets[i]), JsonConvert.SerializeObject(retrievedTickets[i]));
             }
 
-            var retrievedTickets2 = (await _resource.GetAllAsync(new PagerParameters { Page = 2, PageSize = 5 })).ToArray();
+            var retrievedTickets2 = (await _resource.ListAsync(new PagerParameters { Page = 2, PageSize = 5 })).ToArray();
 
             Assert.Equal(5, retrievedTickets2.Length);
             for (var i = 0; i < 5; i++)
@@ -59,7 +62,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllForOrganizationTickets()
         {
-            var ticket1 = new Ticket
+            var ticket1 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 1",
                 Comment = new TicketComment
@@ -69,7 +72,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 OrganisationId = 16230
             };
 
-            var ticket2 = new Ticket
+            var ticket2 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 2",
                 Comment = new TicketComment
@@ -78,7 +81,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 }
             };
 
-            var ticket3 = new Ticket
+            var ticket3 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 3",
                 Comment = new TicketComment
@@ -90,17 +93,16 @@ namespace ZendeskApi.Client.Tests.Resources
 
             await CreateTickets(ticket1, ticket2, ticket3);
 
-            var tickets = (await _resource.GetAllForOrganizationAsync(16230L)).ToArray();
+            var tickets = (await _resource.ListForOrganizationAsync(16230L)).ToArray();
 
             Assert.Equal(2, tickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
             Assert.Equal(JsonConvert.SerializeObject(ticket3), JsonConvert.SerializeObject(tickets[1]));
         }
-
         [Fact]
         public async Task ShouldListAllForRequestedUserTickets()
         {
-            var ticket1 = new Ticket
+            var ticket1 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 1",
                 Comment = new TicketComment
@@ -110,7 +112,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 RequesterId = 10000
             };
 
-            var ticket2 = new Ticket
+            var ticket2 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 2",
                 Comment = new TicketComment
@@ -120,7 +122,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 RequesterId = 10000
             };
 
-            var ticket3 = new Ticket
+            var ticket3 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 3",
                 Comment = new TicketComment
@@ -131,7 +133,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             await CreateTickets(ticket1, ticket2, ticket3);
 
-            var tickets = (await _resource.GetAllRequestedForUserAsync(10000L)).ToArray();
+            var tickets = (await _resource.ListRequestedByAsync(10000L)).ToArray();
 
             Assert.Equal(2, tickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
@@ -141,7 +143,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllForCCDUserTickets()
         {
-            var ticket1 = new Ticket
+            var ticket1 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 1",
                 Comment = new TicketComment
@@ -151,7 +153,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 CollaboratorIds = new System.Collections.Generic.List<long> { }
             };
 
-            var ticket2 = new Ticket
+            var ticket2 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 2",
                 Comment = new TicketComment
@@ -161,7 +163,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 CollaboratorIds = new System.Collections.Generic.List<long> { 2293 }
             };
 
-            var ticket3 = new Ticket
+            var ticket3 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 3",
                 Comment = new TicketComment
@@ -173,7 +175,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             await CreateTickets(ticket1, ticket2, ticket3);
 
-            var tickets = (await _resource.GetAllCCDForUserAsync(2293L)).ToArray();
+            var tickets = (await _resource.ListCcdAsync(2293L)).ToArray();
 
             Assert.Equal(2, tickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[0]));
@@ -184,7 +186,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldListAllForAssignedForUserTickets()
         {
-            var ticket1 = new Ticket
+            var ticket1 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 1",
                 Comment = new TicketComment
@@ -194,7 +196,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 AssigneeId = 2233
             };
 
-            var ticket2 = new Ticket
+            var ticket2 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 2",
                 Comment = new TicketComment
@@ -203,7 +205,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 }
             };
 
-            var ticket3 = new Ticket
+            var ticket3 = new TicketCreateRequest("description")
             {
                 Subject = "My printer is on fire! 3",
                 Comment = new TicketComment
@@ -215,7 +217,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             await CreateTickets(ticket1, ticket2, ticket3);
 
-            var tickets = (await _resource.GetAllAssignedForUserAsync(2233L)).ToArray();
+            var tickets = (await _resource.ListAssignedToAsync(2233L)).ToArray();
 
             Assert.Equal(2, tickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
@@ -227,7 +229,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var ticket = (await CreateTickets(1)).First();
 
-            var response = await _resource.GetAsync(ticket.Id.Value);
+            var response = await _resource.GetAsync(ticket.Id);
 
             Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(response));
         }
@@ -237,7 +239,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var tickets = await CreateTickets(2);
             
-            var retrievedTickets = (await _resource.GetAllAsync(new long[] { tickets[0].Id.Value, 543521L, tickets[1].Id.Value, 123445L })).ToArray();
+            var retrievedTickets = (await _resource.GetAsync(new[] { tickets[0].Id, 543521L, tickets[1].Id, 123445L })).ToArray();
             
             Assert.Equal(2, tickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
@@ -248,7 +250,7 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldCreateTicket()
         {
             var response = await _resource.CreateAsync(
-                new Ticket
+                new TicketCreateRequest("description")
                 {
                     Subject = "My printer is on fire!",
                     Comment = new TicketComment
@@ -257,23 +259,22 @@ namespace ZendeskApi.Client.Tests.Resources
                     }
                 });
 
-            Assert.NotNull(response.Id);
+            Assert.NotEqual(0L, response.Id);
             Assert.Equal("My printer is on fire!", response.Subject);
-            Assert.Equal("The smoke is very colorful.", response.Comment.Body);
         }
 
         [Fact]
         public Task ShouldThrowErrorWhenNot201()
         {
             return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateAsync(
-                new Ticket
+                new TicketCreateRequest("description")
                 {
                     Subject = "My printer is no longer on fire!",
                     Comment = new TicketComment
                     {
                         Body = "The smoke is gone."
                     },
-                    Tags = new System.Collections.Generic.List<string> { "error" }
+                    Tags = new List<string> { "error" }
                 }));
 
             // could use tags to simulate httpstatus codes in fake client?
@@ -284,14 +285,14 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var response = await _resource.CreateAsync(
                 new[] {
-                        new Ticket {
+                        new TicketCreateRequest("description is required") {
                             Subject = "My printer is on fire!",
                             Comment = new TicketComment
                             {
                                 Body = "The smoke is very colorful."
                             }
                         },
-                        new Ticket {
+                        new TicketCreateRequest("description is required") {
                             Subject = "My printer is somehow on fire again!",
                             Comment = new TicketComment
                             {
@@ -307,12 +308,15 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldUpdateTicket()
         {
             var ticket = (await CreateTickets(1)).First();
-
+            
             Assert.Equal("My printer is on fire! 0", ticket.Subject);
 
-            ticket.Subject = "I COMMAND YOU TO UPDATE!!!";
+            var updateTicketRequest = new TicketUpdateRequest(ticket.Id)
+            {
+                Subject = "I COMMAND YOU TO UPDATE!!!"
+            };
 
-            ticket = await _resource.UpdateAsync(ticket);
+            ticket = await _resource.UpdateAsync(updateTicketRequest);
 
             Assert.Equal("I COMMAND YOU TO UPDATE!!!", ticket.Subject);
         }
@@ -322,24 +326,24 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var ticket = (await CreateTickets(1)).First();
 
-            var ticket1 = await _resource.GetAsync(ticket.Id.Value);
+            var ticket1 = await _resource.GetAsync(ticket.Id);
 
             Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(ticket1));
 
-            await _resource.DeleteAsync(ticket.Id.Value);
+            await _resource.DeleteAsync(ticket.Id);
 
-            var ticket2 = await _resource.GetAsync(ticket.Id.Value);
+            var ticket2 = await _resource.GetAsync(ticket.Id);
 
             Assert.Null(ticket2);
         }
 
-        private async Task<Ticket[]> CreateTickets(int numberOfTicketsToCreate)
+        private async Task<TicketResponse[]> CreateTickets(int numberOfTicketsToCreate)
         {
-            var tickets = new List<Ticket>();
+            var tickets = new List<TicketCreateRequest>();
 
             for (var i = 0; i < numberOfTicketsToCreate; i++)
             {
-                var ticket = new Ticket
+                var ticket = new TicketCreateRequest("Description is required")
                 {
                     Subject = "My printer is on fire! " + i,
                     Comment = new TicketComment
@@ -351,28 +355,20 @@ namespace ZendeskApi.Client.Tests.Resources
                 tickets.Add(ticket);
             }
 
-            var jobStatus = await _resource.CreateAsync(tickets);
-
-            for (var i = 0; i < numberOfTicketsToCreate; i++)
-            {
-                tickets[i].Id = jobStatus.Items.Single(x => x.Title == tickets[i].Subject).Id;
-                tickets[i].Url = new Uri("https://company.zendesk.com/api/v2/tickets/" + tickets[i].Id + ".json");
-            }
-
-            return tickets.ToArray();
+            return await CreateTickets(tickets.ToArray());
         }
 
-        private async Task<Ticket[]> CreateTickets(params Ticket[] tickets)
+        private async Task<TicketResponse[]> CreateTickets(params TicketCreateRequest[] tickets)
         {
-            var jobStatus = await _resource.CreateAsync(tickets);
+            var createdTickets = new List<TicketResponse>();
 
-            for (var i = 0; i < tickets.Length; i++)
+            foreach (var ticketCreateRequest in tickets)
             {
-                tickets[i].Id = jobStatus.Items.Single(x => x.Title == tickets[i].Subject).Id;
-                tickets[i].Url = new Uri("https://company.zendesk.com/api/v2/tickets/" + tickets[i].Id + ".json");
+                var ticket = await _resource.CreateAsync(ticketCreateRequest);
+                createdTickets.Add(ticket);
             }
 
-            return tickets.ToArray();
+            return createdTickets.ToArray();
         }
 
         public void Dispose()
