@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
 {
     [JsonObject("job_status")]
-    public class JobStatus
+    public class JobStatusResponse
     {
         [JsonProperty("id")]
         public string Id { get; set; }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
@@ -41,18 +41,19 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task AddComment(long ticketId, TicketComment ticketComment)
+        public Task AddComment(long ticketId, TicketComment ticketComment)
         {
-            var ticket = await _ticketsResource.GetAsync(ticketId).ConfigureAwait(false);
+          /*  var ticket = await _ticketsResource.GetAsync(ticketId).ConfigureAwait(false);
 
             if (ticket == null)
             {
-                throw new Exception($"Ticket {ticketId} not found");
+                throw new Exception($"TicketResponse {ticketId} not found");
             }
+            //TODO:
+           // ticket.Comment = ticketComment;
 
-            ticket.Comment = ticketComment;
-
-            await _ticketsResource.UpdateAsync(ticket).ConfigureAwait(false);
+            await _ticketsResource.UpdateAsync(ticket).ConfigureAwait(false);*/
+            return new Task(() => { });
         }
     }
 }

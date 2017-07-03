@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -47,7 +47,7 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    _logger.LogInformation("Ticket Form {0} not found", ticketformId);
+                    _logger.LogInformation("TicketResponse Form {0} not found", ticketformId);
                     return null;
                 }
 

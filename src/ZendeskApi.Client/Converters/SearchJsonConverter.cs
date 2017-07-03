@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +12,7 @@ namespace ZendeskApi.Client.Converters
     public class SearchJsonConverter : JsonConverter
     {
         private static Type[] DeserializableSearchTypes =
-            new Type[] { typeof(Ticket), typeof(User), typeof(Group), typeof(Organization) /*, typeof(Topic) */ }; // TODO: Introduce Topics?
+            new Type[] { typeof(TicketResponse), typeof(User), typeof(Group), typeof(Organization) /*, typeof(Topic) */ }; // TODO: Introduce Topics?
 
         public override bool CanConvert(Type objectType)
         {

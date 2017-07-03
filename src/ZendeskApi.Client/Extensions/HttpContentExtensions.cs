@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -33,9 +33,10 @@ namespace ZendeskApi.Client
             using (var reader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(reader))
             {
-                var ser = new JsonSerializer();
-                ser.Converters.Insert(0, new SingularJsonConverter<T>());
-                return ser.Deserialize<T>(jsonReader);
+                var jsonSerializer = new JsonSerializer();
+                jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
+                jsonSerializer.Converters.Insert(0, new SingularJsonConverter<T>());
+                return jsonSerializer.Deserialize<T>(jsonReader);
             }
         }
     }

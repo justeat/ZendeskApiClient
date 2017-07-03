@@ -1,25 +1,26 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
     public interface ITicketsResource
     {
-        Task<IPagination<Ticket>> GetAllAsync(PagerParameters pager = null);
-        Task<IPagination<Ticket>> GetAllForOrganizationAsync(long organizationId, PagerParameters pager = null);
-        Task<IPagination<Ticket>> GetAllRequestedForUserAsync(long userId, PagerParameters pager = null);
-        Task<IPagination<Ticket>> GetAllCCDForUserAsync(long userId, PagerParameters pager = null);
-        Task<IPagination<Ticket>> GetAllAssignedForUserAsync(long userId, PagerParameters pager = null);
-        Task<Ticket> GetAsync(long ticketId);
-        Task<IPagination<Ticket>> GetAllAsync(long[] ticketIds, PagerParameters pager = null);
-        Task<Ticket> CreateAsync(Ticket ticket);
-        Task<JobStatus> CreateAsync(IEnumerable<Ticket> tickets);
-        Task<Ticket> UpdateAsync(Ticket ticket);
-        Task<JobStatus> UpdateAsync(IEnumerable<Ticket> tickets);
+        Task<IPagination<TicketResponse>> GetAllAsync(PagerParameters pager = null);
+        Task<IPagination<TicketResponse>> GetAllForOrganizationAsync(long organizationId, PagerParameters pager = null);
+        Task<IPagination<TicketResponse>> GetAllRequestedForUserAsync(long userId, PagerParameters pager = null);
+        Task<IPagination<TicketResponse>> GetAllCCDForUserAsync(long userId, PagerParameters pager = null);
+        Task<IPagination<TicketResponse>> GetAllAssignedForUserAsync(long userId, PagerParameters pager = null);
+        Task<TicketResponse> GetAsync(long ticketId);
+        Task<IPagination<TicketResponse>> GetAllAsync(long[] ticketIds, PagerParameters pager = null);
+        Task<TicketResponse> CreateAsync(TicketCreateRequest ticket);
+        Task<JobStatusResponse> CreateAsync(IEnumerable<TicketCreateRequest> tickets);
+        Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket);
+        Task<JobStatusResponse> UpdateAsync(IEnumerable<TicketUpdateRequest> tickets);
         Task<bool> MarkTicketAsSpamAndSuspendRequester(long ticketId);
-        Task<JobStatus> MarkTicketAsSpamAndSuspendRequester(long[] ticketIds);
+        Task<JobStatusResponse> MarkTicketAsSpamAndSuspendRequester(long[] ticketIds);
         Task DeleteAsync(long ticketId);
     }
 }
