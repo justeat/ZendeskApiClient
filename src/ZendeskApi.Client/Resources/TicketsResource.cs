@@ -7,8 +7,8 @@ using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Responses;
 using ZendeskApi.Client.Requests;
-using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
@@ -33,95 +33,129 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<TicketResponse>> GetAllAsync(PagerParameters pager = null)
+        #region List Tickets
+        public async Task<IPagination<TicketResponse>> ListAsync(PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, "GetAllAsync"))
+            using (_loggerScope(_logger, "ListAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
-
-                response.EnsureSuccessStatusCode();
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("core/tickets#list-tickets")
+                        .Build();
+                }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
         }
         
-        public async Task<IPagination<TicketResponse>> GetAllForOrganizationAsync(long organizationId, PagerParameters pager = null)
+        public async Task<IPagination<TicketResponse>> ListForOrganizationAsync(long organizationId, PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, $"GetAllForOrganizationAsync({organizationId})"))
+            using (_loggerScope(_logger, $"ListForOrganizationAsync({organizationId})"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(string.Format(OrganizationResourceUriFormat, organizationId), pager).ConfigureAwait(false);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     _logger.LogInformation("Tickets in organization {0} not found", organizationId);
                     return null;
                 }
-
-                response.EnsureSuccessStatusCode();
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("core/tickets#list-tickets")
+                        .Build();
+                }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
         }
 
-        public async Task<IPagination<TicketResponse>> GetAllRequestedForUserAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<TicketResponse>> ListRequestedByAsync(long userId, PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, $"GetAllRequestedForUserAsync({userId})"))
+            using (_loggerScope(_logger, $"ListRequestedByAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
             {
                 var response = await client.GetAsync("requested", pager).ConfigureAwait(false);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     _logger.LogInformation("Requested ticketsResponse for user {0} not found", userId);
                     return null;
                 }
-
-                response.EnsureSuccessStatusCode();
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("core/tickets#list-tickets")
+                        .Build();
+                }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
         }
 
-        public async Task<IPagination<TicketResponse>> GetAllCCDForUserAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<TicketResponse>> ListCcdAsync(long userId, PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, $"GetAllCCDForUserAsync({userId})"))
+            using (_loggerScope(_logger, $"ListCcdAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
             {
                 var response = await client.GetAsync("ccd", pager).ConfigureAwait(false);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     _logger.LogInformation("CCD ticketsResponse for user {0} not found", userId);
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("core/tickets#list-tickets")
+                        .Build();
+                }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
         }
 
-        public async Task<IPagination<TicketResponse>> GetAllAssignedForUserAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<TicketResponse>> ListAssignedToAsync(long userId, PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, $"GetAllAssignedForUserAsync({userId})"))
+            using (_loggerScope(_logger, $"ListAssignedToAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
             {
                 var response = await client.GetAsync("assigned", pager).ConfigureAwait(false);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     _logger.LogInformation("Assigned ticketsResponse for user {0} not found", userId);
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("core/tickets#list-tickets")
+                        .Build();
+                }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
         }
-        
+        #endregion
+
+
+        #region Show Tickets
         public async Task<TicketResponse> GetAsync(long ticketId)
         {
             using (_loggerScope(_logger, $"GetAsync({ticketId})"))
@@ -141,7 +175,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<TicketResponse>> GetAllAsync(long[] ticketIds, PagerParameters pager = null)
+        public async Task<IPagination<TicketResponse>> GetAsync(long[] ticketIds, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllAsync({ZendeskFormatter.ToCsv(ticketIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -153,7 +187,10 @@ namespace ZendeskApi.Client.Resources
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
         }
+        #endregion
 
+
+        #region Create Tickets
         public async Task<TicketResponse> CreateAsync(TicketCreateRequest ticket)
         {
             using (_loggerScope(_logger, "CreateAsync"))
@@ -193,7 +230,10 @@ namespace ZendeskApi.Client.Resources
                 return await response.Content.ReadAsAsync<JobStatusResponse>();
             }
         }
+        #endregion
 
+
+        #region Update Tickets
         public async Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket)
         {
             using (_loggerScope(_logger, "UpdateAsync"))
@@ -237,6 +277,7 @@ namespace ZendeskApi.Client.Resources
                 return await response.Content.ReadAsAsync<JobStatusResponse>();
             }
         }
+        #endregion
 
         public async Task<bool> MarkTicketAsSpamAndSuspendRequester(long ticketId)
         {
@@ -245,7 +286,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.PutAsJsonAsync($"{ticketId}/mark_as_spam", "{ }").ConfigureAwait(false);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     _logger.LogInformation("Cannot mark ticketResponse {0} as spam as the ticketResponse is not found", ticketId);
                     return false;
@@ -277,7 +318,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.DeleteAsync(ticketId.ToString()).ConfigureAwait(false);
 
-                if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
+                if (response.StatusCode != HttpStatusCode.NoContent)
                 {
                     throw new HttpRequestException(
                         $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +

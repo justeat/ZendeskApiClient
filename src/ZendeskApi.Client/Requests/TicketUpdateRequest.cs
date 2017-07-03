@@ -10,6 +10,11 @@ namespace ZendeskApi.Client.Requests
     /// </summary>
     public class TicketUpdateRequest
     {
+        public TicketUpdateRequest(long id)
+        {
+            Id = id;
+        }
+
         [JsonProperty("id")]
         public long Id { get; set; }
 

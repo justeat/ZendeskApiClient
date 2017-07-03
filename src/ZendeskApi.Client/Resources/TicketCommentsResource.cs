@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Models.Responses;
 
 namespace ZendeskApi.Client.Resources
 {

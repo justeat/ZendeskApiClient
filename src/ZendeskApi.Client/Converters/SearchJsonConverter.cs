@@ -5,7 +5,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Models.Responses;
 
 namespace ZendeskApi.Client.Converters
 {

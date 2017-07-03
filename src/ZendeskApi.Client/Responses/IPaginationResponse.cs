@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using ZendeskApi.Client.Models;
 
-namespace ZendeskApi.Client.Responses
+namespace ZendeskApi.Client.Models.Responses
 {
     public interface IPagination<T> : IEnumerable<T>
     {

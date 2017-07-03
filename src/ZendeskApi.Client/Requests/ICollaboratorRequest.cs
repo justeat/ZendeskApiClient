@@ -1,4 +1,4 @@
-﻿namespace ZendeskApi.Client.Requests
+namespace ZendeskApi.Client.Requests
 {
     public interface ICollaboratorRequest
     {

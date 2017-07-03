@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Models.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
