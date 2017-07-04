@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Models;
 
-namespace ZendeskApi.Client.Models.Responses
+namespace ZendeskApi.Client.Responses
 {
     [JsonObject("ticket")]
     public class TicketResponse : ISearchResult

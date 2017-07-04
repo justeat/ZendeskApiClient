@@ -35,7 +35,7 @@ namespace ZendeskApi.Client
             {
                 var jsonSerializer = new JsonSerializer();
                 jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
-                jsonSerializer.Converters.Insert(0, new SingularJsonConverter<T>());
+               // jsonSerializer.Converters.Insert(0, new SingularJsonConverter<T>());
                 return jsonSerializer.Deserialize<T>(jsonReader);
             }
         }

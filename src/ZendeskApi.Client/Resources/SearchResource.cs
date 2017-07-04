@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Converters;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Models.Responses;
 using ZendeskApi.Client.Queries;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {

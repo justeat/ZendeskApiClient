@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using ZendeskApi.Client.Models.Responses;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Requests
 {

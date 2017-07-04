@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Models;
 
-namespace ZendeskApi.Client.Models.Responses
+namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
     public class TicketCommentsResponse : PaginationResponse<TicketComment>
     {
         [JsonProperty("comments")]
-        public override IEnumerable<TicketComment> Item { get; set; }
+        public IEnumerable<TicketComment> Comments { get; set; }
+        
+        protected override IEnumerable<TicketComment> Enumerable => Comments;
     }
 }

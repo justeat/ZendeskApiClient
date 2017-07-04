@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Exceptions
@@ -32,17 +33,19 @@ namespace ZendeskApi.Client.Exceptions
             return this;
         }
 
-        public ZendeskRequestException Build()
+        public async Task<ZendeskRequestException> Build()
         {
             var message = new StringBuilder();
             ErrorResponse error = null;
 
             if (_response != null && (int)_response.StatusCode <= 499)
             {
-                var rawbody = _response.Content.ReadAsStringAsync().Result;
-                error = JsonConvert.DeserializeObject<ErrorResponse>(rawbody);
+                error = await _response.Content.ReadAsAsync<ErrorResponse>();
 
-                message.AppendLine($"{error.Error}: {error.Description}.");
+                if (error?.Error != null && error.Description != null)
+                {
+                    message.AppendLine($"{error.Error}: {error.Description}.");
+                }
             }
 
             if (_expectedStatusCode.HasValue)
@@ -61,7 +64,7 @@ namespace ZendeskApi.Client.Exceptions
                 message.AppendLine($"See: https://developer.zendesk.com/rest_api/docs/{_helpDocsResource} .");
             }
 
-            return new ZendeskRequestException(message.ToString(), error);
+            return new ZendeskRequestException(message.ToString(), error, _response);
         }
 
     }

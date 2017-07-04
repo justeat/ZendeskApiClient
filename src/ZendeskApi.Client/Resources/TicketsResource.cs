@@ -5,10 +5,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Exceptions;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Models.Responses;
 using ZendeskApi.Client.Requests;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
@@ -44,10 +45,10 @@ namespace ZendeskApi.Client.Resources
                 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/tickets#list-tickets")
-                        .Build();
+                    throw await new ZendeskRequestExceptionBuilder()
+                                .WithResponse(response)
+                                .WithHelpDocsLink("core/tickets#list-tickets")
+                                .Build();
                 }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
@@ -69,10 +70,10 @@ namespace ZendeskApi.Client.Resources
                 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/tickets#list-tickets")
-                        .Build();
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithHelpDocsLink("core/tickets#list-tickets")
+                                    .Build();
                 }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
@@ -94,10 +95,10 @@ namespace ZendeskApi.Client.Resources
                 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/tickets#list-tickets")
-                        .Build();
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithHelpDocsLink("core/tickets#list-tickets")
+                                    .Build();
                 }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
@@ -119,10 +120,10 @@ namespace ZendeskApi.Client.Resources
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/tickets#list-tickets")
-                        .Build();
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithHelpDocsLink("core/tickets#list-tickets")
+                                    .Build();
                 }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
@@ -144,10 +145,10 @@ namespace ZendeskApi.Client.Resources
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/tickets#list-tickets")
-                        .Build();
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithHelpDocsLink("core/tickets#list-tickets")
+                                    .Build();
                 }
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
@@ -201,11 +202,11 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.Created)
-                        .WithHelpDocsLink("core/tickets#create-ticket")
-                        .Build(); 
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithExpectedHttpStatus(HttpStatusCode.Created)
+                                    .WithHelpDocsLink("core/tickets#create-ticket")
+                                    .Build(); 
                 }
 
                 return await response.Content.ReadAsAsync<TicketResponse>();
@@ -221,11 +222,11 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.Created)
-                        .WithHelpDocsLink("core/tickets#create-many-tickets")
-                        .Build();
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithExpectedHttpStatus(HttpStatusCode.Created)
+                                    .WithHelpDocsLink("core/tickets#create-many-tickets")
+                                    .Build();
                 }
 
                 return await response.Content.ReadAsAsync<JobStatusResponse>();
@@ -250,10 +251,10 @@ namespace ZendeskApi.Client.Resources
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/tickets#update-ticket")
-                        .Build();
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithHelpDocsLink("core/tickets#update-ticket")
+                                    .Build();
                 }
 
                 return await response.Content.ReadAsAsync<TicketResponse>();
@@ -269,10 +270,10 @@ namespace ZendeskApi.Client.Resources
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/tickets#update-many-tickets")
-                        .Build();
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithHelpDocsLink("core/tickets#update-many-tickets")
+                                    .Build();
                 }
 
                 return await response.Content.ReadAsAsync<JobStatusResponse>();
@@ -326,11 +327,11 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.NoContent)
                 {
-                    throw new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.NoContent)
-                        .WithHelpDocsLink("core/tickets#delete-ticket")
-                        .Build();
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                                    .WithHelpDocsLink("core/tickets#delete-ticket")
+                                    .Build();
                 }
             }
         }

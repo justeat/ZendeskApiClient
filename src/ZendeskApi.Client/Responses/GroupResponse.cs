@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Models;
 
-namespace ZendeskApi.Client.Models.Responses
+namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
     public class GroupsResponse : PaginationResponse<Group>
     {
         [JsonProperty("groups")]
-        public override IEnumerable<Group> Item { get; set; }
+        public IEnumerable<Group> Groups { get; set; }
+        
+        protected override IEnumerable<Group> Enumerable => Groups;
     }
 }

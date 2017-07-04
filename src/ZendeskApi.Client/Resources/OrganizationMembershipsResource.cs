@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Models.Responses;
 using ZendeskApi.Client.Requests;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {

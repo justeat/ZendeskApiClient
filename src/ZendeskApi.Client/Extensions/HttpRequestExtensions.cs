@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Converters;
 
-namespace ZendeskApi.Client
+namespace ZendeskApi.Client.Extensions
 {
     public static class HttpRequestExtensions
     {
@@ -16,7 +16,7 @@ namespace ZendeskApi.Client
                 NullValueHandling = NullValueHandling.Ignore,
             };
 
-            settings.Converters.Add(new SingularJsonConverter<T>());
+            //settings.Converters.Add(new SingularJsonConverter<T>());
             return settings;
         }
 

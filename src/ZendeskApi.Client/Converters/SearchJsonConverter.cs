@@ -5,7 +5,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Models.Responses;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Converters
 {
@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Converters
                 Count = token.Value<int>("count"),
                 NextPage = nextPage != null ? new Uri(nextPage) : null,
                 PreviousPage = previousPage != null ? new Uri(previousPage) : null,
-                Item = results
+                Results = results
             };
         }
 
