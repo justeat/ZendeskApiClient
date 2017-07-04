@@ -4,6 +4,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -15,13 +16,12 @@ namespace ZendeskApi.Client.Resources
         private readonly IZendeskApiClient _apiClient;
         private readonly ILogger _logger;
 
-        private Func<ILogger, string, IDisposable> _loggerScope =
+        private readonly Func<ILogger, string, IDisposable> _loggerScope = 
             LoggerMessage.DefineScope<string>(typeof(TicketCommentsResource).Name + ": {0}");
 
-        private ITicketsResource _ticketsResource;
+        private readonly ITicketsResource _ticketsResource;
 
-        public TicketCommentsResource(IZendeskApiClient apiClient,
-            ILogger logger)
+        public TicketCommentsResource(IZendeskApiClient apiClient, ILogger logger)
         {
             _apiClient = apiClient;
             _logger = logger;
@@ -29,32 +29,27 @@ namespace ZendeskApi.Client.Resources
             _ticketsResource = new TicketsResource(apiClient, logger);
         }
 
-        public async Task<IPagination<TicketComment>> GetAllAsync(long ticketId, PagerParameters pager = null)
+        public async Task<TicketCommentsListResponse> ListAsync(long ticketId, PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, $"GetAllAsync({ticketId})"))
+            using (_loggerScope(_logger, $"ListAsync({ticketId})"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(string.Format(ResourceUri, ticketId), pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
-                return await  response.Content.ReadAsAsync<TicketCommentsResponse>();
+                return await  response.Content.ReadAsAsync<TicketCommentsListResponse>();
             }
         }
 
-        public Task AddComment(long ticketId, TicketComment ticketComment)
+        public async Task AddComment(long ticketId, TicketComment ticketComment)
         {
-          /*  var ticket = await _ticketsResource.GetAsync(ticketId).ConfigureAwait(false);
-
-            if (ticket == null)
+            var ticket = new TicketUpdateRequest(ticketId)
             {
-                throw new Exception($"TicketResponse {ticketId} not found");
-            }
-            //TODO:
-           // ticket.Comment = ticketComment;
+                Comment = ticketComment
+            };
 
-            await _ticketsResource.UpdateAsync(ticket).ConfigureAwait(false);*/
-            return new Task(() => { });
+            await _ticketsResource.UpdateAsync(ticket).ConfigureAwait(false);
         }
     }
 }

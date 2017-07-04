@@ -17,41 +17,39 @@ namespace ZendeskApi.Client.Resources
         private readonly IZendeskApiClient _apiClient;
         private readonly ILogger _logger;
 
-        private Func<ILogger, string, IDisposable> _loggerScope =
-            LoggerMessage.DefineScope<string>(typeof(SearchResource).Name + ": {0}");
+        private readonly Func<ILogger, string, IDisposable> _loggerScope = LoggerMessage.DefineScope<string>(typeof(SearchResource).Name + ": {0}");
 
-        public SearchResource(IZendeskApiClient apiClient,
-            ILogger logger)
+        public SearchResource(IZendeskApiClient apiClient, ILogger logger)
         {
             _apiClient = apiClient;
             _logger = logger;
         }
 
-        public async Task<IPagination<ISearchResult>> SearchAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
+        public async Task<SearchResponse<ISearchResponse>> SearchAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
         {
             var query = new ZendeskQuery();
             builder(query);
 
-            using (_loggerScope(_logger, "Search"))
+            using (_loggerScope(_logger, "SearchAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<SearchResultsResponse>(new SearchJsonConverter());
+                return await response.Content.ReadAsAsync<SearchResponse<ISearchResponse>>(new SearchJsonConverter());
             }
         }
 
-        public async Task<IPagination<T>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null) where T : ISearchResult
+        public async Task<SearchResponse<T>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null) where T : ISearchResponse
         {
             var query = new ZendeskQuery();
             builder(query);
 
             query.WithTypeFilter<T>();
 
-            using (_loggerScope(_logger, "Search"))
+            using (_loggerScope(_logger, "SearchAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<SearchResultsResponse<T>>();
+                return await response.Content.ReadAsAsync<SearchResponse<T>>();
             }
         }
     }

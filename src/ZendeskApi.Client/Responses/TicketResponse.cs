@@ -7,7 +7,7 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject("ticket")]
-    public class TicketResponse : ISearchResult
+    public class TicketResponse : ISearchResponse
     {
         /// <summary>
         /// Automatically assigned when creating tickets
@@ -202,6 +202,6 @@ namespace ZendeskApi.Client.Responses
         public DateTime UpdatedAt { get; internal set; }
         
         [JsonProperty("result_type")]
-        string ISearchResult.Type => typeof(TicketResponse).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id;
+        string ISearchResponse.Type => typeof(TicketResponse).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id;
     }
 }

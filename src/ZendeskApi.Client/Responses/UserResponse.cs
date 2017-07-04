@@ -6,7 +6,7 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject("user")]
-    public class UserResponse : ISearchResult
+    public class UserResponse : ISearchResponse
     {
         /// <summary>
         /// Automatically assigned when the user is created
@@ -210,6 +210,6 @@ namespace ZendeskApi.Client.Responses
         public bool Verified { get; internal set; }
 
         [JsonProperty("result_type")]
-        string ISearchResult.Type => "user";
+        string ISearchResponse.Type => "user";
     }
 }

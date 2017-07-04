@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Models
 {
     [JsonObject("organization")]
-    public class Organization : ISearchResult
+    public class Organization : ISearchResponse
     {
         [JsonProperty("id")]
         public long? Id { get; set; }
@@ -56,12 +57,12 @@ namespace ZendeskApi.Client.Models
         [JsonProperty("group_id")]
         public long GroupId { get; set; }
 
-        DateTime ISearchResult.CreatedAt => CreatedAt.Value;
-        DateTime ISearchResult.UpdatedAt => UpdatedAt.Value;
-        long ISearchResult.Id => Id.Value;
-        Uri ISearchResult.Url => Url;
+        DateTime ISearchResponse.CreatedAt => CreatedAt.Value;
+        DateTime ISearchResponse.UpdatedAt => UpdatedAt.Value;
+        long ISearchResponse.Id => Id.Value;
+        Uri ISearchResponse.Url => Url;
 
         [JsonProperty("result_type")]
-        string ISearchResult.Type => typeof(Organization).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id;
+        string ISearchResponse.Type => typeof(Organization).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id;
     }
 }

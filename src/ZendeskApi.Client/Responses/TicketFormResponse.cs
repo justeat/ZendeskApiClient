@@ -9,7 +9,7 @@ namespace ZendeskApi.Client.Responses
     {
         [JsonProperty("ticket_forms")]
         public IEnumerable<TicketForm> TicketForms { get; set; }
-        
+
         protected override IEnumerable<TicketForm> Enumerable => TicketForms;
     }
 }

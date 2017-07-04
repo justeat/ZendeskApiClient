@@ -5,6 +5,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Converters
@@ -12,7 +13,7 @@ namespace ZendeskApi.Client.Converters
     public class SearchJsonConverter : JsonConverter
     {
         private static Type[] DeserializableSearchTypes =
-            new Type[] { typeof(TicketResponse), typeof(UserResponse), typeof(Group), typeof(Organization) /*, typeof(Topic) */ }; // TODO: Introduce Topics?
+            new Type[] { typeof(TicketResponse), typeof(UserResponse), typeof(GroupResponse), typeof(Organization) /*, typeof(Topic) */ }; // TODO: Introduce Topics?
 
         public override bool CanConvert(Type objectType)
         {
@@ -28,11 +29,11 @@ namespace ZendeskApi.Client.Converters
             var token = serializer
                 .Deserialize<JObject>(reader);
             
-            var results = new List<ISearchResult>();
+            var results = new List<ISearchResponse>();
 
             foreach (var result in token.SelectToken("results").Children())
             {
-                results.Add((ISearchResult)result.ToObject(keys[result.Value<string>("result_type")]));
+                results.Add((ISearchResponse)result.ToObject(keys[result.Value<string>("result_type")]));
             }
 
             var nextPage = token.Value<string>("next_page");

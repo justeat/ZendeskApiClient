@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
@@ -20,7 +21,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
     {
         private class State
         {
-            public IDictionary<long, Group> Groups = new Dictionary<long, Group>();
+            public IDictionary<long, GroupResponse> Groups = new Dictionary<long, GroupResponse>();
         }
 
         public static Action<IRouteBuilder> MatchesRequest
@@ -38,7 +39,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupsResponse { Groups = groups });
+                        return resp.WriteAsJson(new GroupListResponse { Groups = groups });
                     })
                     .MapGet("api/v2/groups/{id}", (req, resp, routeData) =>
                     {
@@ -62,7 +63,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupsResponse { Groups = state.Groups.Values });
+                        return resp.WriteAsJson(new GroupListResponse { Groups = state.Groups.Values });
                     })
                     .MapGet("api/v2/users/{id}/groups", (req, resp, routeData) =>
                     {
@@ -76,11 +77,11 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupsResponse { Groups = groups });
+                        return resp.WriteAsJson(new GroupListResponse { Groups = groups });
                     })
                     .MapPost("api/v2/groups", (req, resp, routeData) =>
                     {
-                        var group = req.Body.ReadAs<Group>();
+                        var group = req.Body.ReadAs<GroupResponse>();
 
                         if (group.Name.Contains("error"))
                         {
@@ -93,7 +94,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         group.Id = long.Parse(Rand.Next().ToString());
                         group.Url = new Uri("https://company.zendesk.com/api/v2/groups/" + group.Id + ".json");
-                        state.Groups.Add(group.Id.Value, group);
+                        state.Groups.Add(group.Id, group);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         
@@ -103,7 +104,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var group = req.Body.ReadAs<Group>();
+                        var group = req.Body.ReadAs<GroupResponse>();
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 

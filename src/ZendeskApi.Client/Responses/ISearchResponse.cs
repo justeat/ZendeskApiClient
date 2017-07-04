@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
-namespace ZendeskApi.Client.Models
+namespace ZendeskApi.Client.Responses
 {
-    public interface ISearchResult
+    public interface ISearchResponse
     {
         DateTime CreatedAt { get; }
         DateTime UpdatedAt { get; }

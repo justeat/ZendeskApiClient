@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -20,7 +21,7 @@ namespace ZendeskApi.Client.Resources
         private readonly IZendeskApiClient _apiClient;
         private readonly ILogger _logger;
 
-        private Func<ILogger, string, IDisposable> _loggerScope =
+        private readonly Func<ILogger, string, IDisposable> _loggerScope =
             LoggerMessage.DefineScope<string>(typeof(GroupsResource).Name + ": {0}");
 
         public GroupsResource(IZendeskApiClient apiClient,
@@ -30,22 +31,22 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<Group>> GetAllAsync(PagerParameters pager = null)
+        public async Task<GroupListResponse> ListAsync(PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, "GetAllAsync"))
+            using (_loggerScope(_logger, "ListAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(GroupsResourceUri, pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<GroupsResponse>();
+                return await response.Content.ReadAsAsync<GroupListResponse>();
             }
         }
 
-        public async Task<IPagination<Group>> GetAllAsync(long userId, PagerParameters pager = null)
+        public async Task<GroupListResponse> ListAsync(long userId, PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, $"GetAllAsync({userId})"))
+            using (_loggerScope(_logger, $"ListAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(string.Format(GroupsByUserResourceUriFormat, userId), pager).ConfigureAwait(false);
@@ -58,24 +59,24 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<GroupsResponse>();
+                return await response.Content.ReadAsAsync<GroupListResponse>();
             }
         }
 
-        public async Task<IPagination<Group>> GetAllAssignableAsync(PagerParameters pager = null)
+        public async Task<GroupListResponse> ListAssignableAsync(PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, "GetAllAssignableAsync"))
+            using (_loggerScope(_logger, "ListAssignableAsync"))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(AssignableGroupUri, pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<GroupsResponse>();
+                return await response.Content.ReadAsAsync<GroupListResponse>();
             }
         }
 
-        public async Task<Group> GetAsync(long groupId)
+        public async Task<GroupResponse> GetAsync(long groupId)
         {
             using (_loggerScope(_logger, $"GetAsync({groupId})"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
@@ -84,17 +85,17 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    _logger.LogInformation("Group {0} not found", groupId);
+                    _logger.LogInformation("GroupResponse {0} not found", groupId);
                     return null;
                 }
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<Group>();
+                return await response.Content.ReadAsAsync<GroupResponse>();
             }
         }
 
-        public async Task<Group> CreateAsync(Group group)
+        public async Task<GroupResponse> CreateAsync(GroupCreateRequest group)
         {
             using (_loggerScope(_logger, "PostAsync")) // Maybe incluse the request in the log?
             using (var client = _apiClient.CreateClient())
@@ -109,11 +110,11 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/groups#create-groups");
                 }
                 
-                return await response.Content.ReadAsAsync<Group>();
+                return await response.Content.ReadAsAsync<GroupResponse>();
             }
         }
 
-        public async Task<Group> UpdateAsync(Group group)
+        public async Task<GroupResponse> UpdateAsync(GroupUpdateRequest group)
         {
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
@@ -128,7 +129,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<Group>();
+                return await response.Content.ReadAsAsync<GroupResponse>();
             }
         }
 

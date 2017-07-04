@@ -8,6 +8,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <None Include="Requests\GroupListRequest.cs" />
     <None Include="Requests\UserUpdateRequest.cs" />
   </ItemGroup>
 

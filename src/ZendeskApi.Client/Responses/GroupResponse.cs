@@ -1,15 +1,51 @@
-using System.Collections.Generic;
+using System;
 using Newtonsoft.Json;
-using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
 {
-    [JsonObject]
-    public class GroupsResponse : PaginationResponse<Group>
+    /// <summary>
+    /// <see href="https://developer.zendesk.com/rest_api/docs/core/groups#json-format">Group Response Format</see>
+    /// </summary>
+    [JsonObject("group")]
+    public class GroupResponse : ISearchResponse
     {
-        [JsonProperty("groups")]
-        public IEnumerable<Group> Groups { get; set; }
+        /// <summary>
+        /// Automatically assigned when creating groups
+        /// </summary>
+        [JsonProperty]
+        public long Id { get; internal set; }
+
+        /// <summary>
+        /// The API url of this group
+        /// </summary>
+        [JsonProperty("url")]
+        public Uri Url { get; internal set; }
+
+        /// <summary>
+        /// The name of the group
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; internal set; }      
         
-        protected override IEnumerable<Group> Enumerable => Groups;
+        /// <summary>
+        /// Deleted groups get marked as such
+        /// </summary>
+        [JsonProperty("deleted")]
+        public bool Deleted { get; internal set; }
+
+        /// <summary>
+        /// The time the group was created
+        /// </summary>
+        [JsonProperty("created_at")]
+        public DateTime CreatedAt { get; internal set; }
+
+        /// <summary>
+        /// The time of the last update of the group
+        /// </summary>
+        [JsonProperty("updated_at")]
+        public DateTime UpdatedAt { get; internal set; }
+
+        [JsonProperty("result_type")]
+        string ISearchResponse.Type => "group";
     }
 }

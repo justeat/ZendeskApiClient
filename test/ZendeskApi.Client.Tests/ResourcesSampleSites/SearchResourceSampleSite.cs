@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
@@ -22,9 +23,9 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/search", (req, resp, routeData) =>
                     {
-                        var obj = new ISearchResult[] {
+                        var obj = new ISearchResponse[] {
                             new TicketResponse { Id = 1, Url = new Uri("https://company.zendesk.com/api/v2/tickets/1.json") },
-                            new Group { Id = 2, Url = new Uri("https://company.zendesk.com/api/v2/groups/2.json") },
+                            new GroupResponse { Id = 2, Url = new Uri("https://company.zendesk.com/api/v2/groups/2.json") },
                             new Organization { Id = 3, Url = new Uri("https://company.zendesk.com/api/v2/organizations/3.json") },
                             new UserResponse { Id = 4, Url = new Uri("https://company.zendesk.com/api/v2/users/4.json") }};
 
@@ -41,7 +42,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         return resp.WriteAsJson(new SearchResultsResponse {
                             Results = obj,
                             Count = obj.Length,
-                            NextPage = new Uri("https://foo.zendesk.com/api/v2/search.json?query=\"type:Group hello\"&sort_by=created_at&sort_order=desc&page=2")
+                            NextPage = new Uri("https://foo.zendesk.com/api/v2/search.json?query=\"type:GroupResponse hello\"&sort_by=created_at&sort_order=desc&page=2")
                         });
                     });
             }

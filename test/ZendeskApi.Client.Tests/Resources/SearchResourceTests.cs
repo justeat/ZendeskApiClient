@@ -12,13 +12,12 @@ namespace ZendeskApi.Client.Tests.Resources
 {
     public class SearchResourceTests
     {
-        private readonly IZendeskApiClient _client;
         private readonly SearchResource _resource;
 
         public SearchResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new SearchResourceSampleSite(resource));
-            _resource = new SearchResource(_client, NullLogger.Instance);
+            IZendeskApiClient client = new DisposableZendeskApiClient(resource => new SearchResourceSampleSite(resource));
+            _resource = new SearchResource(client, NullLogger.Instance);
         }
 
         [Fact]
@@ -28,7 +27,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(4, results.Count);
             Assert.Equal(1, results.OfType<TicketResponse>().Single().Id);
             Assert.Equal(3, results.OfType<Organization>().Single().Id);
-           // Assert.Equal(2, results.OfType<Group>().Single().Id);
+            Assert.Equal(2, results.OfType<GroupResponse>().Single().Id);
             Assert.Equal(4, results.OfType<UserResponse>().Single().Id);
         }
 
