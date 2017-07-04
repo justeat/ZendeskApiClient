@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Models.Responses;
+using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
@@ -59,7 +60,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var identities = state.Identities.Where(x => x.Key.Item1 == userId).Select(x => x.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UserIdentitiesResponse { Item = identities });
+                        return resp.WriteAsJson(new UserIdentitiesResponse { Identities = identities });
                     })
                     .MapPost("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {

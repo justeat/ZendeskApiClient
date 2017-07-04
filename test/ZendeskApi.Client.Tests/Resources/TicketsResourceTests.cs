@@ -8,8 +8,10 @@ using Xunit;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Models;
 using System.Collections.Generic;
-using ZendeskApi.Client.Models.Responses;
+using AutoMapper;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Requests;
+using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests.Resources
@@ -91,13 +93,13 @@ namespace ZendeskApi.Client.Tests.Resources
                 OrganisationId = 16230
             };
 
-            await CreateTickets(ticket1, ticket2, ticket3);
+            var ticketsCreated = await CreateTickets(ticket1, ticket2, ticket3);
 
             var tickets = (await _resource.ListForOrganizationAsync(16230L)).ToArray();
 
             Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticket3), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[0]), JsonConvert.SerializeObject(tickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[2]), JsonConvert.SerializeObject(tickets[1]));
         }
         [Fact]
         public async Task ShouldListAllForRequestedUserTickets()
@@ -131,17 +133,17 @@ namespace ZendeskApi.Client.Tests.Resources
                 }
             };
 
-            await CreateTickets(ticket1, ticket2, ticket3);
+            var ticketsCreated = await CreateTickets(ticket1, ticket2, ticket3);
 
             var tickets = (await _resource.ListRequestedByAsync(10000L)).ToArray();
 
             Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[0]), JsonConvert.SerializeObject(tickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[1]), JsonConvert.SerializeObject(tickets[1]));
         }
 
         [Fact]
-        public async Task ShouldListAllForCCDUserTickets()
+        public async Task ShouldListAllForCcdUserTickets()
         {
             var ticket1 = new TicketCreateRequest("description")
             {
@@ -173,13 +175,13 @@ namespace ZendeskApi.Client.Tests.Resources
                 CollaboratorIds = new System.Collections.Generic.List<long> { 2293 }
             };
 
-            await CreateTickets(ticket1, ticket2, ticket3);
+            var ticketsCrearted = await CreateTickets(ticket1, ticket2, ticket3);
 
             var tickets = (await _resource.ListCcdAsync(2293L)).ToArray();
 
             Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticket2), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticket3), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(JsonConvert.SerializeObject(ticketsCrearted[1]), JsonConvert.SerializeObject(tickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(ticketsCrearted[2]), JsonConvert.SerializeObject(tickets[1]));
         }
 
 
@@ -215,13 +217,13 @@ namespace ZendeskApi.Client.Tests.Resources
                 AssigneeId = 2233
             };
 
-            await CreateTickets(ticket1, ticket2, ticket3);
+            var ticketsCreated = await CreateTickets(ticket1, ticket2, ticket3);
 
             var tickets = (await _resource.ListAssignedToAsync(2233L)).ToArray();
 
             Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticket1), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticket3), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[0]), JsonConvert.SerializeObject(tickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[2]), JsonConvert.SerializeObject(tickets[1]));
         }
 
         [Fact]
@@ -266,7 +268,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public Task ShouldThrowErrorWhenNot201()
         {
-            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateAsync(
+            return Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(
                 new TicketCreateRequest("description")
                 {
                     Subject = "My printer is no longer on fire!",
@@ -278,30 +280,6 @@ namespace ZendeskApi.Client.Tests.Resources
                 }));
 
             // could use tags to simulate httpstatus codes in fake client?
-        }
-
-        [Fact]
-        public async Task ShouldJobWhenCreatingMultipleTicket()
-        {
-            var response = await _resource.CreateAsync(
-                new[] {
-                        new TicketCreateRequest("description is required") {
-                            Subject = "My printer is on fire!",
-                            Comment = new TicketComment
-                            {
-                                Body = "The smoke is very colorful."
-                            }
-                        },
-                        new TicketCreateRequest("description is required") {
-                            Subject = "My printer is somehow on fire again!",
-                            Comment = new TicketComment
-                            {
-                                Body = "The smoke is not very colorful."
-                            }
-                        }
-                    });
-            
-            Assert.NotNull(response.Id);
         }
         
         [Fact]

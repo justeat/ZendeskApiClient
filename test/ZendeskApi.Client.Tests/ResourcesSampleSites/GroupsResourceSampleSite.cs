@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Models.Responses;
+using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.Extensions;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests
@@ -37,7 +38,7 @@ namespace ZendeskApi.Client.Tests
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupsResponse { Item = groups });
+                        return resp.WriteAsJson(new GroupsResponse { Groups = groups });
                     })
                     .MapGet("api/v2/groups/{id}", (req, resp, routeData) =>
                     {
@@ -61,7 +62,7 @@ namespace ZendeskApi.Client.Tests
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupsResponse { Item = state.Groups.Values });
+                        return resp.WriteAsJson(new GroupsResponse { Groups = state.Groups.Values });
                     })
                     .MapGet("api/v2/users/{id}/groups", (req, resp, routeData) =>
                     {
@@ -75,7 +76,7 @@ namespace ZendeskApi.Client.Tests
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupsResponse { Item = groups });
+                        return resp.WriteAsJson(new GroupsResponse { Groups = groups });
                     })
                     .MapPost("api/v2/groups", (req, resp, routeData) =>
                     {

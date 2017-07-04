@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Models.Responses;
+using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.Extensions;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests
@@ -39,7 +40,7 @@ namespace ZendeskApi.Client.Tests
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new SearchResultsResponse {
-                            Item = obj,
+                            Results = obj,
                             Count = obj.Length,
                             NextPage = new Uri("https://foo.zendesk.com/api/v2/search.json?query=\"type:Group hello\"&sort_by=created_at&sort_order=desc&page=2")
                         });
