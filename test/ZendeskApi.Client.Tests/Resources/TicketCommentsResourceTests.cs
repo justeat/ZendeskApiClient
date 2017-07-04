@@ -8,7 +8,7 @@ using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
-    public class TicketCommentsResourceTests
+ /*   public class TicketCommentsResourceTests
     {
         private readonly IZendeskApiClient _client;
         private readonly TicketCommentsResource _resource;
@@ -24,7 +24,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetAllCommentsForTicket()
         {
-            var ticket = new TicketResponse(); // await _ticketResource.CreateAsync(new TicketResponse { /*Subject = "Test 1"*/ });
+            var ticket = new TicketResponse(); // await _ticketResource.CreateAsync(new TicketResponse { /*Subject = "Test 1" });
 
             var comments = await _resource.GetAllAsync(ticket.Id);
             Assert.Empty(comments);
@@ -45,5 +45,5 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.NotNull(comments.ElementAt(1).Id);
             Assert.Equal("Hi there! im a second comment...", comments.ElementAt(1).Body);
         }
-    }
+    }*/
 }
