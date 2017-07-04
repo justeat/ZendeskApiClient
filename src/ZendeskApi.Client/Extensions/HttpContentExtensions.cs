@@ -2,9 +2,8 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ZendeskApi.Client.Converters;
 
-namespace ZendeskApi.Client
+namespace ZendeskApi.Client.Extensions
 {
     public static class HttpContentExtensions
     {

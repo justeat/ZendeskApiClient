@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+using System.Net.Http;
+using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
 
-namespace System.Net.Http
+namespace ZendeskApi.Client.Extensions
 {
     public static class HttpClientExtensions
     {

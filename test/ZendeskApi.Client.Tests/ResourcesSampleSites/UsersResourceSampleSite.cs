@@ -9,18 +9,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
-using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
-namespace ZendeskApi.Client.Tests
+namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
     public class UsersResourceSampleSite : SampleSite
     {
         private class State
         {
-            public IDictionary<long, User> Users = new Dictionary<long, User>();
+            public readonly IDictionary<long, User> Users = new Dictionary<long, User>();
         }
         
         public static Action<IRouteBuilder> MatchesRequest

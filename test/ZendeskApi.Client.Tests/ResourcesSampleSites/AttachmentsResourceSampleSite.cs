@@ -14,9 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Tests.Extensions;
-using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
-namespace ZendeskApi.Client.Tests
+namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
     public class AttachmentsResourceSampleSite : SampleSite
     {
