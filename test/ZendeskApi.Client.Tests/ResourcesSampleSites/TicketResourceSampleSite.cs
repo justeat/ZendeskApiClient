@@ -146,7 +146,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/tickets", (req, resp, routeData) =>
                     {
-                        var ticketRequest = req.Body.ReadAs<TicketRequestSingleWrapper<TicketCreateRequest>>();
+                        var ticketRequest = req.Body.ReadAs<TicketRequest<TicketCreateRequest>>();
                         var ticket = ticketRequest.Ticket;
 
                         if (ticket.Tags?.Contains("error") ?? false)
@@ -155,7 +155,8 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return resp.WriteAsJson(new object());
                         }
 
-                        var ticketResponse = Mapper.Map<TicketResponse>(ticket);
+                        var mapper = req.HttpContext.RequestServices.GetRequiredService<IMapper>();
+                        var ticketResponse = mapper.Map<TicketResponse>(ticket);
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
                         ticketResponse.Id = long.Parse(Rand.Next().ToString());
@@ -181,13 +182,14 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return resp.WriteAsJson(new object());
                         }
 
-                        var ticketRequestWrapper = req.Body.ReadAs<TicketRequestSingleWrapper<TicketUpdateRequest>>();
+                        var ticketRequestWrapper = req.Body.ReadAs<TicketRequest<TicketUpdateRequest>>();
                         var ticketRequest = ticketRequestWrapper.Ticket;
 
                         HandleTicketComment(ticketRequest.Comment, state, ticketRequest.Id);
 
                         var ticketResponse = state.Tickets[id];
-                        Mapper.Map(ticketRequest, ticketResponse);
+                        var mapper = req.HttpContext.RequestServices.GetRequiredService<IMapper>();
+                        mapper.Map(ticketRequest, ticketResponse);
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
                         return resp.WriteAsJson(ticketResponse);
@@ -232,16 +234,16 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
         
         public TicketResourceSampleSite(string resource)
         {
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<TicketCreateRequest, TicketResponse>();
-                cfg.CreateMap<TicketUpdateRequest, TicketResponse>();
-            });
-
+           
             var webhostbuilder = new WebHostBuilder();
             webhostbuilder
                 .ConfigureServices(services => {
                     services.AddSingleton(_ => new State());
+                    services.AddSingleton(_ => new MapperConfiguration(cfg =>
+                        {
+                            cfg.CreateMap<TicketCreateRequest, TicketResponse>();
+                            cfg.CreateMap<TicketUpdateRequest, TicketResponse>();
+                        }).CreateMapper());
                     services.AddRouting();
                     services.AddMemoryCache();
                 })

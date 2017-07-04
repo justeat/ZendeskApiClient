@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        if (!state.Identities.Any(x => x.Key.Item1 == userId))
+                        if (state.Identities.All(x => x.Key.Item1 != userId))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;

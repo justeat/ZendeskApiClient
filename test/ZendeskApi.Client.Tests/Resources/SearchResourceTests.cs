@@ -29,7 +29,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(1, results.OfType<TicketResponse>().Single().Id);
             Assert.Equal(3, results.OfType<Organization>().Single().Id);
            // Assert.Equal(2, results.OfType<Group>().Single().Id);
-            Assert.Equal(4, results.OfType<User>().Single().Id);
+            Assert.Equal(4, results.OfType<UserResponse>().Single().Id);
         }
 
         [Fact]

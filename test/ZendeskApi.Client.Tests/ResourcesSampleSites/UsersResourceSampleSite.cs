@@ -4,13 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
-using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
@@ -20,7 +21,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
     {
         private class State
         {
-            public readonly IDictionary<long, User> Users = new Dictionary<long, User>();
+            public readonly IDictionary<long, UserResponse> Users = new Dictionary<long, UserResponse>();
         }
         
         public static Action<IRouteBuilder> MatchesRequest
@@ -32,7 +33,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        var users = Enumerable.Empty<User>();
+                        var users = Enumerable.Empty<UserResponse>();
 
                         if (req.Query.ContainsKey("ids"))
                         {
@@ -42,12 +43,16 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         if (req.Query.ContainsKey("external_ids"))
                         {
-                            var ids = req.Query["external_ids"].ToString().Split(',').Where(x => !string.IsNullOrWhiteSpace(x));
+                            var ids = req.Query["external_ids"].ToString().Split(',')
+                                .Where(x => !string.IsNullOrWhiteSpace(x));
                             users = state.Users.Where(x => ids.Contains(x.Value.ExternalId)).Select(p => p.Value);
                         }
-                        
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UsersResponse { Users = users });
+
+                        resp.StatusCode = (int) HttpStatusCode.OK;
+                        return resp.WriteAsJson(new UsersListResponse
+                        {
+                            Users = users
+                        });
                     })
                     .MapGet("api/v2/users/{id}", (req, resp, routeData) =>
                     {
@@ -57,21 +62,24 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         if (!state.Users.ContainsKey(id))
                         {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
+                            resp.StatusCode = (int) HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var user = state.Users.Single(x => x.Key == id).Value;
+                        var user = state.Users[id];
 
-                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.StatusCode = (int) HttpStatusCode.OK;
                         return resp.WriteAsJson(user);
                     })
                     .MapGet("api/v2/users", (req, resp, routeData) =>
                     {
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UsersResponse { Users = state.Users.Values });
+                        resp.StatusCode = (int) HttpStatusCode.OK;
+                        return resp.WriteAsJson(new UsersListResponse
+                        {
+                            Users = state.Users.Values
+                        });
                     })
                     .MapGet("api/v2/groups/{id}/users", (req, resp, routeData) =>
                     {
@@ -84,8 +92,11 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Where(x => x.Value.DefaultGroupId == id)
                             .Select(p => p.Value);
 
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UsersResponse { Users = users });
+                        resp.StatusCode = (int) HttpStatusCode.OK;
+                        return resp.WriteAsJson(new UsersListResponse
+                        {
+                            Users = users
+                        });
                     })
                     .MapGet("api/v2/organizations/{id}/users", (req, resp, routeData) =>
                     {
@@ -99,47 +110,54 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Where(x => x.Value.OrganizationId == id)
                             .Select(p => p.Value);
 
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UsersResponse { Users = users });
+                        resp.StatusCode = (int) HttpStatusCode.OK;
+                        return resp.WriteAsJson(new UsersListResponse
+                        {
+                            Users = users
+                        });
                     })
                     .MapPost("api/v2/users", (req, resp, routeData) =>
                     {
-                        var user = req.Body.ReadAs<User>();
+                        var user = req.Body.ReadAs<UserRequest<UserCreateRequest>>().User;
 
                         if (user.Tags != null && user.Tags.Contains("error"))
                         {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
+                            resp.StatusCode = (int) HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
 
                             return Task.CompletedTask;
                         }
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var mapper = req.HttpContext.RequestServices.GetRequiredService<IMapper>();
 
-                        user.Id = long.Parse(Rand.Next().ToString());
-                        user.Url = new Uri("https://company.zendesk.com/api/v2/users/" + user.Id + ".json");
-                        state.Users.Add(user.Id.Value, user);
+                        var userNew = mapper.Map<UserResponse>(user);
 
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(user);
+                        userNew.Id = long.Parse(Rand.Next().ToString());
+                        userNew.Url = new Uri($"https://company.zendesk.com/api/v2/users/{userNew.Id}.json");
+                        state.Users.Add(userNew.Id, userNew);
+
+                        resp.StatusCode = (int) HttpStatusCode.Created;
+                        return resp.WriteAsJson(userNew);
                     })
                     .MapPut("api/v2/users/{id}", (req, resp, routeData) =>
                     {
-                        var user = req.Body.ReadAs<User>();
+                        var user = req.Body.ReadAs<UserRequest<UserUpdateRequest>>().User;
 
                         var id = long.Parse(routeData.Values["id"].ToString());
 
                         if (user.Tags != null && user.Tags.Contains("error"))
                         {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
+                            resp.StatusCode = (int) HttpStatusCode.BadRequest;
 
                             return Task.CompletedTask;
                         }
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        
+                        var mapper = req.HttpContext.RequestServices.GetRequiredService<IMapper>();
+                        mapper.Map(user, state.Users[id]);
 
-                        state.Users[id] = user;
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
+                        resp.StatusCode = (int) HttpStatusCode.Created;
                         return resp.WriteAsJson(user);
                     })
                     .MapDelete("api/v2/users/{id}", (req, resp, routeData) =>
@@ -150,10 +168,9 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         state.Users.Remove(id);
 
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
+                        resp.StatusCode = (int) HttpStatusCode.NoContent;
                         return Task.CompletedTask;
-                    })
-                    ;
+                    });
             }
         }
 
@@ -167,7 +184,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             var webhostbuilder = new WebHostBuilder();
             webhostbuilder
                 .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
+                    services.AddSingleton(_ => new State());
+                    services.AddSingleton(_ => new MapperConfiguration(cfg =>
+                    {
+                        cfg.CreateMap<UserUpdateRequest, UserResponse>();
+                        cfg.CreateMap<UserCreateRequest, UserResponse>();
+                    }).CreateMapper());
                     services.AddRouting();
                     services.AddMemoryCache();
                 })
@@ -182,7 +204,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             RefreshClient(resource);
         }
 
-        public override void RefreshClient(string resource)
+        public sealed override void RefreshClient(string resource)
         {
             _client = _server.CreateClient();
             _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
@@ -192,13 +214,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
         {
             resource = resource?.Trim('/');
 
-            return resource != null ? resource + "/" : resource;
+            return resource != null ? resource + "/" : "";
         }
 
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
+        public Uri BaseUri => Client.BaseAddress;
 
         public override void Dispose()
         {

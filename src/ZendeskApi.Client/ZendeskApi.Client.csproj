@@ -6,6 +6,10 @@
     <TargetFramework>netstandard1.3</TargetFramework>
     <Description>A Zendesk Api Client for use with the ZendeskApi v2</Description>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="Requests\UserUpdateRequest.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="1.1.2" />

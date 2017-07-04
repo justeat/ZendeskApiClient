@@ -26,7 +26,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             new TicketResponse { Id = 1, Url = new Uri("https://company.zendesk.com/api/v2/tickets/1.json") },
                             new Group { Id = 2, Url = new Uri("https://company.zendesk.com/api/v2/groups/2.json") },
                             new Organization { Id = 3, Url = new Uri("https://company.zendesk.com/api/v2/organizations/3.json") },
-                            new User { Id = 4, Url = new Uri("https://company.zendesk.com/api/v2/users/4.json") }};
+                            new UserResponse { Id = 4, Url = new Uri("https://company.zendesk.com/api/v2/users/4.json") }};
 
                         if (req.Query.ContainsKey("query") && !string.IsNullOrEmpty(req.Query["query"][0])) {
                             var query = req.Query["query"][0].Split(':');

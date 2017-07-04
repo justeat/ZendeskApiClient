@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Requests
 {
-    internal class TicketRequestManyWrapper<T>
+    internal class TicketListRequest<T>
     {
-        public TicketRequestManyWrapper(IEnumerable<T> tickets)
+        public TicketListRequest(IEnumerable<T> tickets)
         {
             Tickets = tickets;
         }

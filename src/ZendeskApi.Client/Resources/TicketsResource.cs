@@ -198,7 +198,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "CreateAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, new TicketRequestSingleWrapper<TicketCreateRequest>(ticket)).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(ResourceUri, new TicketRequest<TicketCreateRequest>(ticket)).ConfigureAwait(false);
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
@@ -218,7 +218,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "CreateAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PostAsJsonAsync("create_many", new TicketRequestManyWrapper<TicketCreateRequest>(tickets)).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync("create_many", new TicketListRequest<TicketCreateRequest>(tickets)).ConfigureAwait(false);
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
@@ -241,7 +241,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "UpdateAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync(ticket.Id.ToString(), new TicketRequestSingleWrapper<TicketUpdateRequest>(ticket)).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(ticket.Id.ToString(), new TicketRequest<TicketUpdateRequest>(ticket)).ConfigureAwait(false);
 
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
@@ -266,7 +266,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync("update_many", new TicketRequestManyWrapper<TicketUpdateRequest>(tickets)).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync("update_many", new TicketListRequest<TicketUpdateRequest>(tickets)).ConfigureAwait(false);
 
                 if (!response.IsSuccessStatusCode)
                 {

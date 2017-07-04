@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    _logger.LogInformation("User {0} not found", userId);
+                    _logger.LogInformation("UserResponse {0} not found", userId);
                     return null;
                 }
 
