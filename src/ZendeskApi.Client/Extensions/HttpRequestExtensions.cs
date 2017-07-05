@@ -4,19 +4,17 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ZendeskApi.Client.Converters;
 
 namespace ZendeskApi.Client.Extensions
 {
     public static class HttpRequestExtensions
     {
         private static JsonSerializerSettings DefaultJsonSettings<T>() {
-            var settings = new JsonSerializerSettings()
+            var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
             };
-
-            //settings.Converters.Add(new SingularJsonConverter<T>());
+            
             return settings;
         }
 
@@ -54,7 +52,7 @@ namespace ZendeskApi.Client.Extensions
             Stream inputStream,
             string fileName)
         {
-            using (var content = new MultipartFormDataContent()) // hmm
+            using (var content = new MultipartFormDataContent()) 
             {
                 content.Add(new StreamContent(inputStream), fileName, fileName);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/binary");

@@ -1,13 +1,14 @@
 using System;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Converters;
 
 namespace ZendeskApi.Client.Responses
 {
     /// <summary>
     /// <see href="https://developer.zendesk.com/rest_api/docs/core/groups#json-format">Group Response Format</see>
     /// </summary>
-    [JsonObject("group")]
-    public class GroupResponse : ISearchResponse
+    [SearchResultType("group")]
+    public class GroupResponse : ISearchResult
     {
         /// <summary>
         /// Automatically assigned when creating groups
@@ -45,7 +46,8 @@ namespace ZendeskApi.Client.Responses
         [JsonProperty("updated_at")]
         public DateTime UpdatedAt { get; internal set; }
 
+       
         [JsonProperty("result_type")]
-        string ISearchResponse.Type => "group";
+        internal string ResultType => "group";
     }
 }

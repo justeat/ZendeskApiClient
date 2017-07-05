@@ -8,7 +8,7 @@ namespace ZendeskApi.Client.Resources
 {
     public interface ISearchResource
     {
-        Task<SearchResponse<ISearchResponse>> SearchAsync(Action<IZendeskQuery> builder, PagerParameters pager = null);
-        Task<SearchResponse<T>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null) where T : ISearchResponse;
+        Task<SearchResponse<ISearchResult>> SearchAsync(Action<IZendeskQuery> builder, PagerParameters pager = null);
+        Task<SearchResponse<T>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null) where T : ISearchResult;
     }
 }

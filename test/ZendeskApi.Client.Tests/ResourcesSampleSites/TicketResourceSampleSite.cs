@@ -39,7 +39,8 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var tickets = state
                             .Tickets
-                            .Where(x => ids.Contains(x.Key)).Select(p => p.Value)
+                            .Where(x => ids.Contains(x.Key))
+                            .Select(p => p.Value)
                             .Skip(pager.GetStartIndex())
                             .Take(pager.PageSize);
 

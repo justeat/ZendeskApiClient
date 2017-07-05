@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Converters;
 using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
 {
-    [JsonObject("user")]
-    public class UserResponse : ISearchResponse
+    [SearchResultType("user")]
+    public class UserResponse : ISearchResult
     {
         /// <summary>
         /// Automatically assigned when the user is created
@@ -209,7 +210,8 @@ namespace ZendeskApi.Client.Responses
         [JsonProperty("verified")]
         public bool Verified { get; internal set; }
 
+
         [JsonProperty("result_type")]
-        string ISearchResponse.Type => "user";
+        internal string ResultType => "user";
     }
 }

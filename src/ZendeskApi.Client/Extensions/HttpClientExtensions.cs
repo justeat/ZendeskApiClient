@@ -6,8 +6,7 @@ namespace ZendeskApi.Client.Extensions
 {
     public static class HttpClientExtensions
     {
-        public static Task<HttpResponseMessage> GetAsync(
-            this HttpClient client, string requestUri, PagerParameters parameters = null)
+        public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, PagerParameters parameters = null)
         {
             var pager = new Pager(parameters?.Page, parameters?.PageSize, 100);
 

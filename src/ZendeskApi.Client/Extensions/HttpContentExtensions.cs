@@ -32,9 +32,11 @@ namespace ZendeskApi.Client.Extensions
             using (var reader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(reader))
             {
-                var jsonSerializer = new JsonSerializer();
-                jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
-               // jsonSerializer.Converters.Insert(0, new SingularJsonConverter<T>());
+                var jsonSerializer = new JsonSerializer
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
+
                 return jsonSerializer.Deserialize<T>(jsonReader);
             }
         }

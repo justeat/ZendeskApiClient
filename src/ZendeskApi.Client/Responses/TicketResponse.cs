@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Converters;
 using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
 {
-    [JsonObject("ticket")]
-    public class TicketResponse : ISearchResponse
+    [SearchResultType("ticket")]
+    public class TicketResponse : ISearchResult
     {
         /// <summary>
         /// Automatically assigned when creating tickets
@@ -200,8 +201,9 @@ namespace ZendeskApi.Client.Responses
         /// </summary>
         [JsonProperty("updated_at")]
         public DateTime UpdatedAt { get; internal set; }
-        
+
+
         [JsonProperty("result_type")]
-        string ISearchResponse.Type => typeof(TicketResponse).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id;
+        internal string ResultType => "ticket";
     }
 }
