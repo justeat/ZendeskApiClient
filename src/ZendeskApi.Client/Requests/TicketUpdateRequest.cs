@@ -119,7 +119,8 @@ namespace ZendeskApi.Client.Requests
         /// An array of the custom field objects consisting of ids and values. Any tags defined with the custom field replace existing tags
         /// </summary>
         [JsonProperty("custom_fields")]
-        public IList<CustomField> CustomFields { get; set; }
+        [JsonConverter(typeof(CustomFields))]
+        public ICustomFields CustomFields { get; set; }
 
         /// <summary>
         /// Datetime of last update received from API. See <c>SafeUpdate</c> param

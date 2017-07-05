@@ -72,7 +72,8 @@ namespace ZendeskApi.Client.Requests
         public long? FormId { get; set; }
 
         [JsonProperty("custom_fields")]
-        public IList<CustomField> CustomFields { get; set; }
+        [JsonConverter(typeof(CustomFields))]
+        public ICustomFields CustomFields { get; set; }
 
         [JsonProperty("via_followup_source_id")]
         public long? ViaFollowupSourceId { get; set; }

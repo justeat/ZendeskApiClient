@@ -146,7 +146,8 @@ namespace ZendeskApi.Client.Responses
         /// The custom fields of the ticket
         /// </summary>
         [JsonProperty("custom_fields")]
-        public IReadOnlyList<CustomField> CustomFields { get; internal set; }
+        [JsonConverter(typeof(CustomFields))]
+        public IReadOnlyCustomFields CustomFields { get; internal set; }
 
         /// <summary>
         /// The satisfaction rating of the ticket, if it exists, or the state of satisfaction, 'offered' or 'unoffered'
