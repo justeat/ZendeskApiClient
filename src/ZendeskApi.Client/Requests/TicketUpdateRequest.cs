@@ -119,7 +119,6 @@ namespace ZendeskApi.Client.Requests
         /// An array of the custom field objects consisting of ids and values. Any tags defined with the custom field replace existing tags
         /// </summary>
         [JsonProperty("custom_fields")]
-        [JsonConverter(typeof(CustomFields))]
         public ICustomFields CustomFields { get; set; }
 
         /// <summary>

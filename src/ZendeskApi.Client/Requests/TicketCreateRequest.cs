@@ -15,13 +15,13 @@ namespace ZendeskApi.Client.Requests
             Description = description;
         }
 
-        [JsonProperty("description", Required = Required.DisallowNull)]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
         [JsonProperty("subject")]
         public string Subject { get; set; }
 
-        [JsonProperty("comment", Required = Required.DisallowNull)]
+        [JsonProperty("comment")]
         public TicketComment Comment { get; set; }
 
         [JsonProperty("requester_id")]
@@ -72,7 +72,6 @@ namespace ZendeskApi.Client.Requests
         public long? FormId { get; set; }
 
         [JsonProperty("custom_fields")]
-        [JsonConverter(typeof(CustomFields))]
         public ICustomFields CustomFields { get; set; }
 
         [JsonProperty("via_followup_source_id")]
