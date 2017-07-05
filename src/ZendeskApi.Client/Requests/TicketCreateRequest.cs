@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Converters;
 using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Requests
@@ -72,6 +73,7 @@ namespace ZendeskApi.Client.Requests
         public long? FormId { get; set; }
 
         [JsonProperty("custom_fields")]
+        [JsonConverter(typeof(CustomFieldsConverter))]
         public ICustomFields CustomFields { get; set; }
 
         [JsonProperty("via_followup_source_id")]

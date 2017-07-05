@@ -146,6 +146,7 @@ namespace ZendeskApi.Client.Responses
         /// The custom fields of the ticket
         /// </summary>
         [JsonProperty("custom_fields")]
+        [JsonConverter(typeof(CustomFieldsConverter))]
         public IReadOnlyCustomFields CustomFields { get; internal set; }
 
         /// <summary>

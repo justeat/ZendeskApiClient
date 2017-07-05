@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -9,14 +8,6 @@ using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Converters
 {
-    internal class SearchResultTypeAttribute : Attribute {
-        public string ResultType { get; }
-
-        public SearchResultTypeAttribute(string resultType)
-        {
-            ResultType = resultType;
-        }
-    }
     public class SearchJsonConverter : JsonConverter
     {
         private static readonly Type[] DeserializableSearchTypes =
