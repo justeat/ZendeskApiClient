@@ -2,6 +2,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Client.Extensions
 {
@@ -34,7 +35,8 @@ namespace ZendeskApi.Client.Extensions
             {
                 var jsonSerializer = new JsonSerializer
                 {
-                    NullValueHandling = NullValueHandling.Ignore
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Converters = { new StringEnumConverter() }
                 };
 
                 return jsonSerializer.Deserialize<T>(jsonReader);

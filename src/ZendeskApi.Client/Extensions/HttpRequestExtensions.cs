@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Client.Extensions
 {
@@ -13,6 +14,7 @@ namespace ZendeskApi.Client.Extensions
             var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
+                Converters = { new StringEnumConverter() }
             };
             
             return settings;
