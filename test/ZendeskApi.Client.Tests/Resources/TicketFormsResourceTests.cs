@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests.Resources
 {

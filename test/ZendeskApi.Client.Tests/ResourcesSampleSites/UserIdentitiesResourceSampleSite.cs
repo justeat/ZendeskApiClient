@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
@@ -50,7 +52,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        if (!state.Identities.Any(x => x.Key.Item1 == userId))
+                        if (state.Identities.All(x => x.Key.Item1 != userId))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
@@ -59,7 +61,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var identities = state.Identities.Where(x => x.Key.Item1 == userId).Select(x => x.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UserIdentitiesResponse { Item = identities });
+                        return resp.WriteAsJson(new UserIdentitiesResponse { Identities = identities });
                     })
                     .MapPost("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
@@ -76,7 +78,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        identity.Id = long.Parse(RAND.Next().ToString());
+                        identity.Id = long.Parse(Rand.Next().ToString());
                         state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
@@ -97,7 +99,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        identity.Id = long.Parse(RAND.Next().ToString());
+                        identity.Id = long.Parse(Rand.Next().ToString());
                         state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;

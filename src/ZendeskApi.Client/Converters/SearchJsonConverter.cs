@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -11,39 +10,43 @@ namespace ZendeskApi.Client.Converters
 {
     public class SearchJsonConverter : JsonConverter
     {
-        private static Type[] DeserializableSearchTypes =
-            new Type[] { typeof(Ticket), typeof(User), typeof(Group), typeof(Organization) /*, typeof(Topic) */ }; // TODO: Introduce Topics?
+        private static readonly Type[] DeserializableSearchTypes =
+        {
+            typeof(TicketResponse),
+            typeof(UserResponse),
+            typeof(GroupResponse),
+            typeof(Organization)
+        };
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(SearchResultsResponse) == objectType;
+            return objectType.IsConstructedGenericType && objectType.GetGenericTypeDefinition() == typeof(SearchResponse<>).GetGenericTypeDefinition();
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var keys = DeserializableSearchTypes.ToDictionary(k =>
-                k.GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id,
-                v => v);
+            var resultTypes = DeserializableSearchTypes.ToDictionary(
+                k => k.GetTypeInfo().GetCustomAttribute<SearchResultTypeAttribute>().ResultType,
+                v => v
+            );
 
             var token = serializer
                 .Deserialize<JObject>(reader);
             
-            var results = new List<ISearchResult>();
-
-            foreach (var result in token.SelectToken("results").Children())
-            {
-                results.Add((ISearchResult)result.ToObject(keys[result.Value<string>("result_type")]));
-            }
+            var results = token.SelectToken("results")
+                .Children()
+                .Select(result => (ISearchResult) result.ToObject(resultTypes[result.Value<string>("result_type")]))
+                .ToList();
 
             var nextPage = token.Value<string>("next_page");
             var previousPage = token.Value<string>("previous_page");
 
-            return new SearchResultsResponse
+            return new SearchResponse<ISearchResult>
             {
                 Count = token.Value<int>("count"),
                 NextPage = nextPage != null ? new Uri(nextPage) : null,
                 PreviousPage = previousPage != null ? new Uri(previousPage) : null,
-                Item = results
+                Results = results
             };
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
-using ZendeskApi.Client.Tests.ResourcesSampleSites;
+using ZendeskApi.Client.Tests.Extensions;
 
-namespace ZendeskApi.Client.Tests
+namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
     public class SearchResourceSampleSite : SampleSite
     {
@@ -23,25 +23,27 @@ namespace ZendeskApi.Client.Tests
                     .MapGet("api/v2/search", (req, resp, routeData) =>
                     {
                         var obj = new ISearchResult[] {
-                            new Ticket { Id = 1, Url = new Uri("https://company.zendesk.com/api/v2/tickets/1.json") },
-                            new Group { Id = 2, Url = new Uri("https://company.zendesk.com/api/v2/groups/2.json") },
+                            new TicketResponse { Id = 1, Url = new Uri("https://company.zendesk.com/api/v2/tickets/1.json") },
+                            new GroupResponse { Id = 2, Url = new Uri("https://company.zendesk.com/api/v2/groups/2.json") },
                             new Organization { Id = 3, Url = new Uri("https://company.zendesk.com/api/v2/organizations/3.json") },
-                            new User { Id = 4, Url = new Uri("https://company.zendesk.com/api/v2/users/4.json") }};
+                            new UserResponse { Id = 4, Url = new Uri("https://company.zendesk.com/api/v2/users/4.json") }
+                        };
 
                         if (req.Query.ContainsKey("query") && !string.IsNullOrEmpty(req.Query["query"][0])) {
                             var query = req.Query["query"][0].Split(':');
 
                             if (query[1] == "ticket")
                             {
-                                obj = obj.OfType<Ticket>().ToArray();
+                                obj = obj.OfType<TicketResponse>().ToArray();
                             }
                         }
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new SearchResultsResponse {
-                            Item = obj,
+                        return resp.WriteAsJson(new SearchResponse<ISearchResult>
+                        {
+                            Results = obj,
                             Count = obj.Length,
-                            NextPage = new Uri("https://foo.zendesk.com/api/v2/search.json?query=\"type:Group hello\"&sort_by=created_at&sort_order=desc&page=2")
+                            NextPage = new Uri("https://foo.zendesk.com/api/v2/search.json?query=\"type:GroupResponse hello\"&sort_by=created_at&sort_order=desc&page=2")
                         });
                     });
             }
@@ -70,7 +72,7 @@ namespace ZendeskApi.Client.Tests
             RefreshClient(resource);
         }
 
-        public override void RefreshClient(string resource)
+        public sealed override void RefreshClient(string resource)
         {
             _client = _server.CreateClient();
             _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
@@ -80,13 +82,10 @@ namespace ZendeskApi.Client.Tests
         {
             resource = resource?.Trim('/');
 
-            return resource != null ? resource + "/" : resource;
+            return resource != null ? resource + "/" : "";
         }
 
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
+        public Uri BaseUri => Client.BaseAddress;
 
         public override void Dispose()
         {

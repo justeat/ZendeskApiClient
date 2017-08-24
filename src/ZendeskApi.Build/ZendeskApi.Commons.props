@@ -22,7 +22,7 @@
   </PropertyGroup>
   <PropertyGroup>
       <Major>3</Major>
-      <Minor>0</Minor>
+      <Minor>1</Minor>
       <Revision>0</Revision>
 
       <BuildNumber Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">$(APPVEYOR_BUILD_NUMBER)</BuildNumber>
@@ -30,7 +30,7 @@
       <BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
 
       <!-- Remove for release -->
-      <PrereleaseLabel>-beta</PrereleaseLabel>
+      <PrereleaseLabel>-alpha</PrereleaseLabel>
 
       <BuildSuffix Condition=" '$(PrereleaseLabel)' != '' ">$(PrereleaseLabel)-$(BuildNumber)</BuildSuffix>
       <BuildSuffix Condition=" '$(BuildSuffix)' == '' "></BuildSuffix>

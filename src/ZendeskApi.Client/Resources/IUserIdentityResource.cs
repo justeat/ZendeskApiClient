@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
 

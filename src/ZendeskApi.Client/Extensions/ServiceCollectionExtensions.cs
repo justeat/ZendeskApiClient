@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Options;
 
-namespace ZendeskApi.Client
+namespace ZendeskApi.Client.Extensions
 {
     public static class ServiceCollectionExtensions
     {

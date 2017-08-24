@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 
@@ -8,6 +8,9 @@ namespace ZendeskApi.Client.Responses
     public class UserIdentitiesResponse : PaginationResponse<UserIdentity>
     {
         [JsonProperty("identities")]
-        public override IEnumerable<UserIdentity> Item { get; set; }
+        public IEnumerable<UserIdentity> Identities { get; set; }
+
+
+        protected override IEnumerable<UserIdentity> Enumerable => Identities;
     }
 }

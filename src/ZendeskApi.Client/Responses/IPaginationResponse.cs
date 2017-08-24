@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -8,7 +8,6 @@ namespace ZendeskApi.Client.Responses
 {
     public interface IPagination<T> : IEnumerable<T>
     {
-        IEnumerable<T> Item { get; set; }
         int Count { get; set; }
         Uri NextPage { get; set; }
         Uri PreviousPage { get; set; }
@@ -16,7 +15,7 @@ namespace ZendeskApi.Client.Responses
 
     public abstract class PaginationResponse<T> : IPagination<T>
     {
-        public abstract IEnumerable<T> Item { get; set; }
+        protected abstract IEnumerable<T> Enumerable { get; }
 
         [JsonProperty("count")]
         public int Count { get; set; } = 0;
@@ -45,12 +44,12 @@ namespace ZendeskApi.Client.Responses
 
         public IEnumerator<T> GetEnumerator()
         {
-            return Item.GetEnumerator();
+            return Enumerable.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return Item.GetEnumerator();
+            return Enumerable.GetEnumerator();
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace ZendeskApi.Client.Models
+namespace ZendeskApi.Client.Responses
 {
     public interface ISearchResult
     {
@@ -8,6 +8,5 @@ namespace ZendeskApi.Client.Models
         DateTime UpdatedAt { get; }
         long Id { get; }
         Uri Url { get; }
-        string Type { get; }
     }
 }

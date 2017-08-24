@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
-using ZendeskApi.Client.Tests.ResourcesSampleSites;
+using ZendeskApi.Client.Tests.Extensions;
 
-namespace ZendeskApi.Client.Tests
+namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
     public class TicketFieldsResourceSampleSite : SampleSite
     {
@@ -48,7 +49,7 @@ namespace ZendeskApi.Client.Tests
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFieldsResponse { Item = state.TicketFields.Values });
+                        return resp.WriteAsJson(new TicketFieldsResponse { TicketFields = state.TicketFields.Values });
                     })
                     .MapPost("api/v2/ticket_fields", (req, resp, routeData) =>
                     {
@@ -63,7 +64,7 @@ namespace ZendeskApi.Client.Tests
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        ticket.Id = long.Parse(RAND.Next().ToString());
+                        ticket.Id = long.Parse(Rand.Next().ToString());
                         state.TicketFields.Add(ticket.Id.Value, ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;

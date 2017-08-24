@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Queries;
 using ZendeskApi.Client.Responses;
@@ -58,12 +59,13 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
+        //TODO: FIx
         public async Task<IPagination<Request>> SearchAsync(IZendeskQuery query, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"SearchAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.GetAsync("search?" + query.WithTypeFilter<Request>().BuildQuery(), pager).ConfigureAwait(false);
+                var response = await client.GetAsync("search?" /*+ query.WithTypeFilter<Request>().BuildQuery()*/, pager).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 

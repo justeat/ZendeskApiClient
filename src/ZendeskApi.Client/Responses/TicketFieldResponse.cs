@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 
@@ -8,6 +8,8 @@ namespace ZendeskApi.Client.Responses
     public class TicketFieldsResponse : PaginationResponse<TicketField>
     {
         [JsonProperty("ticket_fields")]
-        public override IEnumerable<TicketField> Item { get; set; }
+        public IEnumerable<TicketField> TicketFields { get; internal set; }
+
+        protected override IEnumerable<TicketField> Enumerable => TicketFields;
     }
 }

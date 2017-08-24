@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -146,7 +147,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatus> CreateAsync(IEnumerable<OrganizationMembership> organizationMemberships)
+        public async Task<JobStatusResponse> CreateAsync(IEnumerable<OrganizationMembership> organizationMemberships)
         {
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -161,7 +162,7 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
                 }
 
-                return (await response.Content.ReadAsAsync<JobStatus>());
+                return (await response.Content.ReadAsAsync<JobStatusResponse>());
             }
         }
 

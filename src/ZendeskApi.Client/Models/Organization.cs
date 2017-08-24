@@ -1,15 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Converters;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Models
 {
-    [JsonObject("organization")]
+    [SearchResultType("organization")]
     public class Organization : ISearchResult
     {
         [JsonProperty("id")]
-        public long? Id { get; set; }
+        public long Id { get; internal set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -21,10 +22,10 @@ namespace ZendeskApi.Client.Models
         public string Notes { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTime? CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonProperty("updated_at")]
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         [JsonProperty("due_at")]
         public DateTime? Due { get; set; }
@@ -56,12 +57,8 @@ namespace ZendeskApi.Client.Models
         [JsonProperty("group_id")]
         public long GroupId { get; set; }
 
-        DateTime ISearchResult.CreatedAt => CreatedAt.Value;
-        DateTime ISearchResult.UpdatedAt => UpdatedAt.Value;
-        long ISearchResult.Id => Id.Value;
-        Uri ISearchResult.Url => Url;
 
         [JsonProperty("result_type")]
-        string ISearchResult.Type => typeof(Organization).GetTypeInfo().GetCustomAttribute<JsonObjectAttribute>().Id;
+        internal string ResultType => "organization";
     }
 }

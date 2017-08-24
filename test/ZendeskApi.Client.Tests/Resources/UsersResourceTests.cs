@@ -1,34 +1,31 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Resources;
-using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
     public class UsersResourceTests
     {
-        private readonly IZendeskApiClient _client;
         private readonly UsersResource _resource;
 
         public UsersResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new UsersResourceSampleSite(resource));
-            _resource = new UsersResource(_client, NullLogger.Instance);
+            IZendeskApiClient client = new DisposableZendeskApiClient(resource => new UsersResourceSampleSite(resource));
+            _resource = new UsersResource(client, NullLogger.Instance);
         }
-
-        /*
-        Task<User> GetRelatedUsersAsync(long userId);
-         */
 
         [Fact]
         public async Task ShouldGetAllUsers()
         {
             var users = await CreateUsers();
 
-            var objs = (await _resource.GetAllAsync()).ToArray();
+            var objs = (await _resource.ListAsync()).ToArray();
 
             Assert.Equal(2, objs.Length);
             Assert.Equal(JsonConvert.SerializeObject(users[0]), JsonConvert.SerializeObject(objs[0]));
@@ -38,61 +35,61 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetAllUsersInGroup()
         {
-            var obj1 = new User
+            var obj1 = new UserCreateRequest("name")
             {
                 Email = "Fu1@fu.com", 
                 DefaultGroupId = 1
             };
 
-            var obj2 = new User
+            var obj2 = new UserCreateRequest("name")
             {
                 Email = "Fu2@fu.com",
                 DefaultGroupId = 2
             };
 
-            obj1 = await _resource.CreateAsync(obj1);
-            obj2 = await _resource.CreateAsync(obj2);
+            var objr1 = await _resource.CreateAsync(obj1);
+            var objr2 = await _resource.CreateAsync(obj2);
 
-            var obj1Result = (await _resource.GetAllUsersInGroupAsync(1)).ToArray()[0];
-            var obj2Result = (await _resource.GetAllUsersInGroupAsync(2)).ToArray()[0];
+            var obj1Result = (await _resource.ListInGroupAsync(1)).ToArray()[0];
+            var obj2Result = (await _resource.ListInGroupAsync(2)).ToArray()[0];
             
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(obj1Result));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(obj2Result));
+            Assert.Equal(JsonConvert.SerializeObject(objr1), JsonConvert.SerializeObject(obj1Result));
+            Assert.Equal(JsonConvert.SerializeObject(objr2), JsonConvert.SerializeObject(obj2Result));
         }
 
         [Fact]
         public async Task ShouldGetAllUsersInOrganization()
         {
-            var obj1 = new User
+            var obj1 = new UserCreateRequest("name")
             {
                 Email = "Fu1@fu.com",
                 OrganizationId = 18
             };
 
-            var obj2 = new User
+            var obj2 = new UserCreateRequest("name")
             {
                 Email = "Fu2@fu.com",
                 OrganizationId = 12
             };
 
-            obj1 = await _resource.CreateAsync(obj1);
-            obj2 = await _resource.CreateAsync(obj2);
+            var objr1 = await _resource.CreateAsync(obj1);
+            var objr2 = await _resource.CreateAsync(obj2);
 
-            var obj1Result = (await _resource.GetAllUsersInOrganizationAsync(12)).ToArray()[0];
-            var obj2Result = (await _resource.GetAllUsersInOrganizationAsync(18)).ToArray()[0];
+            var obj1Result = (await _resource.ListInOrganizationAsync(12)).ToArray()[0];
+            var obj2Result = (await _resource.ListInOrganizationAsync(18)).ToArray()[0];
 
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(obj2Result));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(obj1Result));
+            Assert.Equal(JsonConvert.SerializeObject(objr1), JsonConvert.SerializeObject(obj2Result));
+            Assert.Equal(JsonConvert.SerializeObject(objr2), JsonConvert.SerializeObject(obj1Result));
         }
 
         [Fact]
         public async Task ShouldGetAllUsersById()
         {
-            var obj1 = await _resource.CreateAsync(new User { Email = "Fu1@fu.com" });
-            var obj2 = await _resource.CreateAsync(new User { Email = "Fu2@fu.com" });
-            var obj3 = await _resource.CreateAsync(new User { Email = "Fu2@fu.com" });
+            var obj1 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu1@fu.com" });
+            var obj2 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu2@fu.com" });
+            var obj3 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu2@fu.com" });
 
-            var objs = (await _resource.GetAllAsync(new[] { obj1.Id.Value, obj3.Id.Value })).ToArray();
+            var objs = (await _resource.ListAsync(new[] { obj1.Id, obj3.Id })).ToArray();
 
             Assert.Equal(2, objs.Length);
             Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
@@ -102,11 +99,11 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task ShouldGetAllUsersByExternalId()
         {
-            var obj1 = await _resource.CreateAsync(new User { Email = "Fu1@fu.com" });
-            var obj2 = await _resource.CreateAsync(new User { Email = "Fu2@fu.com", ExternalId = "ATEST1" });
-            var obj3 = await _resource.CreateAsync(new User { Email = "Fu2@fu.com", ExternalId = "ATEST2" });
+            var obj1 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu1@fu.com" });
+            var obj2 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu2@fu.com", ExternalId = "ATEST1" });
+            var obj3 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu2@fu.com", ExternalId = "ATEST2" });
 
-            var objs = (await _resource.GetAllByExternalIdsAsync(new[] { obj1.ExternalId, obj2.ExternalId, obj3.ExternalId })).ToArray();
+            var objs = (await _resource.ListByExternalIdsAsync(new[] { obj1.ExternalId, obj2.ExternalId, obj3.ExternalId })).ToArray();
 
             Assert.Equal(2, objs.Length);
             Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[0]));
@@ -117,12 +114,12 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldGetUser()
         {
             var user = await _resource.CreateAsync(
-                new User
+                new UserCreateRequest("name")
                 {
                     Email = "Fu1@fu.com"
                 });
 
-            var user2 = await _resource.GetAsync(user.Id.Value);
+            var user2 = await _resource.GetAsync(user.Id);
 
             Assert.Equal(JsonConvert.SerializeObject(user), JsonConvert.SerializeObject(user2));
         }
@@ -131,12 +128,11 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldCreateUser()
         {
             var user = await _resource.CreateAsync(
-                new User
+                new UserCreateRequest("name")
                 {
                     Email = "Fu1@fu.com"
                 });
 
-            Assert.NotNull(user.Id);
             Assert.Equal("Fu1@fu.com", user.Email);
         }
 
@@ -144,7 +140,7 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldUpdateUser()
         {
             var user = await _resource.CreateAsync(
-                new User
+                new UserCreateRequest("name")
                 {
                     Email = "Fu1@fu.com",
                     Name = "Kung Fu Wizard"
@@ -152,50 +148,53 @@ namespace ZendeskApi.Client.Tests.Resources
 
             Assert.Equal("Kung Fu Wizard", user.Name);
 
-            user.Name = "Cheese Master";
+            var updateRequest = new UserUpdateRequest(user.Id)
+            {
+                Name = "Cheese Master"
+            };
 
-            user = await _resource.UpdateAsync(user);
+            var userUpdated = await _resource.UpdateAsync(updateRequest);
 
-            Assert.Equal("Cheese Master", user.Name);
+            Assert.Equal("Cheese Master", userUpdated.Name);
         }
 
         [Fact]
         public async Task ShouldDeleteUser()
         {
             var user = await _resource.CreateAsync(
-                new User
+                new UserCreateRequest("name")
                 {
                     Email = "Fu1@fu.com",
                     Name = "Kung Fu Wizard"
                 });
 
-            var user1 = await _resource.GetAsync(user.Id.Value);
+            var user1 = await _resource.GetAsync(user.Id);
 
             Assert.Equal(JsonConvert.SerializeObject(user), JsonConvert.SerializeObject(user1));
 
-            await _resource.DeleteAsync(user.Id.Value);
+            await _resource.DeleteAsync(user.Id);
 
-            var user2 = await _resource.GetAsync(user.Id.Value);
+            var user2 = await _resource.GetAsync(user.Id);
 
             Assert.Null(user2);
         }
 
-        private async Task<User[]> CreateUsers()
+        private async Task<UserResponse[]> CreateUsers()
         {
-            var obj1 = new User
+            var obj1 = new UserCreateRequest("some name")
             {
                 Email = "Fu1@fu.com"
             };
 
-            var obj2 = new User
+            var obj2 = new UserCreateRequest("some name")
             {
                 Email = "Fu2@fu.com"
             };
 
-            obj1 = await _resource.CreateAsync(obj1);
-            obj2 = await _resource.CreateAsync(obj2);
+            var objr1 = await _resource.CreateAsync(obj1);
+            var objr2 = await _resource.CreateAsync(obj2);
 
-            return new[] { obj1, obj2 };
+            return new[] { objr1, objr2 };
         }
     }
 }

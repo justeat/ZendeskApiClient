@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;

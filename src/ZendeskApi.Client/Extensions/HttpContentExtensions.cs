@@ -1,10 +1,10 @@
-﻿using System.IO;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ZendeskApi.Client.Converters;
+using Newtonsoft.Json.Converters;
 
-namespace ZendeskApi.Client
+namespace ZendeskApi.Client.Extensions
 {
     public static class HttpContentExtensions
     {
@@ -33,9 +33,13 @@ namespace ZendeskApi.Client
             using (var reader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(reader))
             {
-                var ser = new JsonSerializer();
-                ser.Converters.Insert(0, new SingularJsonConverter<T>());
-                return ser.Deserialize<T>(jsonReader);
+                var jsonSerializer = new JsonSerializer
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Converters = { new StringEnumConverter() }
+                };
+
+                return jsonSerializer.Deserialize<T>(jsonReader);
             }
         }
     }

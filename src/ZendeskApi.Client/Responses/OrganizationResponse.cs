@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 
@@ -8,6 +8,8 @@ namespace ZendeskApi.Client.Responses
     public class OrganizationsResponse : PaginationResponse<Organization>
     {
         [JsonProperty("organizations")]
-        public override IEnumerable<Organization> Item { get; set; }
+        public IEnumerable<Organization> Organizations { get; internal set; }
+
+        protected override IEnumerable<Organization> Enumerable => Organizations;
     }
 }

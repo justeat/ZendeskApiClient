@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
-using ZendeskApi.Client.Tests.ResourcesSampleSites;
+using ZendeskApi.Client.Tests.Extensions;
 
-namespace ZendeskApi.Client.Tests
+namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
     public class TicketFormsResourceSampleSite : SampleSite
     {
@@ -36,7 +37,7 @@ namespace ZendeskApi.Client.Tests
                         var obj = state.TicketForms.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFormsResponse { Item = obj });
+                        return resp.WriteAsJson(new TicketFormsResponse { TicketForms = obj });
                     })
                     .MapGet("api/v2/ticket_forms/{id}", (req, resp, routeData) =>
                     {
@@ -60,7 +61,7 @@ namespace ZendeskApi.Client.Tests
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFormsResponse { Item = state.TicketForms.Values });
+                        return resp.WriteAsJson(new TicketFormsResponse { TicketForms = state.TicketForms.Values });
                     })
                     .MapPost("api/v2/ticket_forms", (req, resp, routeData) =>
                     {
@@ -75,7 +76,7 @@ namespace ZendeskApi.Client.Tests
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        obj.Id = long.Parse(RAND.Next().ToString());
+                        obj.Id = long.Parse(Rand.Next().ToString());
                         state.TicketForms.Add(obj.Id.Value, obj);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
