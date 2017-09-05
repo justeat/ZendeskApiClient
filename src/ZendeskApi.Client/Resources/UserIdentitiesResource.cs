@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -60,10 +60,14 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<UserIdentity> CreateUserIdentityAsync(UserIdentity identity, long userId)
         {
+            string resourceUriFormat = "api/v2/users/{0}/identities";
             using (_loggerScope(_logger, $"CreateUserIdentityAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(string.Format(ResourceUriFormat, userId), identity).ConfigureAwait(false);
+                var idWrapper = new IdentityWrapper { Identity = identity };
+                var response = await client
+                    .PostAsJsonAsync(string.Format(resourceUriFormat, userId), idWrapper)
+                    .ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -73,16 +77,22 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/user_identities#create-identity");
                 }
 
-                return await response.Content.ReadAsAsync<UserIdentity>();
+                var idd = await response.Content.ReadAsAsync<IdentityWrapper>();
+                return idd.Identity;
             }
         }
 
         public async Task<UserIdentity> CreateEndUserIdentityAsync(UserIdentity identity, long endUserId)
         {
+            string resourceUriFormat = "api/v2/users/{0}/identities";
             using (_loggerScope(_logger, $"CreateEndUserIdentityAsync({endUserId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(string.Format(EndUsersResourceUriFormat, endUserId), identity).ConfigureAwait(false);
+                var idWrapper = new IdentityWrapper { Identity = identity };
+                var response = await client
+                    .PostAsJsonAsync(string.Format(resourceUriFormat, endUserId), idWrapper)
+                    .ConfigureAwait(false);
+
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -92,16 +102,21 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/user_identities#create-identity");
                 }
 
-                return await response.Content.ReadAsAsync<UserIdentity>();
+                var idd = await response.Content.ReadAsAsync<IdentityWrapper>();
+                return idd.Identity;
             }
         }
 
         public async Task<UserIdentity> UpdateAsync(UserIdentity identity)
         {
+            string resourceUriFormat = "api/v2/users/{0}/identities/{1}";
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PutAsJsonAsync(string.Format(ResourceUriFormat, identity.UserId), identity).ConfigureAwait(false);
+                var idWrapper = new IdentityWrapper { Identity = identity };
+                var response = await client
+                    .PutAsJsonAsync(string.Format(resourceUriFormat, identity.UserId, identity.Id), idWrapper)
+                    .ConfigureAwait(false);
                 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -111,7 +126,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<UserIdentity>();
+                var idd = await response.Content.ReadAsAsync<IdentityWrapper>();
+                return idd.Identity;
             }
         }
 

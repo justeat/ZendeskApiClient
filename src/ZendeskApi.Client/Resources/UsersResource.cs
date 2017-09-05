@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -204,7 +204,8 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UserResponse>();
+                var userr = await response.Content.ReadAsAsync<UserWrapper<UserResponse>>();
+                return userr.User;
             }
         }
         
@@ -229,7 +230,8 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UserResponse>();
+                var userr = await response.Content.ReadAsAsync<UserWrapper<UserResponse>>();
+                return userr.User;
             }
         }
 
@@ -240,14 +242,13 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.DeleteAsync(userId.ToString()).ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.NoContent)
-                        .WithHelpDocsLink("core/users#delete-user")
-                        .Build();
-                }
+                if (response.StatusCode == HttpStatusCode.NoContent || response.StatusCode == HttpStatusCode.OK)
+                    return;
+                throw await new ZendeskRequestExceptionBuilder()
+                    .WithResponse(response)
+                    .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                    .WithHelpDocsLink("core/users#delete-user")
+                    .Build();
             }
         }
     }

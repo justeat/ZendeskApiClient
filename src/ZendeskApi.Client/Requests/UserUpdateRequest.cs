@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 
@@ -98,11 +98,13 @@ namespace ZendeskApi.Client.Requests
         [JsonProperty("restricted_agent")]
         public bool? RestrictedAgent { get; set; }
 
+        [JsonProperty("shared_phone_number")]
+        public bool? SharedPhoneNumber { get; set; }
         /// <summary>
         /// The user's role. Possible values are "end-user", "agent", or "admin"
         /// </summary>
         [JsonProperty("role")]
-        public UserRole? Role { get; set; }
+        public string Role { get; set; }
 
         /// <summary>
         /// The user's signature. Only agents and admins can have signatures
@@ -126,7 +128,7 @@ namespace ZendeskApi.Client.Requests
         /// Specifies which tickets the user has access to. Possible values are: "organization", "groups", "assigned", "requested", null
         /// </summary>
         [JsonProperty("ticket_restriction")]
-        public TicketRestriction? TicketRestriction { get; set; }
+        public string TicketRestriction { get; set; }
 
         /// <summary>
         /// The user's time zone

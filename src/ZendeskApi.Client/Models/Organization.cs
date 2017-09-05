@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Converters;
@@ -60,5 +60,12 @@ namespace ZendeskApi.Client.Models
 
         [JsonProperty("result_type")]
         internal string ResultType => "organization";
+    }
+
+    
+    internal class OrganisationWrapper
+    {
+        [JsonProperty("organization")]
+        public Organization Organization { get; set; }
     }
 }

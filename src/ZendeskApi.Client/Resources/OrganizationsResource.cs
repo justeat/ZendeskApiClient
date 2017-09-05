@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -75,7 +75,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<Organization>();
+                var org= await response.Content.ReadAsAsync<OrganisationWrapper>();
+                return org.Organization;
             }
         }
 

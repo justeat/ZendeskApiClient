@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Converters;
@@ -135,7 +135,7 @@ namespace ZendeskApi.Client.Responses
         /// The user's role. Possible values are "end-user", "agent", or "admin"
         /// </summary>
         [JsonProperty("role")]
-        public UserRole Role { get; internal set; }
+        public string Role { get; internal set; }
 
         /// <summary>
         /// If the user is shared from a different Zendesk Support instance. Ticket sharing accounts only
@@ -148,6 +148,10 @@ namespace ZendeskApi.Client.Responses
         /// </summary>
         [JsonProperty("shared_agent")]
         public bool SharedAgent { get; internal set; }
+        
+      
+        [JsonProperty("shared_phone_number")]
+        public bool SharedPhoneNumber { get; internal set; }
 
         /// <summary>
         /// The user's signature. Only agents and admins can have signatures
@@ -171,7 +175,7 @@ namespace ZendeskApi.Client.Responses
         /// Specifies which tickets the user has access to. Possible values are: "organization", "groups", "assigned", "requested", null
         /// </summary>
         [JsonProperty("ticket_restriction")]
-        public TicketRestriction? TicketRestriction { get; internal set; }
+        public string TicketRestriction { get; internal set; }
 
         /// <summary>
         /// The user's time zone

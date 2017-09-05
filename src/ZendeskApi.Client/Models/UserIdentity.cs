@@ -37,4 +37,22 @@ namespace ZendeskApi.Client.Models
         public DateTime? UpdatedAt { get; set; }
 
     }
+
+    [JsonObject("identity")]
+    internal class IdentityWrapper
+    {
+        [JsonProperty("identity")]
+        public UserIdentity Identity { get; set; }
+    }
+
+    internal class UserWrapper<T>
+    {
+        [JsonProperty("user")]
+        public T User { get; set; }
+
+        public UserWrapper(T user)
+        {
+            User = user;
+        }
+    }
 }
