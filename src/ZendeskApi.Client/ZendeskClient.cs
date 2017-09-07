@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ZendeskApi.Client.Resources;
@@ -54,5 +54,8 @@ namespace ZendeskApi.Client
 
         private Lazy<ISatisfactionRatingsResource> SatisfactionRatingLazy => new Lazy<ISatisfactionRatingsResource>(() => new SatisfactionRatingsResource(_apiClient, _logger));
         public ISatisfactionRatingsResource SatisfactionRatings => SatisfactionRatingLazy.Value;
+
+        private Lazy<IUserFieldsResource> UserFieldsLazy => new Lazy<IUserFieldsResource>(() => new UserFieldsResource(_apiClient, _logger));
+        public IUserFieldsResource UserFields => UserFieldsLazy.Value;
     }
 }
