@@ -58,7 +58,7 @@ namespace ZendeskApi.Client.Requests
         public IList<string> Tags { get; set; }
 
         [JsonProperty("external_id")]
-        public long? ExternalId { get; set; }
+        public string ExternalId { get; set; }
             
         [JsonProperty("forum_topic_id")]
         public long? ForumTopicId { get; set; }
