@@ -17,5 +17,6 @@ namespace ZendeskApi.Client
         IOrganizationMembershipsResource OrganizationMemberships { get; }
         IRequestsResource Requests { get; }
         ISatisfactionRatingsResource SatisfactionRatings { get; }
+        IUserFieldsResource UserFields { get; }
     }
 }
