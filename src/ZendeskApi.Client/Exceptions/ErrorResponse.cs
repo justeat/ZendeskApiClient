@@ -5,17 +5,13 @@ namespace ZendeskApi.Client.Exceptions
 {
     public class ErrorResponse
     {
-        public ErrorResponse()
-        {
-        }
-
         [JsonProperty("error")]
-        public string Error { get; internal set; }
+        public string Error { get; set; }
 
         [JsonProperty("description")]
-        public string Description { get; internal set; }
+        public string Description { get; set; }
 
         [JsonProperty("details")]
-        public JObject Details { get; internal set; }
+        public JObject Details { get; set; }
     }
 }

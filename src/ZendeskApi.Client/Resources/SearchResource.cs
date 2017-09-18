@@ -25,7 +25,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<SearchResponse<ISearchResult>> SearchAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
+        public async Task<SearchListResponse<ISearchResult>> SearchAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
         {
             var query = new ZendeskQuery();
             builder(query);
@@ -34,11 +34,11 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<SearchResponse<ISearchResult>>(new SearchJsonConverter());
+                return await response.Content.ReadAsAsync<SearchListResponse<ISearchResult>>(new SearchJsonConverter());
             }
         }
 
-        public async Task<SearchResponse<T>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null) where T : ISearchResult
+        public async Task<SearchListResponse<T>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null) where T : ISearchResult
         {
             var query = new ZendeskQuery();
             builder(query);
@@ -49,7 +49,7 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager).ConfigureAwait(false);
-                return await response.Content.ReadAsAsync<SearchResponse<T>>();
+                return await response.Content.ReadAsAsync<SearchListResponse<T>>();
             }
         }
     }

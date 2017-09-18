@@ -14,37 +14,37 @@ namespace ZendeskApi.Client.Responses
         /// Automatically assigned when creating groups
         /// </summary>
         [JsonProperty]
-        public long Id { get; internal set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// The API url of this group
         /// </summary>
         [JsonProperty("url")]
-        public Uri Url { get; internal set; }
+        public Uri Url { get; set; }
 
         /// <summary>
         /// The name of the group
         /// </summary>
         [JsonProperty("name")]
-        public string Name { get; internal set; }      
+        public string Name { get; set; }      
         
         /// <summary>
         /// Deleted groups get marked as such
         /// </summary>
         [JsonProperty("deleted")]
-        public bool Deleted { get; internal set; }
+        public bool Deleted { get; set; }
 
         /// <summary>
         /// The time the group was created
         /// </summary>
         [JsonProperty("created_at")]
-        public DateTime CreatedAt { get; internal set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// The time of the last update of the group
         /// </summary>
         [JsonProperty("updated_at")]
-        public DateTime UpdatedAt { get; internal set; }
+        public DateTime UpdatedAt { get; set; }
 
        
         [JsonProperty("result_type")]

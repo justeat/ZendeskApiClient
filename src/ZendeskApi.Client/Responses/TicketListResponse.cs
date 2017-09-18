@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
-    public class TicketsListResponse : PaginationResponse<TicketResponse>
+    public class TicketListResponse : PaginationResponse<TicketResponse>
     {
         [JsonProperty("tickets")]
         public IEnumerable<TicketResponse> Tickets { get; set; }

@@ -5,10 +5,10 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
-    public class TicketFieldsResponse : PaginationResponse<TicketField>
+    public class TicketFieldListResponse : PaginationResponse<TicketField>
     {
         [JsonProperty("ticket_fields")]
-        public IEnumerable<TicketField> TicketFields { get; internal set; }
+        public IEnumerable<TicketField> TicketFields { get; set; }
 
         protected override IEnumerable<TicketField> Enumerable => TicketFields;
     }

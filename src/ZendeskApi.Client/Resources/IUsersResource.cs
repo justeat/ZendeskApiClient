@@ -8,11 +8,11 @@ namespace ZendeskApi.Client.Resources
     public interface IUsersResource
     {
         #region List Users
-        Task<UsersListResponse> ListAsync(PagerParameters pager = null);
-        Task<UsersListResponse> ListAsync(long[] userIds, PagerParameters pager = null);
-        Task<UsersListResponse> ListInGroupAsync(long groupId, PagerParameters pager = null);
-        Task<UsersListResponse> ListInOrganizationAsync(long organizationId, PagerParameters pager = null);
-        Task<UsersListResponse> ListByExternalIdsAsync(string[] externalIds, PagerParameters pager = null);
+        Task<UserListResponse> ListAsync(PagerParameters pager = null);
+        Task<UserListResponse> ListAsync(long[] userIds, PagerParameters pager = null);
+        Task<UserListResponse> ListInGroupAsync(long groupId, PagerParameters pager = null);
+        Task<UserListResponse> ListInOrganizationAsync(long organizationId, PagerParameters pager = null);
+        Task<UserListResponse> ListByExternalIdsAsync(string[] externalIds, PagerParameters pager = null);
         //Task<UserResponse> ListRelatedUsersAsync(long userId); //TODO: Fix this
         #endregion
 

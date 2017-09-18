@@ -5,11 +5,11 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
-    public class TicketCommentsListResponse : PaginationResponse<TicketComment>
+    public class TicketCommentListResponse : PaginationResponse<TicketComment>
     {
         [JsonProperty("comments")]
         public IEnumerable<TicketComment> Comments { get; set; }
-
+        
         protected override IEnumerable<TicketComment> Enumerable => Comments;
     }
 }

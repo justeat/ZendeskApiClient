@@ -45,7 +45,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Take(pager.PageSize);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return resp.WriteAsJson(new TicketListResponse { Tickets = tickets });
                     })
                     .MapGet("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
@@ -76,7 +76,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Take(pager.PageSize);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return resp.WriteAsJson(new TicketListResponse { Tickets = tickets });
                     })
                     .MapGet("api/v2/tickets/{id}/comments", (req, resp, routeData) =>
                     {
@@ -87,7 +87,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var comments = state.TicketComments.ContainsKey(id) ? state.TicketComments[id] : new List<TicketComment>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketCommentsResponse { Comments = comments });
+                        return resp.WriteAsJson(new TicketCommentListResponse { Comments = comments });
                     })
                     .MapGet("api/v2/users/{id}/tickets/assigned", (req, resp, routeData) =>
                     {
@@ -101,7 +101,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Where(x => x.AssigneeId.HasValue && x.AssigneeId == id);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return resp.WriteAsJson(new TicketListResponse { Tickets = tickets });
                     })
                     .MapGet("api/v2/users/{id}/tickets/ccd", (req, resp, routeData) =>
                     {
@@ -115,7 +115,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Where(x => x.CollaboratorIds.Contains(id));
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return resp.WriteAsJson(new TicketListResponse { Tickets = tickets });
                     })
                     .MapGet("api/v2/users/{id}/tickets/requested", (req, resp, routeData) =>
                     {
@@ -129,7 +129,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Where(x => x.RequesterId.HasValue && x.RequesterId == id);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return resp.WriteAsJson(new TicketListResponse { Tickets = tickets });
                     })
                     .MapGet("api/v2/organizations/{id}/tickets", (req, resp, routeData) =>
                     {
@@ -143,7 +143,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Where(x => x.OrganisationId == id);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return resp.WriteAsJson(new TicketListResponse { Tickets = tickets });
                     })
                     .MapPost("api/v2/tickets", (req, resp, routeData) =>
                     {

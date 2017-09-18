@@ -51,7 +51,7 @@ namespace ZendeskApi.Client.Resources
                                 .Build();
                 }
 
-                return await response.Content.ReadAsAsync<TicketsListResponse>();
+                return await response.Content.ReadAsAsync<TicketListResponse>();
             }
         }
         
@@ -76,7 +76,7 @@ namespace ZendeskApi.Client.Resources
                                     .Build();
                 }
 
-                return await response.Content.ReadAsAsync<TicketsListResponse>();
+                return await response.Content.ReadAsAsync<TicketListResponse>();
             }
         }
 
@@ -101,7 +101,7 @@ namespace ZendeskApi.Client.Resources
                                     .Build();
                 }
 
-                return await response.Content.ReadAsAsync<TicketsListResponse>();
+                return await response.Content.ReadAsAsync<TicketListResponse>();
             }
         }
 
@@ -126,7 +126,7 @@ namespace ZendeskApi.Client.Resources
                                     .Build();
                 }
 
-                return await response.Content.ReadAsAsync<TicketsListResponse>();
+                return await response.Content.ReadAsAsync<TicketListResponse>();
             }
         }
 
@@ -151,7 +151,7 @@ namespace ZendeskApi.Client.Resources
                                     .Build();
                 }
 
-                return await response.Content.ReadAsAsync<TicketsListResponse>();
+                return await response.Content.ReadAsAsync<TicketListResponse>();
             }
         }
         #endregion
@@ -186,7 +186,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<TicketsListResponse>();
+                return await response.Content.ReadAsAsync<TicketListResponse>();
             }
         }
         #endregion

@@ -20,7 +20,7 @@ namespace ZendeskApi.Client.Converters
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType.IsConstructedGenericType && objectType.GetGenericTypeDefinition() == typeof(SearchResponse<>).GetGenericTypeDefinition();
+            return objectType.IsConstructedGenericType && objectType.GetGenericTypeDefinition() == typeof(SearchListResponse<>).GetGenericTypeDefinition();
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -41,7 +41,7 @@ namespace ZendeskApi.Client.Converters
             var nextPage = token.Value<string>("next_page");
             var previousPage = token.Value<string>("previous_page");
 
-            return new SearchResponse<ISearchResult>
+            return new SearchListResponse<ISearchResult>
             {
                 Count = token.Value<int>("count"),
                 NextPage = nextPage != null ? new Uri(nextPage) : null,

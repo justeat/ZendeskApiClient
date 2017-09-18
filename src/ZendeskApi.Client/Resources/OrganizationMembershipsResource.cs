@@ -41,7 +41,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<OrganizationMembershipsResponse>();
+                return await response.Content.ReadAsAsync<OrganizationMembershipListResponse>();
             }
         }
 
@@ -54,7 +54,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<OrganizationMembershipsResponse>();
+                return await response.Content.ReadAsAsync<OrganizationMembershipListResponse>();
             }
         }
 
@@ -67,7 +67,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<OrganizationMembershipsResponse>();
+                return await response.Content.ReadAsAsync<OrganizationMembershipListResponse>();
             }
         }
 
@@ -152,7 +152,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PostAsJsonAsync("create_many", new OrganizationMembershipsRequest { Item = organizationMemberships }).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync("create_many", new OrganizationMembershipListRequest { Item = organizationMemberships }).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {

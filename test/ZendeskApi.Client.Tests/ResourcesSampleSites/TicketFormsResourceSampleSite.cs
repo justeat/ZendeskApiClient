@@ -37,7 +37,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var obj = state.TicketForms.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFormsResponse { TicketForms = obj });
+                        return resp.WriteAsJson(new TicketFormListResponse { TicketForms = obj });
                     })
                     .MapGet("api/v2/ticket_forms/{id}", (req, resp, routeData) =>
                     {
@@ -61,7 +61,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFormsResponse { TicketForms = state.TicketForms.Values });
+                        return resp.WriteAsJson(new TicketFormListResponse { TicketForms = state.TicketForms.Values });
                     })
                     .MapPost("api/v2/ticket_forms", (req, resp, routeData) =>
                     {

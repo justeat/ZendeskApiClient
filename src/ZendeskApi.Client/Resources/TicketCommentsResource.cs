@@ -29,7 +29,7 @@ namespace ZendeskApi.Client.Resources
             _ticketsResource = new TicketsResource(apiClient, logger);
         }
 
-        public async Task<TicketCommentsListResponse> ListAsync(long ticketId, PagerParameters pager = null)
+        public async Task<TicketCommentListResponse> ListAsync(long ticketId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"ListAsync({ticketId})"))
             using (var client = _apiClient.CreateClient())
@@ -38,7 +38,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await  response.Content.ReadAsAsync<TicketCommentsListResponse>();
+                return await  response.Content.ReadAsAsync<TicketCommentListResponse>();
             }
         }
 

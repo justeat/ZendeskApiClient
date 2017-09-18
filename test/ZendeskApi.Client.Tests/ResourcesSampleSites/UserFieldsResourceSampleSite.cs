@@ -50,7 +50,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UserFieldsResponse { UserFields = state.UserFields.Values });
+                        return resp.WriteAsJson(new UserFieldListResponse { UserFields = state.UserFields.Values });
                     })
                     .MapPost("api/v2/user_fields", (req, resp, routeData) =>
                     {
