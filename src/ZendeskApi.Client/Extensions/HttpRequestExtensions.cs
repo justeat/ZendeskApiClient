@@ -48,18 +48,25 @@ namespace ZendeskApi.Client.Extensions
             return await client.PostAsync(requestUri, content).ConfigureAwait(false);
         }
 
+        /**
+         * See https://developer.zendesk.com/rest_api/docs/core/attachments#upload-files
+         * The api takes binary files without Multipart boundaries
+         */
         public static async Task<HttpResponseMessage> PostAsBinaryAsync(
             this HttpClient client,
             string requestUri,
             Stream inputStream,
             string fileName)
         {
-            using (var content = new MultipartFormDataContent()) 
+            using (var stream = new MemoryStream())
             {
-                content.Add(new StreamContent(inputStream), fileName, fileName);
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/binary");
+                inputStream.CopyTo(stream);
+                using (var content = new ByteArrayContent(stream.ToArray()))
+                {
+                    content.Headers.ContentType = new MediaTypeHeaderValue("application/binary");
 
-                return await client.PostAsync(requestUri, content).ConfigureAwait(false);
+                    return await client.PostAsync(requestUri, content).ConfigureAwait(false);
+                }
             }
         }
 
