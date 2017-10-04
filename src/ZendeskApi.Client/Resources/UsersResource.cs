@@ -121,7 +121,8 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UserResponse>();
+                var result = await response.Content.ReadAsAsync<SingleUserResponse>();
+                return result.UserResponse;
             }
         }
         
@@ -204,7 +205,8 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UserResponse>();
+                var result = await response.Content.ReadAsAsync<SingleUserResponse>();
+                return result.UserResponse;
             }
         }
         
@@ -229,7 +231,8 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UserResponse>();
+                var result = await response.Content.ReadAsAsync<SingleUserResponse>();
+                return result.UserResponse;
             }
         }
 
