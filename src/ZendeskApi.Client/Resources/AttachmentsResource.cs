@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
@@ -66,7 +67,8 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/attachments#upload-files");
                 }
 
-                return await response.Content.ReadAsAsync<Upload>();
+                var uploadResponse = await response.Content.ReadAsAsync<UploadResponse>();
+                return uploadResponse.Upload;
             }
         }
 
