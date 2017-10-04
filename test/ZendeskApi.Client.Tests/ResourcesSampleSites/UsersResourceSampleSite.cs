@@ -69,7 +69,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var user = state.Users[id];
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(user);
+                        return resp.WriteAsJson(new SingleUserResponse
+                        {
+                            UserResponse = user
+                        });
                     })
                     .MapGet("api/v2/users", (req, resp, routeData) =>
                     {
@@ -137,7 +140,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Users.Add(userNew.Id, userNew);
 
                         resp.StatusCode = (int) HttpStatusCode.Created;
-                        return resp.WriteAsJson(userNew);
+                        return resp.WriteAsJson(new SingleUserResponse
+                        {
+                            UserResponse = userNew
+                        });
                     })
                     .MapPut("api/v2/users/{id}", (req, resp, routeData) =>
                     {
@@ -158,7 +164,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         mapper.Map(user, state.Users[id]);
 
                         resp.StatusCode = (int) HttpStatusCode.Created;
-                        return resp.WriteAsJson(user);
+                        return resp.WriteAsJson(new
+                        {
+                            user
+                        });
                     })
                     .MapDelete("api/v2/users/{id}", (req, resp, routeData) =>
                     {
