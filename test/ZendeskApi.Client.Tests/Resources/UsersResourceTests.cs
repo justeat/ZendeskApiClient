@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -122,6 +123,30 @@ namespace ZendeskApi.Client.Tests.Resources
             var user2 = await _resource.GetAsync(user.Id);
 
             Assert.Equal(JsonConvert.SerializeObject(user), JsonConvert.SerializeObject(user2));
+        }
+
+        [Fact]
+        public async Task ShouldGetIncrementalChanges()
+        {
+            var user = await _resource.CreateAsync(
+                new UserCreateRequest("User Name")
+                {
+                    Email = "test@kung.fu",
+                });
+
+            // Querying every change in the last 5 minutes
+            var now = DateTime.UtcNow.Subtract(new TimeSpan(0, 5, 0));
+            var changedUsers = await _resource.GetIncrementalExport(now);
+
+            Assert.Equal(1, changedUsers.Count);
+            Assert.Equal(user.Email, changedUsers.First().Email);
+            Assert.False(changedUsers.HasMoreResults);
+
+            // The second request with the end time of the previous request, should not return any
+            var emptyResult = await _resource.GetIncrementalExport(changedUsers.EndTime);
+
+            Assert.Equal(0, emptyResult.Count);
+            Assert.Equal(changedUsers.EndTime, emptyResult.EndTime);
         }
         
         [Fact]

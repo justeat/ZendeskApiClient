@@ -17,6 +17,7 @@ namespace ZendeskApi.Client.Resources
     public class UsersResource : IUsersResource
     {
         private const string ResourceUri = "api/v2/users";
+        private const string IncrementalResourceUri = "api/v2/incremental";
         private const string GroupUsersResourceUriFormat = "api/v2/groups/{0}/users";
         private const string OrganizationsUsersResourceUriFormat = "api/v2/organizations/{0}/users";
 
@@ -160,6 +161,28 @@ namespace ZendeskApi.Client.Resources
                 }
 
                 return await response.Content.ReadAsAsync<UsersListResponse>();
+            }
+        }
+
+        public async Task<IncrementalUsersResponse<UserResponse>> GetIncrementalExport(DateTime startTime)
+        {
+            using (_loggerScope(_logger, "GetIncrementalExport"))
+            using (var client = _apiClient.CreateClient(IncrementalResourceUri))
+            {
+                var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                var nextPage = Convert.ToInt64((startTime - epoch).TotalSeconds);
+
+                var response = await client.GetAsync($"users?start_time={nextPage}").ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("core/incremental_export#incremental-user-export")
+                        .Build();
+                }
+
+                return await response.Content.ReadAsAsync<IncrementalUsersResponse<UserResponse>>();
             }
         }
 
