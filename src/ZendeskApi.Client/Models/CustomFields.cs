@@ -5,6 +5,19 @@ namespace ZendeskApi.Client.Models
 {
     public class CustomFields : List<CustomField>, IReadOnlyCustomFields, ICustomFields
     {
+        public CustomFields()
+        {
+            
+        }
+
+        public CustomFields(Dictionary<long, string> fields)
+        {
+            foreach (var field in fields)
+            {
+                this[field.Key] = field.Value;
+            }
+        }
+
         private void Set(long id, string value)
         {
             if (this.All(cf => cf.Id != id))
