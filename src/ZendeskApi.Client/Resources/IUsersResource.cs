@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
@@ -18,6 +19,7 @@ namespace ZendeskApi.Client.Resources
 
         #region Get Users
         Task<UserResponse> GetAsync(long userId);
+        Task<IncrementalUsersResponse<UserResponse>> GetIncrementalExport(DateTime startTime);
         #endregion
 
         #region Create Users
