@@ -193,7 +193,7 @@ namespace ZendeskApi.Client.Resources
 
 
         #region Create Tickets
-        public async Task<TicketResponse> CreateAsync(TicketCreateRequest ticket)
+        public async Task<TicketResponseContainer> CreateAsync(TicketCreateRequest ticket)
         {
             using (_loggerScope(_logger, "CreateAsync"))
             using (var client = _apiClient.CreateClient())
@@ -209,7 +209,7 @@ namespace ZendeskApi.Client.Resources
                                     .Build(); 
                 }
 
-                return await response.Content.ReadAsAsync<TicketResponse>();
+                return await response.Content.ReadAsAsync<TicketResponseContainer>();
             }
         }
 
@@ -236,7 +236,7 @@ namespace ZendeskApi.Client.Resources
 
 
         #region Update Tickets
-        public async Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket)
+        public async Task<TicketResponseContainer> UpdateAsync(TicketUpdateRequest ticket)
         {
             using (_loggerScope(_logger, "UpdateAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -257,7 +257,7 @@ namespace ZendeskApi.Client.Resources
                                     .Build();
                 }
 
-                return await response.Content.ReadAsAsync<TicketResponse>();
+                return await response.Content.ReadAsAsync<TicketResponseContainer>();
             }
         }
 

@@ -261,8 +261,8 @@ namespace ZendeskApi.Client.Tests.Resources
                     }
                 });
 
-            Assert.NotEqual(0L, response.Id);
-            Assert.Equal("My printer is on fire!", response.Subject);
+            Assert.NotEqual(0L, response.Ticket.Id);
+            Assert.Equal("My printer is on fire!", response.Ticket.Subject);
         }
 
         [Fact]
@@ -294,7 +294,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 Subject = "I COMMAND YOU TO UPDATE!!!"
             };
 
-            ticket = await _resource.UpdateAsync(updateTicketRequest);
+            ticket = (await _resource.UpdateAsync(updateTicketRequest)).Ticket;
 
             Assert.Equal("I COMMAND YOU TO UPDATE!!!", ticket.Subject);
         }
@@ -342,8 +342,8 @@ namespace ZendeskApi.Client.Tests.Resources
 
             foreach (var ticketCreateRequest in tickets)
             {
-                var ticket = await _resource.CreateAsync(ticketCreateRequest);
-                createdTickets.Add(ticket);
+                var response = await _resource.CreateAsync(ticketCreateRequest);
+                createdTickets.Add(response.Ticket);
             }
 
             return createdTickets.ToArray();
