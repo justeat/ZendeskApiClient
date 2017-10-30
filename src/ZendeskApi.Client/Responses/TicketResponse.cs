@@ -13,13 +13,13 @@ namespace ZendeskApi.Client.Responses
         /// <summary>
         /// Automatically assigned when creating tickets
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("id")]
         public long Id { get; internal set; }
 
         /// <summary>
         /// The API url of this ticket
         /// </summary>
-        [JsonProperty]
+        [JsonProperty("url")]
         public Uri Url { get; internal set; }
 
         /// <summary>

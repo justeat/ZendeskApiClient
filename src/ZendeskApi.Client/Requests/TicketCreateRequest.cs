@@ -11,14 +11,21 @@ namespace ZendeskApi.Client.Requests
     /// </summary>
     public class TicketCreateRequest
     {
-        public TicketCreateRequest(string description)
+        public TicketCreateRequest()
         {
-            Description = description;
+            
         }
 
-        [JsonProperty("description")]
-        public string Description { get; set; }
+        public TicketCreateRequest(string initialComment, bool initialCommentIsPublic = false)
+        {
+            Comment = new TicketComment {Body = initialComment, IsPublic = initialCommentIsPublic};    
+        }
 
+        public TicketCreateRequest(TicketComment comment)
+        {
+            Comment = comment;
+        }
+        
         [JsonProperty("subject")]
         public string Subject { get; set; }
 
