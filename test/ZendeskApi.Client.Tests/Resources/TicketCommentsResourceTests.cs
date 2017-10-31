@@ -25,21 +25,21 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var ticket = await _ticketResource.CreateAsync(new TicketCreateRequest("description") { Subject = "Test 1" });
 
-            var comments = await _resource.ListAsync(ticket.Id);
+            var comments = await _resource.ListAsync(ticket.Ticket.Id);
             Assert.Equal(1, comments.Count());
             Assert.NotNull(comments.ElementAt(0).Id);
             Assert.Equal("description", comments.ElementAt(0).Body);
 
-            await _resource.AddComment(ticket.Id, new Models.TicketComment { Body = "Hi there! im a comments..." });
+            await _resource.AddComment(ticket.Ticket.Id, new Models.TicketComment { Body = "Hi there! im a comments..." });
 
-            comments = await _resource.ListAsync(ticket.Id);
+            comments = await _resource.ListAsync(ticket.Ticket.Id);
             Assert.Equal(2, comments.Count());
             Assert.NotNull(comments.ElementAt(1).Id);
             Assert.Equal("Hi there! im a comments...", comments.ElementAt(1).Body);
 
-            await _resource.AddComment(ticket.Id, new Models.TicketComment { Body = "Hi there! im a second comment..." });
+            await _resource.AddComment(ticket.Ticket.Id, new Models.TicketComment { Body = "Hi there! im a second comment..." });
 
-            comments = await _resource.ListAsync(ticket.Id);
+            comments = await _resource.ListAsync(ticket.Ticket.Id);
             Assert.Equal(3, comments.Count());
             Assert.NotNull(comments.ElementAt(1).Id);
             Assert.Equal("Hi there! im a comments...", comments.ElementAt(1).Body);

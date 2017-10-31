@@ -25,12 +25,12 @@ namespace ZendeskApi.Client.Resources
         #endregion
 
         #region Create Tickets
-        Task<TicketResponse> CreateAsync(TicketCreateRequest ticket);
+        Task<TicketResponseContainer> CreateAsync(TicketCreateRequest ticket);
         Task<JobStatusResponse> CreateAsync(IEnumerable<TicketCreateRequest> tickets);
         #endregion
 
         #region Update Tickets
-        Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket);
+        Task<TicketResponseContainer> UpdateAsync(TicketUpdateRequest ticket);
         Task<JobStatusResponse> UpdateAsync(IEnumerable<TicketUpdateRequest> tickets);
         #endregion
 
