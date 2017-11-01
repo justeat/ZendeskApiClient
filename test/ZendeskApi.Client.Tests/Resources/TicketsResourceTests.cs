@@ -233,7 +233,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             var response = await _resource.GetAsync(ticket.Id);
 
-            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(response));
+            Assert.Equal(JsonConvert.SerializeObject(new TicketResponseContainer{Ticket = ticket}), JsonConvert.SerializeObject(response));
         }
 
         [Fact]
@@ -306,7 +306,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             var ticket1 = await _resource.GetAsync(ticket.Id);
 
-            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(ticket1));
+            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(ticket1.Ticket));
 
             await _resource.DeleteAsync(ticket.Id);
 

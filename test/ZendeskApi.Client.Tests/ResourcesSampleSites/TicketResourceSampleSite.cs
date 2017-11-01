@@ -62,7 +62,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var ticket = state.Tickets.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(ticket);
+                        return resp.WriteAsJson(new TicketResponseContainer{Ticket = ticket});
                     })
                     .MapGet("api/v2/tickets", (req, resp, routeData) =>
                     {

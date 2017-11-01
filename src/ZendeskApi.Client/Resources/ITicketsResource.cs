@@ -20,7 +20,7 @@ namespace ZendeskApi.Client.Resources
         #endregion
 
         #region Show Tickets
-        Task<TicketResponse> GetAsync(long ticketId);
+        Task<TicketResponseContainer> GetAsync(long ticketId);
         Task<IPagination<TicketResponse>> GetAsync(long[] ticketIds, PagerParameters pager = null);
         #endregion
 
