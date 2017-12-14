@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,17 +9,19 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class AttachmentsResourceSampleSite : SampleSite
+    class OrganizationResourceSampleSite : SampleSite
     {
         private class State
         {
-            public readonly IDictionary<long, Attachment> Attachments = new Dictionary<long, Attachment>();
+            public readonly IDictionary<long, Organization> Organizations = new Dictionary<long, Organization>();
         }
 
         public static Action<IRouteBuilder> MatchesRequest
@@ -28,54 +29,49 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             get
             {
                 return rb => rb
-                    .MapGet("api/v2/attachments/{id}", (req, resp, routeData) =>
+                    .MapGet("api/v2/organizations/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        if (!state.Attachments.ContainsKey(id))
+                        if (!state.Organizations.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var obj = state.Attachments.Single(x => x.Key == id).Value;
+                        var org = state.Organizations.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(obj);
+                        return resp.WriteAsJson(new OrganizationResponse
+                        {
+                            Organization = org
+                        });
                     })
-                    .MapPost("api/v2/uploads", (req, resp, routeData) =>
+                    .MapPost("api/v2/organizations", (req, resp, routeData) =>
                     {
-                        Debug.Assert(req.Query["filename"] == "crash.log");
-                        Debug.Assert(req.Query["token"] == "6bk3gql82em5nmf");
-                        Debug.Assert(req.ContentType == "application/binary");
+                        var request = req.Body.ReadAs<OrganizationCreateRequest>();
+                        var org = request.Organization;
 
-                        resp.StatusCode = (int)HttpStatusCode.Created;
+                        if (string.IsNullOrEmpty(org.Name))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
 
-                        resp.Headers.Add("Location", "https://localhost/api/v2/attachments/498483");
+                            return Task.CompletedTask;
+                        }
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
-                        
-                        var attachment = new Attachment
+
+                        org.Id = long.Parse(Rand.Next().ToString());
+
+                        state.Organizations.Add(org.Id, org);
+
+                        resp.StatusCode = (int)HttpStatusCode.Created;
+                        return resp.WriteAsJson(new OrganizationResponse
                         {
-                            ContentType = "text/plain",
-                            ContentUrl = "https://company.zendesk.com/attachments/crash.log",
-                            Size = req.Body.Length,
-                            FileName = req.Query["filename"],
-                            Id = long.Parse(Rand.Next().ToString())
-                        };
-
-                        state.Attachments.Add(attachment.Id.Value, attachment);
-
-                        resp.WriteAsJson(new UploadResponse{
-                            Upload = new Upload {
-                                Attachment = attachment,
-                                Token = "6bk3gql82em5nmf"
-                            }
+                            Organization = org
                         });
-
-                        return Task.CompletedTask;
                     });
             }
         }
@@ -85,12 +81,13 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
         private HttpClient _client;
         public override HttpClient Client => _client;
 
-        public AttachmentsResourceSampleSite(string resource)
+        public OrganizationResourceSampleSite(string resource)
         {
             var webhostbuilder = new WebHostBuilder();
             webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
+                .ConfigureServices(services =>
+                {
+                    services.AddSingleton(_ => new State());
                     services.AddRouting();
                     services.AddMemoryCache();
                 })
@@ -110,17 +107,14 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
         }
 
-        private string CreateResource(string resource)
+        private static string CreateResource(string resource)
         {
             resource = resource?.Trim('/');
 
-            return resource != null ? resource + "/" : resource;
+            return resource != null ? resource + "/" : null;
         }
 
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
+        public Uri BaseUri => Client.BaseAddress;
 
         public override void Dispose()
         {

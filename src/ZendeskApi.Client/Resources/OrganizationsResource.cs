@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -18,7 +19,7 @@ namespace ZendeskApi.Client.Resources
         private readonly IZendeskApiClient _apiClient;
         private readonly ILogger _logger;
 
-        private Func<ILogger, string, IDisposable> _loggerScope =
+        private readonly Func<ILogger, string, IDisposable> _loggerScope =
             LoggerMessage.DefineScope<string>(typeof(OrganizationsResource).Name + ": {0}");
 
         public OrganizationsResource(IZendeskApiClient apiClient,
@@ -75,7 +76,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<Organization>();
+                var result = await response.Content.ReadAsAsync<OrganizationResponse>();
+                return result.Organization;
             }
         }
 
@@ -110,7 +112,8 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, organization).ConfigureAwait(false);
+                var request = new OrganizationCreateRequest(organization);
+                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -120,7 +123,8 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/organizations#create-organization");
                 }
 
-                return await response.Content.ReadAsAsync<Organization>();
+                var result = await response.Content.ReadAsAsync<OrganizationResponse>();
+                return result.Organization;
             }
         }
 
@@ -139,7 +143,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<Organization>();
+                var result = await response.Content.ReadAsAsync<OrganizationResponse>();
+                return result.Organization;
             }
         }
 

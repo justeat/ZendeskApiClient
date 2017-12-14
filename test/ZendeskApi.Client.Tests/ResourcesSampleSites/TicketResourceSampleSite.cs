@@ -62,7 +62,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var ticket = state.Tickets.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(ticket);
+                        return resp.WriteAsJson(new TicketResponseContainer{Ticket = ticket});
                     })
                     .MapGet("api/v2/tickets", (req, resp, routeData) =>
                     {
@@ -157,16 +157,16 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         }
 
                         var mapper = req.HttpContext.RequestServices.GetRequiredService<IMapper>();
-                        var ticketResponse = mapper.Map<TicketResponse>(ticket);
+                        var ticketResponse = mapper.Map<TicketResponseContainer>(ticket);
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
-                        ticketResponse.Id = long.Parse(Rand.Next().ToString());
-                        ticketResponse.Url = new Uri($"https://company.zendesk.com/api/v2/tickets/{ticketResponse.Id}.json");
+                        ticketResponse.Ticket.Id = long.Parse(Rand.Next().ToString());
+                        ticketResponse.Ticket.Url = new Uri($"https://company.zendesk.com/api/v2/tickets/{ticketResponse.Ticket.Id}.json");
 
 
-                        HandleTicketComment(ticket.Comment, state, ticketResponse.Id);
+                        HandleTicketComment(ticket.Comment, state, ticketResponse.Ticket.Id);
 
-                        state.Tickets.Add(ticketResponse.Id, ticketResponse);
+                        state.Tickets.Add(ticketResponse.Ticket.Id, ticketResponse.Ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(ticketResponse);
@@ -188,7 +188,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         HandleTicketComment(ticketRequest.Comment, state, ticketRequest.Id);
 
-                        var ticketResponse = state.Tickets[id];
+                        var ticketResponse = new TicketResponseContainer {Ticket = state.Tickets[id] };
                         var mapper = req.HttpContext.RequestServices.GetRequiredService<IMapper>();
                         mapper.Map(ticketRequest, ticketResponse);
 
@@ -242,6 +242,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     services.AddSingleton(_ => new State());
                     services.AddSingleton(_ => new MapperConfiguration(cfg =>
                         {
+                            cfg.CreateMap<TicketCreateRequest, TicketResponseContainer>()
+                                .ForMember(r => r.Ticket, r => r.MapFrom(req => req));
+                            cfg.CreateMap<TicketUpdateRequest, TicketResponseContainer>()
+                                .ForMember(r => r.Ticket, r => r.MapFrom(req => req));
                             cfg.CreateMap<TicketCreateRequest, TicketResponse>();
                             cfg.CreateMap<TicketUpdateRequest, TicketResponse>();
                         }).CreateMapper());

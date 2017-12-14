@@ -69,7 +69,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var user = state.Users[id];
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(user);
+                        return resp.WriteAsJson(new SingleUserResponse
+                        {
+                            UserResponse = user
+                        });
                     })
                     .MapGet("api/v2/users", (req, resp, routeData) =>
                     {
@@ -116,6 +119,39 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             Users = users
                         });
                     })
+                    .MapGet("api/v2/incremental/users", (req, resp, routeData) =>
+                    {
+                        if (!req.Query.ContainsKey("start_time"))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                            return Task.CompletedTask;
+                        }
+
+                        var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                        var startTime = long.Parse(req.Query["start_time"]);
+                        // Adding 1 second since the query param does not have millisecond accuracy
+                        var startDateTime = epoch.AddSeconds(startTime + 1L);
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var users = state
+                            .Users
+                            .Select(p => p.Value)
+                            .Where(u => u.UpdatedAt > startDateTime)
+                            .ToList();
+
+                        var nextPage = users.Count > 0 ? Convert.ToInt64((users.Max(u => u.UpdatedAt) - epoch).TotalSeconds) : startTime;
+                        var nextPageUrl = $"/api/v2/incremental/users?start_time={nextPage}";
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return resp.WriteAsJson(new IncrementalUsersResponse<UserResponse>(nextPage)
+                        {
+                            Users = users,
+                            Count = users.Count,
+                            NextPage = new Uri(new Uri("http://kung.fu"), nextPageUrl)
+                        });
+                    })
                     .MapPost("api/v2/users", (req, resp, routeData) =>
                     {
                         var user = req.Body.ReadAs<UserRequest<UserCreateRequest>>().User;
@@ -134,10 +170,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         userNew.Id = long.Parse(Rand.Next().ToString());
                         userNew.Url = new Uri($"https://company.zendesk.com/api/v2/users/{userNew.Id}.json");
+                        userNew.CreatedAt = DateTime.UtcNow;
+                        userNew.UpdatedAt = DateTime.UtcNow;
                         state.Users.Add(userNew.Id, userNew);
 
                         resp.StatusCode = (int) HttpStatusCode.Created;
-                        return resp.WriteAsJson(userNew);
+                        return resp.WriteAsJson(new SingleUserResponse
+                        {
+                            UserResponse = userNew
+                        });
                     })
                     .MapPut("api/v2/users/{id}", (req, resp, routeData) =>
                     {
@@ -158,7 +199,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         mapper.Map(user, state.Users[id]);
 
                         resp.StatusCode = (int) HttpStatusCode.Created;
-                        return resp.WriteAsJson(user);
+                        return resp.WriteAsJson(new
+                        {
+                            user
+                        });
                     })
                     .MapDelete("api/v2/users/{id}", (req, resp, routeData) =>
                     {

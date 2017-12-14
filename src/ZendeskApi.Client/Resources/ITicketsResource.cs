@@ -20,17 +20,17 @@ namespace ZendeskApi.Client.Resources
         #endregion
 
         #region Show Tickets
-        Task<TicketResponse> GetAsync(long ticketId);
+        Task<TicketResponseContainer> GetAsync(long ticketId);
         Task<IPagination<TicketResponse>> GetAsync(long[] ticketIds, PagerParameters pager = null);
         #endregion
 
         #region Create Tickets
-        Task<TicketResponse> CreateAsync(TicketCreateRequest ticket);
+        Task<TicketResponseContainer> CreateAsync(TicketCreateRequest ticket);
         Task<JobStatusResponse> CreateAsync(IEnumerable<TicketCreateRequest> tickets);
         #endregion
 
         #region Update Tickets
-        Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket);
+        Task<TicketResponseContainer> UpdateAsync(TicketUpdateRequest ticket);
         Task<JobStatusResponse> UpdateAsync(IEnumerable<TicketUpdateRequest> tickets);
         #endregion
 

@@ -5,10 +5,10 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
-    public class OrganizationListResponse : PaginationResponse<Organization>
+    public class OrganizationsResponse : PaginationResponse<Organization>
     {
         [JsonProperty("organizations")]
-        public IEnumerable<Organization> Organizations { get; set; }
+        public IEnumerable<Organization> Organizations { get; internal set; }
 
         protected override IEnumerable<Organization> Enumerable => Organizations;
     }
