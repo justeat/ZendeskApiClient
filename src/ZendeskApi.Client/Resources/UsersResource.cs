@@ -32,7 +32,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<UsersListResponse> ListAsync(PagerParameters pager = null)
+        public async Task<UserListResponse> ListAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, "ListAsync"))
             using (var client = _apiClient.CreateClient())
@@ -47,11 +47,11 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UsersListResponse>();
+                return await response.Content.ReadAsAsync<UserListResponse>();
             }
         }
 
-        public async Task<UsersListResponse> ListInGroupAsync(long groupId, PagerParameters pager = null)
+        public async Task<UserListResponse> ListInGroupAsync(long groupId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"ListInGroupAsync({groupId})"))
             using (var client = _apiClient.CreateClient())
@@ -72,11 +72,11 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UsersListResponse>();
+                return await response.Content.ReadAsAsync<UserListResponse>();
             }
         }
 
-        public async Task<UsersListResponse> ListInOrganizationAsync(long organizationId, PagerParameters pager = null)
+        public async Task<UserListResponse> ListInOrganizationAsync(long organizationId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"ListInOrganizationAsync({organizationId})"))
             using (var client = _apiClient.CreateClient())
@@ -97,7 +97,7 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UsersListResponse>();
+                return await response.Content.ReadAsAsync<UserListResponse>();
             }
         }
 
@@ -127,7 +127,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
         
-        public async Task<UsersListResponse> ListAsync(long[] userIds, PagerParameters pager = null)
+        public async Task<UserListResponse> ListAsync(long[] userIds, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"ListAsync({ZendeskFormatter.ToCsv(userIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -142,11 +142,11 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UsersListResponse>();
+                return await response.Content.ReadAsAsync<UserListResponse>();
             }
         }
 
-        public async Task<UsersListResponse> ListByExternalIdsAsync(string[] externalIds, PagerParameters pager = null)
+        public async Task<UserListResponse> ListByExternalIdsAsync(string[] externalIds, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"ListByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))
@@ -161,7 +161,7 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<UsersListResponse>();
+                return await response.Content.ReadAsAsync<UserListResponse>();
             }
         }
 

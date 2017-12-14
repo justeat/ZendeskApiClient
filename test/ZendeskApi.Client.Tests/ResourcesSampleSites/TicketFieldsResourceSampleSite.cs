@@ -49,7 +49,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFieldsResponse { TicketFields = state.TicketFields.Values });
+                        return resp.WriteAsJson(new TicketFieldListResponse { TicketFields = state.TicketFields.Values });
                     })
                     .MapPost("api/v2/ticket_fields", (req, resp, routeData) =>
                     {

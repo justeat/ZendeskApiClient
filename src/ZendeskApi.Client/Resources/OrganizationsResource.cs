@@ -38,7 +38,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<OrganizationsResponse>();
+                return await response.Content.ReadAsAsync<OrganizationListResponse>();
             }
         }
 
@@ -57,7 +57,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<OrganizationsResponse>();
+                return await response.Content.ReadAsAsync<OrganizationListResponse>();
             }
         }
 
@@ -90,7 +90,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<OrganizationsResponse>();
+                return await response.Content.ReadAsAsync<OrganizationListResponse>();
             }
         }
 
@@ -103,7 +103,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<OrganizationsResponse>();
+                return await response.Content.ReadAsAsync<OrganizationListResponse>();
             }
         }
 

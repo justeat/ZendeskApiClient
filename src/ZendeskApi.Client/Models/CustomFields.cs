@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ZendeskApi.Client.Models
 {
-    public class CustomFields : List<CustomField>, IReadOnlyCustomFields, ICustomFields
+    public class CustomFields : List<CustomField>, ICustomFields
     {
         public CustomFields()
         {

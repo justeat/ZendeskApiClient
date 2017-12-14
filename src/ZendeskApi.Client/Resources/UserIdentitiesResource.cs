@@ -35,7 +35,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<UserIdentitiesResponse>();
+                return await response.Content.ReadAsAsync<UserIdentityListResponse>();
             }
         }
 

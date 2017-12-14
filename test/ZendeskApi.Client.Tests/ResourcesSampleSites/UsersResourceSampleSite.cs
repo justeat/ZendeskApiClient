@@ -49,7 +49,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         }
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UsersListResponse
+                        return resp.WriteAsJson(new UserListResponse
                         {
                             Users = users
                         });
@@ -79,7 +79,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UsersListResponse
+                        return resp.WriteAsJson(new UserListResponse
                         {
                             Users = state.Users.Values
                         });
@@ -96,7 +96,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UsersListResponse
+                        return resp.WriteAsJson(new UserListResponse
                         {
                             Users = users
                         });
@@ -114,7 +114,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Select(p => p.Value);
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UsersListResponse
+                        return resp.WriteAsJson(new UserListResponse
                         {
                             Users = users
                         });

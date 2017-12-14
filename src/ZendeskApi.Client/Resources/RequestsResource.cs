@@ -88,7 +88,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<TicketCommentsResponse>();
+                return await response.Content.ReadAsAsync<TicketCommentListResponse>();
             }
         }
 

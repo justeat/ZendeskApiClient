@@ -5,7 +5,7 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
-    public class UserIdentitiesResponse : PaginationResponse<UserIdentity>
+    public class UserIdentityListResponse : PaginationResponse<UserIdentity>
     {
         [JsonProperty("identities")]
         public IEnumerable<UserIdentity> Identities { get; set; }

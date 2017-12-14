@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         }
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new SearchResponse<ISearchResult>
+                        return resp.WriteAsJson(new SearchListResponse<ISearchResult>
                         {
                             Results = obj,
                             Count = obj.Length,

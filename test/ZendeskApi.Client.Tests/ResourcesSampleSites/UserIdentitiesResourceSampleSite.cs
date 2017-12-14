@@ -61,7 +61,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var identities = state.Identities.Where(x => x.Key.Item1 == userId).Select(x => x.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UserIdentitiesResponse { Identities = identities });
+                        return resp.WriteAsJson(new UserIdentityListResponse { Identities = identities });
                     })
                     .MapPost("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Converters
 {
@@ -9,7 +10,6 @@ namespace ZendeskApi.Client.Converters
     {
         private static readonly Type[] DeserializableSearchTypes =
         {
-            typeof(IReadOnlyCustomFields),
             typeof(ICustomFields)
         };
 

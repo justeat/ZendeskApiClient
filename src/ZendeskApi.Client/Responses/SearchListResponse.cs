@@ -6,7 +6,7 @@ using ZendeskApi.Client.Resources;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
-    public class SearchResponse<T> : PaginationResponse<T> where T : ISearchResult
+    public class SearchListResponse<T> : PaginationResponse<T> where T : ISearchResult
     {
         [JsonProperty("results")]
         public IEnumerable<T> Results { get; set; }
