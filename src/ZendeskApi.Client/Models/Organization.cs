@@ -10,7 +10,7 @@ namespace ZendeskApi.Client.Models
     public class Organization : ISearchResult
     {
         [JsonProperty("id")]
-        public long Id { get; internal set; }
+        public long Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -59,6 +59,6 @@ namespace ZendeskApi.Client.Models
 
 
         [JsonProperty("result_type")]
-        internal string ResultType => "organization";
+        string ResultType => "organization";
     }
 }

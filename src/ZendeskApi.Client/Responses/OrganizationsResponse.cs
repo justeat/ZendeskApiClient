@@ -8,7 +8,7 @@ namespace ZendeskApi.Client.Responses
     public class OrganizationsResponse : PaginationResponse<Organization>
     {
         [JsonProperty("organizations")]
-        public IEnumerable<Organization> Organizations { get; internal set; }
+        public IEnumerable<Organization> Organizations { get; set; }
 
         protected override IEnumerable<Organization> Enumerable => Organizations;
     }
