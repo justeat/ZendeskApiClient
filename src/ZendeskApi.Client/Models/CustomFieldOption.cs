@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
@@ -7,7 +7,7 @@ namespace ZendeskApi.Client.Models
     public class CustomFieldOption
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
