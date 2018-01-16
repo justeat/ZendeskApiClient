@@ -54,7 +54,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<TicketForm>();
+                var singleResponse = await response.Content.ReadAsAsync<SingleTicketForm>();
+                return singleResponse.TicketForm;
             }
         }
 

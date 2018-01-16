@@ -54,7 +54,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var obj = state.TicketForms.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(obj);
+                        return resp.WriteAsJson(new SingleTicketForm { TicketForm = obj });
                     })
                     .MapGet("api/v2/ticket_forms", (req, resp, routeData) =>
                     {

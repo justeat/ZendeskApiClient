@@ -91,7 +91,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<GroupResponse>();
+                var groupResponse = await response.Content.ReadAsAsync<SingleGroupResponse>();
+                return groupResponse.Group;
             }
         }
 

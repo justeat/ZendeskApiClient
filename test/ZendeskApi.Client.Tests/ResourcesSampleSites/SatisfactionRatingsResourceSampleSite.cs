@@ -44,7 +44,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var sr = state.SatisfactionRatings.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(sr);
+                        return resp.WriteAsJson(new SingleSatisfactionRating { SatisfactionRating = sr });
                     })
                     .MapGet("api/v2/satisfaction_ratings", (req, resp, routeData) =>
                     {

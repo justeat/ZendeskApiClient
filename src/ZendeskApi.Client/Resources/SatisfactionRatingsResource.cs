@@ -54,7 +54,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<SatisfactionRating>();
+                var single = await response.Content.ReadAsAsync<SingleSatisfactionRating>();
+                return single.SatisfactionRating;
             }
         }
 

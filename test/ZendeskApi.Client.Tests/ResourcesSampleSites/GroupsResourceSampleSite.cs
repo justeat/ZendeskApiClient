@@ -56,7 +56,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var group = state.Groups.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(group);
+                        return resp.WriteAsJson(new SingleGroupResponse{ Group = group});
                     })
                     .MapGet("api/v2/groups", (req, resp, routeData) =>
                     {
@@ -137,7 +137,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             var webhostbuilder = new WebHostBuilder();
             webhostbuilder
                 .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
+                    services.AddSingleton(_ => new State());
                     services.AddRouting();
                     services.AddMemoryCache();
                 })
