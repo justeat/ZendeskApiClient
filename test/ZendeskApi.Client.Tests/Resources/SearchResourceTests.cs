@@ -7,6 +7,7 @@ using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+using Group = ZendeskApi.Client.Models.Group;
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -25,16 +26,16 @@ namespace ZendeskApi.Client.Tests.Resources
             var results = await _resource.SearchAsync(query => { });
 
             Assert.Equal(4, results.Count);
-            Assert.Equal(1, results.OfType<TicketResponse>().Single().Id);
+            Assert.Equal(1, results.OfType<Ticket>().Single().Id);
             Assert.Equal(3, results.OfType<Organization>().Single().Id);
-            Assert.Equal(2, results.OfType<GroupResponse>().Single().Id);
+            Assert.Equal(2, results.OfType<Group>().Single().Id);
             Assert.Equal(4, results.OfType<UserResponse>().Single().Id);
         }
 
         [Fact]
         public async Task ShouldGetTicket()
         {
-            var results = await _resource.SearchAsync<TicketResponse>(query => { });
+            var results = await _resource.SearchAsync<Ticket>(query => { });
 
             Assert.Equal(1, results.Count);
             Assert.Equal(1, results.Single().Id);

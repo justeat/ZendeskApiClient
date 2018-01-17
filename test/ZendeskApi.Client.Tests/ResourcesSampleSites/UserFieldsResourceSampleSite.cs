@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var userField = state.UserFields.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(userField);
+                        return resp.WriteAsJson(new UserFieldResponse { UserField = userField });
                     })
                     .MapGet("api/v2/user_fields", (req, resp, routeData) =>
                     {

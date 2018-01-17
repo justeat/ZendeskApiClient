@@ -21,7 +21,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
     {
         private class State
         {
-            public IDictionary<long, GroupResponse> Groups = new Dictionary<long, GroupResponse>();
+            public IDictionary<long, Group> Groups = new Dictionary<long, Group>();
         }
 
         public static Action<IRouteBuilder> MatchesRequest
@@ -56,7 +56,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var group = state.Groups.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(group);
+                        return resp.WriteAsJson(new GroupResponse{ Group = group});
                     })
                     .MapGet("api/v2/groups", (req, resp, routeData) =>
                     {
@@ -81,7 +81,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/groups", (req, resp, routeData) =>
                     {
-                        var group = req.Body.ReadAs<GroupResponse>();
+                        var group = req.Body.ReadAs<Group>();
 
                         if (group.Name.Contains("error"))
                         {
@@ -104,7 +104,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var group = req.Body.ReadAs<GroupResponse>();
+                        var group = req.Body.ReadAs<Group>();
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
@@ -137,7 +137,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             var webhostbuilder = new WebHostBuilder();
             webhostbuilder
                 .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
+                    services.AddSingleton(_ => new State());
                     services.AddRouting();
                     services.AddMemoryCache();
                 })
