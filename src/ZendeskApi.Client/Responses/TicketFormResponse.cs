@@ -1,15 +1,11 @@
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
 {
-    [JsonObject]
-    public class TicketFormsResponse : PaginationResponse<TicketForm>
+    public class TicketFormResponse
     {
-        [JsonProperty("ticket_forms")]
-        public IEnumerable<TicketForm> TicketForms { get; set; }
-
-        protected override IEnumerable<TicketForm> Enumerable => TicketForms;
+        [JsonProperty("ticket_form")]
+        public TicketForm TicketForm { get; set; }
     }
 }

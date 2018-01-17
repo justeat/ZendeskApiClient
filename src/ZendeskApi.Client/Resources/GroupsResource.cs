@@ -76,7 +76,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<GroupResponse> GetAsync(long groupId)
+        public async Task<Group> GetAsync(long groupId)
         {
             using (_loggerScope(_logger, $"GetAsync({groupId})"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
@@ -91,12 +91,12 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                var groupResponse = await response.Content.ReadAsAsync<SingleGroupResponse>();
+                var groupResponse = await response.Content.ReadAsAsync<GroupResponse>();
                 return groupResponse.Group;
             }
         }
 
-        public async Task<GroupResponse> CreateAsync(GroupCreateRequest group)
+        public async Task<Group> CreateAsync(GroupCreateRequest group)
         {
             using (_loggerScope(_logger, "PostAsync")) // Maybe incluse the request in the log?
             using (var client = _apiClient.CreateClient())
@@ -111,11 +111,11 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/groups#create-groups");
                 }
                 
-                return await response.Content.ReadAsAsync<GroupResponse>();
+                return await response.Content.ReadAsAsync<Group>();
             }
         }
 
-        public async Task<GroupResponse> UpdateAsync(GroupUpdateRequest group)
+        public async Task<Group> UpdateAsync(GroupUpdateRequest group)
         {
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
@@ -130,7 +130,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<GroupResponse>();
+                return await response.Content.ReadAsAsync<Group>();
             }
         }
 

@@ -23,8 +23,8 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     .MapGet("api/v2/search", (req, resp, routeData) =>
                     {
                         var obj = new ISearchResult[] {
-                            new TicketResponse { Id = 1, Url = new Uri("https://company.zendesk.com/api/v2/tickets/1.json") },
-                            new GroupResponse { Id = 2, Url = new Uri("https://company.zendesk.com/api/v2/groups/2.json") },
+                            new Ticket { Id = 1, Url = new Uri("https://company.zendesk.com/api/v2/tickets/1.json") },
+                            new Group { Id = 2, Url = new Uri("https://company.zendesk.com/api/v2/groups/2.json") },
                             new Organization { Id = 3, Url = new Uri("https://company.zendesk.com/api/v2/organizations/3.json") },
                             new UserResponse { Id = 4, Url = new Uri("https://company.zendesk.com/api/v2/users/4.json") }
                         };
@@ -34,7 +34,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                             if (query[1] == "ticket")
                             {
-                                obj = obj.OfType<TicketResponse>().ToArray();
+                                obj = obj.OfType<Ticket>().ToArray();
                             }
                         }
 

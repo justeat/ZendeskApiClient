@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                var singleResponse = await response.Content.ReadAsAsync<SingleTicketField>();
+                var singleResponse = await response.Content.ReadAsAsync<TicketFieldResponse>();
                 return singleResponse.TicketField;
             }
         }

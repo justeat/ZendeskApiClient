@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var userField = state.UserFields.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new SingleUserField { UserField = userField });
+                        return resp.WriteAsJson(new UserFieldResponse { UserField = userField });
                     })
                     .MapGet("api/v2/user_fields", (req, resp, routeData) =>
                     {

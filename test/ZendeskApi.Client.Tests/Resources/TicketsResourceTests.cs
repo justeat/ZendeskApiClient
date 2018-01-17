@@ -233,7 +233,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             var response = await _resource.GetAsync(ticket.Id);
 
-            Assert.Equal(JsonConvert.SerializeObject(new TicketResponseContainer{Ticket = ticket}), JsonConvert.SerializeObject(response));
+            Assert.Equal(JsonConvert.SerializeObject(new TicketResponse{Ticket = ticket}), JsonConvert.SerializeObject(response));
         }
 
         [Fact]
@@ -315,7 +315,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Null(ticket2);
         }
 
-        private async Task<TicketResponse[]> CreateTickets(int numberOfTicketsToCreate)
+        private async Task<Ticket[]> CreateTickets(int numberOfTicketsToCreate)
         {
             var tickets = new List<TicketCreateRequest>();
 
@@ -336,9 +336,9 @@ namespace ZendeskApi.Client.Tests.Resources
             return await CreateTickets(tickets.ToArray());
         }
 
-        private async Task<TicketResponse[]> CreateTickets(params TicketCreateRequest[] tickets)
+        private async Task<Ticket[]> CreateTickets(params TicketCreateRequest[] tickets)
         {
-            var createdTickets = new List<TicketResponse>();
+            var createdTickets = new List<Ticket>();
 
             foreach (var ticketCreateRequest in tickets)
             {

@@ -10,9 +10,9 @@ namespace ZendeskApi.Client.Resources
         Task<GroupListResponse> ListAsync(PagerParameters pager = null);
         Task<GroupListResponse> ListAsync(long userId, PagerParameters pager = null);
         Task<GroupListResponse> ListAssignableAsync(PagerParameters pager = null);
-        Task<GroupResponse> GetAsync(long groupId);
-        Task<GroupResponse> CreateAsync(GroupCreateRequest group);
-        Task<GroupResponse> UpdateAsync(GroupUpdateRequest group);
+        Task<Group> GetAsync(long groupId);
+        Task<Group> CreateAsync(GroupCreateRequest group);
+        Task<Group> UpdateAsync(GroupUpdateRequest group);
         Task DeleteAsync(long groupId);
     }
 }

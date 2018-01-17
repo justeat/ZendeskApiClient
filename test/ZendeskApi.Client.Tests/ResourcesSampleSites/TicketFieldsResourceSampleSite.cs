@@ -42,7 +42,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var ticketField = state.TicketFields.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new SingleTicketField { TicketField = ticketField });
+                        return resp.WriteAsJson(new TicketFieldResponse { TicketField = ticketField });
                     })
                     .MapGet("api/v2/ticket_fields", (req, resp, routeData) =>
                     {

@@ -1,15 +1,11 @@
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Responses
 {
-    [JsonObject]
-    public class RequestsResponse : PaginationResponse<Request>
+    public class RequestResponse
     {
-        [JsonProperty("requests")]
-        public IEnumerable<Request> Requests { get; set; }
-
-        protected override IEnumerable<Request> Enumerable => Requests;
+        [JsonProperty("request")]
+        public Request Request { get; set; }
     }
 }
