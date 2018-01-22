@@ -17,7 +17,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public SatisfactionRatingsTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new SatisfactionRatingsResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient(resource => new SatisfactionRatingsResourceSampleSite(resource));
             _resource = new SatisfactionRatingsResource(_client, NullLogger.Instance);
         }
 
@@ -38,7 +38,20 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ShouldGetSatisfactionRating()
         {
             var obj1 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
-            var obj2 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu2.com" }, 1);
+
+            var response = await _resource.GetAsync(obj1.Id.Value);
+
+            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(response));
+        }
+
+        [Fact]
+        public async Task ShouldHandleSatisfactionRatingComment()
+        {
+            var obj1 = await _resource.CreateAsync(new SatisfactionRating
+            {
+                Url = "http://fu.com",
+                Comment = "Very satified indeed"
+            }, 1);
 
             var response = await _resource.GetAsync(obj1.Id.Value);
 

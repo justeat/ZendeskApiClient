@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Models
         public DateTime? UpdatedAt { get; set; }
 
         [JsonProperty("comment")]
-        public TicketComment Comment { get; set; }
+        public string Comment { get; set; }
 
         [JsonProperty("url")]
         public string Url { get; set; }
