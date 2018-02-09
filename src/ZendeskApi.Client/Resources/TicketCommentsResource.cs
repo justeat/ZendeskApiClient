@@ -42,14 +42,14 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task AddComment(long ticketId, TicketComment ticketComment)
+        public async Task AddComment(long ticketId, TicketComment ticketComment, bool asImport = false)
         {
             var ticket = new TicketUpdateRequest(ticketId)
             {
                 Comment = ticketComment
             };
 
-            await _ticketsResource.UpdateAsync(ticket).ConfigureAwait(false);
+            await _ticketsResource.UpdateAsync(ticket,asImport).ConfigureAwait(false);
         }
     }
 }

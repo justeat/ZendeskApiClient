@@ -193,12 +193,12 @@ namespace ZendeskApi.Client.Resources
 
 
         #region Create Tickets
-        public async Task<TicketResponse> CreateAsync(TicketCreateRequest ticket)
+        public async Task<TicketResponse> CreateAsync(TicketCreateRequest ticket, bool asImport=false)
         {
             using (_loggerScope(_logger, "CreateAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, new TicketRequest<TicketCreateRequest>(ticket)).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(GetUri(asImport), new TicketRequest<TicketCreateRequest>(ticket)).ConfigureAwait(false);
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
@@ -213,10 +213,11 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatusResponse> CreateAsync(IEnumerable<TicketCreateRequest> tickets)
+        public async Task<JobStatusResponse> CreateAsync(IEnumerable<TicketCreateRequest> tickets,
+            bool asImport = false)
         {
             using (_loggerScope(_logger, "CreateAsync"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
+            using (var client = _apiClient.CreateClient(GetUri(asImport)))
             {
                 var response = await client.PostAsJsonAsync("create_many", new TicketListRequest<TicketCreateRequest>(tickets)).ConfigureAwait(false);
 
@@ -232,14 +233,21 @@ namespace ZendeskApi.Client.Resources
                 return await response.Content.ReadAsAsync<JobStatusResponse>();
             }
         }
+
+        private static string GetUri(bool asImport)
+        {
+            var uri = asImport ? ResourceUri.Replace("api/v2/", "api/v2/imports/") : ResourceUri;
+            return uri;
+        }
+
         #endregion
 
 
         #region Update Tickets
-        public async Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket)
+        public async Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket, bool asImport = false)
         {
             using (_loggerScope(_logger, "UpdateAsync"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
+            using (var client = _apiClient.CreateClient(GetUri(asImport)))
             {
                 var response = await client.PutAsJsonAsync(ticket.Id.ToString(), new TicketRequest<TicketUpdateRequest>(ticket)).ConfigureAwait(false);
 
@@ -261,10 +269,11 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<JobStatusResponse> UpdateAsync(IEnumerable<TicketUpdateRequest> tickets)
+        public async Task<JobStatusResponse> UpdateAsync(IEnumerable<TicketUpdateRequest> tickets,
+            bool asImport = false)
         {
             using (_loggerScope(_logger, "PutAsync"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
+            using (var client = _apiClient.CreateClient(GetUri(asImport)))
             {
                 var response = await client.PutAsJsonAsync("update_many", new TicketListRequest<TicketUpdateRequest>(tickets)).ConfigureAwait(false);
 

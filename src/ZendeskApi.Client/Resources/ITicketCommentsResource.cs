@@ -7,6 +7,6 @@ namespace ZendeskApi.Client.Resources
     public interface ITicketCommentsResource
     {
         Task<TicketCommentsListResponse> ListAsync(long parentId, PagerParameters pager = null);
-        Task AddComment(long ticketId, TicketComment ticketComment);
+        Task AddComment(long ticketId, TicketComment ticketComment,bool asImport=false);
     }
 }

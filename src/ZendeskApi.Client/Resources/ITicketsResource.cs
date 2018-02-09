@@ -25,13 +25,13 @@ namespace ZendeskApi.Client.Resources
         #endregion
 
         #region Create Tickets
-        Task<TicketResponse> CreateAsync(TicketCreateRequest ticket);
-        Task<JobStatusResponse> CreateAsync(IEnumerable<TicketCreateRequest> tickets);
+        Task<TicketResponse> CreateAsync(TicketCreateRequest ticket,bool asImport=false);
+        Task<JobStatusResponse> CreateAsync(IEnumerable<TicketCreateRequest> tickets, bool asImport = false);
         #endregion
 
         #region Update Tickets
-        Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket);
-        Task<JobStatusResponse> UpdateAsync(IEnumerable<TicketUpdateRequest> tickets);
+        Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket,bool asImport = false);
+        Task<JobStatusResponse> UpdateAsync(IEnumerable<TicketUpdateRequest> tickets, bool asImport = false);
         #endregion
 
         #region Mark Ticket as Spam and Suspend Requester
