@@ -44,7 +44,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var sr = state.SatisfactionRatings.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(sr);
+                        return resp.WriteAsJson(new SatisfactionRatingResponse { SatisfactionRating = sr });
                     })
                     .MapGet("api/v2/satisfaction_ratings", (req, resp, routeData) =>
                     {
@@ -57,14 +57,6 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var sr = req.Body.ReadAs<SatisfactionRating>();
                         var ticketId = long.Parse(routeData.Values["ticketId"].ToString());
-
-                        if (sr.Comment != null && sr.Comment.Body.Contains("error"))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
-
-                            return Task.CompletedTask;
-                        }
-
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
                         sr.Id = long.Parse(Rand.Next().ToString());
@@ -123,10 +115,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             return resource != null ? resource + "/" : resource;
         }
 
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
+        public Uri BaseUri => Client.BaseAddress;
 
         public override void Dispose()
         {

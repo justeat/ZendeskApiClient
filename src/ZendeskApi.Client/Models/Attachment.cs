@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models
@@ -25,6 +25,6 @@ namespace ZendeskApi.Client.Models
         public string ContentType { get; set; }
 
         [JsonProperty("size")]
-        public int Size { get; set; }
+        public long Size { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace ZendeskApi.Client.Resources
 
 
         #region List Tickets
-        public async Task<IPagination<TicketResponse>> ListAsync(PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, "ListAsync"))
             using (var client = _apiClient.CreateClient())
@@ -55,7 +55,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
         
-        public async Task<IPagination<TicketResponse>> ListForOrganizationAsync(long organizationId, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListForOrganizationAsync(long organizationId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"ListForOrganizationAsync({organizationId})"))
             using (var client = _apiClient.CreateClient())
@@ -80,7 +80,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<TicketResponse>> ListRequestedByAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListRequestedByAsync(long userId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"ListRequestedByAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
@@ -105,7 +105,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<TicketResponse>> ListCcdAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListCcdAsync(long userId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"ListCcdAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
@@ -130,7 +130,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<TicketResponse>> ListAssignedToAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListAssignedToAsync(long userId, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"ListAssignedToAsync({userId})"))
             using (var client = _apiClient.CreateClient(string.Format(UserResourceUriFormat, userId)))
@@ -177,7 +177,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<IPagination<TicketResponse>> GetAsync(long[] ticketIds, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> GetAsync(long[] ticketIds, PagerParameters pager = null)
         {
             using (_loggerScope(_logger, $"GetAllAsync({ZendeskFormatter.ToCsv(ticketIds)})"))
             using (var client = _apiClient.CreateClient(ResourceUri))

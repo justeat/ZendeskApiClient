@@ -68,7 +68,7 @@ namespace ZendeskApi.Client.Tests.Queries
         public void CalledWithDifferentType_BuildsQuery()
         {
             // Given
-            var query = new ZendeskQuery().WithTypeFilter<TicketResponse>();
+            var query = new ZendeskQuery().WithTypeFilter<Ticket>();
             query.WithFilter("name", "cheese factory", FilterOperator.Equals);
 
             // When 
@@ -82,7 +82,7 @@ namespace ZendeskApi.Client.Tests.Queries
         public void CalledWithOrderSet_BuildsQuery()
         {
             // Given
-            var query = new ZendeskQuery().WithTypeFilter<TicketResponse>();
+            var query = new ZendeskQuery().WithTypeFilter<Ticket>();
             query.WithFilter("name", "cheese factory", FilterOperator.Equals).WithOrdering(SortBy.Priority, SortOrder.Asc);
 
             // When 
@@ -96,7 +96,7 @@ namespace ZendeskApi.Client.Tests.Queries
         public void CalledWithNotEqual_BuildsQuery()
         {
             // Given
-            var query = new ZendeskQuery().WithTypeFilter<TicketResponse>();
+            var query = new ZendeskQuery().WithTypeFilter<Ticket>();
             query.WithFilter("name", "cheese factory", FilterOperator.Excludes).WithOrdering(SortBy.Priority, SortOrder.Asc);
 
             // When 
@@ -120,9 +120,9 @@ namespace ZendeskApi.Client.Tests.Queries
             Assert.Equal("query=type:user+status:open", new ZendeskQuery().WithTypeFilter<UserResponse>().WithTicketStatus(TicketStatus.Open).BuildQuery());
             Assert.Equal("query=type:organization+created<2015-05-01", new ZendeskQuery().WithTypeFilter<Organization>().WithCreatedDate(new DateTime(2015,5,1), FilterOperator.LessThan).BuildQuery());
             Assert.Equal("query=type:organization+created>2015-05-01", new ZendeskQuery().WithTypeFilter<Organization>().WithCreatedDate(new DateTime(2015, 5, 1), FilterOperator.GreaterThan).BuildQuery());
-            Assert.Equal("query=status<solved+requester:user%40domain.com+type:ticket", new ZendeskQuery().WithTicketStatus(TicketStatus.Solved, FilterOperator.LessThan).FromRequester("user@domain.com").WithTypeFilter<TicketResponse>().BuildQuery());
+            Assert.Equal("query=status<solved+requester:user%40domain.com+type:ticket", new ZendeskQuery().WithTicketStatus(TicketStatus.Solved, FilterOperator.LessThan).FromRequester("user@domain.com").WithTypeFilter<Ticket>().BuildQuery());
             Assert.Equal("query=type:user+tags:premium_support", new ZendeskQuery().WithTypeFilter<UserResponse>().WithTags("premium_support").BuildQuery());
-            Assert.Equal("query=created>2012-07-17+type:ticket+organization:\"MD+Photo\"", new ZendeskQuery().WithCreatedDate(new DateTime(2012, 7, 17), FilterOperator.GreaterThan).WithTypeFilter<TicketResponse>().WithWordFromTypeFilter<Organization>("MD Photo",  FilterOperator.Exact).BuildQuery());
+            Assert.Equal("query=created>2012-07-17+type:ticket+organization:\"MD+Photo\"", new ZendeskQuery().WithCreatedDate(new DateTime(2012, 7, 17), FilterOperator.GreaterThan).WithTypeFilter<Ticket>().WithWordFromTypeFilter<Organization>("MD Photo",  FilterOperator.Exact).BuildQuery());
         }
     }
 }

@@ -12,9 +12,9 @@ namespace ZendeskApi.Client.Converters
     {
         private static readonly Type[] DeserializableSearchTypes =
         {
-            typeof(TicketResponse),
+            typeof(Ticket),
             typeof(UserResponse),
-            typeof(GroupResponse),
+            typeof(Group),
             typeof(Organization)
         };
 

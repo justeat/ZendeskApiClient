@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -11,8 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Net.Http.Headers;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
@@ -21,7 +20,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
     {
         private class State
         {
-            public IDictionary<long, Attachment> Attachments = new Dictionary<long, Attachment>();
+            public readonly IDictionary<long, Attachment> Attachments = new Dictionary<long, Attachment>();
         }
 
         public static Action<IRouteBuilder> MatchesRequest
@@ -52,18 +51,6 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         Debug.Assert(req.Query["token"] == "6bk3gql82em5nmf");
                         Debug.Assert(req.ContentType == "application/binary");
 
-                        var strings = new List<string>();
-                        using (var inputStreamReader = new StreamReader(req.Body))
-                        {
-                            string line;
-                            while ((line = inputStreamReader.ReadLine()) != null)
-                            {
-                                strings.Add(line);
-                            }
-                        }
-                        
-                        var parsedContentDisposition = ContentDispositionHeaderValue.Parse(strings[1].Replace("Content-Disposition: ", ""));
-
                         resp.StatusCode = (int)HttpStatusCode.Created;
 
                         resp.Headers.Add("Location", "https://localhost/api/v2/attachments/498483");
@@ -74,16 +61,18 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         {
                             ContentType = "text/plain",
                             ContentUrl = "https://company.zendesk.com/attachments/crash.log",
-                            Size = strings[3].Length,
-                            FileName = parsedContentDisposition.FileName,
+                            Size = req.Body.Length,
+                            FileName = req.Query["filename"],
                             Id = long.Parse(Rand.Next().ToString())
                         };
 
                         state.Attachments.Add(attachment.Id.Value, attachment);
 
-                        resp.WriteAsJson(new Upload {
-                            Attachment = attachment,
-                            Token = "6bk3gql82em5nmf"
+                        resp.WriteAsJson(new UploadResponse{
+                            Upload = new Upload {
+                                Attachment = attachment,
+                                Token = "6bk3gql82em5nmf"
+                            }
                         });
 
                         return Task.CompletedTask;

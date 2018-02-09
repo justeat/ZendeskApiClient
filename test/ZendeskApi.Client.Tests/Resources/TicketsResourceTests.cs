@@ -233,7 +233,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             var response = await _resource.GetAsync(ticket.Id);
 
-            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(response));
+            Assert.Equal(JsonConvert.SerializeObject(new TicketResponse{Ticket = ticket}), JsonConvert.SerializeObject(response));
         }
 
         [Fact]
@@ -261,8 +261,8 @@ namespace ZendeskApi.Client.Tests.Resources
                     }
                 });
 
-            Assert.NotEqual(0L, response.Id);
-            Assert.Equal("My printer is on fire!", response.Subject);
+            Assert.NotEqual(0L, response.Ticket.Id);
+            Assert.Equal("My printer is on fire!", response.Ticket.Subject);
         }
 
         [Fact]
@@ -294,7 +294,7 @@ namespace ZendeskApi.Client.Tests.Resources
                 Subject = "I COMMAND YOU TO UPDATE!!!"
             };
 
-            ticket = await _resource.UpdateAsync(updateTicketRequest);
+            ticket = (await _resource.UpdateAsync(updateTicketRequest)).Ticket;
 
             Assert.Equal("I COMMAND YOU TO UPDATE!!!", ticket.Subject);
         }
@@ -306,7 +306,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             var ticket1 = await _resource.GetAsync(ticket.Id);
 
-            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(ticket1));
+            Assert.Equal(JsonConvert.SerializeObject(ticket), JsonConvert.SerializeObject(ticket1.Ticket));
 
             await _resource.DeleteAsync(ticket.Id);
 
@@ -315,7 +315,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Null(ticket2);
         }
 
-        private async Task<TicketResponse[]> CreateTickets(int numberOfTicketsToCreate)
+        private async Task<Ticket[]> CreateTickets(int numberOfTicketsToCreate)
         {
             var tickets = new List<TicketCreateRequest>();
 
@@ -336,14 +336,14 @@ namespace ZendeskApi.Client.Tests.Resources
             return await CreateTickets(tickets.ToArray());
         }
 
-        private async Task<TicketResponse[]> CreateTickets(params TicketCreateRequest[] tickets)
+        private async Task<Ticket[]> CreateTickets(params TicketCreateRequest[] tickets)
         {
-            var createdTickets = new List<TicketResponse>();
+            var createdTickets = new List<Ticket>();
 
             foreach (var ticketCreateRequest in tickets)
             {
-                var ticket = await _resource.CreateAsync(ticketCreateRequest);
-                createdTickets.Add(ticket);
+                var response = await _resource.CreateAsync(ticketCreateRequest);
+                createdTickets.Add(response.Ticket);
             }
 
             return createdTickets.ToArray();

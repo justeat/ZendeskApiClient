@@ -12,16 +12,16 @@ namespace ZendeskApi.Client.Resources
     public interface ITicketsResource
     {
         #region List Tickets
-        Task<IPagination<TicketResponse>> ListAsync(PagerParameters pager = null);
-        Task<IPagination<TicketResponse>> ListForOrganizationAsync(long organizationId, PagerParameters pager = null);
-        Task<IPagination<TicketResponse>> ListRequestedByAsync(long userId, PagerParameters pager = null);
-        Task<IPagination<TicketResponse>> ListCcdAsync(long userId, PagerParameters pager = null);
-        Task<IPagination<TicketResponse>> ListAssignedToAsync(long userId, PagerParameters pager = null);
+        Task<IPagination<Ticket>> ListAsync(PagerParameters pager = null);
+        Task<IPagination<Ticket>> ListForOrganizationAsync(long organizationId, PagerParameters pager = null);
+        Task<IPagination<Ticket>> ListRequestedByAsync(long userId, PagerParameters pager = null);
+        Task<IPagination<Ticket>> ListCcdAsync(long userId, PagerParameters pager = null);
+        Task<IPagination<Ticket>> ListAssignedToAsync(long userId, PagerParameters pager = null);
         #endregion
 
         #region Show Tickets
         Task<TicketResponse> GetAsync(long ticketId);
-        Task<IPagination<TicketResponse>> GetAsync(long[] ticketIds, PagerParameters pager = null);
+        Task<IPagination<Ticket>> GetAsync(long[] ticketIds, PagerParameters pager = null);
         #endregion
 
         #region Create Tickets

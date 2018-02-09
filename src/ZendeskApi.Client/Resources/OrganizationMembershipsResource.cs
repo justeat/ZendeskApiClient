@@ -86,7 +86,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<OrganizationMembership>();
+                var single = await response.Content.ReadAsAsync<OrganizationMembershipResponse>();
+                return single.OrganizationMembership;
             }
         }
 

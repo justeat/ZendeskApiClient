@@ -11,14 +11,21 @@ namespace ZendeskApi.Client.Requests
     /// </summary>
     public class TicketCreateRequest
     {
-        public TicketCreateRequest(string description)
+        public TicketCreateRequest()
         {
-            Description = description;
+            
         }
 
-        [JsonProperty("description")]
-        public string Description { get; set; }
+        public TicketCreateRequest(string initialComment, bool initialCommentIsPublic = false)
+        {
+            Comment = new TicketComment {Body = initialComment, IsPublic = initialCommentIsPublic};    
+        }
 
+        public TicketCreateRequest(TicketComment comment)
+        {
+            Comment = comment;
+        }
+        
         [JsonProperty("subject")]
         public string Subject { get; set; }
 
@@ -58,7 +65,7 @@ namespace ZendeskApi.Client.Requests
         public IList<string> Tags { get; set; }
 
         [JsonProperty("external_id")]
-        public long? ExternalId { get; set; }
+        public string ExternalId { get; set; }
             
         [JsonProperty("forum_topic_id")]
         public long? ForumTopicId { get; set; }
