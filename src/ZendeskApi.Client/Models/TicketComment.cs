@@ -1,10 +1,27 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace ZendeskApi.Client.Models
 {
+    public class TicketBulkComment
+    {
+        [JsonProperty] public long? Id { get; set; }
+
+        [JsonProperty("value")]
+        public string Value { get; set; }
+
+        [JsonProperty("author_id")]
+        public long? Author { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTime? CreatedAt { get; set; }
+
+        [JsonProperty("public")]
+        public bool IsPublic { get; set; }
+    }
+
     [JsonObject("comment")]
     public class TicketComment
     {

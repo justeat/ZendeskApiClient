@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using ZendeskApi.Client.Converters;
 using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Requests
 {
+   
+
     /// <summary>
-    /// <see href="https://developer.zendesk.com/rest_api/docs/core/tickets#request-body">Request body</see> <see href="https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket">Create Ticket</see>.
-    /// </summary>
-    public class TicketUpdateRequest
+        /// <see href="https://developer.zendesk.com/rest_api/docs/core/tickets#request-body">Request body</see> <see href="https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket">Create Ticket</see>.
+        /// </summary>
+        public class TicketUpdateRequest
     {
         public TicketUpdateRequest(long id)
         {

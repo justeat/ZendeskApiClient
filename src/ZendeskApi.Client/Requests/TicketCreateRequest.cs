@@ -6,6 +6,19 @@ using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Requests
 {
+
+    [JsonObject("comment")]
+  
+    public class TicketBulkCreateRequest : TicketCreateRequest
+    {
+        /// <summary>
+        /// An object that adds a comment to the ticket. See <see href="https://developer.zendesk.com/rest_api/docs/core/ticket_comments">Ticket comments</see>. 
+        /// To include an attachment with the comment, see Attaching files
+        /// </summary>
+        [JsonProperty("comments", Required = Required.DisallowNull)]
+        public List<TicketBulkComment> Comments { get; set; }
+    }
+
     /// <summary>
     /// See <see href="https://developer.zendesk.com/rest_api/docs/core/tickets#request-parameters">Request body</see> for Create Ticket.
     /// </summary>
