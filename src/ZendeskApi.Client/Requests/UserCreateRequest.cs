@@ -70,6 +70,11 @@ namespace ZendeskApi.Client.Requests
         /// </summary>
         [JsonProperty("only_private_comments")]
         public bool? OnlyPrivateComments { get; set; }
+        /// <summary>
+        /// Whether the phone number is shared or not.
+        /// </summary>
+        [JsonProperty("shared_phone_number")]
+        public bool SharedPhoneNumber { get; set; }
 
         /// <summary>
         /// The id of the organization the user is associated with

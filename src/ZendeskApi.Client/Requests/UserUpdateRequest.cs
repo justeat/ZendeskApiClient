@@ -91,7 +91,11 @@ namespace ZendeskApi.Client.Requests
         /// </summary>
         [JsonProperty("phone")]
         public string Phone { get; set; }
-
+        /// <summary>
+        /// Whether the phone number is shared or not.
+        /// </summary>
+        [JsonProperty("shared_phone_number")]
+        public bool SharedPhoneNumber { get; set; }
         /// <summary>
         /// If the agent has any restrictions; false for admins and unrestricted agents, true for other agents
         /// </summary>
