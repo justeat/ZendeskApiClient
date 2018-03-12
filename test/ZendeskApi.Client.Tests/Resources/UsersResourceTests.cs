@@ -184,6 +184,30 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task ShouldCreateOrUpdateUser()
+        {
+            var user = await _resource.CreateOrUpdateAsync(
+                new UserCreateRequest("name")
+                {
+                    Email = "Fu1@fu.com",
+                    Name = "Cheese Master"
+                });
+
+            Assert.Equal("Fu1@fu.com", user.Email);
+            Assert.Equal("Cheese Master", user.Name);
+
+            user = await _resource.CreateOrUpdateAsync(
+                new UserCreateRequest("name")
+                {
+                    Email = "Fu1@fu.com",
+                    Name = "Kung Fu Wizard"
+                });
+
+            Assert.Equal("Fu1@fu.com", user.Email);
+            Assert.Equal("Kung Fu Wizard", user.Name);
+        }
+
+        [Fact]
         public async Task ShouldDeleteUser()
         {
             var user = await _resource.CreateAsync(

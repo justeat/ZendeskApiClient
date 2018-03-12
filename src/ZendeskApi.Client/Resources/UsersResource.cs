@@ -259,6 +259,27 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
+        public async Task<UserResponse> CreateOrUpdateAsync(UserCreateRequest user)
+        {
+            using (_loggerScope(_logger, "CreateOrUpdateAsync"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
+            {
+                var response = await client.PostAsJsonAsync("create_or_update", new UserRequest<UserCreateRequest>(user)).ConfigureAwait(false);
+
+                if (response.StatusCode != HttpStatusCode.Created && response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithExpectedHttpStatus(HttpStatusCode.Created, HttpStatusCode.OK)
+                        .WithHelpDocsLink("core/users#create-or-update-user")
+                        .Build();
+                }
+
+                var result = await response.Content.ReadAsAsync<SingleUserResponse>();
+                return result.UserResponse;
+            }
+        }
+
         public async Task DeleteAsync(long userId)
         {
             using (_loggerScope(_logger, "DeleteAsync({userId})"))
