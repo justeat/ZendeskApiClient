@@ -30,7 +30,14 @@ namespace ZendeskApi.Client.Exceptions
         {
             if (status != null)
             {
-                this._expectedStatusCode = new List<HttpStatusCode>(status);
+                if (_expectedStatusCode != null)
+                {
+                    this._expectedStatusCode.AddRange(status);
+                }
+                else
+                {
+                    this._expectedStatusCode = new List<HttpStatusCode>(status);
+                }
             }
             return this;
         }
