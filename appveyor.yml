@@ -7,6 +7,11 @@ build:
   project: ZendeskApiClient.sln
   parallel: true
   verbosity: minimal
+test:
+  assemblies:
+    except:
+      - test-assembly-A.dll
+      - '**\*.tests.dll'
 artifacts:
 - path: 'output\*.nupkg'
 deploy:
