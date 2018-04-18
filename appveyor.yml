@@ -11,7 +11,7 @@ test:
   assemblies:
     except:
       - test-assembly-A.dll
-      - '**\*.tests.dll'
+      - '**\*.Acceptance.dll'
 artifacts:
 - path: 'output\*.nupkg'
 deploy:
