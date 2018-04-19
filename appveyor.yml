@@ -6,7 +6,6 @@ before_build:
 build:
   project: ZendeskApiClient.sln
   publish_nuget: true
-  publish_nuget_symbols: true
   include_nuget_references: true
   parallel: true
   verbosity: minimal
@@ -14,8 +13,6 @@ test:
   assemblies:
     except:
       - '**\*.Acceptance.dll'
-artifacts:
-- path: 'output\*.nupkg'
 deploy:
 - provider: NuGet
   api_key:
