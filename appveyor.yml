@@ -5,12 +5,14 @@ before_build:
 - nuget restore
 build:
   project: ZendeskApiClient.sln
+  publish_nuget: true
+  publish_nuget_symbols: true
+  include_nuget_references: true
   parallel: true
   verbosity: minimal
 test:
   assemblies:
     except:
-      - test-assembly-A.dll
       - '**\*.Acceptance.dll'
 artifacts:
 - path: 'output\*.nupkg'
