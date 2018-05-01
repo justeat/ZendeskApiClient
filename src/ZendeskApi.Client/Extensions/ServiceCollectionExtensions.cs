@@ -22,5 +22,21 @@ namespace ZendeskApi.Client.Extensions
 
             return services;
         }
+
+        public static IServiceCollection AddZendeskClient(this IServiceCollection services,
+            string endpointUri,
+            string oAuthToken
+        )
+        {
+            services.AddScoped<IZendeskClient, ZendeskClient>();
+            services.AddScoped<IZendeskApiClient, ZendeskApiClient>();
+
+            services.Configure<ZendeskOptions>(options => {
+                options.EndpointUri = endpointUri;
+                options.OAuthToken = oAuthToken;
+            });
+
+            return services;
+        }
     }
 }
