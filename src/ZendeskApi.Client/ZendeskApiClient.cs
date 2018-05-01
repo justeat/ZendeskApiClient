@@ -39,7 +39,7 @@ namespace ZendeskApi.Client
 
             var authorizationHeader = _options.GetAuthorizationHeader();
 
-            client.DefaultRequestHeaders.Add("Authorization", $"Basic {authorizationHeader}");
+            client.DefaultRequestHeaders.Add("Authorization", authorizationHeader);
 
             client.DefaultRequestHeaders
               .Accept
