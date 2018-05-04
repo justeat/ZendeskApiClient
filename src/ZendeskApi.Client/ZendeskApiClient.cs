@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.Options;
+using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Options;
 
 namespace ZendeskApi.Client
@@ -36,9 +37,9 @@ namespace ZendeskApi.Client
                 BaseAddress = new Uri($"{_options.EndpointUri}/{resource}"),
             };
 
-            var authorizationHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_options.Username}/token:{_options.Token}"));
+            var authorizationHeader = _options.GetAuthorizationHeader();
 
-            client.DefaultRequestHeaders.Add("Authorization", $"Basic {authorizationHeader}");
+            client.DefaultRequestHeaders.Add("Authorization", authorizationHeader);
 
             client.DefaultRequestHeaders
               .Accept
