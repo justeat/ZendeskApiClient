@@ -15,7 +15,7 @@ namespace ZendeskApi.Client.Models
         [JsonProperty("id")]
         public long? Id { get; set; }
 
-        [JsonProperty("filename")]
+        [JsonProperty("file_name")]
         public string FileName { get; set; }
 
         [JsonProperty("content_url")]
