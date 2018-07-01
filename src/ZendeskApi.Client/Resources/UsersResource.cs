@@ -270,7 +270,7 @@ namespace ZendeskApi.Client.Resources
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                         .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                        .WithExpectedHttpStatus(HttpStatusCode.OK)
                         .WithHelpDocsLink("core/users#delete-user")
                         .Build();
                 }
