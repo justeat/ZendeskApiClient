@@ -17,7 +17,6 @@ namespace ZendeskApi.Client.Resources
     public class DeletedUsersResource : IDeletedUsersResource
     {
         private const string ResourceUri = "api/v2/deleted_users";
-        private const string IncrementalResourceUri = "api/v2/incremental";
 
         private readonly IZendeskApiClient _apiClient;
         private readonly ILogger _logger;
