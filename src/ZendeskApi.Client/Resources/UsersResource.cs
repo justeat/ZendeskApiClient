@@ -266,7 +266,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.DeleteAsync(userId.ToString()).ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                         .WithResponse(response)
