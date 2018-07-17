@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using ZendeskApi.Client.Models;
 
@@ -114,9 +114,9 @@ namespace ZendeskApi.Client.Queries
                 }
             }
 
-            if (_sortOrder == SortOrder.Asc)
+            if (_sortOrder == SortOrder.Desc)
             {
-                sb.Append("&sort_order=asc");
+                sb.Append("&sort_order=desc");
             }
 
             return sb.ToString();
