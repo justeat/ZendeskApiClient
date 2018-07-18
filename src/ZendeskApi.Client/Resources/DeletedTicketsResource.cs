@@ -5,10 +5,12 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ZendeskApi.Client.Converters;
 using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Queries;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -46,7 +48,29 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<TicketsListResponse>();
+                return await response.Content.ReadAsAsync<DeletedTicketsListResponse>();
+            }
+        }
+
+        public async Task<DeletedTicketsListResponse> ListAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
+        {
+            var query = new ZendeskQuery();
+            builder(query);
+
+            using (_loggerScope(_logger, "SearchAsync"))
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync($"{ResourceUri}.json?{query.BuildQuery()}", pager).ConfigureAwait(false);
+
+                if(!response.IsSuccessStatusCode)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("core/tickets#show-deleted-tickets")
+                        .Build();
+                }
+
+                return await response.Content.ReadAsAsync<DeletedTicketsListResponse>(new SearchJsonConverter());
             }
         }
 
@@ -59,11 +83,11 @@ namespace ZendeskApi.Client.Resources
                     .PutAsync(string.Format($"{ticketId}/restore.json", ticketId), new StringContent(string.Empty))
                     .ConfigureAwait(false);
                 
-                if (response.StatusCode != HttpStatusCode.NoContent)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                         .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                        .WithExpectedHttpStatus(HttpStatusCode.OK)
                         .WithHelpDocsLink("core/tickets#restore-a-previously-deleted-ticket")
                         .Build();
                 }
@@ -93,11 +117,11 @@ namespace ZendeskApi.Client.Resources
                     .PutAsync($"restore_many?ids={ticketIdsString}", new StringContent(string.Empty))
                     .ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                         .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                        .WithExpectedHttpStatus(HttpStatusCode.OK)
                         .WithHelpDocsLink("core/tickets#restore-previously-deleted-tickets-in-bulk")
                         .Build();
                 }
@@ -115,7 +139,7 @@ namespace ZendeskApi.Client.Resources
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                         .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                        .WithExpectedHttpStatus(HttpStatusCode.OK)
                         .WithHelpDocsLink("core/tickets#delete-ticket-permanently")
                         .Build();
                 }
@@ -145,11 +169,11 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.DeleteAsync($"destroy_many?ids={ticketIdsString}").ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                         .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                        .WithExpectedHttpStatus(HttpStatusCode.OK)
                         .WithHelpDocsLink("core/tickets#delete-multiple-tickets-permanently")
                         .Build();
                 }

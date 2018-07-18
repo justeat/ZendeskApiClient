@@ -35,6 +35,18 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(JsonConvert.SerializeObject(tickets[1]), JsonConvert.SerializeObject(retrievedTickets[1]));
         }
         
+
+        [Fact]
+        public async Task ShouldListDeletedTicketsWhenSpecifyingSorting()
+        {
+            var tickets = CreateTickets(2);
+
+            var retrievedTickets = (await _resource.ListAsync(q => q.WithOrdering(SortBy.DeletedAt, SortOrder.Desc))).ToArray();
+
+            Assert.Equal(2, retrievedTickets.Length);
+            Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
+            Assert.Equal(JsonConvert.SerializeObject(tickets[1]), JsonConvert.SerializeObject(retrievedTickets[1]));
+        }
         [Fact]
         public async Task ShouldRestoreTicket()
         {

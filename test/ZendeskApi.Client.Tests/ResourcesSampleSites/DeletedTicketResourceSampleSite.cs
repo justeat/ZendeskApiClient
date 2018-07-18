@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Take(pager.PageSize);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return resp.WriteAsJson(new DeletedTicketsListResponse { Tickets = tickets});
                     })
                     .MapPut("api/v2/deleted_tickets/{id}/restore.json", (req, resp, routeData) =>
                     {
@@ -59,7 +59,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         state.Tickets.Remove(id);
                         
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
+                        resp.StatusCode = (int)HttpStatusCode.OK;
                         return Task.CompletedTask;
                     })
                     .MapPut("api/v2/deleted_tickets/restore_many", (req, resp, routeData) =>
@@ -84,7 +84,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             state.Tickets.Remove(anId);
                         }
 
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
+                        resp.StatusCode = (int)HttpStatusCode.OK;
                         return Task.CompletedTask;
                     })
                     .MapDelete("api/v2/deleted_tickets/destroy_many", (req, resp, routeData) =>
@@ -109,7 +109,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             state.Tickets.Remove(anId);
                         }
 
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
+                        resp.StatusCode = (int)HttpStatusCode.OK;
                         return Task.CompletedTask;
                     })
                     .MapDelete("api/v2/deleted_tickets/{id}.json", (req, resp, routeData) =>

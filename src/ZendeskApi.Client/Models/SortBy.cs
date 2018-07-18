@@ -1,4 +1,4 @@
-﻿namespace ZendeskApi.Client.Models
+namespace ZendeskApi.Client.Models
 {
     public enum SortBy
     {
@@ -7,6 +7,7 @@
         UpdateAt,
         Priority,
         Status,
-        TicketType
+        TicketType,
+        DeletedAt
     }
 }
