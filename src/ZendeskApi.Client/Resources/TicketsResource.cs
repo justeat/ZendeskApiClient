@@ -327,11 +327,11 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.DeleteAsync(ticketId.ToString()).ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                                    .WithExpectedHttpStatus(HttpStatusCode.OK)
                                     .WithHelpDocsLink("core/tickets#delete-ticket")
                                     .Build();
                 }
@@ -359,11 +359,11 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.DeleteAsync($"destroy_many.json?ids={ticketIdsString}").ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                                    .WithExpectedHttpStatus(HttpStatusCode.OK)
                                     .WithHelpDocsLink("core/tickets#bulk-delete-tickets")
                                     .Build();
                 }

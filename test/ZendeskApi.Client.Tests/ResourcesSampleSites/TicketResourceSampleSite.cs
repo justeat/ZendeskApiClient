@@ -217,7 +217,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             state.Tickets.Remove(anId);
                         }
 
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
+                        resp.StatusCode = (int)HttpStatusCode.OK;
                         return Task.CompletedTask;
                     })
                     .MapDelete("api/v2/tickets/{id}", (req, resp, routeData) =>
@@ -228,7 +228,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         state.Tickets.Remove(id);
 
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
+                        resp.StatusCode = (int)HttpStatusCode.OK;
                         return Task.CompletedTask;
                     });
             }
