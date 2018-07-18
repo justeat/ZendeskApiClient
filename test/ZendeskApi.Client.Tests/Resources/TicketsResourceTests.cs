@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
@@ -8,7 +7,6 @@ using Xunit;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Models;
 using System.Collections.Generic;
-using AutoMapper;
 using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -101,6 +99,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[0]), JsonConvert.SerializeObject(tickets[0]));
             Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[2]), JsonConvert.SerializeObject(tickets[1]));
         }
+
         [Fact]
         public async Task ShouldListAllForRequestedUserTickets()
         {
@@ -183,8 +182,7 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(JsonConvert.SerializeObject(ticketsCrearted[1]), JsonConvert.SerializeObject(tickets[0]));
             Assert.Equal(JsonConvert.SerializeObject(ticketsCrearted[2]), JsonConvert.SerializeObject(tickets[1]));
         }
-
-
+        
         [Fact]
         public async Task ShouldListAllForAssignedForUserTickets()
         {
@@ -313,6 +311,19 @@ namespace ZendeskApi.Client.Tests.Resources
             var ticket2 = await _resource.GetAsync(ticket.Id);
 
             Assert.Null(ticket2);
+        }
+
+        [Fact]
+        public async Task ShouldDeleteMultipleTickets()
+        {
+            var tickets = await CreateTickets(3);
+            var ticketIds = tickets.Select(t => t.Id).ToArray();
+
+            await _resource.DeleteAsync(ticketIds);
+
+            var doTicketsStillExistResult = await _resource.GetAsync(ticketIds);
+
+            Assert.Empty(doTicketsStillExistResult);
         }
 
         private async Task<Ticket[]> CreateTickets(int numberOfTicketsToCreate)

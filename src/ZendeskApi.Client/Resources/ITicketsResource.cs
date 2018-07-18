@@ -41,6 +41,7 @@ namespace ZendeskApi.Client.Resources
 
         #region Delete Tickets
         Task DeleteAsync(long ticketId);
+        Task DeleteAsync(IEnumerable<long> ticketIds);
         #endregion
     }
 }
