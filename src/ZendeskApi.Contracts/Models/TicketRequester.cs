@@ -17,6 +17,6 @@ namespace ZendeskApi.Contracts.Models
         public string Email { get; set; }
 
         [DataMember(Name = "locale_id")]
-        public int? Locale { get; set; }
+        public long? Locale { get; set; }
     }
 }

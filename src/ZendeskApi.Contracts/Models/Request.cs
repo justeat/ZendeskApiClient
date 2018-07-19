@@ -70,7 +70,7 @@ namespace ZendeskApi.Contracts.Models
         public long? GroupId { get; set; }
 
         [DataMember(Name = "ticket_form_id", EmitDefaultValue = false)]
-        public int? FormId { get; set; }
+        public long? FormId { get; set; }
 
         [DataMember(Name = "can_be_solved_by_me")]
         public bool CanBeSolvedByMe { get; set; }
