@@ -296,6 +296,30 @@ namespace ZendeskApi.Client.Tests.Resources
 
             Assert.Equal("I COMMAND YOU TO UPDATE!!!", ticket.Subject);
         }
+        
+        [Fact]
+        public async Task ShouldUpdateMultipleTickets()
+        {
+            var tickets = await CreateTickets(3);
+
+            var updates = new List<TicketUpdateRequest>();
+            var counter = 0;
+            foreach (var ticket in tickets)
+            {
+                Assert.StartsWith("My printer is on fire! ", ticket.Subject);
+
+                var updateTicketRequest = new TicketUpdateRequest(ticket.Id)
+                {
+                    Subject = "I COMMAND YOU TO UPDATE!!! " + counter++
+                };
+
+                updates.Add(updateTicketRequest);
+            }
+
+            var jobStatusResponse = await _resource.UpdateAsync(updates);
+
+            Assert.NotNull(jobStatusResponse);
+        }
 
         [Fact]
         public async Task ShouldDeleteTicket()
