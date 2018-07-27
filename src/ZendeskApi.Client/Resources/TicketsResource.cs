@@ -268,7 +268,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync("update_many", new TicketListRequest<TicketUpdateRequest>(tickets)).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync("update_many.json", new TicketListRequest<TicketUpdateRequest>(tickets)).ConfigureAwait(false);
 
                 if (!response.IsSuccessStatusCode)
                 {

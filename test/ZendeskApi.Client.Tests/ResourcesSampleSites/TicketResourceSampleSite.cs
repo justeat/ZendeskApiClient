@@ -171,6 +171,32 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(ticketResponse);
                     })
+                    .MapPut("api/v2/tickets/update_many.json", (req, resp, routeData) =>
+                    {
+                        var theIds = req.Query["ids"]
+                            .SelectMany(q => q.Split(','))
+                            .Select(long.Parse);
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var ticketRequestWrapper = req.Body.ReadAs<TicketListRequest<TicketUpdateRequest>>();
+
+                        var ticketsById = ticketRequestWrapper.Tickets.ToDictionary(t => t.Id, t => t);
+
+                        foreach (var id in theIds.Where(id => ticketsById.ContainsKey(id)))
+                        {
+                            var ticket = ticketsById[id];
+                            HandleTicketComment(ticket.Comment, state, ticket.Id);
+                        }
+
+                        var status = new JobStatusResult
+                        {
+                            Id = Rand.Next()
+                        };
+
+                        resp.StatusCode = (int) HttpStatusCode.OK;
+                        return resp.WriteAsJson(status);
+                    })
                     .MapPut("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
