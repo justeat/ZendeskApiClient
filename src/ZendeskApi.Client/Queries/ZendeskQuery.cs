@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using ZendeskApi.Client.Models;
 
@@ -98,6 +98,9 @@ namespace ZendeskApi.Client.Queries
                 {
                     case SortBy.CreatedAt:
                         sb.Append("&sort_by=created_at");
+                        break;
+                    case SortBy.DeletedAt:
+                        sb.Append("&sort_by=deleted_at");
                         break;
                     case SortBy.Priority:
                         sb.Append("&sort_by=priority");

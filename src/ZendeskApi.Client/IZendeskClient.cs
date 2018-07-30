@@ -1,4 +1,4 @@
-﻿using ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Resources;
 
 namespace ZendeskApi.Client
 {
@@ -6,6 +6,7 @@ namespace ZendeskApi.Client
     {
         ITicketsResource Tickets { get; }
         ITicketCommentsResource TicketComments { get; }
+        IDeletedTicketsResource DeletedTickets { get; }
         IOrganizationsResource Organizations { get; }
         ISearchResource Search { get; }
         IGroupsResource Groups { get; }

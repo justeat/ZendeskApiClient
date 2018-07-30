@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -266,7 +268,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync("update_many", new TicketListRequest<TicketUpdateRequest>(tickets)).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync("update_many.json", new TicketListRequest<TicketUpdateRequest>(tickets)).ConfigureAwait(false);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -325,18 +327,49 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.DeleteAsync(ticketId.ToString()).ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.NoContent)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithExpectedHttpStatus(HttpStatusCode.NoContent)
+                                    .WithExpectedHttpStatus(HttpStatusCode.OK)
                                     .WithHelpDocsLink("core/tickets#delete-ticket")
                                     .Build();
                 }
             }
         }
 
-        //TODO: Bulk Delete
+        public async Task DeleteAsync(IEnumerable<long> ticketIds)
+        {
+            if (ticketIds == null)
+            {
+                throw new ArgumentNullException($"{nameof(ticketIds)} must not be null", nameof(ticketIds));
+            }
+
+            var ticketIdList = ticketIds.ToList();
+
+            if (ticketIdList.Count == 0 || ticketIdList.Count > 100)
+            {
+                throw new ArgumentException($"{nameof(ticketIds)} must have [0..100] elements", nameof(ticketIds));
+            }
+
+            var ticketIdsString = ZendeskFormatter.ToCsv(ticketIdList);
+
+            using (_loggerScope(_logger, $"DeleteAsync({ticketIdsString})"))
+            using (var client = _apiClient.CreateClient(ResourceUri))
+            {
+                var response = await client.DeleteAsync($"destroy_many.json?ids={ticketIdsString}").ConfigureAwait(false);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                                    .WithResponse(response)
+                                    .WithExpectedHttpStatus(HttpStatusCode.OK)
+                                    .WithHelpDocsLink("core/tickets#bulk-delete-tickets")
+                                    .Build();
+                }
+            }
+        }
+        
         #endregion
     }
 }

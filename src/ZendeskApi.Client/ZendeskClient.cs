@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ZendeskApi.Client.Resources;
@@ -21,6 +21,9 @@ namespace ZendeskApi.Client
 
         private Lazy<ITicketCommentsResource> TicketCommentsLazy => new Lazy<ITicketCommentsResource>(() => new TicketCommentsResource(_apiClient, _logger));
         public ITicketCommentsResource TicketComments => TicketCommentsLazy.Value;
+
+        private Lazy<IDeletedTicketsResource> DeletedTicketsLazy => new Lazy<IDeletedTicketsResource>(() => new DeletedTicketsResource(_apiClient, _logger));
+        public IDeletedTicketsResource DeletedTickets => DeletedTicketsLazy.Value;
 
         private Lazy<IOrganizationsResource> OrganizationsLazy => new Lazy<IOrganizationsResource>(() => new OrganizationsResource(_apiClient, _logger));
         public IOrganizationsResource Organizations => OrganizationsLazy.Value;

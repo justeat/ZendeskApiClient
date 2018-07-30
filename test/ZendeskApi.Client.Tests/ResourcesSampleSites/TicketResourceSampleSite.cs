@@ -171,6 +171,32 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(ticketResponse);
                     })
+                    .MapPut("api/v2/tickets/update_many.json", (req, resp, routeData) =>
+                    {
+                        var theIds = req.Query["ids"]
+                            .SelectMany(q => q.Split(','))
+                            .Select(long.Parse);
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        var ticketRequestWrapper = req.Body.ReadAs<TicketListRequest<TicketUpdateRequest>>();
+
+                        var ticketsById = ticketRequestWrapper.Tickets.ToDictionary(t => t.Id, t => t);
+
+                        foreach (var id in theIds.Where(id => ticketsById.ContainsKey(id)))
+                        {
+                            var ticket = ticketsById[id];
+                            HandleTicketComment(ticket.Comment, state, ticket.Id);
+                        }
+
+                        var status = new JobStatusResult
+                        {
+                            Id = Rand.Next()
+                        };
+
+                        resp.StatusCode = (int) HttpStatusCode.OK;
+                        return resp.WriteAsJson(status);
+                    })
                     .MapPut("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
@@ -195,6 +221,31 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         resp.StatusCode = (int) HttpStatusCode.OK;
                         return resp.WriteAsJson(ticketResponse);
                     })
+                    .MapDelete("api/v2/tickets/destroy_many.json", (req, resp, routeData) =>
+                    {
+                        var idParameterValue = req.Query["ids"].First().ToString();
+
+                        if (!idParameterValue.Contains(","))
+                        {
+                            resp.StatusCode = 500;
+                            return Task.CompletedTask;
+                        }
+
+                        var theIds = idParameterValue
+                            .Split(',')
+                            .Select(x => long.Parse(x.Trim()))
+                            .ToList();
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+
+                        foreach (var anId in theIds)
+                        {
+                            state.Tickets.Remove(anId);
+                        }
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        return Task.CompletedTask;
+                    })
                     .MapDelete("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
@@ -203,7 +254,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         state.Tickets.Remove(id);
 
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
+                        resp.StatusCode = (int)HttpStatusCode.OK;
                         return Task.CompletedTask;
                     });
             }
