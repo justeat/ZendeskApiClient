@@ -1,7 +1,6 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using Microsoft.Extensions.Options;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Options;
@@ -10,27 +9,39 @@ namespace ZendeskApi.Client
 {
     public class ZendeskApiClient : IZendeskApiClient
     {
+        private readonly Func<HttpMessageHandler> _httpMessageHandlerFactory;
         private readonly ZendeskOptions _options;
+
+        public ZendeskApiClient(IOptions<ZendeskOptions> options, Func<HttpMessageHandler> httpMessageHandlerFactory)
+        : this(options)
+        {
+            _httpMessageHandlerFactory = httpMessageHandlerFactory;
+        }
 
         public ZendeskApiClient(IOptions<ZendeskOptions> options)
         {
             _options = options.Value;
+            _httpMessageHandlerFactory = () =>
+            {
+                var handler = new HttpClientHandler();
+                if (handler.SupportsAutomaticDecompression)
+                {
+                    handler.AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate;
+                }
+                return handler;
+            };
         }
 
         public HttpClient CreateClient(string resource = null)
         {
-            var handler = new HttpClientHandler();
-            if (handler.SupportsAutomaticDecompression)
-            {
-                handler.AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate;
-            }
-
             resource = resource?.Trim('/');
 
             if (!string.IsNullOrEmpty(resource))
             {
                 resource = resource + "/";
             }
+
+            var handler = _httpMessageHandlerFactory();
 
             var client = new HttpClient(handler)
             {
