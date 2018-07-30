@@ -9,7 +9,7 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IDeletedTicketsResource
     {
-        Task<IPagination<Ticket>> ListAsync(PagerParameters pager = null);
+        Task<DeletedTicketsListResponse> ListAsync(PagerParameters pager = null);
         Task RestoreAsync(long ticketId);
         Task RestoreAsync(IEnumerable<long> ticketIds);
         Task<JobStatusResponse> PurgeAsync(long ticketId);

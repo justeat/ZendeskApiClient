@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IPagination<Ticket>> ListAsync(PagerParameters pager = null)
+        public async Task<DeletedTicketsListResponse> ListAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, "ListAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
