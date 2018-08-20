@@ -325,12 +325,15 @@ namespace ZendeskApi.Client.Http
 
         private static void ConfigureRequest(IHttpRequest request, HttpClient client)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             SetTimeout(request, client);
             AddHeaders(request.Headers, client);
         }
 
         private static WebRequest ConfigureRequest(IHttpRequest request, string method)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             var webRequest = (HttpWebRequest)WebRequest.Create(request.RequestUri);
 
             AddHeaders(request, webRequest);
