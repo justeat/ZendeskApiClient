@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace ZendeskApi.Client.Models
 {
@@ -15,6 +15,8 @@ namespace ZendeskApi.Client.Models
         [EnumMember(Value = "solved")]
         Solved,
         [EnumMember(Value = "hold")]
-        Hold
+        Hold,
+        [EnumMember(Value = "deleted")]
+        Deleted
     }
 }
