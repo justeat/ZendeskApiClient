@@ -21,7 +21,7 @@ Some noteworthy changes include:
 ## Creating a client
 To register this in your DI, you just need to call...
 ```c#
-services.AddZendeskClient("enpointurl", "username", "token");
+services.AddZendeskClient("https://[your_url].zendesk.com", "username", "token");
 ```
 then you can inject in IZendeskClient anywhere you want to use it. Here you can access all the resources available.
 
@@ -30,7 +30,7 @@ If however you want to use the client in a DI less environment you can do this
 ```c#
 var zendeskOptions = new ZendeskOptions
 {
-   EndpointUri = "endpoint",
+   EndpointUri = "https://[your_url].zendesk.com",
    Username = "username"
    Token = "token"
 };
@@ -57,6 +57,11 @@ await client.Search.SearchAsync<User>(q =>
 
 await client.Search.SearchAsync<Organization>(q => 
     q.WithFilter("name", "Cupcake Cafe")
+);
+
+// All non closed tickets
+await client.Search.SearchAsync<Ticket>(q => 
+    q.WithFilter("status", "closed", FilterOperator.LessThan)
 );
 ```
 
