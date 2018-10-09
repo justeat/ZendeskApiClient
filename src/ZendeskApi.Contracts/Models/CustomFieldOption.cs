@@ -8,7 +8,7 @@ namespace ZendeskApi.Contracts.Models
     public class CustomFieldOption
     {
         [DataMember(Name = "id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
