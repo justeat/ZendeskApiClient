@@ -28,7 +28,7 @@ namespace ZendeskApi.Contracts.Models
         public string RawDisplayName { get; set; }
 
         [DataMember(Name = "position", EmitDefaultValue = false)]
-        public int? Position { get; set; }
+        public long? Position { get; set; }
 
         [DataMember(Name = "end_user_visible", EmitDefaultValue = false)]
         public bool? EndUserVisible { get; set; }

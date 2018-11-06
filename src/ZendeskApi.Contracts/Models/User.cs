@@ -40,7 +40,7 @@ namespace ZendeskApi.Contracts.Models
         public string Locale { get; set; }
 
         [DataMember(Name = "locale_id", EmitDefaultValue = false)]
-        public int? LocalId { get; set; }
+        public long? LocalId { get; set; }
 
         [DataMember(Name = "organization_id", EmitDefaultValue = false)]
         public long? OrganizationId { get; set; }

@@ -31,7 +31,7 @@ namespace ZendeskApi.Contracts.Models
         public string RawDescription { get; set; }
 
         [DataMember(Name = "position", EmitDefaultValue = false)]
-        public int? Position { get; set; }
+        public long? Position { get; set; }
 
         [DataMember(Name = "active", EmitDefaultValue = false)]
         public bool? Active { get; set; }

@@ -65,7 +65,7 @@ namespace ZendeskApi.Contracts.Models
         public long? GroupId { get; set; }
 
         [DataMember(Name = "ticket_form_id", EmitDefaultValue = false)]
-        public int? FormId { get; set; }
+        public long? FormId { get; set; }
 
         [DataMember(Name = "via")]
         public Via Via { get; set; }
