@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+name:cheese+factory", queryString);
+            Assert.Equal("query=type:organization+name:cheese+factory&sort_order=desc", queryString);
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+updated_at>10%2F15%2F14", queryString);
+            Assert.Equal("query=type:organization+updated_at>10%2F15%2F14&sort_order=desc", queryString);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+updated_at<10%2F15%2F14", queryString);
+            Assert.Equal("query=type:organization+updated_at<10%2F15%2F14&sort_order=desc", queryString);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:organization+name:cheese+factory", queryString);
+            Assert.Equal("query=type:organization+name:cheese+factory&sort_order=desc", queryString);
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace ZendeskApi.Client.Tests.Queries
             var queryString = query.BuildQuery();
 
             // Then
-            Assert.Equal("query=type:ticket+name:cheese+factory", queryString);
+            Assert.Equal("query=type:ticket+name:cheese+factory&sort_order=desc", queryString);
         }
 
         [Fact]
@@ -111,18 +111,18 @@ namespace ZendeskApi.Client.Tests.Queries
         [Fact]
         public void SmokeTestQueries()
         {
-            Assert.Equal("query=123", new ZendeskQuery().WithTicketId(123).BuildQuery());
-            Assert.Equal("query=type:user", new ZendeskQuery().WithTypeFilter<UserResponse>().BuildQuery());
-            Assert.Equal("query=124+type:user", new ZendeskQuery().WithTicketId(124).WithTypeFilter<UserResponse>().BuildQuery());
-            Assert.Equal("query=124+type:user", new ZendeskQuery().WithTypeFilter<UserResponse>().WithTicketId(124).BuildQuery());
-            Assert.Equal("query=Kung+type:user", new ZendeskQuery().WithWord("Kung").WithTypeFilter<UserResponse>().BuildQuery());
-            Assert.Equal("query=type:user+\"Jane+Doe\"", new ZendeskQuery().WithTypeFilter<UserResponse>().WithWord("Jane Doe", FilterOperator.Exact).BuildQuery());
-            Assert.Equal("query=type:user+status:open", new ZendeskQuery().WithTypeFilter<UserResponse>().WithTicketStatus(TicketStatus.Open).BuildQuery());
-            Assert.Equal("query=type:organization+created<2015-05-01", new ZendeskQuery().WithTypeFilter<Organization>().WithCreatedDate(new DateTime(2015,5,1), FilterOperator.LessThan).BuildQuery());
-            Assert.Equal("query=type:organization+created>2015-05-01", new ZendeskQuery().WithTypeFilter<Organization>().WithCreatedDate(new DateTime(2015, 5, 1), FilterOperator.GreaterThan).BuildQuery());
-            Assert.Equal("query=status<solved+requester:user%40domain.com+type:ticket", new ZendeskQuery().WithTicketStatus(TicketStatus.Solved, FilterOperator.LessThan).FromRequester("user@domain.com").WithTypeFilter<Ticket>().BuildQuery());
-            Assert.Equal("query=type:user+tags:premium_support", new ZendeskQuery().WithTypeFilter<UserResponse>().WithTags("premium_support").BuildQuery());
-            Assert.Equal("query=created>2012-07-17+type:ticket+organization:\"MD+Photo\"", new ZendeskQuery().WithCreatedDate(new DateTime(2012, 7, 17), FilterOperator.GreaterThan).WithTypeFilter<Ticket>().WithWordFromTypeFilter<Organization>("MD Photo",  FilterOperator.Exact).BuildQuery());
+            Assert.Equal("query=123&sort_order=desc", new ZendeskQuery().WithTicketId(123).BuildQuery());
+            Assert.Equal("query=type:user&sort_order=desc", new ZendeskQuery().WithTypeFilter<UserResponse>().BuildQuery());
+            Assert.Equal("query=124+type:user&sort_order=desc", new ZendeskQuery().WithTicketId(124).WithTypeFilter<UserResponse>().BuildQuery());
+            Assert.Equal("query=124+type:user&sort_order=desc", new ZendeskQuery().WithTypeFilter<UserResponse>().WithTicketId(124).BuildQuery());
+            Assert.Equal("query=Kung+type:user&sort_order=desc", new ZendeskQuery().WithWord("Kung").WithTypeFilter<UserResponse>().BuildQuery());
+            Assert.Equal("query=type:user+\"Jane+Doe\"&sort_order=desc", new ZendeskQuery().WithTypeFilter<UserResponse>().WithWord("Jane Doe", FilterOperator.Exact).BuildQuery());
+            Assert.Equal("query=type:user+status:open&sort_order=desc", new ZendeskQuery().WithTypeFilter<UserResponse>().WithTicketStatus(TicketStatus.Open).BuildQuery());
+            Assert.Equal("query=type:organization+created<2015-05-01&sort_order=desc", new ZendeskQuery().WithTypeFilter<Organization>().WithCreatedDate(new DateTime(2015,5,1), FilterOperator.LessThan).BuildQuery());
+            Assert.Equal("query=type:organization+created>2015-05-01&sort_order=desc", new ZendeskQuery().WithTypeFilter<Organization>().WithCreatedDate(new DateTime(2015, 5, 1), FilterOperator.GreaterThan).BuildQuery());
+            Assert.Equal("query=status<solved+requester:user%40domain.com+type:ticket&sort_order=desc", new ZendeskQuery().WithTicketStatus(TicketStatus.Solved, FilterOperator.LessThan).FromRequester("user@domain.com").WithTypeFilter<Ticket>().BuildQuery());
+            Assert.Equal("query=type:user+tags:premium_support&sort_order=desc", new ZendeskQuery().WithTypeFilter<UserResponse>().WithTags("premium_support").BuildQuery());
+            Assert.Equal("query=created>2012-07-17+type:ticket+organization:\"MD+Photo\"&sort_order=desc", new ZendeskQuery().WithCreatedDate(new DateTime(2012, 7, 17), FilterOperator.GreaterThan).WithTypeFilter<Ticket>().WithWordFromTypeFilter<Organization>("MD Photo",  FilterOperator.Exact).BuildQuery());
         }
     }
 }
