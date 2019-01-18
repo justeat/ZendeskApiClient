@@ -4,6 +4,6 @@ namespace ZendeskApi.Client.Models
 {
     public interface ICustomFields : IList<CustomField>
     {
-        string this[long id] { get; set; }
+        List<string> this[long id] { get; set; }
     }
 }

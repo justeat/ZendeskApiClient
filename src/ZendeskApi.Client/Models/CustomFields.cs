@@ -10,7 +10,7 @@ namespace ZendeskApi.Client.Models
             
         }
 
-        public CustomFields(Dictionary<long, string> fields)
+        public CustomFields(Dictionary<long, List<string>> fields)
         {
             foreach (var field in fields)
             {
@@ -18,7 +18,7 @@ namespace ZendeskApi.Client.Models
             }
         }
 
-        private void Set(long id, string value)
+        private void Set(long id, List<string> value)
         {
             if (this.All(cf => cf.Id != id))
             {
@@ -34,12 +34,12 @@ namespace ZendeskApi.Client.Models
             }
         }
 
-        private string Get(long id)
+        private List<string> Get(long id)
         {
             return this.FirstOrDefault(cf => cf.Id == id)?.Value;
         }
 
-        public string this[long id]
+        public List<string> this[long id]
         {
             get => Get(id);
             set => Set(id, value);
