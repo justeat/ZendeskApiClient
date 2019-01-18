@@ -1,0 +1,79 @@
+{
+    "url": "https://justeatukpoc.zendesk.com/api/v2/tickets/18076817.json",
+    "id": 18076817,
+    "external_id": null,
+    "via": {
+        "channel": "api",
+        "source": {
+            "rel": "inbound"
+        }
+    },
+    "created_at": "2018-12-31T12:42:32Z",
+    "updated_at": "2019-01-02T15:58:01Z",
+    "type": null,
+    "subject": "Festive Delivery Changes Request",
+    "raw_subject": "Festive Delivery Changes Request",
+    "description": "Auto-created by phone call from +447703760786 to DNIS=+442037649247",
+    "priority": "normal",
+    "status": "solved",
+    "recipient": null,
+    "requester_id": 517281522,
+    "submitter_id": 517281522,
+    "assignee_id": 542358262,
+    "organization_id": 30688762,
+    "group_id": 24171311,
+    "collaborator_ids": [],
+    "follower_ids": [],
+    "email_cc_ids": [],
+    "forum_topic_id": null,
+    "problem_id": null,
+    "has_incidents": false,
+    "is_public": false,
+    "due_at": null,
+    "tags": [
+        "channel_phone",
+        "delivery_accepted",
+        "fd_1st_january",
+        "fd_2nd_january",
+        "festive_change_reverted",
+        "festive_delivery_request",
+        "satisfaction_offered",
+        "satisfaction_q217",
+        "segment_premium",
+        "ss_status_tracker_work_completed",
+        "task_delivery"
+    ],
+    "satisfaction_rating": {
+        "score": "bad",
+        "id": 360233956797,
+        "comment":
+            "I asked to just put the charges by £1 on on both BT’s but you have done it the wrong way Terrible as usual I spoke on the phone a number of times explaining how it was to be done and yet they still seem to get it wrong, also a day late Absolutely thick ",
+        "reason": "The issue was not resolved",
+        "reason_id": 40089
+    },
+    "sharing_agreement_ids": [],
+    "custom_fields": [
+        {
+            "id": 25128652,
+            "value": "12"
+        },
+        {
+            "id": 27661992,
+            "value": "task_delivery"
+        },
+        {
+            "id": 27612842,
+            "value": "festive_delivery_request"
+        },
+        {
+            "id": 360000027769,
+            "value": ["fd_1st_january", "fd_2nd_january"]
+        }
+    ],
+    "followup_ids": [],
+    "ticket_form_id": 60502,
+    "brand_id": 44291,
+    "satisfaction_probability": null,
+    "allow_channelback": false,
+    "allow_attachments": true
+}
