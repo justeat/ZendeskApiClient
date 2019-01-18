@@ -121,6 +121,10 @@ namespace ZendeskApi.Client.Queries
             {
                 sb.Append("&sort_order=asc");
             }
+            else if(_sortOrder == SortOrder.Desc)
+            {
+                sb.Append("&sort_order=desc");
+            }
 
             return sb.ToString();
         }
