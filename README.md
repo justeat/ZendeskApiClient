@@ -9,6 +9,9 @@ A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 # Breaking Changes
 
+- `CustomField.Value` is now a list of strings (previously it was of type string).
+- `CustomFields` has a different contract now for constructor, Set, Get and indexer (this change is also reflected in `ICustomFields` and `IReadOnlyCustomFields`). The contract change mainly involves working with a list of strings instead of a single string.
+
 ## 3.x.x
 This is a complete rewrite so expect breaking changes.
 
