@@ -18,6 +18,11 @@ namespace ZendeskApi.Client.Models
             }
         }
 
+        public CustomFields(List<CustomField> customFields)
+        {
+            AddRange(customFields);
+        }
+
         private void Set(long id, string value)
         {
             if (this.All(cf => cf.Id != id))
@@ -43,6 +48,27 @@ namespace ZendeskApi.Client.Models
         {
             get => Get(id);
             set => Set(id, value);
+        }
+
+        public List<string> GetValues(long id)
+        {
+            return this.FirstOrDefault(cf => cf.Id == id)?.Values;
+        }
+
+        public void SetValues(long id, List<string> values)
+        {
+            if (this.All(cf => cf.Id != id))
+            {
+                Add(new CustomField
+                {
+                    Id = id,
+                    Values = values
+                });
+            }
+            else
+            {
+                this.FirstOrDefault(cf => cf.Id == id).Values = values;
+            }
         }
     }
 }
