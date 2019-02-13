@@ -254,7 +254,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         state.Tickets.Remove(id);
 
-                        resp.StatusCode = (int)HttpStatusCode.OK;
+                        resp.StatusCode = (int)HttpStatusCode.NoContent;
                         return Task.CompletedTask;
                     });
             }
