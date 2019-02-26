@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
 
@@ -6,7 +7,7 @@ namespace ZendeskApi.Client.Extensions
 {
     public static class HttpClientExtensions
     {
-        public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, PagerParameters parameters = null)
+        public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, PagerParameters parameters = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var pager = new Pager(parameters?.Page, parameters?.PageSize, 100);
 
@@ -21,7 +22,7 @@ namespace ZendeskApi.Client.Extensions
                 requestUri += "?" + pagination;
             }
 
-            return client.GetAsync(requestUri);
+            return client.GetAsync(requestUri, cancellationToken);
         }
     }
 }
