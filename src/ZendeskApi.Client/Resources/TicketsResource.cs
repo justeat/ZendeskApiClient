@@ -327,11 +327,11 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.DeleteAsync(ticketId.ToString()).ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != HttpStatusCode.NoContent)
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithExpectedHttpStatus(HttpStatusCode.OK)
+                                    .WithExpectedHttpStatus(HttpStatusCode.NoContent)
                                     .WithHelpDocsLink("core/tickets#delete-ticket")
                                     .Build();
                 }
