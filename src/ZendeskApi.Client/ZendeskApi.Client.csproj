@@ -5,7 +5,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
     <Description>A Zendesk Api Client for use with the ZendeskApi v2</Description>
-    <PackageVersion>4.0.0-alpha-0</PackageVersion>
+    <PackageVersion>3.2.0-alpha-0</PackageVersion>
   </PropertyGroup>
   
   <ItemGroup>
