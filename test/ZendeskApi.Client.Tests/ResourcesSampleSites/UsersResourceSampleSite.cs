@@ -180,6 +180,44 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             UserResponse = userNew
                         });
                     })
+                    .MapPost("api/v2/users/create_or_update", (req, resp, routeData) =>
+                    {
+                        var user = req.Body.ReadAs<UserRequest<UserCreateRequest>>().User;
+                        var id = user.ExternalId?.GetHashCode() ?? user.Email?.GetHashCode();
+                        if (id == null)
+                        {
+                            resp.StatusCode = 422;
+                            return Task.CompletedTask;
+                        }
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var mapper = req.HttpContext.RequestServices.GetRequiredService<IMapper>();
+                        var userNew = mapper.Map<UserResponse>(user);
+
+                        userNew.Id = id.Value;
+                        userNew.Url = new Uri($"https://company.zendesk.com/api/v2/users/{userNew.Id}.json");
+
+                        if (state.Users.ContainsKey(userNew.Id))
+                        {
+                            var existingUser = state.Users[userNew.Id];
+                            userNew = mapper.Map(userNew, existingUser);
+                            userNew.UpdatedAt = DateTime.UtcNow;
+                            resp.StatusCode = (int)HttpStatusCode.OK;
+                        }
+                        else
+                        {
+                            userNew.CreatedAt = DateTime.UtcNow;
+                            userNew.UpdatedAt = DateTime.UtcNow;
+                            state.Users.Add(userNew.Id, userNew);
+                            resp.StatusCode = (int)HttpStatusCode.Created;
+                        }
+                        
+                        
+                        return resp.WriteAsJson(new SingleUserResponse
+                        {
+                            UserResponse = userNew
+                        });
+                    })
                     .MapPut("api/v2/users/{id}", (req, resp, routeData) =>
                     {
                         var user = req.Body.ReadAs<UserRequest<UserUpdateRequest>>().User;
