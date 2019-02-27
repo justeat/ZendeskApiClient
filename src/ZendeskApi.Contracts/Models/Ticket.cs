@@ -109,6 +109,9 @@ namespace ZendeskApi.Contracts.Models
 
         [DataMember(Name = "requester")]
         public TicketRequester Requester { get; set; }
-// ReSharper restore InconsistentNaming
+
+        [DataMember(Name = "brand_id", EmitDefaultValue = false)]
+        public long? BrandId { get; set; }
+        // ReSharper restore InconsistentNaming
     }
 }
