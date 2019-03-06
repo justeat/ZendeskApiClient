@@ -29,8 +29,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Converters\testTicketNull.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Converters\testTicket.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
