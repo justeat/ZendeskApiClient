@@ -20,6 +20,10 @@ namespace ZendeskApi.Client.Converters
             {
                 result.Add("value", customField.Value);
             }
+            else if (customField.Values == null || customField.Values.Count == 0)
+            {
+                result.Add("value", null);
+            }
             else
             {
                 result.Add("value", new JArray(customField.Values));

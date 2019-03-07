@@ -1,0 +1,70 @@
+{
+    "url": "",
+    "id": 18076817,
+    "external_id": null,
+    "via": {
+        "channel": "api",
+        "source": {
+            "rel": "inbound"
+        }
+    },
+    "created_at": "2011-12-31T12:42:32Z",
+    "updated_at": "2011-01-02T15:58:01Z",
+    "type": null,
+    "subject": "Festive Delivery Changes Request",
+    "raw_subject": "Festive Delivery Changes Request",
+    "description": "Auto-created by phone call from",
+    "priority": "normal",
+    "status": "solved",
+    "recipient": null,
+    "requester_id": 517281522,
+    "submitter_id": 517281522,
+    "assignee_id": 542358262,
+    "organization_id": 30688762,
+    "group_id": 24171311,
+    "collaborator_ids": [],
+    "follower_ids": [],
+    "email_cc_ids": [],
+    "forum_topic_id": null,
+    "problem_id": null,
+    "has_incidents": false,
+    "is_public": false,
+    "due_at": null,
+    "tags": [
+        "channel_phone",
+        "delivery_accepted",
+        "fd_1st_january",
+        "fd_2nd_january",
+        "festive_change_reverted",
+        "festive_delivery_request",
+        "satisfaction_offered",
+        "satisfaction_q217",
+        "segment_premium",
+        "ss_status_tracker_work_completed",
+        "task_delivery"
+    ],
+    "satisfaction_rating": {
+        "score": "bad",
+        "id": 360233956797,
+        "comment": "comment",
+        "reason": "The issue was not resolved",
+        "reason_id": 40089
+    },
+    "sharing_agreement_ids": [],
+    "custom_fields": [
+        {
+            "id": 27612842,
+            "value": null
+        },
+        {
+            "id": 360000027769,
+            "value": ["fd_1st_january", "fd_2nd_january"]
+        }
+    ],
+    "followup_ids": [],
+    "ticket_form_id": 60502,
+    "brand_id": 44291,
+    "satisfaction_probability": null,
+    "allow_channelback": false,
+    "allow_attachments": true
+}
