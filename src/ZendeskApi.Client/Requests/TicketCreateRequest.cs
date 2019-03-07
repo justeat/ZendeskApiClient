@@ -29,6 +29,9 @@ namespace ZendeskApi.Client.Requests
         [JsonProperty("subject")]
         public string Subject { get; set; }
 
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
         [JsonProperty("comment")]
         public TicketComment Comment { get; set; }
 
@@ -94,6 +97,9 @@ namespace ZendeskApi.Client.Requests
         /// </summary>
         [JsonProperty("organization_id")]
         public long? OrganisationId { get; set; }
+
+        [JsonProperty("via")]
+        public Via Via { get; set; }
 
     }
 }
