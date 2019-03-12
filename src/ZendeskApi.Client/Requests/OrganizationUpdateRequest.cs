@@ -14,7 +14,7 @@ namespace ZendeskApi.Client.Requests
         }
 
         /// <summary>
-        /// The Organization to create
+        /// The Organization to update
         /// </summary>
         [JsonProperty("organization")]
         public Organization Organization { get; set; }
