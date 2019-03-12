@@ -38,6 +38,9 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 
             Assert.Equal(id, org.ExternalId);
             Assert.Equal($"ZendeskApi.Client.IntegrationTests {id}", org.Name);
+
+            await client.Organizations
+                .DeleteAsync(created.Id);
         }
 
         private IZendeskClient GetClient()
