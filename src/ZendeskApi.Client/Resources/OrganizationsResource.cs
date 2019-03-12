@@ -133,7 +133,8 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync(organization.Id.ToString(), organization).ConfigureAwait(false);
+                var request = new OrganizationUpdateRequest(organization);
+                var response = await client.PutAsJsonAsync(organization.Id.ToString(), request).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
