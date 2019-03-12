@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using ZendeskApi.Client.IntegrationTests.Factories;
-using ZendeskApi.Client.IntegrationTests.Settings;
 using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.IntegrationTests.Resources
@@ -25,10 +24,6 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         [Fact]
         public async Task CreateOrganisation()
         {
-            var settings = new ZendeskSettings();
-
-            _output.WriteLine($"url: {settings.Url}");
-
             var client = _clientFactory.GetClient();
 
             var id = Guid.NewGuid().ToString();
