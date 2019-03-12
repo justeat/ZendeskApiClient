@@ -69,6 +69,10 @@ await client.Search.SearchAsync<Ticket>(q =>
 The zendesk api documentation is available at http://developer.zendesk.com/documentation/rest_api/introduction.html
 Querying and searching is limited by the searchable fields on the zendesk api
 
+## Contributing
+
+In order to contribute to this repository, create a fork, branch from develop and then submit a pull request back to develop here. We will then build checks will then occur running unit tests. Once all is good we will merge. If you could write integration tests and run against your zendesk instance, that would be great! Once in develop, we can then create a Pull Request to master which will run the unit tests and integration tests and we can be super confident of pushing a package to nuget!
+
 ## Integration Tests
 
 In order to run integration tests against your own zendesk instance use the Cake script provided by:
