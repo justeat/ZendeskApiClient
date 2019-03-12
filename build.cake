@@ -57,7 +57,25 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var projects = GetFiles("./test/**/*.*Tests.csproj");
+    var projects = GetFiles("./test/**/*.Tests.csproj");
+    
+    foreach(var project in projects)
+    {
+        DotNetCoreTest(
+            project.FullPath,
+            new DotNetCoreTestSettings()
+            {
+                Configuration = configuration
+            }
+        );
+    }
+});
+
+Task("Run-Integration-Tests")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    var projects = GetFiles("./test/**/*.IntegrationTests.csproj");
     
     foreach(var project in projects)
     {
