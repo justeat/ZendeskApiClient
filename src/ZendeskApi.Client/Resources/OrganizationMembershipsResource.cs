@@ -115,7 +115,8 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, organizationMembership).ConfigureAwait(false);
+                var request = new OrganizationMembershipCreateRequest(organizationMembership);
+                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
