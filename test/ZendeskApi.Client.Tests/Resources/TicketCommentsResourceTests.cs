@@ -26,7 +26,7 @@ namespace ZendeskApi.Client.Tests.Resources
             var ticket = await _ticketResource.CreateAsync(new TicketCreateRequest("description") { Subject = "Test 1" });
 
             var comments = await _resource.ListAsync(ticket.Ticket.Id);
-            Assert.Equal(1, comments.Count());
+            Assert.Single(comments);
             Assert.NotNull(comments.ElementAt(0).Id);
             Assert.Equal("description", comments.ElementAt(0).Body);
 

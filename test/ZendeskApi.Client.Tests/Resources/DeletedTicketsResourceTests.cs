@@ -64,19 +64,19 @@ namespace ZendeskApi.Client.Tests.Resources
             
             await _resource.RestoreAsync(tickets.Select(t => t.Id));
             
-            Assert.Equal(0, _ticketState.Count);
+            Assert.Empty(_ticketState);
         }
 
         [Fact]
         public async Task ShouldPurgeTicket()
         {
             var ticket = CreateTickets(1).First();
-            Assert.Equal(1, _ticketState.Count);
+            Assert.Single(_ticketState);
 
             var jobResponse = await _resource.PurgeAsync(ticket.Id);
 
             Assert.NotNull(jobResponse);
-            Assert.Equal(0, _ticketState.Count);
+            Assert.Empty(_ticketState);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
             await _resource.PurgeAsync(ticketIds);
 
-            Assert.Equal(0, _ticketState.Count);
+            Assert.Empty(_ticketState);
         }
 
         private List<Ticket> CreateTickets(int numberOfTicketsToCreate)

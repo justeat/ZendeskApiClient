@@ -86,7 +86,8 @@ namespace ZendeskApi.Client.Tests.Converters
 
             Assert.Equal(2, ticket.CustomFields.Count);
 
-            Assert.Equal(1, multiValueCustomField.Count());
+            Assert.Single(multiValueCustomField);
+
             Assert.Equal(2, multiValueCustomField.First().Values.Count);
             Assert.Contains(multiValueCustomField.First().Values, x => x == "fd_1st_january");
             Assert.Contains(multiValueCustomField.First().Values, x => x == "fd_2nd_january");

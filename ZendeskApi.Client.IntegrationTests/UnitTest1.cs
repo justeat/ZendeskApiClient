@@ -8,7 +8,7 @@ namespace ZendeskApi.Client.IntegrationTests
         [Fact]
         public void Test1()
         {
-            Assert.Equal(true, true);
+            Assert.True(true);
         }
     }
 }
