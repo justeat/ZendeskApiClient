@@ -4,7 +4,6 @@
 [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/justeattech/zendeskapiclient/master.svg?style=flat-square)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
 [![Gitter](https://img.shields.io/gitter/room/justeat/ZendeskApiClient.svg?style=flat-square)](https://gitter.im/justeat/ZendeskApiClient)
 
-
 A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 # Breaking Changes
@@ -70,3 +69,10 @@ await client.Search.SearchAsync<Ticket>(q =>
 The zendesk api documentation is available at http://developer.zendesk.com/documentation/rest_api/introduction.html
 Querying and searching is limited by the searchable fields on the zendesk api
 
+## Integration Tests
+
+In order to run integration tests against your own zendesk instance use the Cake script provided by:
+
+```powershell
+.\build.ps1 -Target "Run-Integration-Tests" -ScriptArgs '-zendeskUrl="<your zendesk url>"', '-zendeskUsername="<your zendesk username>"', '-zendeskToken="<your zendesk token>"'
+```

@@ -67,7 +67,7 @@ namespace ZendeskApi.Client.Tests.Responses
             IncrementalUsersResponse<UserResponse> response = stream.ReadAs<IncrementalUsersResponse<UserResponse>>();
 
             Assert.NotNull(response.Users);
-            Assert.Equal(1, response.Users.Count());
+            Assert.Single(response.Users);
             Assert.Equal(1, response.Count);
             Assert.False(response.HasMoreResults);
             Assert.Equal("test@kung.fu", response.Users.First().Email);

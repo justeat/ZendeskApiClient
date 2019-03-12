@@ -1,6 +1,13 @@
 image: Visual Studio 2017
 version: 3.2.0-alpha-{build}
 configuration: Release
+environment:
+  ZendeskApi_Credentials_Url:
+    secure: EqmTftam7aCYhmq7iHOoogNjL1vPuxrBSMVGmTY5WdIG+3RaWB7HWEYFhoGwd7ou
+  ZendeskApi_Credentials_Username: 
+    secure: ft+ZIlhKYIHzQ+0Phrool1mjCK1QksYDv6hWtq/pPP0=
+  ZendeskApi_Credentials_Token: 
+    secure: KbM8YKkKl6sU7c8YAhzC0mxyT0WP2qy9xpIZVYu/Fdd8GlOZKtn+8WaK+fLfjSwA
 before_build:
   - dotnet restore
 build:
@@ -8,8 +15,6 @@ build:
   parallel: true
   verbosity: minimal
 clone_depth: 1
-test_script:
-- dotnet test -c Release .\test\ZendeskApi.Client.Tests\ZendeskApi.Client.Tests.csproj
 after_build:
 - dotnet pack .\src\ZendeskApi.Client\ZendeskApi.Client.csproj -o ../../output --no-build
 artifacts:
@@ -21,3 +26,15 @@ deploy:
   artifact: /.*nupkg/
   on:
     APPVEYOR_REPO_TAG: true
+for:
+# override settings for `master` branch
+-
+  branches:
+    only:
+      - master
+
+  test_script:
+  - dotnet test -c Release .\test\ZendeskApi.Client.Tests\ZendeskApi.Client.Tests.csproj
+-
+  test_script:
+  - dotnet test -c Release .\test\ZendeskApi.Client.Tests\ZendeskApi.Client.Tests.csproj

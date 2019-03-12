@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -40,8 +40,8 @@ namespace ZendeskApi.Client.Tests.Resources
             var objs1 = (await _resource.GetAllForUserAsync(123)).ToArray();
             var objs2 = (await _resource.GetAllForUserAsync(234123)).ToArray();
 
-            Assert.Equal(1, objs1.Length);
-            Assert.Equal(1, objs2.Length);
+            Assert.Single(objs1);
+            Assert.Single(objs2);
             Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs1[0]));
             Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs2[0]));
         }
