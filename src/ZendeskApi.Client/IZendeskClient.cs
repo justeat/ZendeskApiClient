@@ -11,6 +11,7 @@ namespace ZendeskApi.Client
         ISearchResource Search { get; }
         IGroupsResource Groups { get; }
         IUsersResource Users { get; }
+        IDeletedUsersResource DeletedUsers { get; }
         IUserIdentityResource UserIdentities { get; }
         IAttachmentsResource Attachments { get; }
         ITicketFieldsResource TicketFields { get; }

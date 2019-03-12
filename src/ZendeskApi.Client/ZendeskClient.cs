@@ -37,6 +37,9 @@ namespace ZendeskApi.Client
         private Lazy<IUsersResource> UsersLazy => new Lazy<IUsersResource>(() => new UsersResource(_apiClient, _logger));
         public IUsersResource Users => UsersLazy.Value;
 
+        private Lazy<IDeletedUsersResource> DeletedUsersLazy => new Lazy<IDeletedUsersResource>(() => new DeletedUsersResource(_apiClient, _logger));
+        public IDeletedUsersResource DeletedUsers => DeletedUsersLazy.Value;
+
         private Lazy<IUserIdentityResource> UserIdentitiesLazy => new Lazy<IUserIdentityResource>(() => new UserIdentitiesResource(_apiClient, _logger));
         public IUserIdentityResource UserIdentities => UserIdentitiesLazy.Value;
 
