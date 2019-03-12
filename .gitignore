@@ -109,3 +109,6 @@ UpgradeLog*.XML
 
 /src/lib
 .vs/
+
+# Cake Packages
+tools/

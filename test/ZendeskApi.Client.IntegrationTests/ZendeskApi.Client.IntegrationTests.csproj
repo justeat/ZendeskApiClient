@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ZendeskApi.Client\ZendeskApi.Client.csproj" />
+  </ItemGroup>
+
 </Project>
