@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Xunit;
-using Xunit.Abstractions;
 using ZendeskApi.Client.IntegrationTests.Settings;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Options;
@@ -12,13 +11,6 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 {
     public class OrganizationResourceTests
     {
-        private readonly ITestOutputHelper output;
-
-        public OrganizationResourceTests(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
-
         [Fact]
         public async Task CreateOrganisation()
         {
@@ -54,8 +46,6 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         private IZendeskClient GetClient()
         {
             var settings = new ZendeskSettings();
-
-            output.WriteLine(settings.Url);
 
             return new ZendeskClient(
                 new ZendeskApiClient(
