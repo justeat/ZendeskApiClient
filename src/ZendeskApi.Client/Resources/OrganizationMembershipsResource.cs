@@ -18,6 +18,7 @@ namespace ZendeskApi.Client.Resources
         private const string ResourceUri = "api/v2/organization_memberships";
         private const string OrganisationsUrlFormat = "api/v2/organizations/{0}/organization_memberships";
         private const string UsersUrlFormat = "api/v2/users/{0}/organization_memberships";
+        private const string DeleteUsersUrlFormat = "api/v2/users/{0}/organization_memberships/{1}";
 
         private readonly IZendeskApiClient _apiClient;
         private readonly ILogger _logger;
@@ -133,12 +134,13 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<OrganizationMembership> PostForUserAsync(OrganizationMembership organizationMembership, string userId)
+        public async Task<OrganizationMembership> PostForUserAsync(OrganizationMembership organizationMembership, long userId)
         {
             using (_loggerScope(_logger, $"PostAsync({userId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(string.Format(UsersUrlFormat, userId), organizationMembership).ConfigureAwait(false);
+                var request = new OrganizationMembershipCreateRequest(organizationMembership);
+                var response = await client.PostAsJsonAsync(string.Format(UsersUrlFormat, userId), request).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -148,7 +150,10 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
                 }
 
-                return await response.Content.ReadAsAsync<OrganizationMembership>();
+                return (await response
+                        .Content
+                        .ReadAsAsync<OrganizationMembershipResponse>())
+                    .OrganizationMembership;
             }
         }
 
@@ -159,7 +164,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.PostAsJsonAsync("create_many", new OrganizationMembershipsRequest { Item = organizationMemberships }).ConfigureAwait(false);
 
-                if (response.StatusCode != System.Net.HttpStatusCode.Created)
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     throw new HttpRequestException(
                         $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
@@ -193,7 +198,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"DeleteAsync({userId},{organizationMembershipId})"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.DeleteAsync(string.Format(UsersUrlFormat, userId, organizationMembershipId)).ConfigureAwait(false);
+                var response = await client.DeleteAsync(string.Format(DeleteUsersUrlFormat, userId, organizationMembershipId)).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {

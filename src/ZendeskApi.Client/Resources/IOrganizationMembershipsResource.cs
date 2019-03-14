@@ -13,7 +13,7 @@ namespace ZendeskApi.Client.Resources
         Task<OrganizationMembership> GetAsync(long id);
         Task<OrganizationMembership> GetForUserAndOrganizationAsync(long userId, long organizationId);
         Task<OrganizationMembership> CreateAsync(OrganizationMembership organizationMembership);
-        Task<OrganizationMembership> PostForUserAsync(OrganizationMembership organizationMembership, string userId);
+        Task<OrganizationMembership> PostForUserAsync(OrganizationMembership organizationMembership, long userId);
         Task<JobStatusResponse> CreateAsync(IEnumerable<OrganizationMembership> organizationMemberships);
         Task DeleteAsync(long organizationMembershipId);
         Task DeleteAsync(long userId, long organizationMembershipId);
