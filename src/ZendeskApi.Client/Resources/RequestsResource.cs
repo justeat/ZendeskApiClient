@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Queries;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -55,8 +56,10 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                var single = await response.Content.ReadAsAsync<RequestResponse>();
-                return single.Request;
+                return (await response
+                    .Content
+                    .ReadAsAsync<RequestResponse>())
+                    .Request;
             }
         }
 
@@ -117,7 +120,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(ResourceUri, new RequestCreateRequest(request)).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -127,7 +130,10 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/requests#create-request");
                 }
 
-                return await response.Content.ReadAsAsync<Request>();
+                return (await response
+                        .Content
+                        .ReadAsAsync<RequestResponse>())
+                    .Request;
             }
         }
 
@@ -136,7 +142,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync(request.Id.ToString(), request).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(request.Id.ToString(), new RequestUpdateRequest(request)).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -146,7 +152,10 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<Request>();
+                return (await response
+                        .Content
+                        .ReadAsAsync<RequestResponse>())
+                    .Request;
             }
         }
     }
