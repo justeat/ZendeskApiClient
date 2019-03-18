@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Converters;
 
 namespace ZendeskApi.Client.Models
 {
@@ -48,6 +49,7 @@ namespace ZendeskApi.Client.Models
         /// Result data from processed tasks
         /// </summary>
         [JsonProperty("results")]
+        [JsonConverter(typeof(JobStatusResultConverter))]
         public IEnumerable<JobStatusResult> Results { get; set; }
     }
 

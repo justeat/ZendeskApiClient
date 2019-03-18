@@ -63,5 +63,10 @@ namespace ZendeskApi.Client
 
         private Lazy<IUserFieldsResource> UserFieldsLazy => new Lazy<IUserFieldsResource>(() => new UserFieldsResource(_apiClient, _logger));
         public IUserFieldsResource UserFields => UserFieldsLazy.Value;
+
+        private Lazy<IJobStatusResource> JobStatusesLazy =>
+            new Lazy<IJobStatusResource>(() => new JobStatusResource(_apiClient, _logger));
+
+        public IJobStatusResource JobStatuses => JobStatusesLazy.Value;
     }
 }
