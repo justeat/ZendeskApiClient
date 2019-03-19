@@ -10,7 +10,7 @@ namespace ZendeskApi.Client.Converters
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -33,7 +33,9 @@ namespace ZendeskApi.Client.Converters
 
         public override bool CanConvert(Type objectType)
         {
-            throw new NotImplementedException();
+            return objectType == typeof(IEnumerable<JobStatusResult>) ||
+                   objectType == typeof(JArray) ||
+                   objectType == typeof(JObject);
         }
     }
 }
