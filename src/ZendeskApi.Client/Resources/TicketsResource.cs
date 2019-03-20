@@ -49,7 +49,7 @@ namespace ZendeskApi.Client.Resources
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                 .WithResponse(response)
-                                .WithHelpDocsLink("core/tickets#list-tickets")
+                                .WithHelpDocsLink("support/tickets#list-tickets")
                                 .Build();
                 }
 
@@ -74,7 +74,7 @@ namespace ZendeskApi.Client.Resources
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithHelpDocsLink("core/tickets#list-tickets")
+                                    .WithHelpDocsLink("support/tickets#list-tickets")
                                     .Build();
                 }
 
@@ -99,7 +99,7 @@ namespace ZendeskApi.Client.Resources
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithHelpDocsLink("core/tickets#list-tickets")
+                                    .WithHelpDocsLink("support/tickets#list-tickets")
                                     .Build();
                 }
 
@@ -124,7 +124,7 @@ namespace ZendeskApi.Client.Resources
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithHelpDocsLink("core/tickets#list-tickets")
+                                    .WithHelpDocsLink("support/tickets#list-tickets")
                                     .Build();
                 }
 
@@ -149,7 +149,7 @@ namespace ZendeskApi.Client.Resources
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithHelpDocsLink("core/tickets#list-tickets")
+                                    .WithHelpDocsLink("support/tickets#list-tickets")
                                     .Build();
                 }
 
@@ -207,7 +207,7 @@ namespace ZendeskApi.Client.Resources
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
                                     .WithExpectedHttpStatus(HttpStatusCode.Created)
-                                    .WithHelpDocsLink("core/tickets#create-ticket")
+                                    .WithHelpDocsLink("support/tickets#create-ticket")
                                     .Build(); 
                 }
 
@@ -222,16 +222,16 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.PostAsJsonAsync("create_many", new TicketListRequest<TicketCreateRequest>(tickets)).ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.Created)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
                                     .WithExpectedHttpStatus(HttpStatusCode.Created)
-                                    .WithHelpDocsLink("core/tickets#create-many-tickets")
+                                    .WithHelpDocsLink("support/tickets#create-many-tickets")
                                     .Build();
                 }
 
-                return await response.Content.ReadAsAsync<JobStatusResponse>();
+                return (await response.Content.ReadAsAsync<SingleJobStatusResponse>()).JobStatus;
             }
         }
         #endregion
@@ -255,7 +255,7 @@ namespace ZendeskApi.Client.Resources
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithHelpDocsLink("core/tickets#update-ticket")
+                                    .WithHelpDocsLink("support/tickets#update-ticket")
                                     .Build();
                 }
 
@@ -274,7 +274,7 @@ namespace ZendeskApi.Client.Resources
                 {
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
-                                    .WithHelpDocsLink("core/tickets#update-many-tickets")
+                                    .WithHelpDocsLink("support/tickets#update-many-tickets")
                                     .Build();
                 }
 
@@ -332,7 +332,7 @@ namespace ZendeskApi.Client.Resources
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
                                     .WithExpectedHttpStatus(HttpStatusCode.NoContent)
-                                    .WithHelpDocsLink("core/tickets#delete-ticket")
+                                    .WithHelpDocsLink("support/tickets#delete-ticket")
                                     .Build();
                 }
             }
@@ -364,7 +364,7 @@ namespace ZendeskApi.Client.Resources
                     throw await new ZendeskRequestExceptionBuilder()
                                     .WithResponse(response)
                                     .WithExpectedHttpStatus(HttpStatusCode.OK)
-                                    .WithHelpDocsLink("core/tickets#bulk-delete-tickets")
+                                    .WithHelpDocsLink("support/tickets#bulk-delete-tickets")
                                     .Build();
                 }
             }
