@@ -102,7 +102,7 @@ namespace ZendeskApi.Client.Requests
         /// An ID to link tickets to local records
         /// </summary>
         [JsonProperty("external_id")]
-        public long? ExternalId { get; set; }
+        public string ExternalId { get; set; }
 
         /// <summary>
         /// For tickets of type "incident", the numeric ID of the problem the incident is linked to, if any
