@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -63,7 +64,8 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, $"PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, ticketField).ConfigureAwait(false);
+                var request = new TicketFieldCreateRequest(ticketField);
+                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -73,7 +75,8 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/ticket_fields#create-ticket-field");
                 }
 
-                return await response.Content.ReadAsAsync<TicketField>();
+                var result = await response.Content.ReadAsAsync<TicketFieldResponse>();
+                return result.TicketField;
             }
         }
 
