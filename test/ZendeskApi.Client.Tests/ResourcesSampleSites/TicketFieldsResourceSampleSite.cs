@@ -55,7 +55,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/ticket_fields", (req, resp, routeData) =>
                     {
-                        var ticket = req.Body.ReadAs<TicketFieldCreateRequest>();
+                        var ticket = req.Body.ReadAs<TicketFieldCreateUpdateRequest>();
                         Assert.NotNull(ticket);
                         var ticketField = ticket.TicketField;
 
@@ -78,14 +78,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var ticket = req.Body.ReadAs<TicketField>();
+                        var ticket = req.Body.ReadAs<TicketFieldCreateUpdateRequest>();
+                        Assert.NotNull(ticket);
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        state.TicketFields[id] = ticket;
+                        state.TicketFields[id] = ticket.TicketField;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(state.TicketFields[id]);
+                        return resp.WriteAsJson(new TicketFieldResponse{TicketField = state.TicketFields[id]});
                     })
                     .MapDelete("api/v2/ticket_fields/{id}", (req, resp, routeData) =>
                     {

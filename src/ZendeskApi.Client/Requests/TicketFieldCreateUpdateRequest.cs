@@ -7,9 +7,9 @@ namespace ZendeskApi.Client.Requests
     /// <summary>
     /// See: https://developer.zendesk.com/rest_api/docs/support/ticket_fields#create-ticket-field
     /// </summary>
-    public class TicketFieldCreateRequest
+    public class TicketFieldCreateUpdateRequest
     {
-        public TicketFieldCreateRequest(TicketField ticketField)
+        public TicketFieldCreateUpdateRequest(TicketField ticketField)
         {
             TicketField = ticketField;
         }
