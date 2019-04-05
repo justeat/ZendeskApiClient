@@ -5,7 +5,7 @@ namespace ZendeskApi.Client.Responses
 {
     public class GroupResponse
     {
-        [JsonProperty]
+        [JsonProperty("group")]
         public Group Group { get; set; }
     }
 }
