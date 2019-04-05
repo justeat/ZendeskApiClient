@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
@@ -81,8 +82,9 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/groups", (req, resp, routeData) =>
                     {
-                        var group = req.Body.ReadAs<Group>();
-
+                        var groupRequest = req.Body.ReadAs<GroupRequest<GroupCreateRequest>>();
+                        var group = groupRequest.Group;
+                        
                         if (group.Name.Contains("error"))
                         {
                             resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
@@ -91,27 +93,38 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         }
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
-
-                        group.Id = long.Parse(Rand.Next().ToString());
-                        group.Url = new Uri("https://company.zendesk.com/api/v2/groups/" + group.Id + ".json");
-                        state.Groups.Add(group.Id, group);
+                        var groupId = long.Parse(Rand.Next().ToString());
+                        var newGroup = new Group
+                        {
+                            Name = group.Name,
+                            Id = groupId,
+                            Url = new Uri("https://company.zendesk.com/api/v2/groups/" + groupId + ".json")
+                        };
+                        
+                        state.Groups.Add(newGroup.Id, newGroup);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         
-                        return resp.WriteAsJson(group);
+                        return resp.WriteAsJson(new GroupResponse{Group = newGroup});
                     })
                     .MapPut("api/v2/groups/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var group = req.Body.ReadAs<Group>();
+                        var groupRequest = req.Body.ReadAs<GroupRequest<GroupUpdateRequest>>();
+                        var group = groupRequest.Group;
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var newGroup = new Group
+                        {
+                            Name = group.Name,
+                            Id = id
+                        };
 
-                        state.Groups[id] = group;
+                        state.Groups[id] = newGroup;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(state.Groups[id]);
+                        return resp.WriteAsJson(new GroupResponse{Group = state.Groups[id]});
                     })
                     .MapDelete("api/v2/groups/{id}", (req, resp, routeData) =>
                     {

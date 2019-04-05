@@ -98,10 +98,10 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Group> CreateAsync(GroupCreateRequest group)
         {
-            using (_loggerScope(_logger, "PostAsync")) // Maybe incluse the request in the log?
+            using (_loggerScope(_logger, "PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(GroupsResourceUri, group).ConfigureAwait(false);
+                var response = await client.PostAsJsonAsync(GroupsResourceUri, new GroupRequest<GroupCreateRequest>(group)).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -111,7 +111,8 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/groups#create-groups");
                 }
                 
-                return await response.Content.ReadAsAsync<Group>();
+                var result = await response.Content.ReadAsAsync<GroupResponse>();
+                return result.Group;
             }
         }
 
@@ -120,7 +121,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
-                var response = await client.PutAsJsonAsync(group.Id.ToString(), group).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(group.Id.ToString(), new GroupRequest<GroupUpdateRequest>(group)).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -130,7 +131,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<Group>();
+                var result = await response.Content.ReadAsAsync<GroupResponse>();
+                return result.Group;
             }
         }
 
