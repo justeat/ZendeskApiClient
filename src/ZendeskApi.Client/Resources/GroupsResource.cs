@@ -121,7 +121,7 @@ namespace ZendeskApi.Client.Resources
             using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(GroupsResourceUri))
             {
-                var response = await client.PutAsJsonAsync(group.Id.ToString(), group).ConfigureAwait(false);
+                var response = await client.PutAsJsonAsync(group.Id.ToString(), new GroupRequest<GroupUpdateRequest>(group)).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -131,7 +131,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<Group>();
+                var result = await response.Content.ReadAsAsync<GroupResponse>();
+                return result.Group;
             }
         }
 
