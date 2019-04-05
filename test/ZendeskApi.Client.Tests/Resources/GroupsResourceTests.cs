@@ -93,12 +93,14 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public Task ShouldThrowErrorWhenNot201()
+        public Task ShouldThrowErrorWhenNot201OnCreate()
         {
             return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateAsync(new GroupCreateRequest("I'm an error group!")));
 
             // could use tags to simulate httpstatus codes in fake client?
         }
+        
+        
 
         [Fact]
         public async Task ShouldUpdateGroup()
