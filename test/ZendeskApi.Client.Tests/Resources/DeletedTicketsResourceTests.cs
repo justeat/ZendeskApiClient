@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
@@ -28,7 +29,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var tickets = CreateTickets(2);
 
-            var retrievedTickets = (await _resource.ListAsync()).ToArray();
+            var retrievedTickets = (await _resource.GetAllAsync()).ToArray();
 
             Assert.Equal(2, retrievedTickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
@@ -41,7 +42,7 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var tickets = CreateTickets(2);
 
-            var retrievedTickets = (await _resource.ListAsync(q => q.WithOrdering(SortBy.DeletedAt, SortOrder.Desc))).ToArray();
+            var retrievedTickets = (await _resource.GetAllAsync(q => q.WithOrdering(SortBy.DeletedAt, SortOrder.Desc))).ToArray();
 
             Assert.Equal(2, retrievedTickets.Length);
             Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
@@ -65,6 +66,26 @@ namespace ZendeskApi.Client.Tests.Resources
             await _resource.RestoreAsync(tickets.Select(t => t.Id));
             
             Assert.Empty(_ticketState);
+        }
+
+        [Fact]
+        public async Task RestoreShouldThrowExceptionWhenNullIds()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _resource.RestoreAsync(null));
+        }
+
+        [Fact]
+        public async Task RestoreSohuldThrowExceptionWhenEmptyList()
+        {
+            var list = new List<long> { };
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _resource.RestoreAsync(list));
+        }
+        
+        [Fact]
+        public async Task RestoreShouldThrowExceptionWhenTooManyItemsInList()
+        {
+            var list = new List<long>(101);
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _resource.RestoreAsync(list));
         }
 
         [Fact]
@@ -111,7 +132,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public void Dispose()
         {
-            ((IDisposable)_client).Dispose();
+            ((IDisposable)_client)?.Dispose();
         }
     }
 }

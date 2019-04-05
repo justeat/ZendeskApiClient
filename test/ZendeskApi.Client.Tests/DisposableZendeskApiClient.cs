@@ -29,7 +29,7 @@ namespace ZendeskApi.Client.Tests
 
         public void Dispose()
         {
-            _createdSite.Dispose();
+            _createdSite?.Dispose();
         }
     }
 }

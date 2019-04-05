@@ -108,9 +108,19 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         {
                             state.Tickets.Remove(anId);
                         }
+                        
+                        var jobStatusResponse = new JobStatusResponse
+                        {
+                            Id = Rand.Next(999).ToString(),
+                            Results = null,
+                            Total = 0,
+                            Message = null,
+                            Progress = 0,
+                            Status = "queued"
+                        };
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return Task.CompletedTask;
+                        return resp.WriteAsJson(new SingleJobStatusResponse {JobStatus = jobStatusResponse});
                     })
                     .MapDelete("api/v2/deleted_tickets/{id}.json", (req, resp, routeData) =>
                     {
@@ -137,7 +147,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         };
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(jobStatusResponse);
+                        return resp.WriteAsJson(new SingleJobStatusResponse {JobStatus = jobStatusResponse});
                     });
             }
         }
