@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -60,10 +61,11 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketField> CreateAsync(TicketField ticketField)
         {
-            using (_loggerScope(_logger, $"PostAsync"))
+            using (_loggerScope(_logger, "PostAsync"))
             using (var client = _apiClient.CreateClient())
             {
-                var response = await client.PostAsJsonAsync(ResourceUri, ticketField).ConfigureAwait(false);
+                var request = new TicketFieldCreateUpdateRequest(ticketField);
+                var response = await client.PostAsJsonAsync(ResourceUri, request).ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -73,16 +75,18 @@ namespace ZendeskApi.Client.Resources
                         "See: https://developer.zendesk.com/rest_api/docs/core/ticket_fields#create-ticket-field");
                 }
 
-                return await response.Content.ReadAsAsync<TicketField>();
+                var result = await response.Content.ReadAsAsync<TicketFieldResponse>();
+                return result.TicketField;
             }
         }
 
         public async Task<TicketField> UpdateAsync(TicketField ticketField)
         {
-            using (_loggerScope(_logger, $"PutAsync"))
+            using (_loggerScope(_logger, "PutAsync"))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
-                var response = await client.PutAsJsonAsync(ticketField.Id.ToString(), ticketField).ConfigureAwait(false);
+                var request = new TicketFieldCreateUpdateRequest(ticketField);
+                var response = await client.PutAsJsonAsync(ticketField.Id.ToString(), request).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -92,7 +96,8 @@ namespace ZendeskApi.Client.Resources
 
                 response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsAsync<TicketField>();
+                var result = await response.Content.ReadAsAsync<TicketFieldResponse>();
+                return result.TicketField;
             }
         }
 

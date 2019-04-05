@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
@@ -53,9 +55,11 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/ticket_fields", (req, resp, routeData) =>
                     {
-                        var ticket = req.Body.ReadAs<TicketField>();
+                        var ticket = req.Body.ReadAs<TicketFieldCreateUpdateRequest>();
+                        Assert.NotNull(ticket);
+                        var ticketField = ticket.TicketField;
 
-                        if (ticket.Tag != null && ticket.Tag.Contains("error"))
+                        if (ticketField.Tag != null && ticketField.Tag.Contains("error"))
                         {
                             resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
 
@@ -64,8 +68,8 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        ticket.Id = long.Parse(Rand.Next().ToString());
-                        state.TicketFields.Add(ticket.Id.Value, ticket);
+                        ticketField.Id = long.Parse(Rand.Next().ToString());
+                        state.TicketFields.Add(ticketField.Id.Value, ticketField);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(ticket);
@@ -74,14 +78,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var ticket = req.Body.ReadAs<TicketField>();
+                        var ticket = req.Body.ReadAs<TicketFieldCreateUpdateRequest>();
+                        Assert.NotNull(ticket);
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State>();
 
-                        state.TicketFields[id] = ticket;
+                        state.TicketFields[id] = ticket.TicketField;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(state.TicketFields[id]);
+                        return resp.WriteAsJson(new TicketFieldResponse{TicketField = state.TicketFields[id]});
                     })
                     .MapDelete("api/v2/ticket_fields/{id}", (req, resp, routeData) =>
                     {
