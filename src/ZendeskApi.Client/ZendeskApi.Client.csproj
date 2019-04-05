@@ -7,11 +7,6 @@
     <Description>A Zendesk Api Client for use with the ZendeskApi v2</Description>
     <PackageVersion>3.3.2-alpha-0</PackageVersion>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <None Include="Requests\GroupListRequest.cs" />
-    <None Include="Requests\UserUpdateRequest.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="1.1.2" />
