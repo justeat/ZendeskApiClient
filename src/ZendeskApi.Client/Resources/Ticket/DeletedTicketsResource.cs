@@ -178,7 +178,6 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                var test = await response.Content.ReadAsStringAsync();
                 var result = await response.Content.ReadAsAsync<SingleJobStatusResponse>();
                 return result.JobStatus;
             }
