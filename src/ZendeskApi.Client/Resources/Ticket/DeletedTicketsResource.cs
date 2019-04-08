@@ -33,9 +33,15 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
+        [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<DeletedTicketsListResponse> ListAsync(PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, "ListAsync"))
+            return await GetAllAsync(pager);
+        }
+        
+        public async Task<DeletedTicketsListResponse> GetAllAsync(PagerParameters pager = null)
+        {
+            using (_loggerScope(_logger, nameof(GetAllAsync)))
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync($"/{ResourceUri}.json", pager).ConfigureAwait(false);
@@ -52,12 +58,19 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<DeletedTicketsListResponse> ListAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
+        [Obsolete("Use `GetAllAsync` instead.")]
+        public async Task<DeletedTicketsListResponse> ListAsync(Action<IZendeskQuery> builder,
+            PagerParameters pager = null)
+        {
+            return await GetAllAsync(builder, pager);
+        }
+        
+        public async Task<DeletedTicketsListResponse> GetAllAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
         {
             var query = new ZendeskQuery();
             builder(query);
 
-            using (_loggerScope(_logger, "SearchAsync"))
+            using (_loggerScope(_logger, nameof(GetAllAsync)))
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync($"{ResourceUri}.json?{query.BuildQuery()}", pager).ConfigureAwait(false);
@@ -144,7 +157,8 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<JobStatusResponse>();
+                var result = await response.Content.ReadAsAsync<SingleJobStatusResponse>();
+                return result.JobStatus;
             }
         }
 
@@ -156,7 +170,6 @@ namespace ZendeskApi.Client.Resources
             }
 
             var ticketIdList = ticketIds.ToList();
-
             if (ticketIdList.Count == 0 || ticketIdList.Count > 100)
             {
                 throw new ArgumentException($"{nameof(ticketIds)} must have [0..100] elements", nameof(ticketIds));
@@ -178,7 +191,8 @@ namespace ZendeskApi.Client.Resources
                         .Build();
                 }
 
-                return await response.Content.ReadAsAsync<JobStatusResponse>();
+                var result = await response.Content.ReadAsAsync<SingleJobStatusResponse>();
+                return result.JobStatus;
             }
         }
     }
