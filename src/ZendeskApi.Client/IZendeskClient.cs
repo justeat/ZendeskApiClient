@@ -1,9 +1,11 @@
 using ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Resources.Interfaces;
 
 namespace ZendeskApi.Client
 {
     public interface IZendeskClient
     {
+        IArticlesResources Articles { get; }
         ITicketsResource Tickets { get; }
         ITicketCommentsResource TicketComments { get; }
         IDeletedTicketsResource DeletedTickets { get; }
