@@ -33,6 +33,12 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
+        [Obsolete("Use `GetAllAsync` instead.")]
+        public async Task<DeletedTicketsListResponse> ListAsync(PagerParameters pager = null)
+        {
+            return await GetAllAsync(pager);
+        }
+        
         public async Task<DeletedTicketsListResponse> GetAllAsync(PagerParameters pager = null)
         {
             using (_loggerScope(_logger, nameof(GetAllAsync)))
@@ -52,6 +58,13 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
+        [Obsolete("Use `GetAllAsync` instead.")]
+        public async Task<DeletedTicketsListResponse> ListAsync(Action<IZendeskQuery> builder,
+            PagerParameters pager = null)
+        {
+            return await GetAllAsync(builder, pager);
+        }
+        
         public async Task<DeletedTicketsListResponse> GetAllAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
         {
             var query = new ZendeskQuery();

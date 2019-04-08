@@ -9,6 +9,10 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IDeletedTicketsResource
     {
+        [Obsolete("User `GetAllAsync` instead.")]
+        Task<DeletedTicketsListResponse> ListAsync(PagerParameters pager = null);
+        [Obsolete("User `GetAllAsync` instead.")]
+        Task<DeletedTicketsListResponse> ListAsync(Action<IZendeskQuery> builder, PagerParameters pager = null);
         Task<DeletedTicketsListResponse> GetAllAsync(PagerParameters pager = null);
         Task<DeletedTicketsListResponse> GetAllAsync(Action<IZendeskQuery> builder, PagerParameters pager = null);
         Task RestoreAsync(long ticketId);
