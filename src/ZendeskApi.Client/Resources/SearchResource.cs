@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -41,6 +42,21 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
+        public async Task<SearchResponse<ISearchResult>> SearchAsync(
+            string query,
+            PagerParameters pager = null, 
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            using (_loggerScope(_logger, "SearchAsync"))
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync($"{SearchUri}?query={query}", pager, cancellationToken)
+                    .ConfigureAwait(false);
+
+                return await response.Content.ReadAsAsync<SearchResponse<ISearchResult>>(new SearchJsonConverter());
+            }
+        }
+
         public async Task<SearchResponse<T>> SearchAsync<T>(Action<IZendeskQuery> builder, PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken)) where T : ISearchResult
         {
@@ -54,6 +70,21 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager, cancellationToken)
                     .ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<SearchResponse<T>>();
+            }
+        }
+
+        public async Task<SearchResponse<T>> SearchAsync<T>(
+            string query, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken)) where T : ISearchResult
+        {
+            using (_loggerScope(_logger, "SearchAsync"))
+            using (var client = _apiClient.CreateClient())
+            {
+                var response = await client.GetAsync($"{SearchUri}?query={query}{System.Net.WebUtility.UrlEncode(" ")}type:{typeof(T).GetTypeInfo().GetCustomAttribute<SearchResultTypeAttribute>().ResultType}", pager, cancellationToken)
+                    .ConfigureAwait(false);
+
                 return await response.Content.ReadAsAsync<SearchResponse<T>>();
             }
         }

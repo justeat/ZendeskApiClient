@@ -33,9 +33,30 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task SearchAsync_WithoutBuilder_ShouldGetObjectsWhenAsked()
+        {
+            var results = await _resource.SearchAsync("");
+
+            Assert.Equal(4, results.Count);
+            Assert.Equal(1, results.OfType<Ticket>().Single().Id);
+            Assert.Equal(3, results.OfType<Organization>().Single().Id);
+            Assert.Equal(2, results.OfType<Group>().Single().Id);
+            Assert.Equal(4, results.OfType<UserResponse>().Single().Id);
+        }
+
+        [Fact]
         public async Task ShouldGetTicket()
         {
             var results = await _resource.SearchAsync<Ticket>(query => { });
+
+            Assert.Equal(1, results.Count);
+            Assert.Equal(1, results.Single().Id);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WithoutBuilder_ShouldGetTicket()
+        {
+            var results = await _resource.SearchAsync<Ticket>("");
 
             Assert.Equal(1, results.Count);
             Assert.Equal(1, results.Single().Id);
