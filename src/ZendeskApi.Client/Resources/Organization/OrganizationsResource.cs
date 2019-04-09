@@ -1,5 +1,4 @@
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
@@ -36,7 +35,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#list-organizations");
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -55,7 +54,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#list-organizations");
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -74,7 +73,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#show-organization");
 
                 var result = await response.Content.ReadAsAsync<OrganizationResponse>();
                 return result.Organization;
@@ -88,7 +87,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(organizationIds)}", pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#show-many-organizations");
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -101,7 +100,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}", pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#show-many-organizations");
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -117,10 +116,7 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/organizations#create-organization");
+                    await response.ThrowZendeskRequestException("organizations#create-organization");
                 }
 
                 var result = await response.Content.ReadAsAsync<OrganizationResponse>();
@@ -142,7 +138,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#update-organization");
 
                 var result = await response.Content.ReadAsAsync<OrganizationResponse>();
                 return result.Organization;
@@ -158,10 +154,7 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/users#delete-user");
+                    await response.ThrowZendeskRequestException("organizations#delete-organization");
                 }
             }
         }
