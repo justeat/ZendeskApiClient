@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
@@ -36,7 +37,13 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("organizations#list-organizations")
+                        .Build();
+                }
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -55,7 +62,13 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("organizations#list-organizations")
+                        .Build();
+                }
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -74,7 +87,13 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("organizations#show-organization")
+                        .Build();
+                }
 
                 var result = await response.Content.ReadAsAsync<OrganizationResponse>();
                 return result.Organization;
@@ -88,7 +107,13 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(organizationIds)}", pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("organizations#show-many-organizations")
+                        .Build();
+                }
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -101,7 +126,13 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}", pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("organizations#show-many-organizations")
+                        .Build();
+                }
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -117,10 +148,10 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/organizations#create-organization");
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("organizations#create-organization")
+                        .Build();
                 }
 
                 var result = await response.Content.ReadAsAsync<OrganizationResponse>();
@@ -142,7 +173,13 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("organizations#update-organization")
+                        .Build();
+                }
 
                 var result = await response.Content.ReadAsAsync<OrganizationResponse>();
                 return result.Organization;
@@ -158,10 +195,10 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/users#delete-user");
+                    throw await new ZendeskRequestExceptionBuilder()
+                        .WithResponse(response)
+                        .WithHelpDocsLink("organizations#delete-organization")
+                        .Build();
                 }
             }
         }
