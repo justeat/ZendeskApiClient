@@ -37,6 +37,9 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager, cancellationToken)
                     .ConfigureAwait(false);
+
+                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("search#list-search-results");
+
                 return await response.Content.ReadAsAsync<SearchResponse<ISearchResult>>(new SearchJsonConverter());
             }
         }
@@ -54,6 +57,9 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"{SearchUri}?{query.BuildQuery()}", pager, cancellationToken)
                     .ConfigureAwait(false);
+
+                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("search#list-search-results");
+
                 return await response.Content.ReadAsAsync<SearchResponse<T>>();
             }
         }
