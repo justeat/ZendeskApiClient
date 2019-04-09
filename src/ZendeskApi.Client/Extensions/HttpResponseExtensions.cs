@@ -6,7 +6,7 @@ namespace ZendeskApi.Client.Extensions
 {
     public static class HttpResponseExtensions
     {
-        public static async Task IsSuccessStatusCodeOrThrowZendeskRequestException(this HttpResponseMessage response, string helpDocLink)
+        public static async Task ThrowIfUnsuccessful(this HttpResponseMessage response, string helpDocLink)
         {
             if (!response.IsSuccessStatusCode)
             {
