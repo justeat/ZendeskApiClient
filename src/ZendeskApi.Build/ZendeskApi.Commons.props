@@ -22,8 +22,8 @@
   </PropertyGroup>
   <PropertyGroup>
       <Major>3</Major>
-      <Minor>2</Minor>
-      <Revision>0</Revision>
+      <Minor>3</Minor>
+      <Revision>2</Revision>
 
       <BuildNumber Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">$(APPVEYOR_BUILD_NUMBER)</BuildNumber>
       <BuildNumber Condition=" '$(BUILD_NUMBER)' != '' ">$(BUILD_NUMBER)</BuildNumber>
