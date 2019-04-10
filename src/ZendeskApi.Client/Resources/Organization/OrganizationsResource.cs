@@ -35,7 +35,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
-                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#list-organizations");
+                await response.ThrowIfUnsuccessful("organizations#list-organizations");
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -54,7 +54,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#list-organizations");
+                await response.ThrowIfUnsuccessful("organizations#list-organizations");
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -73,7 +73,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#show-organization");
+                await response.ThrowIfUnsuccessful("organizations#show-organization");
 
                 var result = await response.Content.ReadAsAsync<OrganizationResponse>();
                 return result.Organization;
@@ -87,7 +87,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(organizationIds)}", pager).ConfigureAwait(false);
 
-                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#show-many-organizations");
+                await response.ThrowIfUnsuccessful("organizations#show-many-organizations");
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -100,7 +100,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}", pager).ConfigureAwait(false);
 
-                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#show-many-organizations");
+                await response.ThrowIfUnsuccessful("organizations#show-many-organizations");
 
                 return await response.Content.ReadAsAsync<OrganizationsResponse>();
             }
@@ -138,7 +138,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                await response.IsSuccessStatusCodeOrThrowZendeskRequestException("organizations#update-organization");
+                await response.ThrowIfUnsuccessful("organizations#update-organization");
 
                 var result = await response.Content.ReadAsAsync<OrganizationResponse>();
                 return result.Organization;
