@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("ticket_fields#list-ticket-fields");
 
                 return await response.Content.ReadAsAsync<TicketFieldsResponse>();
             }
@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("ticket_fields#show-ticket-field");
 
                 var singleResponse = await response.Content.ReadAsAsync<TicketFieldResponse>();
                 return singleResponse.TicketField;
@@ -69,10 +69,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/ticket_fields#create-ticket-field");
+                    await response.ThrowZendeskRequestException(
+                        "ticket_fields#create-ticket-field",
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 var result = await response.Content.ReadAsAsync<TicketFieldResponse>();
@@ -94,7 +93,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("ticket_fields#update-ticket-field");
 
                 var result = await response.Content.ReadAsAsync<TicketFieldResponse>();
                 return result.TicketField;
@@ -110,10 +109,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/tickets#delete-ticket");
+                    await response.ThrowZendeskRequestException(
+                        "ticket_fields#delete-ticket-field",
+                        System.Net.HttpStatusCode.NoContent);
                 }
             }
         }
