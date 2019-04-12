@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(string.Format(ResourceUriFormat, userId), pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("user_identities#list-identities");
 
                 return await response.Content.ReadAsAsync<UserIdentitiesResponse>();
             }
@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("user_identities#show-identity");
 
                 return await response.Content.ReadAsAsync<UserIdentity>();
             }
@@ -67,10 +67,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/user_identities#create-identity");
+                    await response.ThrowZendeskRequestException(
+                        "user_identities#create-identity",
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 return await response.Content.ReadAsAsync<UserIdentity>();
@@ -86,10 +85,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/user_identities#create-identity");
+                    await response.ThrowZendeskRequestException(
+                        "user_identities#create-identity",
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 return await response.Content.ReadAsAsync<UserIdentity>();
@@ -109,7 +107,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("user_identities#update-identity");
 
                 return await response.Content.ReadAsAsync<UserIdentity>();
             }
@@ -124,10 +122,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/tickets#delete-ticket");
+                    await response.ThrowZendeskRequestException(
+                        "user_identities#delete-identity",
+                        System.Net.HttpStatusCode.NoContent);
                 }
             }
         }
