@@ -18,14 +18,17 @@ namespace ZendeskApi.Client.Extensions
         public static async Task ThrowZendeskRequestException(
             this HttpResponseMessage response, 
             string helpDocLink,
-            params HttpStatusCode[] expected
+            HttpStatusCode? expected = null
         )
         {
-            throw await new ZendeskRequestExceptionBuilder()
+            var builder = new ZendeskRequestExceptionBuilder()
                 .WithResponse(response)
-                .WithHelpDocsLink(helpDocLink)
-                .WithExpectedHttpStatus(expected)
-                .Build();
+                .WithHelpDocsLink(helpDocLink);
+
+            if (expected.HasValue)
+                builder.WithExpectedHttpStatus(expected.Value);
+                
+            await builder.Build();
         }
     }
 }
