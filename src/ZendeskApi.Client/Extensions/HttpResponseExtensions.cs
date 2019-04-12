@@ -14,7 +14,7 @@ namespace ZendeskApi.Client.Extensions
         {
             if (!response.IsSuccessStatusCode)
             {
-                await response.ThrowZendeskRequestException(helpDocLink);
+                await response.ThrowZendeskRequestException(helpDocLink, (HttpStatusCode?)null);
             }
         }
 
@@ -25,13 +25,26 @@ namespace ZendeskApi.Client.Extensions
             string helpDocLinkPrefix = "support"
         )
         {
+            await response.ThrowZendeskRequestException(
+                helpDocLink,
+                expected.HasValue ? new[] {expected.Value} : null,
+                helpDocLinkPrefix);
+        }
+
+        public static async Task ThrowZendeskRequestException(
+            this HttpResponseMessage response,
+            string helpDocLink,
+            HttpStatusCode[] expected = null,
+            string helpDocLinkPrefix = "support"
+        )
+        {
             var builder = new ZendeskRequestExceptionBuilder()
                 .WithResponse(response)
                 .WithHelpDocsLink($"/{helpDocLinkPrefix}/{helpDocLink}");
 
-            if (expected.HasValue)
-                builder.WithExpectedHttpStatus(expected.Value);
-                
+            if (expected != null)
+                builder.WithExpectedHttpStatus(expected);
+
             throw await builder.Build();
         }
     }

@@ -39,13 +39,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#list-users")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("users#list-users");
 
                 return await response.Content.ReadAsAsync<UsersListResponse>();
             }
@@ -64,13 +58,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#list-users")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("users#list-users");
 
                 return await response.Content.ReadAsAsync<UsersListResponse>();
             }
@@ -89,13 +77,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#list-users")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("users#list-users");
 
                 return await response.Content.ReadAsAsync<UsersListResponse>();
             }
@@ -114,13 +96,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#show-user")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("users#show-users");
 
                 var result = await response.Content.ReadAsAsync<SingleUserResponse>();
                 return result.UserResponse;
@@ -133,14 +109,8 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient(ResourceUri))
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(userIds)}", pager).ConfigureAwait(false);
-                
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#show-many-users")
-                        .Build();
-                }
+
+                await response.ThrowIfUnsuccessful("users#show-many-users");
 
                 return await response.Content.ReadAsAsync<UsersListResponse>();
             }
@@ -153,13 +123,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}", pager).ConfigureAwait(false);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#show-many-users")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("users#show-many-users");
 
                 return await response.Content.ReadAsAsync<UsersListResponse>();
             }
@@ -175,13 +139,7 @@ namespace ZendeskApi.Client.Resources
 
                 var response = await client.GetAsync($"users?start_time={nextPage}").ConfigureAwait(false);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/incremental_export#incremental-user-export")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("incremental_export#incremental-user-export");
 
                 return await response.Content.ReadAsAsync<IncrementalUsersResponse<UserResponse>>();
             }
@@ -221,11 +179,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.Created)
-                        .WithHelpDocsLink("core/users#create-user")
-                        .Build();
+                    await response.ThrowZendeskRequestException(
+                        "users#create-user",
+                        HttpStatusCode.Created);
                 }
 
                 var result = await response.Content.ReadAsAsync<SingleUserResponse>();
@@ -246,13 +202,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#update-user")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("users#update-user");
 
                 var result = await response.Content.ReadAsAsync<SingleUserResponse>();
                 return result.UserResponse;
@@ -268,11 +218,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.Created && response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.Created, HttpStatusCode.OK)
-                        .WithHelpDocsLink("core/users#create-or-update-user")
-                        .Build();
+                    await response.ThrowZendeskRequestException(
+                        "users#create-or-update-user",
+                        new []{ HttpStatusCode.Created, HttpStatusCode.OK });
                 }
 
                 var result = await response.Content.ReadAsAsync<SingleUserResponse>();
@@ -289,11 +237,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.OK)
-                        .WithHelpDocsLink("core/users#delete-user")
-                        .Build();
+                    await response.ThrowZendeskRequestException(
+                        "users#delete-user",
+                        HttpStatusCode.OK);
                 }
             }
         }
