@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Exceptions;
@@ -14,11 +15,16 @@ namespace ZendeskApi.Client.Extensions
             }
         }
 
-        public static async Task ThrowZendeskRequestException(this HttpResponseMessage response, string helpDocLink)
+        public static async Task ThrowZendeskRequestException(
+            this HttpResponseMessage response, 
+            string helpDocLink,
+            params HttpStatusCode[] expected
+        )
         {
             throw await new ZendeskRequestExceptionBuilder()
                 .WithResponse(response)
                 .WithHelpDocsLink(helpDocLink)
+                .WithExpectedHttpStatus(expected)
                 .Build();
         }
     }

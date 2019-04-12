@@ -40,7 +40,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("organization_memberships#list-memberships");
 
                 return await response.Content.ReadAsAsync<OrganizationMembershipsResponse>();
             }
@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(string.Format(OrganisationsUrlFormat, organizationId), pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("organization_memberships#list-memberships");
 
                 return await response.Content.ReadAsAsync<OrganizationMembershipsResponse>();
             }
@@ -66,7 +66,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(string.Format(UsersUrlFormat, userId), pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("organization_memberships#list-memberships");
 
                 return await response.Content.ReadAsAsync<OrganizationMembershipsResponse>();
             }
@@ -85,7 +85,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("organization_memberships#show-membership");
 
                 var single = await response.Content.ReadAsAsync<OrganizationMembershipResponse>();
                 return single.OrganizationMembership;
@@ -105,7 +105,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("organization_memberships#show-membership");
 
                 return await response.Content.ReadAsAsync<OrganizationMembership>();
             }
@@ -121,10 +121,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
+                    await response.ThrowZendeskRequestException(
+                        "organization_memberships#create-membership", 
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 return (await response
@@ -144,10 +143,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
+                    await response.ThrowZendeskRequestException(
+                        "organization_memberships#create-membership",
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 return (await response
@@ -166,10 +164,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket");
+                    await response.ThrowZendeskRequestException(
+                        "organization_memberships#create-many-memberships",
+                        System.Net.HttpStatusCode.OK);
                 }
 
                 return (await response.Content.ReadAsAsync<JobStatusResponse>());
@@ -185,10 +182,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#delete-membership");
+                    await response.ThrowZendeskRequestException(
+                        "organization_memberships#delete-membership",
+                        System.Net.HttpStatusCode.NoContent);
                 }
             }
         }
@@ -202,10 +198,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/organization_memberships#delete-membership");
+                    await response.ThrowZendeskRequestException(
+                        "organization_memberships#delete-membership",
+                        System.Net.HttpStatusCode.NoContent);
                 }
             }
         }
