@@ -36,13 +36,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#list-deleted-users")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("users#list-deleted-users");
 
                 return await response.Content.ReadAsAsync<UsersListResponse>();
             }
@@ -61,13 +55,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#show-deleted-user")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("users#show-deleted-user");
 
                 var result = await response.Content.ReadAsAsync<SingleUserResponse>();
                 return result.UserResponse;
@@ -83,11 +71,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.OK)
-                        .WithHelpDocsLink("core/users#permanently-delete-user")
-                        .Build();
+                    await response.ThrowZendeskRequestException(
+                        "users#permanently-delete-user",
+                        HttpStatusCode.OK);
                 }
             }
         }
