@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("attachments#show-attachment");
 
                 return await response.Content.ReadAsAsync<Attachment>();
             }
@@ -61,10 +61,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/attachments#upload-files");
+                    await response.ThrowZendeskRequestException(
+                        "attachments#upload-files",
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 var uploadResponse = await response.Content.ReadAsAsync<UploadResponse>();
@@ -81,10 +80,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/attachments#delete-upload");
+                    await response.ThrowZendeskRequestException(
+                        "attachments#delete-upload",
+                        System.Net.HttpStatusCode.NoContent);
                 }
             }
         }
