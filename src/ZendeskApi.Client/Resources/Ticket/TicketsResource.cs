@@ -44,14 +44,8 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
-                
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                                .WithResponse(response)
-                                .WithHelpDocsLink("support/tickets#list-tickets")
-                                .Build();
-                }
+
+                await response.ThrowIfUnsuccessful("tickets#list-tickets");
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
@@ -69,14 +63,8 @@ namespace ZendeskApi.Client.Resources
                     _logger.LogInformation("Tickets in organization {0} not found", organizationId);
                     return null;
                 }
-                
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                                    .WithResponse(response)
-                                    .WithHelpDocsLink("support/tickets#list-tickets")
-                                    .Build();
-                }
+
+                await response.ThrowIfUnsuccessful("tickets#list-tickets");
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
@@ -94,14 +82,8 @@ namespace ZendeskApi.Client.Resources
                     _logger.LogInformation("Requested ticketsResponse for user {0} not found", userId);
                     return null;
                 }
-                
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                                    .WithResponse(response)
-                                    .WithHelpDocsLink("support/tickets#list-tickets")
-                                    .Build();
-                }
+
+                await response.ThrowIfUnsuccessful("tickets#list-tickets");
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
@@ -120,13 +102,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                                    .WithResponse(response)
-                                    .WithHelpDocsLink("support/tickets#list-tickets")
-                                    .Build();
-                }
+                await response.ThrowIfUnsuccessful("tickets#list-tickets");
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
@@ -145,13 +121,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                                    .WithResponse(response)
-                                    .WithHelpDocsLink("support/tickets#list-tickets")
-                                    .Build();
-                }
+                await response.ThrowIfUnsuccessful("tickets#list-tickets");
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
@@ -173,7 +143,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("tickets#show-ticket");
 
                 return await response.Content.ReadAsAsync<TicketResponse>();
             }
@@ -186,7 +156,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ticketIds)}", pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("tickets#show-multiple-tickets");
 
                 return await response.Content.ReadAsAsync<TicketsListResponse>();
             }
@@ -251,13 +221,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                                    .WithResponse(response)
-                                    .WithHelpDocsLink("support/tickets#update-ticket")
-                                    .Build();
-                }
+                await response.ThrowIfUnsuccessful("support/tickets#update-ticket");
 
                 return await response.Content.ReadAsAsync<TicketResponse>();
             }
@@ -270,13 +234,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.PutAsJsonAsync("update_many.json", new TicketListRequest<TicketUpdateRequest>(tickets)).ConfigureAwait(false);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                                    .WithResponse(response)
-                                    .WithHelpDocsLink("support/tickets#update-many-tickets")
-                                    .Build();
-                }
+                await response.ThrowIfUnsuccessful("tickets#update-many-tickets");
 
                 return await response.Content.ReadAsAsync<JobStatusResponse>();
             }
@@ -298,7 +256,7 @@ namespace ZendeskApi.Client.Resources
                     return false;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("tickets#mark-ticket-as-spam-and-suspend-requester");
 
                 return true;
             }
@@ -311,7 +269,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.PutAsJsonAsync($"mark_many_as_spam?ids={ZendeskFormatter.ToCsv(ticketIds)}", "{ }").ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("tickets#bulk-mark-tickets-as-spam");
 
                 return await response.Content.ReadAsAsync<JobStatusResponse>();
             }
@@ -329,11 +287,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.NoContent)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                                    .WithResponse(response)
-                                    .WithExpectedHttpStatus(HttpStatusCode.NoContent)
-                                    .WithHelpDocsLink("support/tickets#delete-ticket")
-                                    .Build();
+                    await response.ThrowZendeskRequestException(
+                        "tickets#delete-ticket",
+                        HttpStatusCode.NoContent);
                 }
             }
         }
@@ -361,11 +317,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                                    .WithResponse(response)
-                                    .WithExpectedHttpStatus(HttpStatusCode.OK)
-                                    .WithHelpDocsLink("support/tickets#bulk-delete-tickets")
-                                    .Build();
+                    await response.ThrowZendeskRequestException(
+                        "tickets#bulk-delete-tickets",
+                        HttpStatusCode.OK);
                 }
             }
         }

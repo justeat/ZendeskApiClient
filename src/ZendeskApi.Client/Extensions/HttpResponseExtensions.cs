@@ -7,7 +7,10 @@ namespace ZendeskApi.Client.Extensions
 {
     public static class HttpResponseExtensions
     {
-        public static async Task ThrowIfUnsuccessful(this HttpResponseMessage response, string helpDocLink)
+        public static async Task ThrowIfUnsuccessful(
+            this HttpResponseMessage response, 
+            string helpDocLink,
+            string helpDocLinkPrefix = "/support")
         {
             if (!response.IsSuccessStatusCode)
             {
@@ -18,12 +21,13 @@ namespace ZendeskApi.Client.Extensions
         public static async Task ThrowZendeskRequestException(
             this HttpResponseMessage response, 
             string helpDocLink,
-            HttpStatusCode? expected = null
+            HttpStatusCode? expected = null,
+            string helpDocLinkPrefix = "/support"
         )
         {
             var builder = new ZendeskRequestExceptionBuilder()
                 .WithResponse(response)
-                .WithHelpDocsLink(helpDocLink);
+                .WithHelpDocsLink($"{helpDocLinkPrefix}/{helpDocLink}");
 
             if (expected.HasValue)
                 builder.WithExpectedHttpStatus(expected.Value);
