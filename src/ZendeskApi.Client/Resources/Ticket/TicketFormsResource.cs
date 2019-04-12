@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("ticket_forms#list-ticket-forms");
 
                 return await response.Content.ReadAsAsync<TicketFormsResponse>();
             }
@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("ticket_forms#show-ticket-form");
 
                 var singleResponse = await response.Content.ReadAsAsync<TicketFormResponse>();
                 return singleResponse.TicketForm;
@@ -66,7 +66,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(ticketFormsIds)}", pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("ticket_forms#show-many-ticket-forms");
 
                 return await response.Content.ReadAsAsync<TicketFormsResponse>();
             }
@@ -81,10 +81,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/ticket_forms#create-ticket-forms");
+                    await response.ThrowZendeskRequestException(
+                        "ticket_forms#create-ticket-forms",
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 return (await response.Content.ReadAsAsync<TicketForm>());
@@ -104,7 +103,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("ticket_forms#update-ticket-forms");
 
                 return await response.Content.ReadAsAsync<TicketForm>();
             }
@@ -119,10 +118,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/ticket_forms#delete-ticket-form");
+                    await response.ThrowZendeskRequestException(
+                        "ticket_forms#delete-ticket-form",
+                        System.Net.HttpStatusCode.NoContent);
                 }
             }
         }

@@ -28,7 +28,7 @@ namespace ZendeskApi.Client.Extensions
             if (expected.HasValue)
                 builder.WithExpectedHttpStatus(expected.Value);
                 
-            await builder.Build();
+            throw await builder.Build();
         }
     }
 }
