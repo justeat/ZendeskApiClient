@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
-using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
@@ -56,204 +54,69 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/users/show_many", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
-
-                        IList<UserResponse> users = new List<UserResponse>();
-
-                        var idsQuery = req.Query.ContainsKey("ids")
-                            ? req.Query["ids"].ToString()
-                            : req.Query["external_ids"].ToString();
-
-                        var ids = idsQuery
-                            .Split(',')
-                            .Select(long.Parse)
-                            .ToList();
-
-                        if (ids.First() == long.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        if (req.Query.ContainsKey("ids"))
-                        {
-                            users = state.Items
-                                .Select(x => x.Value)
-                                .Where(x => ids.Contains(x.Id))
-                                .ToList();
-                        }
-                        else if (req.Query.ContainsKey("external_ids"))
-                        {
-                            users = state.Items
-                                .Select(x => x.Value)
-                                .Where(x => ids.Contains(long.Parse(x.ExternalId)))
-                                .ToList();
-                        }
-
-                        if (req.Query.ContainsKey("page") &&
-                            req.Query.ContainsKey("per_page") &&
-                            int.TryParse(req.Query["page"].ToString(), out var page) &&
-                            int.TryParse(req.Query["per_page"].ToString(), out var size))
-                        {
-                            users = users
-                                .Skip((page - 1) * size)
-                                .Take(size)
-                                .ToList();
-                        }
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-
-                        return resp.WriteAsJson(new UsersListResponse
-                        {
-                            Users = users,
-                            Count = users.Count
-                        });
+                        return RequestHelper.Many<UsersListResponse, UserResponse>(
+                            req,
+                            resp,
+                            user => user.Id,
+                            user => user.ExternalId,
+                            items => new UsersListResponse
+                            {
+                                Users = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/users/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
-
-                        if (id == int.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int) HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var user = state.Items[id];
-
-                        resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(new SingleUserResponse
-                        {
-                            UserResponse = user
-                        });
+                        return RequestHelper.GetById<SingleUserResponse, UserResponse>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new SingleUserResponse
+                            {
+                                UserResponse = item
+                            });
                     })
                     .MapGet("api/v2/users", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
-
-                        var users = state.Items
-                            .Select(x => x.Value)
-                            .ToList();
-
-                        if (req.Query.ContainsKey("page") &&
-                            req.Query.ContainsKey("per_page") &&
-                            int.TryParse(req.Query["page"].ToString(), out var page) &&
-                            int.TryParse(req.Query["per_page"].ToString(), out var size))
-                        {
-                            if (page == int.MaxValue && size == int.MaxValue)
+                        return RequestHelper.List<UsersListResponse, UserResponse>(
+                            req,
+                            resp,
+                            users => new UsersListResponse
                             {
-                                resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                                return Task.FromResult(resp);
-                            }
-
-                            users = users
-                                .Skip((page - 1) * size)
-                                .Take(size)
-                                .ToList();
-                        }
-
-                        resp.StatusCode = (int) HttpStatusCode.OK;
-
-                        return resp.WriteAsJson(new UsersListResponse
-                        {
-                            Users = users,
-                            Count = users.Count
-                        });
+                                Users = users,
+                                Count = users.Count
+                            });
                     })
                     .MapGet("api/v2/groups/{id}/users", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        if (id == int.MaxValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.FromResult(resp);
-                        }
-
-                        if (id == int.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
-
-                        var users = state
-                            .Items
-                            .Where(x => x.Value.DefaultGroupId == id)
-                            .Select(p => p.Value)
-                            .ToList();
-
-                        if (req.Query.ContainsKey("page") &&
-                            req.Query.ContainsKey("per_page") &&
-                            int.TryParse(req.Query["page"].ToString(), out var page) &&
-                            int.TryParse(req.Query["per_page"].ToString(), out var size))
-                        {
-                            users = users
-                                .Skip((page - 1) * size)
-                                .Take(size)
-                                .ToList();
-                        }
-
-                        resp.StatusCode = (int) HttpStatusCode.OK;
-
-                        return resp.WriteAsJson(new UsersListResponse
-                        {
-                            Users = users,
-                            Count = users.Count
-                        });
+                        return RequestHelper.FilteredList<UsersListResponse, UserResponse>(
+                            req,
+                            resp,
+                            routeData.Values["id"].ToString(),
+                            (id, items) => items
+                                .Where(x => x.DefaultGroupId == id)
+                                .ToList(),
+                            items => new UsersListResponse
+                            {
+                                Users = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/organizations/{id}/users", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        if (id == int.MaxValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.FromResult(resp);
-                        }
-
-                        if (id == int.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
-
-                        var users = state
-                            .Items
-                            .Where(x => x.Value.OrganizationId.HasValue)
-                            .Where(x => x.Value.OrganizationId == id)
-                            .Select(p => p.Value)
-                            .ToList();
-
-                        if (req.Query.ContainsKey("page") &&
-                            req.Query.ContainsKey("per_page") &&
-                            int.TryParse(req.Query["page"].ToString(), out var page) &&
-                            int.TryParse(req.Query["per_page"].ToString(), out var size))
-                        {
-                            users = users
-                                .Skip((page - 1) * size)
-                                .Take(size)
-                                .ToList();
-                        }
-
-                        resp.StatusCode = (int) HttpStatusCode.OK;
-
-                        return resp.WriteAsJson(new UsersListResponse
-                        {
-                            Users = users,
-                            Count = users.Count
-                        });
+                        return RequestHelper.FilteredList<UsersListResponse, UserResponse>(
+                            req,
+                            resp,
+                            routeData.Values["id"].ToString(),
+                            (id, items) => items
+                                .Where(x => x.OrganizationId.HasValue)
+                                .Where(x => x.OrganizationId == id)
+                                .ToList(),
+                            items => new UsersListResponse
+                            {
+                                Users = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/incremental/users", (req, resp, routeData) =>
                     {
@@ -399,20 +262,11 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapDelete("api/v2/users/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        if (id == int.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
-
-                        state.Items.Remove(id);
-
-                        resp.StatusCode = (int) HttpStatusCode.OK;
-                        return Task.CompletedTask;
+                        return RequestHelper.Delete<UserResponse>(
+                            req,
+                            resp,
+                            routeData,
+                            HttpStatusCode.OK);
                     });
             }
         }

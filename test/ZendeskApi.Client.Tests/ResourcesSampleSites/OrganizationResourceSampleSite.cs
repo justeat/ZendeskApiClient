@@ -13,6 +13,7 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
+
     internal class OrganizationResourceSampleSite : SampleSite<Organization>
     {
         public OrganizationResourceSampleSite(string resource)
@@ -47,159 +48,53 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/organizations", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
-
-                        var organizations = state.Items
-                            .Select(x => x.Value)
-                            .ToList();
-
-                        if (req.Query.ContainsKey("page") &&
-                            req.Query.ContainsKey("per_page") &&
-                            int.TryParse(req.Query["page"].ToString(), out var page) &&
-                            int.TryParse(req.Query["per_page"].ToString(), out var size))
-                        {
-                            if (page == int.MaxValue && size == int.MaxValue)
+                        return RequestHelper.List<OrganizationsResponse, Organization>(
+                            req,
+                            resp,
+                            orgs => new OrganizationsResponse
                             {
-                                resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                                return Task.FromResult(resp);
-                            }
-                            
-                            organizations = organizations
-                                .Skip((page - 1) * size)
-                                .Take(size)
-                                .ToList();
-                        }
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-
-                        return resp.WriteAsJson(new OrganizationsResponse
-                        {
-                            Organizations = organizations,
-                            Count = organizations.Count
-                        });
+                                Organizations = orgs,
+                                Count = orgs.Count
+                            });
                     })
                     .MapGet("api/v2/users/{userId}/organizations", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
-
-                        var id = long.Parse(routeData.Values["userId"].ToString());
-
-                        if (id == int.MaxValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.FromResult(resp);
-                        }
-
-                        if (id == int.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        var organizations = state.Items
-                            .Select(x => x.Value)
-                            .Where(x => x.CustomFields.ContainsKey("requester") && x.CustomFields["requester"].ToString() == id.ToString())
-                            .ToList();
-
-                        if (req.Query.ContainsKey("page") &&
-                            req.Query.ContainsKey("per_page") &&
-                            int.TryParse(req.Query["page"].ToString(), out var page) &&
-                            int.TryParse(req.Query["per_page"].ToString(), out var size))
-                        {
-                            organizations = organizations
-                                .Skip((page - 1) * size)
-                                .Take(size)
-                                .ToList();
-                        }
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-
-                        return resp.WriteAsJson(new OrganizationsResponse
-                        {
-                            Organizations = organizations,
-                            Count = organizations.Count
-                        });
+                        return RequestHelper.FilteredList<OrganizationsResponse, Organization>(
+                            req,
+                            resp,
+                            routeData.Values["userId"].ToString(),
+                            (id, items) => items
+                                .Where(x => x.CustomFields.ContainsKey("requester") && x.CustomFields["requester"].ToString() == id.ToString())
+                                .ToList(),
+                            items => new OrganizationsResponse
+                            {
+                                Organizations = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/organizations/show_many", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
-
-                        IList<Organization> organizations = new List<Organization>();
-
-                        var idsQuery = req.Query.ContainsKey("ids")
-                            ? req.Query["ids"].ToString()
-                            : req.Query["external_ids"].ToString();
-
-                        var ids = idsQuery
-                            .Split(',')
-                            .Select(long.Parse)
-                            .ToList();
-
-                        if (ids.First() == long.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        if (req.Query.ContainsKey("ids"))
-                        {
-                            organizations = state.Items
-                                .Select(x => x.Value)
-                                .Where(x => ids.Contains(x.Id))
-                                .ToList();
-                        }
-                        else if (req.Query.ContainsKey("external_ids"))
-                        {
-                            organizations = state.Items
-                                .Select(x => x.Value)
-                                .Where(x => ids.Contains(long.Parse(x.ExternalId)))
-                                .ToList();
-                        }
-
-                        if (req.Query.ContainsKey("page") &&
-                            req.Query.ContainsKey("per_page") &&
-                            int.TryParse(req.Query["page"].ToString(), out var page) &&
-                            int.TryParse(req.Query["per_page"].ToString(), out var size))
-                        {
-                            organizations = organizations
-                                .Skip((page - 1) * size)
-                                .Take(size)
-                                .ToList();
-                        }
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-
-                        return resp.WriteAsJson(new OrganizationsResponse
-                        {
-                            Organizations = organizations,
-                            Count = organizations.Count
-                        });
+                        return RequestHelper.Many<OrganizationsResponse, Organization>(
+                            req,
+                            resp,
+                            org => org.Id,
+                            org => org.ExternalId,
+                            items => new OrganizationsResponse
+                            {
+                                Organizations = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/organizations/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
-
-                        if (id == int.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var org = state.Items.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new OrganizationResponse
-                        {
-                            Organization = org
-                        });
+                        return RequestHelper.GetById<OrganizationResponse, Organization>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new OrganizationResponse
+                            {
+                                Organization = item
+                            });
                     })
                     .MapPost("api/v2/organizations", (req, resp, routeData) =>
                     {
@@ -227,45 +122,26 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPut("api/v2/organizations/{id}", (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationUpdateRequest>();
-                        var org = request.Organization;
+                        var request = req
+                            .Body
+                            .ReadAs<OrganizationUpdateRequest>();
 
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
-
-                        if (id == int.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        state.Items[id] = org;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new OrganizationResponse
-                        {
-                            Organization = org
-                        });
+                        return RequestHelper.Update<OrganizationResponse, Organization>(
+                            req,
+                            resp,
+                            routeData,
+                            request.Organization,
+                            item => new OrganizationResponse
+                            {
+                                Organization = item
+                            });
                     })
                     .MapDelete("api/v2/organizations/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        if (id == int.MinValue)
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
-                        }
-
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
-                        return Task.FromResult(resp);
+                        return RequestHelper.Delete<Organization>(
+                            req,
+                            resp,
+                            routeData);
                     });
             }
         }
