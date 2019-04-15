@@ -14,7 +14,10 @@ namespace ZendeskApi.Client.Extensions
         {
             if (!response.IsSuccessStatusCode)
             {
-                await response.ThrowZendeskRequestException(helpDocLink, (HttpStatusCode?)null);
+                await response.ThrowZendeskRequestException(
+                    helpDocLink, 
+                    (HttpStatusCode?)null,
+                    helpDocLinkPrefix);
             }
         }
 
