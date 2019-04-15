@@ -46,7 +46,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"/{ResourceUri}.json", pager).ConfigureAwait(false);
 
-                await response.ThrowIfUnsuccessful("core/tickets#show-deleted-tickets");
+                await response.ThrowIfUnsuccessful("tickets#show-deleted-tickets");
 
                 return await response.Content.ReadAsAsync<DeletedTicketsListResponse>();
             }
@@ -69,7 +69,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"{ResourceUri}.json?{query.BuildQuery()}", pager).ConfigureAwait(false);
 
-                await response.ThrowIfUnsuccessful("core/tickets#show-deleted-tickets");
+                await response.ThrowIfUnsuccessful("tickets#show-deleted-tickets");
 
                 return await response.Content.ReadAsAsync<DeletedTicketsListResponse>(new SearchJsonConverter());
             }
@@ -87,7 +87,7 @@ namespace ZendeskApi.Client.Resources
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     await response.ThrowZendeskRequestException(
-                        "core/tickets#restore-a-previously-deleted-ticket",
+                        "tickets#restore-a-previously-deleted-ticket",
                         HttpStatusCode.OK);
                 }
             }
@@ -119,7 +119,7 @@ namespace ZendeskApi.Client.Resources
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     await response.ThrowZendeskRequestException(
-                        "core/tickets#restore-previously-deleted-tickets-in-bulk",
+                        "tickets#restore-previously-deleted-tickets-in-bulk",
                         HttpStatusCode.OK);
                 }
             }
@@ -135,7 +135,7 @@ namespace ZendeskApi.Client.Resources
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     await response.ThrowZendeskRequestException(
-                        "core/tickets#delete-ticket-permanently",
+                        "tickets#delete-ticket-permanently",
                         HttpStatusCode.OK);
                 }
 
@@ -167,7 +167,7 @@ namespace ZendeskApi.Client.Resources
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     await response.ThrowZendeskRequestException(
-                        "core/tickets#delete-multiple-tickets-permanently",
+                        "tickets#delete-multiple-tickets-permanently",
                         HttpStatusCode.OK);
                 }
 
