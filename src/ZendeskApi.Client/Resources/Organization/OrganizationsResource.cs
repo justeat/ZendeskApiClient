@@ -83,7 +83,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<Organization> UpdateAsync(Organization organization)
         {
             var response = await UpdateWithNotFoundCheckAsync<OrganizationResponse, OrganizationUpdateRequest>(
-                ResourceUri,
+                $"{ResourceUri}/{organization.Id}",
                 new OrganizationUpdateRequest(organization),
                 "update-organization",
                 $"Cannot update organization as organization {organization.Id} cannot be found");
