@@ -35,6 +35,8 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
+                await response.ThrowIfUnsuccessful("requests#list-requests");
+
                 response.EnsureSuccessStatusCode();
 
                 return await response.Content.ReadAsAsync<RequestsResponse>();
@@ -54,7 +56,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("requests#show-request");
 
                 return (await response
                     .Content
@@ -71,7 +73,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync("search?" /*+ query.WithTypeFilter<Request>().BuildQuery()*/, pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("requests#search-requests");
 
                 return await response.Content.ReadAsAsync<RequestsResponse>();
             }
@@ -90,7 +92,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("requests#getting-comments");
 
                 return await response.Content.ReadAsAsync<TicketCommentsResponse>();
             }
@@ -109,7 +111,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("requests#getting-comments");
 
                 return await response.Content.ReadAsAsync<TicketComment>();
             }
@@ -124,10 +126,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/requests#create-request");
+                    await response.ThrowZendeskRequestException(
+                        "requests#create-request",
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 return (await response
@@ -150,7 +151,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("requests#update-request");
 
                 return (await response
                         .Content
