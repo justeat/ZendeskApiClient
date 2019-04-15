@@ -33,12 +33,8 @@ namespace ZendeskApi.Client.Resources
             using (var client = _apiClient.CreateClient())
             {
                 var response = await client.GetAsync(ResourceUri, pagerParameters).ConfigureAwait(false);
-                
-                if (!response.IsSuccessStatusCode)
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("support/job_statuses#list-job-statuses")
-                        .Build();
+
+                await response.ThrowIfUnsuccessful("job_statuses#list-job-statuses");
 
                 return await response.Content.ReadAsAsync<JobStatusListResponse>();
             }
@@ -60,12 +56,8 @@ namespace ZendeskApi.Client.Resources
                     _logger.LogInformation($"JobStatus not found: {statusId}");
                     return null;
                 }
-                
-                if (!response.IsSuccessStatusCode)
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("support/job_statuses#show-job-status")
-                        .Build();
+
+                await response.ThrowIfUnsuccessful("job_statuses#show-job-status");
 
                 var result = await response.Content.ReadAsAsync<SingleJobStatusResponse>();
                 return result.JobStatus;
@@ -79,12 +71,8 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"show_many?ids={ZendeskFormatter.ToCsv(statusIds)}", pagerParameters)
                     .ConfigureAwait(false);
-                
-                if (!response.IsSuccessStatusCode)
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("support/job_statuses#show-many-job-statuses")
-                        .Build();
+
+                await response.ThrowIfUnsuccessful("job_statuses#show-many-job-statuses");
 
                 return await response.Content.ReadAsAsync<JobStatusListResponse>();
             }
