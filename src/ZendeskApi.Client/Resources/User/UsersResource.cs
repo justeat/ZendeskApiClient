@@ -21,17 +21,9 @@ namespace ZendeskApi.Client.Resources
         private const string GroupUsersResourceUriFormat = "api/v2/groups/{0}/users";
         private const string OrganizationsUsersResourceUriFormat = "api/v2/organizations/{0}/users";
 
-        private readonly IZendeskApiClient _apiClient;
-        private readonly ILogger _logger;
-
-        private readonly Func<ILogger, string, IDisposable> _loggerScope = LoggerMessage.DefineScope<string>(typeof(UsersResource).Name + ": {0}");
-
         public UsersResource(IZendeskApiClient apiClient, ILogger logger) 
             : base(apiClient, logger, "users")
-        {
-            _apiClient = apiClient;
-            _logger = logger;
-        }
+        { }
 
         public async Task<UsersListResponse> ListAsync(PagerParameters pager = null)
         {
@@ -153,8 +145,8 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<UserResponse> CreateOrUpdateAsync(UserCreateRequest user)
         {
-            using (_loggerScope(_logger, "CreateOrUpdateAsync"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
+            using (LoggerScope(Logger, "CreateOrUpdateAsync"))
+            using (var client = ApiClient.CreateClient(ResourceUri))
             {
                 var response = await client.PostAsJsonAsync("create_or_update", new UserRequest<UserCreateRequest>(user)).ConfigureAwait(false);
 

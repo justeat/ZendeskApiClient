@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Exceptions;
+using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
@@ -22,107 +24,206 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ShouldGetAllUsers()
+        public async Task ListAsync_WhenCalled_ShouldGetAllUsers()
         {
-            var users = await CreateUsers();
+            var results = await _resource.ListAsync();
 
-            var objs = (await _resource.ListAsync()).ToArray();
+            Assert.Equal(100, results.Count);
 
-            Assert.Equal(2, objs.Length);
-            Assert.Equal(JsonConvert.SerializeObject(users[0]), JsonConvert.SerializeObject(objs[0]));
-            Assert.Equal(JsonConvert.SerializeObject(users[1]), JsonConvert.SerializeObject(objs[1]));
-        }
-
-        [Fact]
-        public async Task ShouldGetAllUsersInGroup()
-        {
-            var obj1 = new UserCreateRequest("name")
+            for (var i = 1; i <= 100; i++)
             {
-                Email = "Fu1@fu.com", 
-                DefaultGroupId = 1
-            };
+                var user = results.ElementAt(i - 1);
 
-            var obj2 = new UserCreateRequest("name")
+                Assert.Equal($"name.{i}", user.Name);
+                Assert.Equal($"email.{i}", user.Email);
+                Assert.Equal(i.ToString(), user.ExternalId);
+            }
+        }
+
+        [Fact]
+        public async Task ListAsync_WhenCalledWithPaging_ShouldGetAllUsers()
+        {
+            var results = await _resource.ListAsync(new PagerParameters
             {
-                Email = "Fu2@fu.com",
-                DefaultGroupId = 2
-            };
+                Page = 2,
+                PageSize = 1
+            });
 
-            var objr1 = await _resource.CreateAsync(obj1);
-            var objr2 = await _resource.CreateAsync(obj2);
+            var user = results.First();
 
-            var obj1Result = (await _resource.ListInGroupAsync(1)).ToArray()[0];
-            var obj2Result = (await _resource.ListInGroupAsync(2)).ToArray()[0];
-            
-            Assert.Equal(JsonConvert.SerializeObject(objr1), JsonConvert.SerializeObject(obj1Result));
-            Assert.Equal(JsonConvert.SerializeObject(objr2), JsonConvert.SerializeObject(obj2Result));
+            Assert.Equal("name.2", user.Name);
+            Assert.Equal("email.2", user.Email);
+            Assert.Equal("2", user.ExternalId);
         }
 
         [Fact]
-        public async Task ShouldGetAllUsersInOrganization()
+        public async Task ListAsync_WhenServiceUnavailable_ShouldThrow()
         {
-            var obj1 = new UserCreateRequest("name")
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListAsync(new PagerParameters
             {
-                Email = "Fu1@fu.com",
-                OrganizationId = 18
-            };
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
 
-            var obj2 = new UserCreateRequest("name")
+        [Fact]
+        public async Task ListInGroupAsync_WhenCalled_ShouldGetAllUsers()
+        {
+            var results = await _resource.ListInGroupAsync(1);
+
+            Assert.Equal(1, results.Count);
+
+            var user = results.First();
+
+            Assert.Equal("name.1", user.Name);
+            Assert.Equal("email.1", user.Email);
+            Assert.Equal("1", user.ExternalId);
+            Assert.Equal(1, user.DefaultGroupId);
+        }
+
+        [Fact]
+        public async Task ListInGroupAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.ListInGroupAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task ListInGroupAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListInGroupAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task ListInOrganizationAsync_WhenCalled_ShouldGetAllUsers()
+        {
+            var results = await _resource.ListInOrganizationAsync(1);
+
+            Assert.Equal(1, results.Count);
+
+            var user = results.First();
+
+            Assert.Equal("name.1", user.Name);
+            Assert.Equal("email.1", user.Email);
+            Assert.Equal("1", user.ExternalId);
+            Assert.Equal(1, user.DefaultGroupId);
+            Assert.Equal(1, user.OrganizationId);
+        }
+
+        [Fact]
+        public async Task ListInOrganizationAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.ListInOrganizationAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task ListInOrganizationAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListInOrganizationAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task ListAsync_WhenCalledWithOrganizationIds_ShouldGetAllUsers()
+        {
+            var results = await _resource.ListAsync(new long[] { 1, 2, 3 });
+
+            Assert.Equal(3, results.Count);
+
+            for (var i = 1; i <= 3; i++)
             {
-                Email = "Fu2@fu.com",
-                OrganizationId = 12
-            };
+                var user = results.ElementAt(i - 1);
 
-            var objr1 = await _resource.CreateAsync(obj1);
-            var objr2 = await _resource.CreateAsync(obj2);
-
-            var obj1Result = (await _resource.ListInOrganizationAsync(12)).ToArray()[0];
-            var obj2Result = (await _resource.ListInOrganizationAsync(18)).ToArray()[0];
-
-            Assert.Equal(JsonConvert.SerializeObject(objr1), JsonConvert.SerializeObject(obj2Result));
-            Assert.Equal(JsonConvert.SerializeObject(objr2), JsonConvert.SerializeObject(obj1Result));
+                Assert.Equal($"name.{i}", user.Name);
+                Assert.Equal(i.ToString(), user.ExternalId);
+            }
         }
 
         [Fact]
-        public async Task ShouldGetAllUsersById()
+        public async Task ListAsync_WhenCalledWithOrganizationIdsAndWithPaging_ShouldGetAllUsers()
         {
-            var obj1 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu1@fu.com" });
-            var obj2 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu2@fu.com" });
-            var obj3 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu2@fu.com" });
-
-            var objs = (await _resource.ListAsync(new[] { obj1.Id, obj3.Id })).ToArray();
-
-            Assert.Equal(2, objs.Length);
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
-            Assert.Equal(JsonConvert.SerializeObject(obj3), JsonConvert.SerializeObject(objs[1]));
-        }
-
-        [Fact]
-        public async Task ShouldGetAllUsersByExternalId()
-        {
-            var obj1 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu1@fu.com" });
-            var obj2 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu2@fu.com", ExternalId = "ATEST1" });
-            var obj3 = await _resource.CreateAsync(new UserCreateRequest("name") { Email = "Fu2@fu.com", ExternalId = "ATEST2" });
-
-            var objs = (await _resource.ListByExternalIdsAsync(new[] { obj1.ExternalId, obj2.ExternalId, obj3.ExternalId })).ToArray();
-
-            Assert.Equal(2, objs.Length);
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[0]));
-            Assert.Equal(JsonConvert.SerializeObject(obj3), JsonConvert.SerializeObject(objs[1]));
-        }
-
-        [Fact]
-        public async Task ShouldGetUser()
-        {
-            var user = await _resource.CreateAsync(
-                new UserCreateRequest("name")
+            var results = await _resource.ListAsync(
+                new long[] { 1, 2, 3 },
+                new PagerParameters
                 {
-                    Email = "Fu1@fu.com"
+                    Page = 2,
+                    PageSize = 1
                 });
 
-            var user2 = await _resource.GetAsync(user.Id);
+            var user = results.First();
 
-            Assert.Equal(JsonConvert.SerializeObject(user), JsonConvert.SerializeObject(user2));
+            Assert.Equal("name.2", user.Name);
+            Assert.Equal("2", user.ExternalId);
+        }
+
+        [Fact]
+        public async Task ListAsync_WhenCalledWithOrganizationIdsButServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListAsync(new long[] { long.MinValue }));
+        }
+
+        [Fact]
+        public async Task ListByExternalIdsAsync_WhenCalledWithExternalIds_ShouldGetAllUsers()
+        {
+            var results = await _resource.ListByExternalIdsAsync(new string[] { "1", "2", "3" });
+
+            Assert.Equal(3, results.Count);
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var user = results.ElementAt(i - 1);
+
+                Assert.Equal($"name.{i}", user.Name);
+                Assert.Equal(i.ToString(), user.ExternalId);
+            }
+        }
+
+        [Fact]
+        public async Task ListByExternalIdsAsync_WhenCalledWithExternalIdsAndWithPaging_ShouldGetAllUsers()
+        {
+            var results = await _resource.ListByExternalIdsAsync(
+                new string[] { "1", "2", "3" },
+                new PagerParameters
+                {
+                    Page = 2,
+                    PageSize = 1
+                });
+
+            var user = results.First();
+
+            Assert.Equal("name.2", user.Name);
+            Assert.Equal("2", user.ExternalId);
+        }
+
+        [Fact]
+        public async Task ListByExternalIdsAsync_WhenCalledWithExternalIdsButServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListByExternalIdsAsync(new string[] { long.MinValue.ToString() }));
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalled_ShouldGetUser()
+        {
+            var org = await _resource.GetAsync(1);
+
+            Assert.Equal("name.1", org.Name);
+            Assert.Equal("1", org.ExternalId);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAsync(int.MinValue));
         }
 
         [Fact]
@@ -150,7 +251,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
         
         [Fact]
-        public async Task ShouldCreateUser()
+        public async Task CreateAsync_WhenCalled_ShouldCreateUser()
         {
             var user = await _resource.CreateAsync(
                 new UserCreateRequest("name")
@@ -162,25 +263,47 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ShouldUpdateUser()
+        public async Task CreateAsync_WhenUnexpectedHttpCode_ShouldThrow()
         {
-            var user = await _resource.CreateAsync(
-                new UserCreateRequest("name")
-                {
-                    Email = "Fu1@fu.com",
-                    Name = "Kung Fu Wizard"
-                });
-
-            Assert.Equal("Kung Fu Wizard", user.Name);
-
-            var updateRequest = new UserUpdateRequest(user.Id)
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(new UserCreateRequest("name")
             {
-                Name = "Cheese Master"
-            };
+                Name = string.Empty
+            }));
+        }
 
-            var userUpdated = await _resource.UpdateAsync(updateRequest);
+        [Fact]
+        public async Task UpdateAsync_WhenCalled_ShouldCreateUser()
+        {
+            var user = await _resource.UpdateAsync(new UserUpdateRequest(1)
+            {
+                Id = 1,
+                Name = "MyNewOrgName",
+                ExternalId = "999999"
+            });
 
-            Assert.Equal("Cheese Master", userUpdated.Name);
+            Assert.Equal("MyNewOrgName", user.Name);
+            Assert.Equal("999999", user.ExternalId);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var org = await _resource.UpdateAsync(new UserUpdateRequest(int.MaxValue)
+            {
+                Name = "MyNewOrgName",
+                ExternalId = "999999"
+            });
+
+            Assert.Null(org);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.UpdateAsync(new UserUpdateRequest(int.MinValue)
+            {
+                Name = string.Empty
+            }));
         }
 
         [Fact]
@@ -208,42 +331,15 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ShouldDeleteUser()
+        public async Task DeleteAsync_WhenCalled_ShouldDeleteUser()
         {
-            var user = await _resource.CreateAsync(
-                new UserCreateRequest("name")
-                {
-                    Email = "Fu1@fu.com",
-                    Name = "Kung Fu Wizard"
-                });
-
-            var user1 = await _resource.GetAsync(user.Id);
-
-            Assert.Equal(JsonConvert.SerializeObject(user), JsonConvert.SerializeObject(user1));
-
-            await _resource.DeleteAsync(user.Id);
-
-            var user2 = await _resource.GetAsync(user.Id);
-
-            Assert.Null(user2);
+            await _resource.DeleteAsync(1);
         }
 
-        private async Task<UserResponse[]> CreateUsers()
+        [Fact]
+        public async Task DeleteAsync_WhenUnexpectedHttpCode_ShouldThrow()
         {
-            var obj1 = new UserCreateRequest("some name")
-            {
-                Email = "Fu1@fu.com"
-            };
-
-            var obj2 = new UserCreateRequest("some name")
-            {
-                Email = "Fu2@fu.com"
-            };
-
-            var objr1 = await _resource.CreateAsync(obj1);
-            var objr2 = await _resource.CreateAsync(obj2);
-
-            return new[] { objr1, objr2 };
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(int.MinValue));
         }
     }
 }
