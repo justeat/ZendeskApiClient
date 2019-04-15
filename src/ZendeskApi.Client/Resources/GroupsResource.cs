@@ -38,7 +38,8 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(GroupsResourceUri, pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("groups#list-groups");
+
 
                 return await response.Content.ReadAsAsync<GroupListResponse>();
             }
@@ -57,7 +58,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("groups#list-groups");
 
                 return await response.Content.ReadAsAsync<GroupListResponse>();
             }
@@ -70,7 +71,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(AssignableGroupUri, pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("groups#show-assignable-groups");
 
                 return await response.Content.ReadAsAsync<GroupListResponse>();
             }
@@ -89,7 +90,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("groups#show-group");
 
                 var groupResponse = await response.Content.ReadAsAsync<GroupResponse>();
                 return groupResponse.Group;
@@ -105,10 +106,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/groups#create-groups");
+                    await response.ThrowZendeskRequestException(
+                        "groups#create-group",
+                        System.Net.HttpStatusCode.Created);
                 }
                 
                 var result = await response.Content.ReadAsAsync<GroupResponse>();
@@ -129,7 +129,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("groups#update-group");
 
                 var result = await response.Content.ReadAsAsync<GroupResponse>();
                 return result.Group;
@@ -145,10 +145,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/attachments#delete-upload");
+                    await response.ThrowZendeskRequestException(
+                        "groups#delete-group",
+                        System.Net.HttpStatusCode.NoContent);
                 }
             }
         }
