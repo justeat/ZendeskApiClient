@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Resources;
@@ -95,7 +96,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public Task ShouldThrowErrorWhenNot201OnCreate()
         {
-            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateAsync(new GroupCreateRequest("I'm an error group!")));
+            return Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(new GroupCreateRequest("I'm an error group!")));
 
             // could use tags to simulate httpstatus codes in fake client?
         }

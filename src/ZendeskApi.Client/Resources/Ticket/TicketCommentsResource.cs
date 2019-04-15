@@ -36,7 +36,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(string.Format(ResourceUri, ticketId), pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("ticket_comments#list-comments");
 
                 return await  response.Content.ReadAsAsync<TicketCommentsListResponse>();
             }

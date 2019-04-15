@@ -32,7 +32,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("user_fields#list-user-fields");
 
                 return await response.Content.ReadAsAsync<UserFieldsResponse>();
             }
@@ -51,7 +51,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("user_fields#show-user-field");
 
                 var singleResponse = await response.Content.ReadAsAsync<UserFieldResponse>();
                 return singleResponse.UserField;
@@ -67,10 +67,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/user_fields#create-user-field");
+                    await response.ThrowZendeskRequestException(
+                        "user_fields#create-user-field",
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 return await response.Content.ReadAsAsync<UserField>();
@@ -90,7 +89,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("user_fields#update-user-fields");
 
                 return await response.Content.ReadAsAsync<UserField>();
             }
@@ -105,10 +104,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/users#delete-user");
+                    await response.ThrowZendeskRequestException(
+                        "user_fields#delete-user-field",
+                        System.Net.HttpStatusCode.NoContent);
                 }
             }
         }

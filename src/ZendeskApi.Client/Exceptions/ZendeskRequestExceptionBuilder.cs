@@ -26,6 +26,7 @@ namespace ZendeskApi.Client.Exceptions
             this._response = response;
             return this;
         }
+
         public ZendeskRequestExceptionBuilder WithExpectedHttpStatus(params HttpStatusCode[] status)
         {
             if (status != null)

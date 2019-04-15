@@ -116,7 +116,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    await response.ThrowZendeskRequestException("organizations#create-organization");
+                    await response.ThrowZendeskRequestException(
+                        "organizations#create-organization", 
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 var result = await response.Content.ReadAsAsync<OrganizationResponse>();
@@ -154,7 +156,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                 {
-                    await response.ThrowZendeskRequestException("organizations#delete-organization");
+                    await response.ThrowZendeskRequestException(
+                        "organizations#delete-organization", 
+                        System.Net.HttpStatusCode.NoContent);
                 }
             }
         }

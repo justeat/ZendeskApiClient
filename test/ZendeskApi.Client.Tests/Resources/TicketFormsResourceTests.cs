@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
@@ -76,7 +77,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public Task ShouldThrowErrorWhenNot201()
         {
-            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateAsync(new TicketForm
+            return Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(new TicketForm
             {
                 Name = "error"
             }));

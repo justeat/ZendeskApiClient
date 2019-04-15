@@ -46,13 +46,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"/{ResourceUri}.json", pager).ConfigureAwait(false);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/tickets#show-deleted-tickets")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("tickets#show-deleted-tickets");
 
                 return await response.Content.ReadAsAsync<DeletedTicketsListResponse>();
             }
@@ -75,13 +69,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync($"{ResourceUri}.json?{query.BuildQuery()}", pager).ConfigureAwait(false);
 
-                if(!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/tickets#show-deleted-tickets")
-                        .Build();
-                }
+                await response.ThrowIfUnsuccessful("tickets#show-deleted-tickets");
 
                 return await response.Content.ReadAsAsync<DeletedTicketsListResponse>(new SearchJsonConverter());
             }
@@ -98,11 +86,9 @@ namespace ZendeskApi.Client.Resources
                 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.OK)
-                        .WithHelpDocsLink("core/tickets#restore-a-previously-deleted-ticket")
-                        .Build();
+                    await response.ThrowZendeskRequestException(
+                        "tickets#restore-a-previously-deleted-ticket",
+                        HttpStatusCode.OK);
                 }
             }
         }
@@ -132,11 +118,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.OK)
-                        .WithHelpDocsLink("core/tickets#restore-previously-deleted-tickets-in-bulk")
-                        .Build();
+                    await response.ThrowZendeskRequestException(
+                        "tickets#restore-previously-deleted-tickets-in-bulk",
+                        HttpStatusCode.OK);
                 }
             }
         }
@@ -150,11 +134,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.OK)
-                        .WithHelpDocsLink("core/tickets#delete-ticket-permanently")
-                        .Build();
+                    await response.ThrowZendeskRequestException(
+                        "tickets#delete-ticket-permanently",
+                        HttpStatusCode.OK);
                 }
 
                 var result = await response.Content.ReadAsAsync<SingleJobStatusResponse>();
@@ -184,11 +166,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithExpectedHttpStatus(HttpStatusCode.OK)
-                        .WithHelpDocsLink("core/tickets#delete-multiple-tickets-permanently")
-                        .Build();
+                    await response.ThrowZendeskRequestException(
+                        "tickets#delete-multiple-tickets-permanently",
+                        HttpStatusCode.OK);
                 }
 
                 var result = await response.Content.ReadAsAsync<SingleJobStatusResponse>();

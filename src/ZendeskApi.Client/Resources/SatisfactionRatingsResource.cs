@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
             {
                 var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("satisfaction_ratings#list-satisfaction-ratings");
 
                 return await response.Content.ReadAsAsync<SatisfactionRatingsResponse>();
             }
@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Resources
                     return null;
                 }
 
-                response.EnsureSuccessStatusCode();
+                await response.ThrowIfUnsuccessful("satisfaction_ratings#show-satisfaction-rating");
 
                 var single = await response.Content.ReadAsAsync<SatisfactionRatingResponse>();
                 return single.SatisfactionRating;
@@ -68,10 +68,9 @@ namespace ZendeskApi.Client.Resources
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/satisfaction_ratings#create-a-satisfaction-rating");
+                    await response.ThrowZendeskRequestException(
+                        "satisfaction_ratings#create-a-satisfaction-rating",
+                        System.Net.HttpStatusCode.Created);
                 }
 
                 return await response.Content.ReadAsAsync<SatisfactionRating>();

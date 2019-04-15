@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
@@ -84,7 +85,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public Task ShouldThrowErrorWhenNot201()
         {
-            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateUserIdentityAsync(
+            return Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateUserIdentityAsync(
                 new UserIdentity
                 {
                     UserId = 123,
