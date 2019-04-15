@@ -17,7 +17,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public SatisfactionRatingsTests()
         {
-            _client = new DisposableZendeskApiClient(resource => new SatisfactionRatingsResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<SatisfactionRatingsState, SatisfactionRating>(resource => new SatisfactionRatingsResourceSampleSite(resource));
             _resource = new SatisfactionRatingsResource(_client, NullLogger.Instance);
         }
 

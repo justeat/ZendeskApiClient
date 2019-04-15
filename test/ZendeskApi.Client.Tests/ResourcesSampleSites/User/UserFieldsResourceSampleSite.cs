@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
@@ -16,12 +11,11 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class UserFieldsResourceSampleSite : SampleSite
+    internal class UserFieldsResourceSampleSite : SampleSite<UserField>
     {
-        private class State
-        {
-            public IDictionary<long, UserField> UserFields = new Dictionary<long, UserField>();
-        }
+        public UserFieldsResourceSampleSite(string resource)
+            : base(resource, MatchesRequest)
+        { }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -32,25 +26,25 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
 
-                        if (!state.UserFields.ContainsKey(id))
+                        if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var userField = state.UserFields.Single(x => x.Key == id).Value;
+                        var userField = state.Items.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new UserFieldResponse { UserField = userField });
                     })
                     .MapGet("api/v2/user_fields", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UserFieldsResponse { UserFields = state.UserFields.Values });
+                        return resp.WriteAsJson(new UserFieldsResponse { UserFields = state.Items.Values });
                     })
                     .MapPost("api/v2/user_fields", (req, resp, routeData) =>
                     {
@@ -63,10 +57,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.CompletedTask;
                         }
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
 
                         user.Id = long.Parse(Rand.Next().ToString());
-                        state.UserFields.Add(user.Id.Value, user);
+                        state.Items.Add(user.Id.Value, user);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(user);
@@ -77,75 +71,26 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var user = req.Body.ReadAs<UserField>();
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
 
-                        state.UserFields[id] = user;
+                        state.Items[id] = user;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(state.UserFields[id]);
+                        return resp.WriteAsJson(state.Items[id]);
                     })
                     .MapDelete("api/v2/user_fields/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
 
-                        state.UserFields.Remove(id);
+                        state.Items.Remove(id);
 
                         resp.StatusCode = (int)HttpStatusCode.NoContent;
                         return Task.CompletedTask;
                     })
                     ;
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public UserFieldsResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-
-            RefreshClient(resource);
-        }
-
-        public override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : resource;
-        }
-
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }

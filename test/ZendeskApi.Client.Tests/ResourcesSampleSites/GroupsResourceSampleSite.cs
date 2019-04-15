@@ -1,29 +1,22 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
-using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class GroupsResourceSampleSite : SampleSite
+    internal class GroupsResourceSampleSite : SampleSite<Group>
     {
-        private class State
-        {
-            public IDictionary<long, Group> Groups = new Dictionary<long, Group>();
-        }
+        public GroupsResourceSampleSite(string resource)
+            : base(resource, MatchesRequest)
+        { }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -32,10 +25,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/groups/assignable", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
 
                         var groups = state
-                            .Groups
+                            .Items
                             .Where(x => x.Value.Name.Contains("Assign:true"))
                             .Select(p => p.Value);
 
@@ -46,34 +39,34 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
 
-                        if (!state.Groups.ContainsKey(id))
+                        if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var group = state.Groups.Single(x => x.Key == id).Value;
+                        var group = state.Items.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new GroupResponse{ Group = group});
                     })
                     .MapGet("api/v2/groups", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupListResponse { Groups = state.Groups.Values });
+                        return resp.WriteAsJson(new GroupListResponse { Groups = state.Items.Values });
                     })
                     .MapGet("api/v2/users/{id}/groups", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
 
                         var groups = state
-                            .Groups
+                            .Items
                             .Where(x => x.Value.Name.Contains($"USER: {id}"))
                             .Select(p => p.Value);
 
@@ -92,7 +85,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.CompletedTask;
                         }
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
                         var groupId = long.Parse(Rand.Next().ToString());
                         var newGroup = new Group
                         {
@@ -101,7 +94,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             Url = new Uri("https://company.zendesk.com/api/v2/groups/" + groupId + ".json")
                         };
                         
-                        state.Groups.Add(newGroup.Id, newGroup);
+                        state.Items.Add(newGroup.Id, newGroup);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         
@@ -114,79 +107,30 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var groupRequest = req.Body.ReadAs<GroupRequest<GroupUpdateRequest>>();
                         var group = groupRequest.Group;
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
                         var newGroup = new Group
                         {
                             Name = group.Name,
                             Id = id
                         };
 
-                        state.Groups[id] = newGroup;
+                        state.Items[id] = newGroup;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupResponse{Group = state.Groups[id]});
+                        return resp.WriteAsJson(new GroupResponse{Group = state.Items[id]});
                     })
                     .MapDelete("api/v2/groups/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
 
-                        state.Groups.Remove(id);
+                        state.Items.Remove(id);
 
                         resp.StatusCode = (int)HttpStatusCode.NoContent;
                         return Task.CompletedTask;
                     });
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public GroupsResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddSingleton(_ => new State());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-
-            RefreshClient(resource);
-        }
-
-        public override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : resource;
-        }
-
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }

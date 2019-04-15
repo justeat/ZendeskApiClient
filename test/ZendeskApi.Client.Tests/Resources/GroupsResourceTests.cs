@@ -21,7 +21,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public GroupsResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new GroupsResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<Group>((resource) => new GroupsResourceSampleSite(resource));
             _resource = new GroupsResource(_client, NullLogger.Instance);
         }
 

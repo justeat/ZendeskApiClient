@@ -16,7 +16,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public TicketFieldsResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new TicketFieldsResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<TicketField>((resource) => new TicketFieldsResourceSampleSite(resource));
             _resource = new TicketFieldsResource(_client, NullLogger.Instance);
         }
 

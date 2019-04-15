@@ -15,7 +15,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public OrganizationResourceTests()
         {
-            IZendeskApiClient client = new DisposableZendeskApiClient(resource => new OrganizationResourceSampleSite(resource));
+            IZendeskApiClient client = new DisposableZendeskApiClient<Organization>(resource => new OrganizationResourceSampleSite(resource));
             _resource = new OrganizationsResource(client, NullLogger.Instance);
         }
 

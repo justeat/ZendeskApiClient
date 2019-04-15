@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using ZendeskApi.Client.Extensions;
@@ -18,12 +13,12 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class TicketFieldsResourceSampleSite : SampleSite
+    internal class TicketFieldsResourceSampleSite : SampleSite<TicketField>
     {
-        private class State {
-            public IDictionary<long, TicketField> TicketFields = new Dictionary<long, TicketField>();
-        }
-        
+        public TicketFieldsResourceSampleSite(string resource)
+            : base(resource, MatchesRequest)
+        { }
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
@@ -33,25 +28,25 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
 
-                        if (!state.TicketFields.ContainsKey(id))
+                        if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var ticketField = state.TicketFields.Single(x => x.Key == id).Value;
+                        var ticketField = state.Items.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new TicketFieldResponse { TicketField = ticketField });
                     })
                     .MapGet("api/v2/ticket_fields", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFieldsResponse { TicketFields = state.TicketFields.Values });
+                        return resp.WriteAsJson(new TicketFieldsResponse { TicketFields = state.Items.Values });
                     })
                     .MapPost("api/v2/ticket_fields", (req, resp, routeData) =>
                     {
@@ -66,10 +61,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.CompletedTask;
                         }
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
 
                         ticketField.Id = long.Parse(Rand.Next().ToString());
-                        state.TicketFields.Add(ticketField.Id.Value, ticketField);
+                        state.Items.Add(ticketField.Id.Value, ticketField);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(ticket);
@@ -81,75 +76,26 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var ticket = req.Body.ReadAs<TicketFieldCreateUpdateRequest>();
                         Assert.NotNull(ticket);
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
 
-                        state.TicketFields[id] = ticket.TicketField;
+                        state.Items[id] = ticket.TicketField;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFieldResponse{TicketField = state.TicketFields[id]});
+                        return resp.WriteAsJson(new TicketFieldResponse{TicketField = state.Items[id]});
                     })
                     .MapDelete("api/v2/ticket_fields/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
 
-                        state.TicketFields.Remove(id);
+                        state.Items.Remove(id);
 
                         resp.StatusCode = (int)HttpStatusCode.NoContent;
                         return Task.CompletedTask;
                     })
                     ;
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-        
-        public TicketFieldsResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-            
-            RefreshClient(resource);
-        }
-
-        public override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : resource;
-        }
-
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public UserIdentitiesResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new UserIdentitiesResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<State<Tuple<long, long>, UserIdentity>, Tuple<long, long>, UserIdentity>((resource) => new UserIdentitiesResourceSampleSite(resource));
             _resource = new UserIdentitiesResource(_client, NullLogger.Instance);
         }
 

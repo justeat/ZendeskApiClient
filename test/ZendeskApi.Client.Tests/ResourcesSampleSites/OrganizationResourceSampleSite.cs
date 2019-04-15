@@ -2,12 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
@@ -17,40 +13,43 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    class OrganizationResourceSampleSite : SampleSite
+    internal class OrganizationResourceSampleSite : SampleSite<Organization>
     {
-        private class State
-        {
-            public readonly IDictionary<long, Organization> Organizations = new Dictionary<long, Organization>();
+        public OrganizationResourceSampleSite(string resource)
+            : base(
+                resource, 
+                MatchesRequest, 
+                null, 
+                PopulateState)
+        { }
 
-            public State()
+        private static void PopulateState(State<Organization> state)
+        {
+            for (var i = 1; i <= 100; i++)
             {
-                for (var i = 1; i <= 100; i++)
+                state.Items.Add(i, new Organization
                 {
-                    Organizations.Add(i, new Organization
+                    Id = i,
+                    Name = $"org.{i}",
+                    ExternalId = i.ToString(),
+                    CustomFields = new Dictionary<object, object>
                     {
-                        Id = i,
-                        Name = $"org.{i}",
-                        ExternalId = i.ToString(),
-                        CustomFields = new Dictionary<object, object>
-                        {
-                            { "requester", i.ToString() }
-                        }
-                    });
-                }
+                        { "requester", i.ToString() }
+                    }
+                });
             }
         }
 
-        public static Action<IRouteBuilder> MatchesRequest
+        private static Action<IRouteBuilder> MatchesRequest
         {
             get
             {
                 return rb => rb
                     .MapGet("api/v2/organizations", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
 
-                        var organizations = state.Organizations
+                        var organizations = state.Items
                             .Select(x => x.Value)
                             .ToList();
 
@@ -81,7 +80,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapGet("api/v2/users/{userId}/organizations", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
 
                         var id = long.Parse(routeData.Values["userId"].ToString());
 
@@ -97,7 +96,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.FromResult(resp);
                         }
 
-                        var organizations = state.Organizations
+                        var organizations = state.Items
                             .Select(x => x.Value)
                             .Where(x => x.CustomFields.ContainsKey("requester") && x.CustomFields["requester"].ToString() == id.ToString())
                             .ToList();
@@ -123,7 +122,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapGet("api/v2/organizations/show_many", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
 
                         IList<Organization> organizations = new List<Organization>();
 
@@ -144,14 +143,14 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         if (req.Query.ContainsKey("ids"))
                         {
-                            organizations = state.Organizations
+                            organizations = state.Items
                                 .Select(x => x.Value)
                                 .Where(x => ids.Contains(x.Id))
                                 .ToList();
                         }
                         else if (req.Query.ContainsKey("external_ids"))
                         {
-                            organizations = state.Organizations
+                            organizations = state.Items
                                 .Select(x => x.Value)
                                 .Where(x => ids.Contains(long.Parse(x.ExternalId)))
                                 .ToList();
@@ -180,7 +179,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
 
                         if (id == int.MinValue)
                         {
@@ -188,13 +187,13 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.FromResult(resp);
                         }
 
-                        if (!state.Organizations.ContainsKey(id))
+                        if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var org = state.Organizations.Single(x => x.Key == id).Value;
+                        var org = state.Items.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new OrganizationResponse
@@ -214,11 +213,11 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.CompletedTask;
                         }
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
 
                         org.Id = long.Parse(Rand.Next().ToString());
 
-                        state.Organizations.Add(org.Id, org);
+                        state.Items.Add(org.Id, org);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(new OrganizationResponse
@@ -233,7 +232,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
 
                         if (id == int.MinValue)
                         {
@@ -241,13 +240,13 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.FromResult(resp);
                         }
 
-                        if (!state.Organizations.ContainsKey(id))
+                        if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        state.Organizations[id] = org;
+                        state.Items[id] = org;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new OrganizationResponse
@@ -269,52 +268,6 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         return Task.FromResult(resp);
                     });
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public OrganizationResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services =>
-                {
-                    services.AddSingleton(_ => new State());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-
-            RefreshClient(resource);
-        }
-
-        public override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private static string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : null;
-        }
-
-        public Uri BaseUri => Client.BaseAddress;
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }
