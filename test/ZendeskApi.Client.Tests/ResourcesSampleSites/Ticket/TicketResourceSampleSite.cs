@@ -264,28 +264,9 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapDelete("api/v2/tickets/destroy_many.json", (req, resp, routeData) =>
                     {
-                        var idParameterValue = req.Query["ids"].First().ToString();
-
-                        if (!idParameterValue.Contains(","))
-                        {
-                            resp.StatusCode = 500;
-                            return Task.CompletedTask;
-                        }
-
-                        var theIds = idParameterValue
-                            .Split(',')
-                            .Select(x => long.Parse(x.Trim()))
-                            .ToList();
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
-
-                        foreach (var anId in theIds)
-                        {
-                            state.Items.Remove(anId);
-                        }
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return Task.CompletedTask;
+                        return RequestHelper.DeleteMany<Ticket, TicketResourceState>(
+                            req,
+                            resp);
                     })
                     .MapDelete("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {

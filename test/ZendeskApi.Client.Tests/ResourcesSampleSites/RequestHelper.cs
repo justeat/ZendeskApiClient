@@ -346,5 +346,51 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
             return Task.FromResult(resp);
         }
+
+        public static Task DeleteMany<TModel>(
+            HttpRequest req,
+            HttpResponse resp)
+            where TModel : class
+        {
+            return DeleteMany<TModel, State<TModel>>(
+                req,
+                resp);
+        }
+
+        public static Task DeleteMany<TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp)
+            where TModel : class
+            where TState : State<TModel>
+        {
+            var idParameterValue = req
+                .Query["ids"]
+                .First();
+
+            if (!idParameterValue.Contains(","))
+            {
+                resp.StatusCode = (int)HttpStatusCode.InternalServerError;
+                return Task.CompletedTask;
+            }
+
+            var theIds = idParameterValue
+                .Split(',')
+                .Select(x => long.Parse(x.Trim()))
+                .ToList();
+
+            var state = req
+                .HttpContext
+                .RequestServices
+                .GetRequiredService<TState>();
+
+            foreach (var anId in theIds)
+            {
+                state.Items.Remove(anId);
+            }
+
+            resp.StatusCode = (int)HttpStatusCode.OK;
+
+            return Task.CompletedTask;
+        }
     }
 }
