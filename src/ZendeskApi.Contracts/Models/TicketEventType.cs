@@ -2,6 +2,7 @@
 {
     public enum TicketEventType
     {
-        Comment
+        Comment,
+        VoiceComment
     }
 }
