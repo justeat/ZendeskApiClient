@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,10 +19,23 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             Func<IList<TModel>, TResponse> outputFunc)
             where TModel : class
         {
+            return List<TResponse, TModel, State<TModel>>(
+                req,
+                resp,
+                outputFunc);
+        }
+
+        public static Task List<TResponse, TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            Func<IList<TModel>, TResponse> outputFunc)
+            where TModel : class
+            where TState : State<TModel>
+        {
             var state = req
                 .HttpContext
                 .RequestServices
-                .GetRequiredService<State<TModel>>();
+                .GetRequiredService<TState>();
 
             var items = state.Items
                 .Select(x => x.Value)
@@ -57,6 +71,23 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             Func<IList<TModel>, TResponse> outputFunc)
             where TModel : class
         {
+            return FilteredList<TResponse, TModel, State<TModel>>(
+                req,
+                resp,
+                filterValue,
+                filter,
+                outputFunc);
+        }
+
+        public static Task FilteredList<TResponse, TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            string filterValue,
+            Func<long, IList<TModel>, IList<TModel>> filter,
+            Func<IList<TModel>, TResponse> outputFunc)
+            where TModel : class
+            where TState : State<TModel>
+        {
             var id = long.Parse(filterValue);
 
             if (id == int.MaxValue)
@@ -74,7 +105,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             var state = req
                 .HttpContext
                 .RequestServices
-                .GetRequiredService<State<TModel>>();
+                .GetRequiredService<TState>();
 
             var items = filter(
                 id,
@@ -108,10 +139,27 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             Func<IList<TModel>, TResponse> outputFunc)
             where TModel : class
         {
+            return Many<TResponse, TModel, State<TModel>>(
+                req,
+                resp,
+                idAccessor,
+                externalIdAccessor,
+                outputFunc);
+        }
+
+        public static Task Many<TResponse, TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            Func<TModel, long> idAccessor,
+            Func<TModel, string> externalIdAccessor,
+            Func<IList<TModel>, TResponse> outputFunc)
+            where TModel : class
+            where TState : State<TModel>
+        {
             var state = req
                 .HttpContext
                 .RequestServices
-                .GetRequiredService<State<TModel>>();
+                .GetRequiredService<TState>();
 
             IList<TModel> items = new List<TModel>();
 
@@ -168,9 +216,24 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             Func<TModel, TResponse> outputFunc)
             where TModel : class
         {
+            return GetById<TResponse, TModel, State<TModel>>(
+                req,
+                resp,
+                routeData,
+                outputFunc);
+        }
+
+        public static Task GetById<TResponse, TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            Func<TModel, TResponse> outputFunc)
+            where TModel : class
+            where TState : State<TModel>
+        {
             var id = long.Parse(routeData.Values["id"].ToString());
 
-            var state = req.HttpContext.RequestServices.GetRequiredService<State<TModel>>();
+            var state = req.HttpContext.RequestServices.GetRequiredService<TState>();
 
             if (id == int.MinValue)
             {
@@ -199,12 +262,29 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             Func<TModel, TResponse> outputFunc)
             where TModel : class
         {
+            return Update<TResponse, TModel, State<TModel>>(
+                req,
+                resp,
+                routeData,
+                item,
+                outputFunc);
+        }
+
+        public static Task Update<TResponse, TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            TModel item,
+            Func<TModel, TResponse> outputFunc)
+            where TModel : class
+            where TState : State<TModel>
+        {
             var id = long.Parse(routeData.Values["id"].ToString());
 
             var state = req
                 .HttpContext
                 .RequestServices
-                .GetRequiredService<State<TModel>>();
+                .GetRequiredService<TState>();
 
             if (id == int.MinValue)
             {
@@ -232,10 +312,25 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             HttpStatusCode returnCode = HttpStatusCode.NoContent)
             where TModel : class
         {
+            return Delete<TModel, State<TModel>>(
+                req,
+                resp,
+                routeData,
+                returnCode);
+        }
+
+        public static Task Delete<TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            HttpStatusCode returnCode = HttpStatusCode.NoContent)
+            where TModel : class
+            where TState : State<TModel>
+        {
             var state = req
                 .HttpContext
                 .RequestServices
-                .GetRequiredService<State<TModel>>();
+                .GetRequiredService<TState>();
 
             var id = long.Parse(routeData.Values["id"].ToString());
 
@@ -245,7 +340,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return Task.FromResult(resp);
             }
 
-            resp.StatusCode = (int) returnCode;
+            resp.StatusCode = (int)returnCode;
 
             state.Items.Remove(id);
 

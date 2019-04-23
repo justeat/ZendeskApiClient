@@ -26,7 +26,8 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             : base(
                 resource,
                 MatchesRequest,
-                ConfigureWebHost)
+                ConfigureWebHost,
+                PopulateState)
         { }
 
         private static void ConfigureWebHost(WebHostBuilder builder)
@@ -45,6 +46,23 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 });
         }
 
+        private static void PopulateState(TicketResourceState state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new Ticket
+                {
+                    Id = i,
+                    Subject = $"My printer is on fire! {i}",
+                    ExternalId = i.ToString(),
+                    OrganisationId = i,
+                    RequesterId = i,
+                    AssigneeId = i,
+                    CollaboratorIds = new List<long> { i }
+                });
+            }
+        }
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
@@ -52,51 +70,38 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/tickets/show_many", (req, resp, routeData) =>
                     {
-                        var ids = req.Query["ids"].ToString().Split(',').Select(long.Parse);
-                        var pager = new Pager(int.Parse(req.Query["page"]), int.Parse(req.Query["per_page"]), 100);
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
-
-                        var tickets = state
-                            .Items
-                            .Where(x => ids.Contains(x.Key))
-                            .Select(p => p.Value)
-                            .Skip(pager.GetStartIndex())
-                            .Take(pager.PageSize);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return RequestHelper.Many<TicketsListResponse, Ticket, TicketResourceState>(
+                            req,
+                            resp,
+                            ticket => ticket.Id,
+                            ticket => ticket.ExternalId,
+                            items => new TicketsListResponse
+                            {
+                                Tickets = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var ticket = state.Items.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketResponse{Ticket = ticket});
+                        return RequestHelper.GetById<TicketResponse, Ticket, TicketResourceState>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new TicketResponse
+                            {
+                                Ticket = item
+                            });
                     })
                     .MapGet("api/v2/tickets", (req, resp, routeData) =>
                     {
-                        var pager = new Pager(int.Parse(req.Query["page"]), int.Parse(req.Query["per_page"]), 100);
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
-
-                        var tickets = state
-                            .Items
-                            .Values
-                            .Skip(pager.GetStartIndex())
-                            .Take(pager.PageSize);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return RequestHelper.List<TicketsListResponse, Ticket, TicketResourceState>(
+                            req,
+                            resp,
+                            items => new TicketsListResponse
+                            {
+                                Tickets = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/tickets/{id}/comments", (req, resp, routeData) =>
                     {
@@ -111,59 +116,63 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapGet("api/v2/users/{id}/tickets/assigned", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
-
-                        var tickets = state
-                            .Items
-                            .Values
-                            .Where(x => x.AssigneeId.HasValue && x.AssigneeId == id);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return RequestHelper.FilteredList<TicketsListResponse, Ticket, TicketResourceState>(
+                            req,
+                            resp,
+                            routeData.Values["id"].ToString(),
+                            (id, items) => items
+                                .Where(x => x.AssigneeId.HasValue && x.AssigneeId == id)
+                                .ToList(),
+                            items => new TicketsListResponse
+                            {
+                                Tickets = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/users/{id}/tickets/ccd", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
-
-                        var tickets = state
-                            .Items
-                            .Values
-                            .Where(x => x.CollaboratorIds.Contains(id));
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return RequestHelper.FilteredList<TicketsListResponse, Ticket, TicketResourceState>(
+                            req,
+                            resp,
+                            routeData.Values["id"].ToString(),
+                            (id, items) => items
+                                .Where(x => x.CollaboratorIds != null && x.CollaboratorIds.Contains(id))
+                                .ToList(),
+                            items => new TicketsListResponse
+                            {
+                                Tickets = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/users/{id}/tickets/requested", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
-
-                        var tickets = state
-                            .Items
-                            .Values
-                            .Where(x => x.RequesterId.HasValue && x.RequesterId == id);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return RequestHelper.FilteredList<TicketsListResponse, Ticket, TicketResourceState>(
+                            req,
+                            resp,
+                            routeData.Values["id"].ToString(),
+                            (id, items) => items
+                                .Where(x => x.RequesterId.HasValue && x.RequesterId == id)
+                                .ToList(),
+                            items => new TicketsListResponse
+                            {
+                                Tickets = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/organizations/{id}/tickets", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
-
-                        var tickets = state
-                            .Items
-                            .Values
-                            .Where(x => x.OrganisationId == id);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketsListResponse { Tickets = tickets });
+                        return RequestHelper.FilteredList<TicketsListResponse, Ticket, TicketResourceState>(
+                            req,
+                            resp,
+                            routeData.Values["id"].ToString(),
+                            (id, items) => items
+                                .Where(x => x.OrganisationId == id)
+                                .ToList(),
+                            items => new TicketsListResponse
+                            {
+                                Tickets = items,
+                                Count = items.Count
+                            });
                     })
                     .MapPost("api/v2/tickets", (req, resp, routeData) =>
                     {
@@ -203,6 +212,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var ticketsById = ticketRequestWrapper.Tickets.ToDictionary(t => t.Id, t => t);
 
+                        if (ticketRequestWrapper.Tickets.Any(t => t.Id == int.MinValue))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
+
                         foreach (var id in theIds.Where(id => ticketsById.ContainsKey(id)))
                         {
                             var ticket = ticketsById[id];
@@ -223,10 +238,16 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
 
+                        if (id == int.MinValue)
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
+
                         if (!state.Items.ContainsKey(id))
                         {
-                            resp.StatusCode = (int) HttpStatusCode.NotFound;
-                            return resp.WriteAsJson(new object());
+                            resp.StatusCode = (int)HttpStatusCode.NotFound;
+                            return Task.CompletedTask;
                         }
 
                         var ticketRequestWrapper = req.Body.ReadAs<TicketRequest<TicketUpdateRequest>>();
@@ -268,14 +289,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapDelete("api/v2/tickets/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
-
-                        state.Items.Remove(id);
-
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
-                        return Task.CompletedTask;
+                        return RequestHelper.Delete<Ticket, TicketResourceState>(
+                            req,
+                            resp,
+                            routeData);
                     });
             }
         }
