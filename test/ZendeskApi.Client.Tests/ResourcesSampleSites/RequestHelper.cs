@@ -67,7 +67,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             HttpRequest req,
             HttpResponse resp,
             string filterValue,
-            Func<long, IList<TModel>, IList<TModel>> filter,
+            Func<long, IEnumerable<TModel>, IEnumerable<TModel>> filter,
             Func<IList<TModel>, TResponse> outputFunc)
             where TModel : class
         {
@@ -83,7 +83,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             HttpRequest req,
             HttpResponse resp,
             string filterValue,
-            Func<long, IList<TModel>, IList<TModel>> filter,
+            Func<long, IEnumerable<TModel>, IEnumerable<TModel>> filter,
             Func<IList<TModel>, TResponse> outputFunc)
             where TModel : class
             where TState : State<TModel>
@@ -113,7 +113,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     .Items
                     .Select(x => x.Value)
                     .ToList()
-            );
+            ).ToList();
 
             if (req.Query.ContainsKey("page") &&
                 req.Query.ContainsKey("per_page") &&

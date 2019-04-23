@@ -63,9 +63,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req,
                             resp,
                             routeData.Values["userId"].ToString(),
-                            (id, items) => items
-                                .Where(x => x.CustomFields.ContainsKey("requester") && x.CustomFields["requester"].ToString() == id.ToString())
-                                .ToList(),
+                            (id, items) => items.Where(x => x.CustomFields.ContainsKey("requester") && x.CustomFields["requester"].ToString() == id.ToString()),
                             items => new OrganizationsResponse
                             {
                                 Organizations = items,
@@ -122,15 +120,13 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPut("api/v2/organizations/{id}", (req, resp, routeData) =>
                     {
-                        var request = req
-                            .Body
-                            .ReadAs<OrganizationUpdateRequest>();
-
                         return RequestHelper.Update<OrganizationResponse, Organization>(
                             req,
                             resp,
                             routeData,
-                            request.Organization,
+                            req.Body
+                                .ReadAs<OrganizationUpdateRequest>()
+                                .Organization,
                             item => new OrganizationResponse
                             {
                                 Organization = item

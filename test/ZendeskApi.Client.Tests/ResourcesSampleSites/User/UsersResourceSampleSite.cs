@@ -93,9 +93,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req,
                             resp,
                             routeData.Values["id"].ToString(),
-                            (id, items) => items
-                                .Where(x => x.DefaultGroupId == id)
-                                .ToList(),
+                            (id, items) => items.Where(x => x.DefaultGroupId == id),
                             items => new UsersListResponse
                             {
                                 Users = items,
@@ -110,8 +108,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             routeData.Values["id"].ToString(),
                             (id, items) => items
                                 .Where(x => x.OrganizationId.HasValue)
-                                .Where(x => x.OrganizationId == id)
-                                .ToList(),
+                                .Where(x => x.OrganizationId == id),
                             items => new UsersListResponse
                             {
                                 Users = items,

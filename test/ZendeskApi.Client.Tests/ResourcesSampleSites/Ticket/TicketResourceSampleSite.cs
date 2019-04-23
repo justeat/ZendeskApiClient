@@ -120,9 +120,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req,
                             resp,
                             routeData.Values["id"].ToString(),
-                            (id, items) => items
-                                .Where(x => x.AssigneeId.HasValue && x.AssigneeId == id)
-                                .ToList(),
+                            (id, items) => items.Where(x => x.AssigneeId.HasValue && x.AssigneeId == id),
                             items => new TicketsListResponse
                             {
                                 Tickets = items,
@@ -135,9 +133,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req,
                             resp,
                             routeData.Values["id"].ToString(),
-                            (id, items) => items
-                                .Where(x => x.CollaboratorIds != null && x.CollaboratorIds.Contains(id))
-                                .ToList(),
+                            (id, items) => items.Where(x => x.CollaboratorIds != null && x.CollaboratorIds.Contains(id)),
                             items => new TicketsListResponse
                             {
                                 Tickets = items,
@@ -150,9 +146,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req,
                             resp,
                             routeData.Values["id"].ToString(),
-                            (id, items) => items
-                                .Where(x => x.RequesterId.HasValue && x.RequesterId == id)
-                                .ToList(),
+                            (id, items) => items.Where(x => x.RequesterId.HasValue && x.RequesterId == id),
                             items => new TicketsListResponse
                             {
                                 Tickets = items,
@@ -165,9 +159,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req,
                             resp,
                             routeData.Values["id"].ToString(),
-                            (id, items) => items
-                                .Where(x => x.OrganisationId == id)
-                                .ToList(),
+                            (id, items) => items.Where(x => x.OrganisationId == id),
                             items => new TicketsListResponse
                             {
                                 Tickets = items,
