@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -53,19 +54,25 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketForm> CreateAsync(TicketForm ticketForm)
         {
-            return await CreateAsync<TicketForm, TicketForm>(
+            var response = await CreateAsync<TicketFormResponse, TicketFormCreateUpdateRequest>(
                 ResourceUri,
-                ticketForm,
+                new TicketFormCreateUpdateRequest(ticketForm),
                 "create-ticket-forms");
+
+            return response?
+                .TicketForm;
         }
 
         public async Task<TicketForm> UpdateAsync(TicketForm ticketForm)
         {
-            return await UpdateWithNotFoundCheckAsync<TicketForm, TicketForm>(
+            var response = await UpdateWithNotFoundCheckAsync<TicketFormResponse, TicketFormCreateUpdateRequest>(
                 $"{ResourceUri}/{ticketForm.Id}",
-                ticketForm,
+                new TicketFormCreateUpdateRequest(ticketForm),
                 "update-ticket-forms",
                 $"Cannot update ticket form as ticket form {ticketForm.Id} cannot be found");
+
+            return response?
+                .TicketForm;
         }
 
         public async Task DeleteAsync(long ticketFormId)
