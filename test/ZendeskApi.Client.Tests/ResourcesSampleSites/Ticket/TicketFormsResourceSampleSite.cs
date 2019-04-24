@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
@@ -16,12 +11,11 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class TicketFormsResourceSampleSite : SampleSite
+    internal class TicketFormsResourceSampleSite : SampleSite<TicketForm>
     {
-        private class State
-        {
-            public IDictionary<long, TicketForm> TicketForms = new Dictionary<long, TicketForm>();
-        }
+        public TicketFormsResourceSampleSite(string resource)
+            : base(resource, MatchesRequest)
+        { }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -32,9 +26,9 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var ids = req.Query["ids"].ToString().Split(',').Select(long.Parse);
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
 
-                        var obj = state.TicketForms.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
+                        var obj = state.Items.Where(x => ids.Contains(x.Key)).Select(p => p.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new TicketFormsResponse { TicketForms = obj });
@@ -43,25 +37,25 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
 
-                        if (!state.TicketForms.ContainsKey(id))
+                        if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var obj = state.TicketForms.Single(x => x.Key == id).Value;
+                        var obj = state.Items.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new TicketFormResponse { TicketForm = obj });
                     })
                     .MapGet("api/v2/ticket_forms", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFormsResponse { TicketForms = state.TicketForms.Values });
+                        return resp.WriteAsJson(new TicketFormsResponse { TicketForms = state.Items.Values });
                     })
                     .MapPost("api/v2/ticket_forms", (req, resp, routeData) =>
                     {
@@ -74,10 +68,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.CompletedTask;
                         }
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
 
                         obj.Id = long.Parse(Rand.Next().ToString());
-                        state.TicketForms.Add(obj.Id.Value, obj);
+                        state.Items.Add(obj.Id.Value, obj);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(obj);
@@ -88,74 +82,25 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         var group = req.Body.ReadAs<TicketForm>();
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
 
-                        state.TicketForms[id] = group;
+                        state.Items[id] = group;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(state.TicketForms[id]);
+                        return resp.WriteAsJson(state.Items[id]);
                     })
                     .MapDelete("api/v2/ticket_forms/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
 
-                        state.TicketForms.Remove(id);
+                        state.Items.Remove(id);
 
                         resp.StatusCode = (int)HttpStatusCode.NoContent;
                         return Task.CompletedTask;
                     });
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public TicketFormsResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-
-            RefreshClient(resource);
-        }
-
-        public override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : resource;
-        }
-
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }

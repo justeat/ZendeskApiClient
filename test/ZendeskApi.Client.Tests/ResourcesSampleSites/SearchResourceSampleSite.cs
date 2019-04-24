@@ -1,20 +1,19 @@
 using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class SearchResourceSampleSite : SampleSite
+    internal class SearchResourceSampleSite : SampleSite<ISearchResult>
     {
+        public SearchResourceSampleSite(string resource)
+            : base(resource, MatchesRequest)
+        { }
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
@@ -47,50 +46,6 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         });
                     });
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public SearchResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-
-            RefreshClient(resource);
-        }
-
-        public sealed override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : "";
-        }
-
-        public Uri BaseUri => Client.BaseAddress;
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }

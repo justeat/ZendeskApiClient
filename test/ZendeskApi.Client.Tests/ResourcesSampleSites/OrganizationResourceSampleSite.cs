@@ -2,12 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
@@ -17,37 +13,86 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    class OrganizationResourceSampleSite : SampleSite
+
+    internal class OrganizationResourceSampleSite : SampleSite<Organization>
     {
-        private class State
+        public OrganizationResourceSampleSite(string resource)
+            : base(
+                resource, 
+                MatchesRequest, 
+                null, 
+                PopulateState)
+        { }
+
+        private static void PopulateState(State<Organization> state)
         {
-            public readonly IDictionary<long, Organization> Organizations = new Dictionary<long, Organization>();
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new Organization
+                {
+                    Id = i,
+                    Name = $"org.{i}",
+                    ExternalId = i.ToString(),
+                    CustomFields = new Dictionary<object, object>
+                    {
+                        { "requester", i.ToString() }
+                    }
+                });
+            }
         }
 
-        public static Action<IRouteBuilder> MatchesRequest
+        private static Action<IRouteBuilder> MatchesRequest
         {
             get
             {
                 return rb => rb
+                    .MapGet("api/v2/organizations", (req, resp, routeData) =>
+                    {
+                        return RequestHelper.List<OrganizationsResponse, Organization>(
+                            req,
+                            resp,
+                            orgs => new OrganizationsResponse
+                            {
+                                Organizations = orgs,
+                                Count = orgs.Count
+                            });
+                    })
+                    .MapGet("api/v2/users/{userId}/organizations", (req, resp, routeData) =>
+                    {
+                        return RequestHelper.FilteredList<OrganizationsResponse, Organization>(
+                            req,
+                            resp,
+                            routeData.Values["userId"].ToString(),
+                            (id, items) => items.Where(x => x.CustomFields.ContainsKey("requester") && x.CustomFields["requester"].ToString() == id.ToString()),
+                            items => new OrganizationsResponse
+                            {
+                                Organizations = items,
+                                Count = items.Count
+                            });
+                    })
+                    .MapGet("api/v2/organizations/show_many", (req, resp, routeData) =>
+                    {
+                        return RequestHelper.Many<OrganizationsResponse, Organization>(
+                            req,
+                            resp,
+                            org => org.Id,
+                            org => org.ExternalId,
+                            items => new OrganizationsResponse
+                            {
+                                Organizations = items,
+                                Count = items.Count
+                            });
+                    })
                     .MapGet("api/v2/organizations/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
-
-                        if (!state.Organizations.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var org = state.Organizations.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new OrganizationResponse
-                        {
-                            Organization = org
-                        });
+                        return RequestHelper.GetById<OrganizationResponse, Organization>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new OrganizationResponse
+                            {
+                                Organization = item
+                            });
                     })
                     .MapPost("api/v2/organizations", (req, resp, routeData) =>
                     {
@@ -61,65 +106,40 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.CompletedTask;
                         }
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
 
                         org.Id = long.Parse(Rand.Next().ToString());
 
-                        state.Organizations.Add(org.Id, org);
+                        state.Items.Add(org.Id, org);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(new OrganizationResponse
                         {
                             Organization = org
                         });
+                    })
+                    .MapPut("api/v2/organizations/{id}", (req, resp, routeData) =>
+                    {
+                        return RequestHelper.Update<OrganizationResponse, Organization>(
+                            req,
+                            resp,
+                            routeData,
+                            req.Body
+                                .ReadAs<OrganizationUpdateRequest>()
+                                .Organization,
+                            item => new OrganizationResponse
+                            {
+                                Organization = item
+                            });
+                    })
+                    .MapDelete("api/v2/organizations/{id}", (req, resp, routeData) =>
+                    {
+                        return RequestHelper.Delete<Organization>(
+                            req,
+                            resp,
+                            routeData);
                     });
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public OrganizationResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services =>
-                {
-                    services.AddSingleton(_ => new State());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-
-            RefreshClient(resource);
-        }
-
-        public override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private static string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : null;
-        }
-
-        public Uri BaseUri => Client.BaseAddress;
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }

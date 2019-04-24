@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
@@ -16,7 +16,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public UserFieldsResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new UserFieldsResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<UserField>((resource) => new UserFieldsResourceSampleSite(resource));
             _resource = new UserFieldsResource(_client, NullLogger.Instance);
         }
 

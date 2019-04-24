@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
+using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
@@ -15,7 +16,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public TicketCommentsResourceTests()
         {
-            var client = new DisposableZendeskApiClient(resource => new TicketResourceSampleSite(resource));
+            var client = new DisposableZendeskApiClient<TicketResourceState, Ticket>(resource => new TicketResourceSampleSite(resource));
             _resource = new TicketCommentsResource(client, NullLogger.Instance);
             _ticketResource = new TicketsResource(client, NullLogger.Instance);
         }

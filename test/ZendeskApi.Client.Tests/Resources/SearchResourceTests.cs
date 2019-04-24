@@ -17,7 +17,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public SearchResourceTests()
         {
-            IZendeskApiClient client = new DisposableZendeskApiClient(resource => new SearchResourceSampleSite(resource));
+            IZendeskApiClient client = new DisposableZendeskApiClient<ISearchResult>(resource => new SearchResourceSampleSite(resource));
             _resource = new SearchResource(client, NullLogger.Instance);
         }
 

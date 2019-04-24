@@ -20,7 +20,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public DeletedTicketsResourceTests()
         {
-            _client = new DisposableZendeskApiClient(resource => new DeletedTicketResourceSampleSite(resource, _ticketState));
+            _client = new DisposableZendeskApiClient<TicketState, Ticket>(resource => new DeletedTicketResourceSampleSite(resource, _ticketState));
             _resource = new DeletedTicketsResource(_client, NullLogger.Instance);
         }
 

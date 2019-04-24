@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
@@ -16,12 +11,11 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class UserIdentitiesResourceSampleSite : SampleSite
+    internal class UserIdentitiesResourceSampleSite : SampleSite<State<Tuple<long, long>, UserIdentity>, Tuple<long, long>, UserIdentity>
     {
-        private class State
-        {
-            public IDictionary<Tuple<long, long>, UserIdentity> Identities = new Dictionary<Tuple<long, long>, UserIdentity>();
-        }
+        public UserIdentitiesResourceSampleSite(string resource)
+            : base(resource, MatchesRequest)
+        { }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -33,15 +27,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var userId = long.Parse(routeData.Values["userId"].ToString());
                         var identityid = long.Parse(routeData.Values["identityid"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
 
-                        if (!state.Identities.ContainsKey(new Tuple<long, long>(userId, identityid)))
+                        if (!state.Items.ContainsKey(new Tuple<long, long>(userId, identityid)))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var identity = state.Identities[new Tuple<long, long>(userId, identityid)];
+                        var identity = state.Items[new Tuple<long, long>(userId, identityid)];
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(identity);
@@ -50,15 +44,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var userId = long.Parse(routeData.Values["userId"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
 
-                        if (state.Identities.All(x => x.Key.Item1 != userId))
+                        if (state.Items.All(x => x.Key.Item1 != userId))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var identities = state.Identities.Where(x => x.Key.Item1 == userId).Select(x => x.Value);
+                        var identities = state.Items.Where(x => x.Key.Item1 == userId).Select(x => x.Value);
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new UserIdentitiesResponse { Identities = identities });
@@ -76,10 +70,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.CompletedTask;
                         }
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
 
                         identity.Id = long.Parse(Rand.Next().ToString());
-                        state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
+                        state.Items.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(identity);
@@ -97,10 +91,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.CompletedTask;
                         }
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
 
                         identity.Id = long.Parse(Rand.Next().ToString());
-                        state.Identities.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
+                        state.Items.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(identity);
@@ -118,9 +112,9 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             return Task.CompletedTask;
                         }
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
 
-                        state.Identities[new Tuple<long, long>(userId, identity.Id.Value)] = identity;
+                        state.Items[new Tuple<long, long>(userId, identity.Id.Value)] = identity;
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
                         return resp.WriteAsJson(identity);
@@ -130,64 +124,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         var userid = long.Parse(routeData.Values["userid"].ToString());
                         var identityid = long.Parse(routeData.Values["identityid"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
                         
-                        state.Identities.Remove(new Tuple<long, long>(userid, identityid));
+                        state.Items.Remove(new Tuple<long, long>(userid, identityid));
 
                         resp.StatusCode = (int)HttpStatusCode.NoContent;
                         return Task.CompletedTask;
                     })
                     ;
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public UserIdentitiesResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-            _client = _server.CreateClient();
-
-            RefreshClient(resource);
-        }
-
-        public override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : resource;
-        }
-
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }

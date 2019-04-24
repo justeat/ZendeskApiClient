@@ -18,7 +18,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public DeletedUsersResourceTests()
         {
-            IZendeskApiClient client = new DisposableZendeskApiClient(resource =>
+            IZendeskApiClient client = new DisposableZendeskApiClient<UserResponse>(resource =>
             {
                 _sample = new DeletedUsersResourceSampleSite(resource);
                 return _sample;

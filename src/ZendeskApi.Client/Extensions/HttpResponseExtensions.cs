@@ -10,13 +10,14 @@ namespace ZendeskApi.Client.Extensions
         public static async Task ThrowIfUnsuccessful(
             this HttpResponseMessage response, 
             string helpDocLink,
+            HttpStatusCode? expected = null,
             string helpDocLinkPrefix = "support")
         {
             if (!response.IsSuccessStatusCode)
             {
                 await response.ThrowZendeskRequestException(
-                    helpDocLink, 
-                    (HttpStatusCode?)null,
+                    helpDocLink,
+                    expected,
                     helpDocLinkPrefix);
             }
         }

@@ -2,16 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -19,13 +15,38 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class DeletedTicketResourceSampleSite : SampleSite
+    internal class TicketState : State<Ticket>
     {
-        public class InternalState {
-            public IDictionary<long, Ticket> Tickets = new Dictionary<long, Ticket>();
-            public readonly IDictionary<long, IList<TicketComment>> TicketComments = new Dictionary<long, IList<TicketComment>>();
+        public readonly IDictionary<long, IList<TicketComment>> TicketComments = new Dictionary<long, IList<TicketComment>>();
+    }
+
+    internal class DeletedTicketResourceSampleSite : SampleSite<TicketState, Ticket>
+    {
+        public DeletedTicketResourceSampleSite(string resource, Dictionary<long, Ticket> ticketState)
+            : base(
+                resource,
+                MatchesRequest,
+                ConfigureWebHost,
+                state => state.Items = ticketState)
+        { }
+
+        private static void ConfigureWebHost(WebHostBuilder builder)
+        {
+            builder
+                .ConfigureServices(services =>
+                {
+                    services.AddSingleton(_ => new MapperConfiguration(cfg =>
+                    {
+                        cfg.CreateMap<TicketCreateRequest, TicketResponse>()
+                            .ForMember(r => r.Ticket, r => r.MapFrom(req => req));
+                        cfg.CreateMap<TicketUpdateRequest, TicketResponse>()
+                            .ForMember(r => r.Ticket, r => r.MapFrom(req => req));
+                        cfg.CreateMap<TicketCreateRequest, Ticket>();
+                        cfg.CreateMap<TicketUpdateRequest, Ticket>();
+                    }).CreateMapper());
+                });
         }
-         
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
@@ -34,10 +55,10 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     .MapGet("api/v2/deleted_tickets.json", (req, resp, routeData) =>
                     {
                         var pager = new Pager(int.Parse(req.Query["page"]), int.Parse(req.Query["per_page"]), 100);
-                        var state = req.HttpContext.RequestServices.GetRequiredService<InternalState>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketState>();
 
                         var tickets = state
-                            .Tickets
+                            .Items
                             .Values
                             .Skip(pager.GetStartIndex())
                             .Take(pager.PageSize);
@@ -49,15 +70,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<InternalState>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketState>();
 
-                        if (!state.Tickets.ContainsKey(id))
+                        if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int) HttpStatusCode.NotFound;
                             return resp.WriteAsJson(new object());
                         }
 
-                        state.Tickets.Remove(id);
+                        state.Items.Remove(id);
                         
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return Task.CompletedTask;
@@ -77,11 +98,11 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Select(x => long.Parse(x.Trim()))
                             .ToList();
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<InternalState>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketState>();
 
                         foreach (var anId in theIds)
                         {
-                            state.Tickets.Remove(anId);
+                            state.Items.Remove(anId);
                         }
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
@@ -102,11 +123,11 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             .Select(x => long.Parse(x.Trim()))
                             .ToList();
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<InternalState>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketState>();
 
                         foreach (var anId in theIds)
                         {
-                            state.Tickets.Remove(anId);
+                            state.Items.Remove(anId);
                         }
                         
                         var jobStatusResponse = new JobStatusResponse
@@ -126,15 +147,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<InternalState>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketState>();
 
-                        if (!state.Tickets.ContainsKey(id))
+                        if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int) HttpStatusCode.NotFound;
                             return resp.WriteAsync("Not found");
                         }
 
-                        state.Tickets.Remove(id);
+                        state.Items.Remove(id);
 
                         var jobStatusResponse = new JobStatusResponse
                         {
@@ -150,64 +171,6 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         return resp.WriteAsJson(new SingleJobStatusResponse {JobStatus = jobStatusResponse});
                     });
             }
-        }
-        
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public InternalState State => new InternalState();
-        
-        public DeletedTicketResourceSampleSite(string resource, Dictionary<long, Ticket> ticketState)
-        { 
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddSingleton(_ => new InternalState
-                    {
-                        Tickets = ticketState
-                    });
-                    services.AddSingleton(_ => new MapperConfiguration(cfg =>
-                        {
-                            cfg.CreateMap<TicketCreateRequest, TicketResponse>()
-                                .ForMember(r => r.Ticket, r => r.MapFrom(req => req));
-                            cfg.CreateMap<TicketUpdateRequest, TicketResponse>()
-                                .ForMember(r => r.Ticket, r => r.MapFrom(req => req));
-                            cfg.CreateMap<TicketCreateRequest, Ticket>();
-                            cfg.CreateMap<TicketUpdateRequest, Ticket>();
-                        }).CreateMapper());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-            
-            RefreshClient(resource);
-        }
-
-        public sealed override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : "";
-        }
-        
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }

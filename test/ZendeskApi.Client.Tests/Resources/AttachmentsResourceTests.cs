@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
@@ -17,7 +18,7 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public AttachmentsResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new AttachmentsResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<Attachment>((resource) => new AttachmentsResourceSampleSite(resource));
             _resource = new AttachmentsResource(_client, NullLogger.Instance);
         }
 

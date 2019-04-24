@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
@@ -16,12 +11,11 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class AttachmentsResourceSampleSite : SampleSite
+    internal class AttachmentsResourceSampleSite : SampleSite<State<Attachment>, Attachment>
     {
-        private class State
-        {
-            public readonly IDictionary<long, Attachment> Attachments = new Dictionary<long, Attachment>();
-        }
+        public AttachmentsResourceSampleSite(string resource)
+        : base(resource, MatchesRequest)
+        { }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -32,15 +26,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Attachment>>();
 
-                        if (!state.Attachments.ContainsKey(id))
+                        if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
                             return Task.CompletedTask;
                         }
 
-                        var obj = state.Attachments.Single(x => x.Key == id).Value;
+                        var obj = state.Items.Single(x => x.Key == id).Value;
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(obj);
@@ -55,8 +49,8 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                         resp.Headers.Add("Location", "https://localhost/api/v2/attachments/498483");
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
-                        
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Attachment>>();
+
                         var attachment = new Attachment
                         {
                             ContentType = "text/plain",
@@ -66,7 +60,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             Id = long.Parse(Rand.Next().ToString())
                         };
 
-                        state.Attachments.Add(attachment.Id.Value, attachment);
+                        state.Items.Add(attachment.Id.Value, attachment);
 
                         resp.WriteAsJson(new UploadResponse{
                             Upload = new Upload {
@@ -78,54 +72,6 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         return Task.CompletedTask;
                     });
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public AttachmentsResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-
-            RefreshClient(resource);
-        }
-
-        public override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : resource;
-        }
-
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }
