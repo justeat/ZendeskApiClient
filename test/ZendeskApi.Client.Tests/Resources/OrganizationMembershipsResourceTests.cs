@@ -284,5 +284,21 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(int.MinValue, int.MinValue));
         }
+
+        [Fact]
+        public async Task DeleteAsync_WhenCalled_ShouldDeleteMultiple()
+        {
+            await _resource.DeleteAsync(new long[] { 1, 2, 3 });
+
+            Assert.Null(await _resource.GetAsync(1));
+            Assert.Null(await _resource.GetAsync(2));
+            Assert.Null(await _resource.GetAsync(3));
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WithManyWhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(new long[] { 1 }));
+        }
     }
 }

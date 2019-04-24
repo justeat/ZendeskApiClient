@@ -168,6 +168,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Total = items.Count()
                             });
                     })
+                    .MapDelete("api/v2/organization_memberships/destroy_many.json", (req, resp, routeData) =>
+                    {
+                        return RequestHelper.DeleteMany<OrganizationMembership>(
+                            req,
+                            resp);
+                    })
                     .MapDelete("api/v2/organization_memberships/{id}", (req, resp, routeData) =>
                     {
                         return RequestHelper.Delete<OrganizationMembership>(

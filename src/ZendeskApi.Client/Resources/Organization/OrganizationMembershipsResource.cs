@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -126,6 +127,14 @@ namespace ZendeskApi.Client.Resources
                 string.Format(DeleteUsersUrlFormat, userId, organizationMembershipId),
                 "delete-membership",
                 scope: $"DeleteAsync({userId},{organizationMembershipId})");
+        }
+
+        public async Task DeleteAsync(IEnumerable<long> organizationMembershipIds)
+        {
+            await DeleteAsync(
+                $"{ResourceUri}/destroy_many.json",
+                organizationMembershipIds.ToArray(),
+                "bulk-delete-memberships");
         }
     }
 }

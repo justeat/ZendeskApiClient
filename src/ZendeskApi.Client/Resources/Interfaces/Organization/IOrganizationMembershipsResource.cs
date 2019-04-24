@@ -17,5 +17,6 @@ namespace ZendeskApi.Client.Resources
         Task<JobStatusResponse> CreateAsync(IEnumerable<OrganizationMembership> organizationMemberships);
         Task DeleteAsync(long organizationMembershipId);
         Task DeleteAsync(long userId, long organizationMembershipId);
+        Task DeleteAsync(IEnumerable<long> organizationMembershipIds);
     }
 }
