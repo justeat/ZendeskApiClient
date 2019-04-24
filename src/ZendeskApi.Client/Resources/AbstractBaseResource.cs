@@ -199,12 +199,9 @@ namespace ZendeskApi.Client.Resources
                 var response = await client.DeleteAsync($"{resource}?ids={idsAsCsv}")
                     .ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    await response.ThrowZendeskRequestException(
-                        $"{DocsResource}#{docs}",
-                        HttpStatusCode.OK);
-                }
+                await response.ThrowIfUnsuccessful(
+                    $"{DocsResource}#{docs}",
+                    HttpStatusCode.OK);
             }
         }
     }
