@@ -254,6 +254,109 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             return resp.WriteAsJson(outputFunc(item));
         }
 
+        public static Task Create<TResponse, TModel>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            Func<TModel, long?> idAccessor,
+            TModel item,
+            Func<TModel, TResponse> outputFunc)
+            where TModel : class
+        {
+            return Create<TResponse, TModel, State<TModel>>(
+                req,
+                resp,
+                routeData,
+                idAccessor,
+                item,
+                outputFunc);
+        }
+
+        public static Task Create<TResponse, TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            Func<TModel, long?> idAccessor,
+            TModel item,
+            Func<TModel, TResponse> outputFunc)
+            where TModel : class
+            where TState : State<TModel>
+        {
+            var id = idAccessor(item);
+
+            if (!id.HasValue || id == int.MinValue)
+            {
+                resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                return Task.CompletedTask;
+            }
+
+            var state = req
+                .HttpContext
+                .RequestServices
+                .GetRequiredService<TState>();
+
+            state.Items.Add(id.Value, item);
+
+            resp.StatusCode = (int)HttpStatusCode.Created;
+
+            return resp.WriteAsJson(outputFunc(item));
+        }
+
+        public static Task CreateMany<TResponse, TModel>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            Func<TModel, long?> idAccessor,
+            IEnumerable<TModel> items,
+            Func<IEnumerable<TModel>, TResponse> outputFunc)
+            where TModel : class
+        {
+            return CreateMany<TResponse, TModel, State<TModel>>(
+                req,
+                resp,
+                routeData,
+                idAccessor,
+                items,
+                outputFunc);
+        }
+
+        public static Task CreateMany<TResponse, TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            Func<TModel, long?> idAccessor,
+            IEnumerable<TModel> items,
+            Func<IEnumerable<TModel>, TResponse> outputFunc)
+            where TModel : class
+            where TState : State<TModel>
+        {
+            var itemsList = items
+                .ToList();
+
+            if (itemsList.Any(item => !idAccessor(item).HasValue || idAccessor(item) == int.MinValue))
+            {
+                resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                return Task.CompletedTask;
+            }
+
+            var state = req
+                .HttpContext
+                .RequestServices
+                .GetRequiredService<TState>();
+
+            foreach (var item in itemsList)
+            {
+                var id = idAccessor(item);
+
+                if (id.HasValue && !state.Items.ContainsKey(id.Value))
+                    state.Items.Add(id.Value, item);
+            }
+
+            resp.StatusCode = (int)HttpStatusCode.OK;
+
+            return resp.WriteAsJson(outputFunc(itemsList));
+        }
+
         public static Task Update<TResponse, TModel>(
             HttpRequest req,
             HttpResponse resp,

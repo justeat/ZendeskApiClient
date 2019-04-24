@@ -161,10 +161,26 @@ namespace ZendeskApi.Client.Resources
             if (scope == null)
                 scope = $"DeleteAsync{id}";
 
+            await DeleteAsync(
+                $"{resource}/{id}",
+                docs,
+                expectedHttpStatusCode,
+                scope);
+        }
+
+        public async Task DeleteAsync(
+            string resource,
+            string docs,
+            HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
+            string scope = null)
+        {
+            if (scope == null)
+                scope = $"DeleteAsync";
+
             using (LoggerScope(Logger, scope))
             using (var client = ApiClient.CreateClient())
             {
-                var response = await client.DeleteAsync($"{resource}/{id}")
+                var response = await client.DeleteAsync(resource)
                     .ConfigureAwait(false);
 
                 if (response.StatusCode != expectedHttpStatusCode)
