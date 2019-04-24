@@ -136,5 +136,14 @@ namespace ZendeskApi.Client.Resources
                 organizationMembershipIds.ToArray(),
                 "bulk-delete-memberships");
         }
+
+        public async Task<IPagination<OrganizationMembership>> MakeDefault(long userId, long organizationMembershipId)
+        {
+            return await UpdateAsync<OrganizationMembershipsResponse, object>(
+                $"{string.Format(UsersUrlFormat, userId)}/{organizationMembershipId}/make_default.json",
+                new { },
+                "set-membership-as-default",
+                "MakeDefault");
+        }
     }
 }

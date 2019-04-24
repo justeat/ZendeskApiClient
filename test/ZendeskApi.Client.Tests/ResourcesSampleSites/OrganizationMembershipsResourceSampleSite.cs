@@ -168,6 +168,38 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Total = items.Count()
                             });
                     })
+                    .MapPut("api/v2/users/{userId}/organization_memberships/{membership_id}/make_default.json", (req, resp, routeData) =>
+                    {
+                        var userId = long.Parse(routeData.Values["userId"].ToString());
+                        var membershipId = long.Parse(routeData.Values["membership_id"].ToString());
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<OrganizationMembership>>();
+
+                        if (userId == int.MinValue && membershipId == int.MinValue)
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
+
+                        if (state.Items.All(x => x.Value.UserId != userId && x.Value.OrganizationId != membershipId))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.NotFound;
+                            return Task.CompletedTask;
+                        }
+
+                        var item = state.Items.Single(x => x.Value.UserId == userId && x.Value.OrganizationId == membershipId)
+                            .Value;
+
+                        item.Default = true;
+
+                        resp.StatusCode = (int)HttpStatusCode.OK;
+
+                        return resp.WriteAsJson(new OrganizationMembershipsResponse
+                        {
+                            OrganizationMemberships = new List<OrganizationMembership> { item },
+                            Count = 1
+                        });
+                    })
                     .MapDelete("api/v2/organization_memberships/destroy_many.json", (req, resp, routeData) =>
                     {
                         return RequestHelper.DeleteMany<OrganizationMembership>(

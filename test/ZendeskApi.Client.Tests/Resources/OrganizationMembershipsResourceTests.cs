@@ -300,5 +300,26 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(new long[] { 1 }));
         }
+
+        [Fact]
+        public async Task MakeDefault_WhenCalled_ShouldMakeDefault()
+        {
+            var results = await _resource.MakeDefault(1, 1);
+
+            Assert.Equal(1, results.Count);
+
+            var membership = results.First();
+
+            Assert.Equal(1, membership.Id);
+            Assert.Equal(1, membership.UserId);
+            Assert.Equal(1, membership.OrganizationId);
+            Assert.True(membership.Default);
+        }
+
+        [Fact]
+        public async Task MakeDefault_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.MakeDefault(int.MinValue, int.MinValue));
+        }
     }
 }
