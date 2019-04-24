@@ -107,11 +107,20 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
+                        if (id == int.MinValue)
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
+
+                        var state = req.HttpContext
+                            .RequestServices
+                            .GetRequiredService<TicketResourceState>();
 
                         var comments = state.TicketComments.ContainsKey(id) ? state.TicketComments[id] : new List<TicketComment>();
 
                         resp.StatusCode = (int)HttpStatusCode.OK;
+
                         return resp.WriteAsJson(new TicketCommentsResponse { Comments = comments });
                     })
                     .MapGet("api/v2/users/{id}/tickets/assigned", (req, resp, routeData) =>
