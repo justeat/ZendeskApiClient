@@ -22,12 +22,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
     internal class DeletedTicketResourceSampleSite : SampleSite<TicketState, Ticket>
     {
-        public DeletedTicketResourceSampleSite(string resource, Dictionary<long, Ticket> ticketState)
+        public DeletedTicketResourceSampleSite(string resource)
             : base(
                 resource,
                 MatchesRequest,
                 ConfigureWebHost,
-                state => state.Items = ticketState)
+                PopulateState)
         { }
 
         private static void ConfigureWebHost(WebHostBuilder builder)
@@ -47,30 +47,53 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 });
         }
 
+        private static void PopulateState(TicketState state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new Ticket
+                {
+                    Id = i,
+                    Subject = $"My printer is on fire! {i}",
+                    ExternalId = i.ToString(),
+                    OrganisationId = i,
+                    RequesterId = i,
+                    AssigneeId = i,
+                    CollaboratorIds = new List<long> { i }
+                });
+            }
+        }
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
             {
                 return rb => rb
-                    .MapGet("api/v2/deleted_tickets.json", (req, resp, routeData) =>
+                    .MapGet("api/v2/deleted_tickets", (req, resp, routeData) =>
                     {
-                        var pager = new Pager(int.Parse(req.Query["page"]), int.Parse(req.Query["per_page"]), 100);
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketState>();
-
-                        var tickets = state
-                            .Items
-                            .Values
-                            .Skip(pager.GetStartIndex())
-                            .Take(pager.PageSize);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new DeletedTicketsListResponse { Tickets = tickets});
+                        return RequestHelper.List<DeletedTicketsListResponse, Ticket, TicketState>(
+                            req,
+                            resp,
+                            items => new DeletedTicketsListResponse
+                            {
+                                Tickets = items,
+                                Count = items.Count
+                            });
                     })
-                    .MapPut("api/v2/deleted_tickets/{id}/restore.json", (req, resp, routeData) =>
+                    .MapPut("api/v2/deleted_tickets/{id}/restore", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketState>();
+                        var state = req
+                            .HttpContext
+                            .RequestServices
+                            .GetRequiredService<TicketState>();
+
+                        if (id == int.MinValue)
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
 
                         if (!state.Items.ContainsKey(id))
                         {
@@ -81,11 +104,14 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Items.Remove(id);
                         
                         resp.StatusCode = (int)HttpStatusCode.OK;
+
                         return Task.CompletedTask;
                     })
                     .MapPut("api/v2/deleted_tickets/restore_many", (req, resp, routeData) =>
                     {
-                        var idParameterValue = req.Query["ids"].First().ToString();
+                        var idParameterValue = req.Query["ids"]
+                            .First()
+                            .ToString();
 
                         if (!idParameterValue.Contains(","))
                         {
@@ -143,11 +169,17 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new SingleJobStatusResponse {JobStatus = jobStatusResponse});
                     })
-                    .MapDelete("api/v2/deleted_tickets/{id}.json", (req, resp, routeData) =>
+                    .MapDelete("api/v2/deleted_tickets/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<TicketState>();
+
+                        if (id == int.MinValue)
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
 
                         if (!state.Items.ContainsKey(id))
                         {
