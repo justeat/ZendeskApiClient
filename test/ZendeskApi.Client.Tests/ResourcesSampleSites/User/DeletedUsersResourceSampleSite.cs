@@ -18,22 +18,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 resource, 
                 MatchesRequest, 
                 ConfigureWebHost,
-                state =>
-                {
-                    state.Items.Add(1, new UserResponse
-                    {
-                        Id = 1,
-                        Name = "Kung Fu Wizard",
-                        Email = "Fu1@fu.com"
-                    });
-
-                    state.Items.Add(2, new UserResponse()
-                    {
-                        Id = 2,
-                        Name = "some name",
-                        Email = "Fu2@fu.com"
-                    });
-                })
+                PopulateState)
         { }
 
         private static void ConfigureWebHost(WebHostBuilder builder)
@@ -48,6 +33,20 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 });
         }
 
+        private static void PopulateState(State<UserResponse> state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new UserResponse
+                {
+                    Id = i,
+                    Name = $"name.{i}",
+                    Email = $"email.{i}",
+                    ExternalId = i.ToString()
+                });
+            }
+        }
+
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
@@ -55,44 +54,33 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/deleted_users/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var user = state.Items[id];
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new SingleUserResponse
-                        {
-                            UserResponse = user
-                        });
+                        return RequestHelper.GetById<SingleUserResponse, UserResponse>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new SingleUserResponse
+                            {
+                                UserResponse = item
+                            });
                     })
                     .MapGet("api/v2/deleted_users", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UsersListResponse
-                        {
-                            Users = state.Items.Values
-                        });
+                        return RequestHelper.List<UsersListResponse, UserResponse>(
+                            req,
+                            resp,
+                            items => new UsersListResponse
+                            {
+                                Users = items,
+                                Count = items.Count
+                            });
                     })
                     .MapDelete("api/v2/deleted_users/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
-
-                        state.Items.Remove(id);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return Task.CompletedTask;
+                        return RequestHelper.Delete<UserResponse>(
+                            req,
+                            resp,
+                            routeData,
+                            HttpStatusCode.OK);
                     });
             }
         }
