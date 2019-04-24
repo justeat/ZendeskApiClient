@@ -1,7 +1,8 @@
-﻿namespace ZendeskApi.Client.Models
+namespace ZendeskApi.Client.Models
 {
     public enum TicketEventType
     {
-        Comment
+        Comment,
+        VoiceComment
     }
 }
