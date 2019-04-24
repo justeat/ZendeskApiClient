@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             get
             {
                 return rb => rb
-                    .MapGet("api/v2/deleted_tickets.json", (req, resp, routeData) =>
+                    .MapGet("api/v2/deleted_tickets", (req, resp, routeData) =>
                     {
                         var pager = new Pager(int.Parse(req.Query["page"]), int.Parse(req.Query["per_page"]), 100);
                         var state = req.HttpContext.RequestServices.GetRequiredService<TicketState>();
@@ -66,7 +66,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new DeletedTicketsListResponse { Tickets = tickets});
                     })
-                    .MapPut("api/v2/deleted_tickets/{id}/restore.json", (req, resp, routeData) =>
+                    .MapPut("api/v2/deleted_tickets/{id}/restore", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
@@ -143,7 +143,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         resp.StatusCode = (int)HttpStatusCode.OK;
                         return resp.WriteAsJson(new SingleJobStatusResponse {JobStatus = jobStatusResponse});
                     })
-                    .MapDelete("api/v2/deleted_tickets/{id}.json", (req, resp, routeData) =>
+                    .MapDelete("api/v2/deleted_tickets/{id}", (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 

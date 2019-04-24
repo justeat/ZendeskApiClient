@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
@@ -31,7 +33,8 @@ namespace ZendeskApi.Client.Resources
             string resource,
             string docs,
             string scope,
-            PagerParameters pager = null)
+            PagerParameters pager = null,
+            JsonConverter converter = null)
             where T : class
         {
             using (LoggerScope(Logger, scope))
@@ -43,9 +46,16 @@ namespace ZendeskApi.Client.Resources
                 await response
                     .ThrowIfUnsuccessful($"{DocsResource}#{docs}");
 
+                if (converter == null)
+                {
+                    return await response
+                        .Content
+                        .ReadAsAsync<T>();
+                }
+
                 return await response
                     .Content
-                    .ReadAsAsync<T>();
+                    .ReadAsAsync<T>(converter);
             }
         }
 
@@ -102,6 +112,49 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
+        public async Task<HttpResponseMessage> UpdateAsync(
+            string resource,
+            string docs,
+            string scope = "UpdateAsync")
+        {
+            using (LoggerScope(Logger, scope))
+            using (var client = ApiClient.CreateClient())
+            {
+                var response = await client.PutAsJsonAsync(resource, new StringContent(string.Empty))
+                    .ConfigureAwait(false);
+
+                await response.ThrowIfUnsuccessful($"{DocsResource}#{docs}");
+
+                return response;
+            }
+        }
+
+        public async Task UpdateAsync(
+            string resource,
+            IReadOnlyList<long> ids,
+            string docs,
+            string scope = "UpdateAsync")
+        {
+            if (ids == null)
+                throw new ArgumentNullException($"{nameof(ids)} must not be null", nameof(ids));
+
+            if (ids.Count == 0 || ids.Count > 100)
+                throw new ArgumentException($"{nameof(ids)} must have [0..100] elements", nameof(ids));
+
+            var idsAsCsv = ZendeskFormatter.ToCsv(ids);
+
+            using (LoggerScope(Logger, scope))
+            using (var client = ApiClient.CreateClient())
+            {
+                var response = await client.PutAsJsonAsync($"{resource}?ids={idsAsCsv}", new StringContent(string.Empty))
+                    .ConfigureAwait(false);
+
+                await response.ThrowIfUnsuccessful(
+                    $"{DocsResource}#{docs}",
+                    HttpStatusCode.OK);
+            }
+        }
+
         public async Task<TResponse> UpdateAsync<TResponse, TRequest>(
             string resource,
             TRequest item,
@@ -151,7 +204,28 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task DeleteAsync(
+        public async Task<TResponse> DeleteAsync<TResponse>(
+            string resource,
+            long id,
+            string docs,
+            HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
+            string scope = null)
+            where TResponse : class
+        {
+            var response = await DeleteAsync(
+                resource,
+                id,
+                docs,
+                expectedHttpStatusCode,
+                scope);
+
+            return await response
+                .Content
+                .ReadAsAsync<TResponse>();
+        }
+
+
+        public async Task<HttpResponseMessage> DeleteAsync(
             string resource,
             long id,
             string docs,
@@ -161,14 +235,14 @@ namespace ZendeskApi.Client.Resources
             if (scope == null)
                 scope = $"DeleteAsync{id}";
 
-            await DeleteAsync(
+            return await DeleteAsync(
                 $"{resource}/{id}",
                 docs,
                 expectedHttpStatusCode,
                 scope);
         }
 
-        public async Task DeleteAsync(
+        public async Task<HttpResponseMessage> DeleteAsync(
             string resource,
             string docs,
             HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
@@ -189,10 +263,30 @@ namespace ZendeskApi.Client.Resources
                         $"{DocsResource}#{docs}",
                         expectedHttpStatusCode);
                 }
+
+                return response;
             }
         }
 
-        public async Task DeleteAsync(
+        public async Task<TResponse> DeleteAsync<TResponse>(
+            string resource,
+            IReadOnlyList<long> ids,
+            string docs,
+            string scope = null)
+            where TResponse : class
+        {
+            var response = await DeleteAsync(
+                resource,
+                ids,
+                docs,
+                scope);
+
+            return await response
+                .Content
+                .ReadAsAsync<TResponse>();
+        }
+
+        public async Task<HttpResponseMessage> DeleteAsync(
             string resource,
             IReadOnlyList<long> ids,
             string docs,
@@ -207,7 +301,7 @@ namespace ZendeskApi.Client.Resources
             var idsAsCsv = ZendeskFormatter.ToCsv(ids);
 
             if (scope == null)
-                scope = $"DeleteAsync{idsAsCsv}";
+                scope = $"DeleteAsync({idsAsCsv})";
 
             using (LoggerScope(Logger, scope))
             using (var client = ApiClient.CreateClient())
@@ -218,6 +312,8 @@ namespace ZendeskApi.Client.Resources
                 await response.ThrowIfUnsuccessful(
                     $"{DocsResource}#{docs}",
                     HttpStatusCode.OK);
+
+                return response;
             }
         }
     }

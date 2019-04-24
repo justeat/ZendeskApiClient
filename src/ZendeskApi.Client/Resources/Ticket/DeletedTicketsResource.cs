@@ -2,13 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Converters;
-using ZendeskApi.Client.Exceptions;
-using ZendeskApi.Client.Extensions;
-using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Queries;
 using ZendeskApi.Client.Responses;
@@ -18,20 +14,14 @@ namespace ZendeskApi.Client.Resources
     /// <summary>
     /// <see cref="https://developer.zendesk.com/rest_api/docs/core/tickets"/>
     /// </summary>
-    public class DeletedTicketsResource : IDeletedTicketsResource
+    public class DeletedTicketsResource : AbstractBaseResource<DeletedTicketsResource>, 
+        IDeletedTicketsResource
     {
         private const string ResourceUri = "api/v2/deleted_tickets";
-        
-        private readonly IZendeskApiClient _apiClient;
-        private readonly ILogger _logger;
-
-        private readonly Func<ILogger, string, IDisposable> _loggerScope = LoggerMessage.DefineScope<string>(typeof(TicketsResource).Name + ": {0}");
-
-        public DeletedTicketsResource(IZendeskApiClient apiClient, ILogger logger)
-        {
-            _apiClient = apiClient;
-            _logger = logger;
-        }
+       
+        public DeletedTicketsResource(IZendeskApiClient apiClient, ILogger logger) 
+            : base(apiClient, logger, "tickets")
+        { }
 
         [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<DeletedTicketsListResponse> ListAsync(PagerParameters pager = null)
@@ -41,15 +31,11 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<DeletedTicketsListResponse> GetAllAsync(PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, nameof(GetAllAsync)))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.GetAsync($"/{ResourceUri}.json", pager).ConfigureAwait(false);
-
-                await response.ThrowIfUnsuccessful("tickets#show-deleted-tickets");
-
-                return await response.Content.ReadAsAsync<DeletedTicketsListResponse>();
-            }
+            return await GetAsync<DeletedTicketsListResponse>(
+                $"{ResourceUri}",
+                "show-deleted-tickets",
+                "GetAllAsync",
+                pager);
         }
 
         [Obsolete("Use `GetAllAsync` instead.")]
@@ -62,118 +48,51 @@ namespace ZendeskApi.Client.Resources
         public async Task<DeletedTicketsListResponse> GetAllAsync(Action<IZendeskQuery> builder, PagerParameters pager = null)
         {
             var query = new ZendeskQuery();
+
             builder(query);
 
-            using (_loggerScope(_logger, nameof(GetAllAsync)))
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.GetAsync($"{ResourceUri}.json?{query.BuildQuery()}", pager).ConfigureAwait(false);
-
-                await response.ThrowIfUnsuccessful("tickets#show-deleted-tickets");
-
-                return await response.Content.ReadAsAsync<DeletedTicketsListResponse>(new SearchJsonConverter());
-            }
+            return await GetAsync<DeletedTicketsListResponse>(
+                $"{ResourceUri}?{query.BuildQuery()}",
+                "show-deleted-tickets",
+                "GetAllAsync",
+                pager,
+                new SearchJsonConverter());
         }
 
         public async Task RestoreAsync(long ticketId)
         {
-            using (_loggerScope(_logger, "RestoreAsync"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client
-                    .PutAsync(string.Format($"{ticketId}/restore.json", ticketId), new StringContent(string.Empty))
-                    .ConfigureAwait(false);
-                
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    await response.ThrowZendeskRequestException(
-                        "tickets#restore-a-previously-deleted-ticket",
-                        HttpStatusCode.OK);
-                }
-            }
+            await UpdateAsync(
+                $"{ResourceUri}/{ticketId}/restore",
+                "restore-a-previously-deleted-ticket");
         }
         
         public async Task RestoreAsync(IEnumerable<long> ticketIds)
         {
-            if (ticketIds == null)
-            {
-                throw new ArgumentNullException($"{nameof(ticketIds)} must not be null", nameof(ticketIds));
-            }
-
-            var ticketIdList = ticketIds.ToList();
-
-            if (ticketIdList.Count == 0 || ticketIdList.Count > 100)
-            {
-                throw new ArgumentException($"{nameof(ticketIds)} must have [0..100] elements", nameof(ticketIds));
-            }
-
-            var ticketIdsString = ZendeskFormatter.ToCsv(ticketIdList);
-
-            using (_loggerScope(_logger, $"RestoreManyAsync({ticketIdsString})"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client
-                    .PutAsync($"restore_many?ids={ticketIdsString}", new StringContent(string.Empty))
-                    .ConfigureAwait(false);
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    await response.ThrowZendeskRequestException(
-                        "tickets#restore-previously-deleted-tickets-in-bulk",
-                        HttpStatusCode.OK);
-                }
-            }
+            await UpdateAsync(
+                $"{ResourceUri}/restore_many",
+                ticketIds.ToList(),
+                "restore-previously-deleted-tickets-in-bulk");
         }
 
         public async Task<JobStatusResponse> PurgeAsync(long ticketId)
         {
-            using (_loggerScope(_logger, $"PurgeAsync({ticketId})"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.DeleteAsync($"{ticketId}.json").ConfigureAwait(false);
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    await response.ThrowZendeskRequestException(
-                        "tickets#delete-ticket-permanently",
-                        HttpStatusCode.OK);
-                }
-
-                var result = await response.Content.ReadAsAsync<SingleJobStatusResponse>();
-                return result.JobStatus;
-            }
+            return await DeleteAsync<JobStatusResponse>(
+                $"{ResourceUri}",
+                ticketId,
+                "delete-ticket-permanently",
+                HttpStatusCode.OK,
+                $"PurgeAsync({ticketId})");
         }
 
         public async Task<JobStatusResponse> PurgeAsync(IEnumerable<long> ticketIds)
         {
-            if (ticketIds == null)
-            {
-                throw new ArgumentNullException($"{nameof(ticketIds)} must not be null", nameof(ticketIds));
-            }
+            var response = await DeleteAsync<SingleJobStatusResponse>(
+                $"{ResourceUri}/destroy_many",
+                ticketIds.ToList(),
+                "delete-multiple-tickets-permanently");
 
-            var ticketIdList = ticketIds.ToList();
-            if (ticketIdList.Count == 0 || ticketIdList.Count > 100)
-            {
-                throw new ArgumentException($"{nameof(ticketIds)} must have [0..100] elements", nameof(ticketIds));
-            }
-
-            var ticketIdsString = ZendeskFormatter.ToCsv(ticketIdList);
-
-            using (_loggerScope(_logger, $"PurgeAsync({ticketIdsString})"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.DeleteAsync($"destroy_many?ids={ticketIdsString}").ConfigureAwait(false);
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    await response.ThrowZendeskRequestException(
-                        "tickets#delete-multiple-tickets-permanently",
-                        HttpStatusCode.OK);
-                }
-
-                var result = await response.Content.ReadAsAsync<SingleJobStatusResponse>();
-                return result.JobStatus;
-            }
+            return response?
+                .JobStatus;
         }
     }
 }
