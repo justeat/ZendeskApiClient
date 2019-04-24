@@ -1,9 +1,7 @@
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Resources;
@@ -24,101 +22,134 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ShouldListAllTicketForms()
+        public async Task GetAllAsync_WhenCalled_ShouldGetAll()
         {
-            var obj1 = await _resource.CreateAsync(new TicketForm {
-                Name = "Superman1"
-            });
+            var results = await _resource.GetAllAsync();
 
-            var obj2 = await _resource.CreateAsync(new TicketForm
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
             {
-                Name = "Superman2"
-            });
+                var item = results.ElementAt(i - 1);
 
-            var objs = (await _resource.GetAllAsync()).ToArray();
-
-            Assert.Equal(2, objs.Length);
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[1]));
-        }
-        
-        [Fact]
-        public async Task ShouldGetTicketFormById()
-        {
-            var obj1 = await _resource.CreateAsync(new TicketForm
-            {
-                Name = "Superman1"
-            });
-
-            var obj2 = await _resource.CreateAsync(new TicketForm
-            {
-                Name = "Superman2"
-            });
-
-            var objs1 = await _resource.GetAsync(obj1.Id.Value);
-            var objs2 = await _resource.GetAsync(obj2.Id.Value);
-
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs1));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs2));
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+            }
         }
 
         [Fact]
-        public async Task ShouldCreateTicketForm()
+        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAll()
         {
-            var obj1 = await _resource.CreateAsync(new TicketForm
+            var results = await _resource.GetAllAsync(new PagerParameters
             {
-                Name = "Superman1"
+                Page = 2,
+                PageSize = 1
             });
 
-            Assert.NotNull(obj1.Id);
-            Assert.Equal("Superman1", obj1.Name);
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal("name.2", item.Name);
         }
 
         [Fact]
-        public Task ShouldThrowErrorWhenNot201()
+        public async Task GetAllAsync_WhenServiceUnavailable_ShouldThrow()
         {
-            return Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(new TicketForm
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new PagerParameters
             {
-                Name = "error"
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
             }));
-
-            // could use tags to simulate httpstatus codes in fake client?
         }
 
         [Fact]
-        public async Task ShouldUpdateTicketForm()
+        public async Task GetAsync_WhenCalled_ShouldGetOrganization()
         {
-            var obj = await _resource.CreateAsync(new TicketForm
-            {
-                Name = "Superman1"
-            });
+            var item = await _resource.GetAsync(1);
 
-            Assert.Equal("Superman1", obj.Name);
-
-            obj.Name = "Superman2";
-
-            obj = await _resource.UpdateAsync(obj);
-
-            Assert.Equal("Superman2", obj.Name);
+            Assert.Equal(1, item.Id);
+            Assert.Equal("name.1", item.Name);
         }
 
         [Fact]
-        public async Task ShouldDeleteTicketForm()
+        public async Task GetAsync_WhenNotFound_ShouldReturnNull()
         {
-            var obj = await _resource.CreateAsync(new TicketForm
+            var results = await _resource.GetAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task CreateAsync_WhenCalled_ShouldCreate()
+        {
+            var item = await _resource.CreateAsync(new TicketForm
             {
-                Name = "Superman1"
+                Id = 101,
+                Name = "name.101"
             });
 
-            var obj1 = await _resource.GetAsync(obj.Id.Value);
+            Assert.Equal(101, item.Id);
+            Assert.Equal("name.101", item.Name);
+        }
 
-            Assert.Equal(JsonConvert.SerializeObject(obj), JsonConvert.SerializeObject(obj1));
+        [Fact]
+        public async Task CreateAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(new TicketForm
+            {
+                Id = int.MinValue
+            }));
+        }
 
-            await _resource.DeleteAsync(obj.Id.Value);
+        [Fact]
+        public async Task UpdateAsync_WhenCalled_ShouldUpdate()
+        {
+            var item = await _resource.UpdateAsync(new TicketForm
+            {
+                Id = 1,
+                Name = "name.1.new"
+            });
 
-            var obj2 = await _resource.GetAsync(obj.Id.Value);
+            Assert.Equal(1, item.Id);
+            Assert.Equal("name.1.new", item.Name);
+        }
 
-            Assert.Null(obj2);
+        [Fact]
+        public async Task UpdateAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var org = await _resource.UpdateAsync(new TicketForm
+            {
+                Id = int.MaxValue
+            });
+
+            Assert.Null(org);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.UpdateAsync(new TicketForm
+            {
+                Id = int.MinValue
+            }));
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenCalled_ShouldDelete()
+        {
+            await _resource.DeleteAsync(1);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(int.MinValue));
         }
 
         public void Dispose()
