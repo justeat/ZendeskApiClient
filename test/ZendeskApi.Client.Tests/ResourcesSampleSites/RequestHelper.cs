@@ -120,6 +120,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 int.TryParse(req.Query["page"].ToString(), out var page) &&
                 int.TryParse(req.Query["per_page"].ToString(), out var size))
             {
+                if (page == int.MaxValue && size == int.MaxValue)
+                {
+                    resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                    return Task.FromResult(resp);
+                }
+
                 items = items
                     .Skip((page - 1) * size)
                     .Take(size)

@@ -145,7 +145,7 @@ namespace ZendeskApi.Client.Resources
                 .ReadAsAsync<TResponse>();
         }
 
-        public async Task<HttpResponseMessage> UpdateAsync(
+        protected async Task<HttpResponseMessage> UpdateAsync(
             string resource,
             string docs,
             string scope = "UpdateAsync")
@@ -162,7 +162,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<HttpResponseMessage> UpdateAsync(
+        protected async Task<HttpResponseMessage> UpdateAsync(
             string resource,
             IReadOnlyList<long> ids,
             string docs,
@@ -182,7 +182,7 @@ namespace ZendeskApi.Client.Resources
                 scope);
         }
 
-        public async Task<TResponse> UpdateAsync<TResponse, TRequest>(
+        protected async Task<TResponse> UpdateAsync<TResponse, TRequest>(
             string resource,
             TRequest item,
             string docs,
@@ -203,7 +203,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<TResponse> UpdateWithNotFoundCheckAsync<TResponse, TRequest>(
+        protected async Task<TResponse> UpdateWithNotFoundCheckAsync<TResponse, TRequest>(
             string resource,
             TRequest item,
             string docs,
@@ -231,7 +231,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<HttpResponseMessage> DeleteAsync(
+        protected async Task<HttpResponseMessage> DeleteAsync(
             string resource,
             string docs,
             HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
@@ -257,7 +257,7 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        public async Task<HttpResponseMessage> DeleteAsync(
+        protected async Task<HttpResponseMessage> DeleteAsync(
             string resource,
             long id,
             string docs,
@@ -274,7 +274,7 @@ namespace ZendeskApi.Client.Resources
                 scope);
         }
 
-        public async Task<TResponse> DeleteAsync<TResponse>(
+        protected async Task<TResponse> DeleteAsync<TResponse>(
             string resource,
             long id,
             string docs,
@@ -294,7 +294,7 @@ namespace ZendeskApi.Client.Resources
                 .ReadAsAsync<TResponse>();
         }
 
-        public async Task<HttpResponseMessage> DeleteAsync(
+        protected async Task<HttpResponseMessage> DeleteAsync(
             string resource,
             IReadOnlyList<long> ids,
             string docs,
@@ -318,7 +318,7 @@ namespace ZendeskApi.Client.Resources
                 scope);
         }
 
-        public async Task<TResponse> DeleteAsync<TResponse>(
+        protected async Task<TResponse> DeleteAsync<TResponse>(
             string resource,
             IReadOnlyList<long> ids,
             string docs,

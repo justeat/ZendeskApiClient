@@ -11,125 +11,90 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    internal class UserIdentitiesResourceSampleSite : SampleSite<State<Tuple<long, long>, UserIdentity>, Tuple<long, long>, UserIdentity>
+    internal class UserIdentitiesResourceSampleSite : SampleSite<State<UserIdentity>, UserIdentity>
     {
         public UserIdentitiesResourceSampleSite(string resource)
-            : base(resource, MatchesRequest)
+            : base(
+                resource, 
+                MatchesRequest,
+                null,
+                PopulateState)
         { }
+
+        private static void PopulateState(State<UserIdentity> state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new UserIdentity
+                {
+                    Id = i,
+                    UserId = i,
+                    Name = $"name.{i}"
+                });
+            }
+        }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
             get
             {
                 return rb => rb
-                    .MapGet("api/v2/users/{userId}/identities/{identityid}", (req, resp, routeData) =>
+                    .MapGet("api/v2/users/{userId}/identities/{id}", (req, resp, routeData) =>
                     {
-                        var userId = long.Parse(routeData.Values["userId"].ToString());
-                        var identityid = long.Parse(routeData.Values["identityid"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
-
-                        if (!state.Items.ContainsKey(new Tuple<long, long>(userId, identityid)))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var identity = state.Items[new Tuple<long, long>(userId, identityid)];
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(identity);
+                        return RequestHelper.GetById<UserIdentity, UserIdentity>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item);
                     })
                     .MapGet("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
-                        var userId = long.Parse(routeData.Values["userId"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
-
-                        if (state.Items.All(x => x.Key.Item1 != userId))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var identities = state.Items.Where(x => x.Key.Item1 == userId).Select(x => x.Value);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UserIdentitiesResponse { Identities = identities });
+                        return RequestHelper.FilteredList<UserIdentitiesResponse, UserIdentity>(
+                            req,
+                            resp,
+                            routeData.Values["userId"].ToString(),
+                            (id, items) => items.Where(x => x.UserId == id),
+                            items => new UserIdentitiesResponse
+                            {
+                                Identities = items,
+                                Count = items.Count
+                            });
                     })
                     .MapPost("api/v2/users/{userId}/identities", (req, resp, routeData) =>
                     {
-                        var identity = req.Body.ReadAs<UserIdentity>();
-
-                        var userId = long.Parse(routeData.Values["userId"].ToString());
-
-                        if (identity.Value != null && identity.Value.Contains("error"))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
-
-                            return Task.CompletedTask;
-                        }
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
-
-                        identity.Id = long.Parse(Rand.Next().ToString());
-                        state.Items.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(identity);
+                        return RequestHelper.Create<UserIdentity, UserIdentity>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item.Id,
+                            req.Body.ReadAs<UserIdentity>(),
+                            item => item);
                     })
                     .MapPost("api/v2/end_users/{userId}/identities", (req, resp, routeData) =>
                     {
-                        var identity = req.Body.ReadAs<UserIdentity>();
-
-                        var userId = long.Parse(routeData.Values["userId"].ToString());
-
-                        if (identity.Value != null && identity.Value.Contains("error"))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
-
-                            return Task.CompletedTask;
-                        }
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
-
-                        identity.Id = long.Parse(Rand.Next().ToString());
-                        state.Items.Add(new Tuple<long, long>(userId, identity.Id.Value), identity);
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(identity);
+                        return RequestHelper.Create<UserIdentity, UserIdentity>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item.Id,
+                            req.Body.ReadAs<UserIdentity>(),
+                            item => item);
                     })
-                    .MapPut("api/v2/users/{userId}/identities", (req, resp, routeData) =>
+                    .MapPut("api/v2/users/{userId}/identities/{id}", (req, resp, routeData) =>
                     {
-                        var identity = req.Body.ReadAs<UserIdentity>();
-
-                        var userId = long.Parse(routeData.Values["userId"].ToString());
-
-                        if (identity.Value != null && identity.Value.Contains("error"))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
-
-                            return Task.CompletedTask;
-                        }
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
-
-                        state.Items[new Tuple<long, long>(userId, identity.Id.Value)] = identity;
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(identity);
+                        return RequestHelper.Update<UserIdentity, UserIdentity>(
+                            req,
+                            resp,
+                            routeData,
+                            req.Body.ReadAs<UserIdentity>(),
+                            item => item);
                     })
-                    .MapDelete("api/v2/users/{userid}/identities/{identityid}", (req, resp, routeData) =>
+                    .MapDelete("api/v2/users/{userid}/identities/{id}", (req, resp, routeData) =>
                     {
-                        var userid = long.Parse(routeData.Values["userid"].ToString());
-                        var identityid = long.Parse(routeData.Values["identityid"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Tuple<long, long>, UserIdentity>>();
-                        
-                        state.Items.Remove(new Tuple<long, long>(userid, identityid));
-
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
-                        return Task.CompletedTask;
+                        return RequestHelper.Delete<UserIdentity>(
+                            req,
+                            resp,
+                            routeData);
                     })
                     ;
             }
