@@ -16,8 +16,24 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
     internal class TicketFieldsResourceSampleSite : SampleSite<TicketField>
     {
         public TicketFieldsResourceSampleSite(string resource)
-            : base(resource, MatchesRequest)
+            : base(
+                resource, 
+                MatchesRequest,
+                null,
+                PopulateState)
         { }
+
+        private static void PopulateState(State<TicketField> state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new TicketField
+                {
+                    Id = i,
+                    RawTitle = $"raw.title.{i}"
+                });
+            }
+        }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -26,75 +42,63 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/ticket_fields/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var ticketField = state.Items.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFieldResponse { TicketField = ticketField });
+                        return RequestHelper.GetById<TicketFieldResponse, TicketField>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new TicketFieldResponse
+                            {
+                                TicketField = item
+                            });
                     })
                     .MapGet("api/v2/ticket_fields", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFieldsResponse { TicketFields = state.Items.Values });
+                        return RequestHelper.List<TicketFieldsResponse, TicketField>(
+                            req,
+                            resp,
+                            items => new TicketFieldsResponse
+                            {
+                                TicketFields = items,
+                                Count = items.Count
+                            });
                     })
                     .MapPost("api/v2/ticket_fields", (req, resp, routeData) =>
                     {
-                        var ticket = req.Body.ReadAs<TicketFieldCreateUpdateRequest>();
-                        Assert.NotNull(ticket);
-                        var ticketField = ticket.TicketField;
+                        var request = req.Body.ReadAs<TicketFieldCreateUpdateRequest>();
+                        var membership = request.TicketField;
 
-                        if (ticketField.Tag != null && ticketField.Tag.Contains("error"))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
-
-                            return Task.CompletedTask;
-                        }
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
-
-                        ticketField.Id = long.Parse(Rand.Next().ToString());
-                        state.Items.Add(ticketField.Id.Value, ticketField);
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(ticket);
+                        return RequestHelper.Create<TicketFieldResponse, TicketField>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item.Id,
+                            membership,
+                            item => new TicketFieldResponse
+                            {
+                                TicketField = item
+                            });
                     })
                     .MapPut("api/v2/ticket_fields/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var ticket = req.Body.ReadAs<TicketFieldCreateUpdateRequest>();
-                        Assert.NotNull(ticket);
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
-
-                        state.Items[id] = ticket.TicketField;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFieldResponse{TicketField = state.Items[id]});
+                        return RequestHelper.Update<TicketFieldResponse, TicketField>(
+                            req,
+                            resp,
+                            routeData,
+                            req.Body
+                                .ReadAs<TicketFieldCreateUpdateRequest>()
+                                .TicketField,
+                            item => new TicketFieldResponse
+                            {
+                                TicketField = item
+                            });
                     })
                     .MapDelete("api/v2/ticket_fields/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketField>>();
-
-                        state.Items.Remove(id);
-
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
-                        return Task.CompletedTask;
-                    })
-                    ;
+                        return RequestHelper.Delete<TicketField>(
+                            req,
+                            resp,
+                            routeData);
+                    });
             }
         }
     }
