@@ -42,7 +42,7 @@ namespace ZendeskApi.Client.Resources
         {
             return await GetAsync<JobStatusListResponse>(
                 $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(statusIds)}",
-                "show-many-organizations",
+                "show-many-job-statuses",
                 $"GetAllAsync({ZendeskFormatter.ToCsv(statusIds)})",
                 pagerParameters);
         }
