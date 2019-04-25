@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
@@ -25,8 +24,6 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        #region List
-
         public async Task<IPagination<JobStatusResponse>> ListAsync(PagerParameters pagerParameters = null)
         {
             using (_loggerScope(_logger, "ListAsync"))
@@ -39,10 +36,6 @@ namespace ZendeskApi.Client.Resources
                 return await response.Content.ReadAsAsync<JobStatusListResponse>();
             }
         }
-
-        #endregion
-
-        #region Show
 
         public async Task<JobStatusResponse> GetAsync(string statusId)
         {
@@ -77,7 +70,5 @@ namespace ZendeskApi.Client.Resources
                 return await response.Content.ReadAsAsync<JobStatusListResponse>();
             }
         }
-
-        #endregion
     }
 }
