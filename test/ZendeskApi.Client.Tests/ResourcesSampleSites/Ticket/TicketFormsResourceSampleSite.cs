@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
@@ -14,8 +15,24 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
     internal class TicketFormsResourceSampleSite : SampleSite<TicketForm>
     {
         public TicketFormsResourceSampleSite(string resource)
-            : base(resource, MatchesRequest)
+            : base(
+                resource, 
+                MatchesRequest,
+                null,
+                PopulateState)
         { }
+
+        private static void PopulateState(State<TicketForm> state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new TicketForm
+                {
+                    Id = i,
+                    Name = $"name.{i}"
+                });
+            }
+        }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -35,70 +52,62 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapGet("api/v2/ticket_forms/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var obj = state.Items.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFormResponse { TicketForm = obj });
+                        return RequestHelper.GetById<TicketFormResponse, TicketForm>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new TicketFormResponse
+                            {
+                                TicketForm = item
+                            });
                     })
                     .MapGet("api/v2/ticket_forms", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new TicketFormsResponse { TicketForms = state.Items.Values });
+                        return RequestHelper.List<TicketFormsResponse, TicketForm>(
+                            req,
+                            resp,
+                            items => new TicketFormsResponse
+                            {
+                                TicketForms = items,
+                                Count = items.Count
+                            });
                     })
                     .MapPost("api/v2/ticket_forms", (req, resp, routeData) =>
                     {
-                        var obj = req.Body.ReadAs<TicketForm>();
+                        var request = req.Body.ReadAs<TicketFormCreateUpdateRequest>();
+                        var membership = request.TicketForm;
 
-                        if (obj.Name.Contains("error"))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
-
-                            return Task.CompletedTask;
-                        }
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
-
-                        obj.Id = long.Parse(Rand.Next().ToString());
-                        state.Items.Add(obj.Id.Value, obj);
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(obj);
+                        return RequestHelper.Create<TicketFormResponse, TicketForm>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item.Id,
+                            membership,
+                            item => new TicketFormResponse
+                            {
+                                TicketForm = item
+                            });
                     })
                     .MapPut("api/v2/ticket_forms/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var group = req.Body.ReadAs<TicketForm>();
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
-
-                        state.Items[id] = group;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(state.Items[id]);
+                        return RequestHelper.Update<TicketFormResponse, TicketForm>(
+                            req,
+                            resp,
+                            routeData,
+                            req.Body
+                                .ReadAs<TicketFormCreateUpdateRequest>()
+                                .TicketForm,
+                            item => new TicketFormResponse
+                            {
+                                TicketForm = item
+                            });
                     })
                     .MapDelete("api/v2/ticket_forms/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<TicketForm>>();
-
-                        state.Items.Remove(id);
-
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
-                        return Task.CompletedTask;
+                        return RequestHelper.Delete<TicketForm>(
+                            req,
+                            resp,
+                            routeData);
                     });
             }
         }
