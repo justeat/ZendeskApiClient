@@ -1,4 +1,5 @@
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
@@ -33,26 +34,17 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Upload> UploadAsync(string fileName, Stream inputStream, string token = null)
         {
-            var attachmentResponse = await ExecuteRequest(async client =>
-            {
-                var response = await client.PostAsBinaryAsync(
+            var attachmentResponse = await ExecuteRequest(async client => 
+                    await client.PostAsBinaryAsync(
                         UploadsResourceUri + $"?filename={fileName}&token={token}",
                         inputStream,
                         fileName)
-                    .ConfigureAwait(false);
+                    .ConfigureAwait(false), 
+                    "UploadAsync")
+                .ThrowIfUnsuccessful("attachments#upload-files", HttpStatusCode.Created)
+                .ReadContentAsAsync<UploadResponse>();
 
-                if (response.StatusCode != System.Net.HttpStatusCode.Created)
-                {
-                    await response.ThrowZendeskRequestException(
-                        "attachments#upload-files",
-                        System.Net.HttpStatusCode.Created);
-                }
-
-                return response;
-            }, "UploadAsync");
-
-            var uploadResponse = await attachmentResponse.Content.ReadAsAsync<UploadResponse>();
-            return uploadResponse.Upload;
+            return attachmentResponse.Upload;
         }
 
         public async Task DeleteAsync(string token)
