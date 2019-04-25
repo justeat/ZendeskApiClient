@@ -33,13 +33,13 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Upload> UploadAsync(string fileName, Stream inputStream, string token = null)
         {
-            using (LoggerScope(Logger, "UploadAsync"))
-            using (var client = ApiClient.CreateClient())
+            var attachmentResponse = await ExecuteRequest(async client =>
             {
                 var response = await client.PostAsBinaryAsync(
-                    UploadsResourceUri + $"?filename={fileName}&token={token}",
-                    inputStream,
-                    fileName).ConfigureAwait(false);
+                        UploadsResourceUri + $"?filename={fileName}&token={token}",
+                        inputStream,
+                        fileName)
+                    .ConfigureAwait(false);
 
                 if (response.StatusCode != System.Net.HttpStatusCode.Created)
                 {
@@ -48,9 +48,11 @@ namespace ZendeskApi.Client.Resources
                         System.Net.HttpStatusCode.Created);
                 }
 
-                var uploadResponse = await response.Content.ReadAsAsync<UploadResponse>();
-                return uploadResponse.Upload;
-            }
+                return response;
+            }, "UploadAsync");
+
+            var uploadResponse = await attachmentResponse.Content.ReadAsAsync<UploadResponse>();
+            return uploadResponse.Upload;
         }
 
         public async Task DeleteAsync(string token)
