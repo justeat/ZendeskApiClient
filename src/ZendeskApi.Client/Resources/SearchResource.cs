@@ -34,7 +34,8 @@ namespace ZendeskApi.Client.Resources
                 "list-search-results",
                 "SearchAsync",
                 pager,
-                new SearchJsonConverter());
+                new SearchJsonConverter(),
+                cancellationToken);
         }
 
         public async Task<SearchResponse<T>> SearchAsync<T>(
@@ -53,7 +54,8 @@ namespace ZendeskApi.Client.Resources
                 $"{SearchUri}?{query.BuildQuery()}",
                 "list-search-results",
                 "SearchAsync",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
     }
 }

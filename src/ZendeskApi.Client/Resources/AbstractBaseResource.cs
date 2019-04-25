@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -30,13 +31,14 @@ namespace ZendeskApi.Client.Resources
         }
 
         protected async Task<HttpResponseMessage> ExecuteRequest(
-            Func<HttpClient, Task<HttpResponseMessage>> requestBodyAccessor,
-            string scope)
+            Func<HttpClient, CancellationToken, Task<HttpResponseMessage>> requestBodyAccessor,
+            string scope,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             using (LoggerScope(Logger, scope))
             using (var client = ApiClient.CreateClient())
             {
-                return await requestBodyAccessor(client);
+                return await requestBodyAccessor(client, cancellationToken);
             }
         }
 
@@ -45,12 +47,14 @@ namespace ZendeskApi.Client.Resources
             string docs,
             string scope,
             PagerParameters pager = null,
-            JsonConverter converter = null)
+            JsonConverter converter = null,
+            CancellationToken cancellationToken = default(CancellationToken))
             where T : class
         {
-            return await ExecuteRequest(async client => 
-                    await client.GetAsync(resource, pager).ConfigureAwait(false),
-                    scope)
+            return await ExecuteRequest(async (client, token) => 
+                    await client.GetAsync(resource, pager, token).ConfigureAwait(false),
+                    scope,
+                    cancellationToken)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
                 .ReadContentAsAsync<T>(converter);
         }
@@ -60,12 +64,14 @@ namespace ZendeskApi.Client.Resources
             string docs,
             string scope,
             string notFoundLogMessage,
-            PagerParameters pager = null)
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
             where T : class
         {
-            return await ExecuteRequest(async client =>
-                    await client.GetAsync(resource, pager).ConfigureAwait(false), 
-                    scope)
+            return await ExecuteRequest(async (client, token) =>
+                    await client.GetAsync(resource, pager, token).ConfigureAwait(false), 
+                    scope,
+                    cancellationToken)
                 .SetToNullWhen(HttpStatusCode.NotFound)
                 .LogInformationWhenNull(Logger, notFoundLogMessage)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
@@ -79,7 +85,7 @@ namespace ZendeskApi.Client.Resources
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created,
             string scope = "CreateAsync")
         {
-            return await ExecuteRequest(async client => 
+            return await ExecuteRequest(async (client, token) => 
                     await client.PostAsJsonAsync(resource, item).ConfigureAwait(false), 
                     scope)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}", expectedStatusCode);
@@ -107,7 +113,7 @@ namespace ZendeskApi.Client.Resources
             string docs,
             string scope = "UpdateAsync")
         {
-            return await ExecuteRequest(async client => 
+            return await ExecuteRequest(async (client, token) => 
                     await client.PutAsJsonAsync(resource, new StringContent(string.Empty)).ConfigureAwait(false), 
                     scope)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}");
@@ -140,7 +146,7 @@ namespace ZendeskApi.Client.Resources
             string scope = "UpdateAsync")
             where TResponse : class
         {
-            return await ExecuteRequest(async client => 
+            return await ExecuteRequest(async (client, token) => 
                     await client.PutAsJsonAsync(resource, item).ConfigureAwait(false), 
                     scope)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
@@ -155,7 +161,7 @@ namespace ZendeskApi.Client.Resources
             string scope = "UpdateAsync")
             where TResponse : class
         {
-            return await ExecuteRequest(async client => 
+            return await ExecuteRequest(async (client, token) => 
                     await client.PutAsJsonAsync(resource, item).ConfigureAwait(false), 
                     scope)
                 .SetToNullWhen(HttpStatusCode.NotFound)
@@ -168,11 +174,13 @@ namespace ZendeskApi.Client.Resources
             string resource,
             string docs,
             HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
-            string scope = null)
+            string scope = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteRequest(async client => 
-                    await client.DeleteAsync(resource).ConfigureAwait(false), 
-                    scope ?? "DeleteAsync")
+            return await ExecuteRequest(async (client, token) => 
+                    await client.DeleteAsync(resource, token).ConfigureAwait(false), 
+                    scope ?? "DeleteAsync",
+                    cancellationToken)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}", expectedHttpStatusCode);
         }
 
@@ -181,13 +189,15 @@ namespace ZendeskApi.Client.Resources
             long id,
             string docs,
             HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
-            string scope = null)
+            string scope = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await DeleteAsync(
                 $"{resource}/{id}",
                 docs,
                 expectedHttpStatusCode,
-                scope ?? $"DeleteAsync{id}");
+                scope ?? $"DeleteAsync{id}",
+                cancellationToken);
         }
 
         protected async Task<TResponse> DeleteAsync<TResponse>(
@@ -195,15 +205,17 @@ namespace ZendeskApi.Client.Resources
             long id,
             string docs,
             HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
-            string scope = null)
+            string scope = null,
+            CancellationToken cancellationToken = default(CancellationToken))
             where TResponse : class
         {
             return await DeleteAsync(
-                resource,
-                id,
-                docs,
-                expectedHttpStatusCode,
-                scope)
+                    resource,
+                    id,
+                    docs,
+                    expectedHttpStatusCode,
+                    scope,
+                    cancellationToken)
                 .ReadContentAsAsync<TResponse>();
         }
 
@@ -211,7 +223,8 @@ namespace ZendeskApi.Client.Resources
             string resource,
             IReadOnlyList<long> ids,
             string docs,
-            string scope = null)
+            string scope = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (ids == null)
                 throw new ArgumentNullException($"{nameof(ids)} must not be null", nameof(ids));
@@ -225,21 +238,24 @@ namespace ZendeskApi.Client.Resources
                 $"{resource}?ids={idsAsCsv}",
                 docs,
                 HttpStatusCode.OK,
-                scope ?? $"DeleteAsync({idsAsCsv})");
+                scope ?? $"DeleteAsync({idsAsCsv})",
+                cancellationToken);
         }
 
         protected async Task<TResponse> DeleteAsync<TResponse>(
             string resource,
             IReadOnlyList<long> ids,
             string docs,
-            string scope = null)
+            string scope = null,
+            CancellationToken cancellationToken = default(CancellationToken))
             where TResponse : class
         {
             return await DeleteAsync(
                     resource,
                     ids,
                     docs,
-                    scope)
+                    scope,
+                    cancellationToken)
                 .ReadContentAsAsync<TResponse>();
         }
     }
