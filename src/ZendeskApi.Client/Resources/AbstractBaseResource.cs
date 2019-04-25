@@ -40,20 +40,6 @@ namespace ZendeskApi.Client.Resources
             }
         }
 
-        protected async Task<HttpResponseMessage> GetAsync(
-            string resource,
-            string scope,
-            PagerParameters pager = null)
-        {
-            return await ExecuteRequest(async client =>
-            {
-                var response = await client.GetAsync(resource, pager)
-                    .ConfigureAwait(false);
-
-                return response;
-            }, scope);
-        }
-
         protected async Task<T> GetAsync<T>(
             string resource,
             string docs,
@@ -62,24 +48,11 @@ namespace ZendeskApi.Client.Resources
             JsonConverter converter = null)
             where T : class
         {
-            var response = await GetAsync(
-                resource,
-                scope,
-                pager);
-
-            await response
-                .ThrowIfUnsuccessful($"{DocsResource}#{docs}");
-
-            if (converter == null)
-            {
-                return await response
-                    .Content
-                    .ReadAsAsync<T>();
-            }
-
-            return await response
-                .Content
-                .ReadAsAsync<T>(converter);
+            return await ExecuteRequest(async client => 
+                    await client.GetAsync(resource, pager).ConfigureAwait(false),
+                    scope)
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
+                .ReadContentAsAsync<T>(converter);
         }
 
         protected async Task<T> GetWithNotFoundCheckAsync<T>(
@@ -90,23 +63,13 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null)
             where T : class
         {
-            var response = await GetAsync(
-                resource,
-                scope,
-                pager);
-
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                Logger.LogInformation(notFoundLogMessage);
-                return null;
-            }
-
-            await response
-                .ThrowIfUnsuccessful($"{DocsResource}#{docs}");
-
-            return await response
-                .Content
-                .ReadAsAsync<T>();
+            return await ExecuteRequest(async client =>
+                    await client.GetAsync(resource, pager).ConfigureAwait(false), 
+                    scope)
+                .IsNullWhen(HttpStatusCode.NotFound)
+                .LogInformationWhenNull(Logger, notFoundLogMessage)
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
+                .ReadContentAsAsync<T>();
         }
 
         protected async Task<HttpResponseMessage> CreateAsync<TRequest>(
@@ -116,20 +79,10 @@ namespace ZendeskApi.Client.Resources
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created,
             string scope = "CreateAsync")
         {
-            return await ExecuteRequest(async client =>
-            {
-                var response = await client.PostAsJsonAsync(resource, item)
-                    .ConfigureAwait(false);
-
-                if (response.StatusCode != expectedStatusCode)
-                {
-                    await response.ThrowZendeskRequestException(
-                        $"{DocsResource}#{docs}",
-                        expectedStatusCode);
-                }
-
-                return response;
-            }, scope);
+            return await ExecuteRequest(async client => 
+                    await client.PostAsJsonAsync(resource, item).ConfigureAwait(false), 
+                    scope)
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}", expectedStatusCode);
         }
 
         protected async Task<TResponse> CreateAsync<TResponse, TRequest>(
@@ -138,17 +91,15 @@ namespace ZendeskApi.Client.Resources
             string docs,
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created,
             string scope = "CreateAsync")
+            where TResponse : class
         {
-            var response = await CreateAsync<TRequest>(
-                resource,
-                item,
-                docs,
-                expectedStatusCode,
-                scope);
-
-            return await response
-                .Content
-                .ReadAsAsync<TResponse>();
+            return await CreateAsync<TRequest>(
+                    resource,
+                    item,
+                    docs,
+                    expectedStatusCode,
+                    scope)
+                .ReadContentAsAsync<TResponse>();
         }
 
         protected async Task<HttpResponseMessage> UpdateAsync(
@@ -156,15 +107,10 @@ namespace ZendeskApi.Client.Resources
             string docs,
             string scope = "UpdateAsync")
         {
-            return await ExecuteRequest(async client =>
-            {
-                var response = await client.PutAsJsonAsync(resource, new StringContent(string.Empty))
-                    .ConfigureAwait(false);
-
-                await response.ThrowIfUnsuccessful($"{DocsResource}#{docs}");
-
-                return response;
-            }, scope);
+            return await ExecuteRequest(async client => 
+                    await client.PutAsJsonAsync(resource, new StringContent(string.Empty)).ConfigureAwait(false), 
+                    scope)
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}");
         }
 
         protected async Task<HttpResponseMessage> UpdateAsync(
@@ -194,19 +140,11 @@ namespace ZendeskApi.Client.Resources
             string scope = "UpdateAsync")
             where TResponse : class
         {
-            var updateResponse = await ExecuteRequest(async client =>
-            {
-                var response = await client.PutAsJsonAsync(resource, item)
-                    .ConfigureAwait(false);
-
-                await response.ThrowIfUnsuccessful($"{DocsResource}#{docs}");
-
-                return response;
-            }, scope);
-
-            return await updateResponse
-                .Content
-                .ReadAsAsync<TResponse>();
+            return await ExecuteRequest(async client => 
+                    await client.PutAsJsonAsync(resource, item).ConfigureAwait(false), 
+                    scope)
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
+                .ReadContentAsAsync<TResponse>();
         }
 
         protected async Task<TResponse> UpdateWithNotFoundCheckAsync<TResponse, TRequest>(
@@ -217,25 +155,13 @@ namespace ZendeskApi.Client.Resources
             string scope = "UpdateAsync")
             where TResponse : class
         {
-            var updateResponse = await ExecuteRequest(async client =>
-            {
-                var response = await client.PutAsJsonAsync(resource, item)
-                    .ConfigureAwait(false);
-
-                return response;
-            }, scope);
-
-            if (updateResponse.StatusCode == HttpStatusCode.NotFound)
-            {
-                Logger.LogInformation(notFoundLogMessage);
-                return null;
-            }
-
-            await updateResponse.ThrowIfUnsuccessful($"{DocsResource}#{docs}");
-
-            return await updateResponse
-                .Content
-                .ReadAsAsync<TResponse>();
+            return await ExecuteRequest(async client => 
+                    await client.PutAsJsonAsync(resource, item).ConfigureAwait(false), 
+                    scope)
+                .IsNullWhen(HttpStatusCode.NotFound)
+                .LogInformationWhenNull(Logger, notFoundLogMessage)
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
+                .ReadContentAsAsync<TResponse>();
         }
 
         protected async Task<HttpResponseMessage> DeleteAsync(
@@ -244,20 +170,10 @@ namespace ZendeskApi.Client.Resources
             HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
             string scope = null)
         {
-            return await ExecuteRequest(async client =>
-            {
-                var response = await client.DeleteAsync(resource)
-                    .ConfigureAwait(false);
-
-                if (response.StatusCode != expectedHttpStatusCode)
-                {
-                    await response.ThrowZendeskRequestException(
-                        $"{DocsResource}#{docs}",
-                        expectedHttpStatusCode);
-                }
-
-                return response;
-            }, scope ?? "DeleteAsync");
+            return await ExecuteRequest(async client => 
+                    await client.DeleteAsync(resource).ConfigureAwait(false), 
+                    scope ?? "DeleteAsync")
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}", expectedHttpStatusCode);
         }
 
         protected async Task<HttpResponseMessage> DeleteAsync(
@@ -282,16 +198,13 @@ namespace ZendeskApi.Client.Resources
             string scope = null)
             where TResponse : class
         {
-            var response = await DeleteAsync(
+            return await DeleteAsync(
                 resource,
                 id,
                 docs,
                 expectedHttpStatusCode,
-                scope);
-
-            return await response
-                .Content
-                .ReadAsAsync<TResponse>();
+                scope)
+                .ReadContentAsAsync<TResponse>();
         }
 
         protected async Task<HttpResponseMessage> DeleteAsync(
@@ -322,15 +235,12 @@ namespace ZendeskApi.Client.Resources
             string scope = null)
             where TResponse : class
         {
-            var response = await DeleteAsync(
-                resource,
-                ids,
-                docs,
-                scope);
-
-            return await response
-                .Content
-                .ReadAsAsync<TResponse>();
+            return await DeleteAsync(
+                    resource,
+                    ids,
+                    docs,
+                    scope)
+                .ReadContentAsAsync<TResponse>();
         }
     }
 }
