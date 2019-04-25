@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
@@ -21,92 +22,134 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ShouldListAllUserFields()
+        public async Task GetAllAsync_WhenCalled_ShouldGetAll()
         {
-            var obj1 = await _resource.CreateAsync(new UserField
+            var results = await _resource.GetAllAsync();
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
             {
-                RawTitle = "FuBar"
-            });
+                var item = results.ElementAt(i - 1);
 
-            var obj2 = await _resource.CreateAsync(new UserField
-            {
-                RawTitle = "FuBar2"
-            });
-
-            var retrievedGroups = (await _resource.GetAllAsync()).ToArray();
-
-            Assert.Equal(2, retrievedGroups.Length);
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(retrievedGroups[0]));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(retrievedGroups[1]));
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"raw.title.{i}", item.RawTitle);
+            }
         }
 
         [Fact]
-        public async Task ShouldGetUserFieldById()
+        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAll()
         {
-            var obj1 = await _resource.CreateAsync(new UserField
+            var results = await _resource.GetAllAsync(new PagerParameters
             {
-                RawTitle = "FuBar"
+                Page = 2,
+                PageSize = 1
             });
 
-            var obj2 = await _resource.CreateAsync(new UserField
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal("raw.title.2", item.RawTitle);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new PagerParameters
             {
-                RawTitle = "FuBar2"
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalled_ShouldGetOrganization()
+        {
+            var item = await _resource.GetAsync(1);
+
+            Assert.Equal(1, item.Id);
+            Assert.Equal("raw.title.1", item.RawTitle);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task CreateAsync_WhenCalled_ShouldCreate()
+        {
+            var item = await _resource.CreateAsync(new UserField
+            {
+                Id = 101,
+                RawTitle = "raw.title.101"
             });
 
-            var obj3 = await _resource.GetAsync(obj2.Id.Value);
-
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(obj3));
+            Assert.Equal(101, item.Id);
+            Assert.Equal("raw.title.101", item.RawTitle);
         }
 
         [Fact]
-        public async Task ShouldCreateUserField()
+        public async Task CreateAsync_WhenUnexpectedHttpCode_ShouldThrow()
         {
-            var response = await _resource.CreateAsync(
-                new UserField
-                {
-                    RawTitle = "FuBar"
-                });
-
-            Assert.NotNull(response.Id);
-            Assert.Equal("FuBar", response.RawTitle);
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(new UserField
+            {
+                Id = int.MinValue
+            }));
         }
 
         [Fact]
-        public async Task ShouldUpdateUserField()
+        public async Task UpdateAsync_WhenCalled_ShouldUpdate()
         {
-            var userField = await _resource.CreateAsync(
-                new UserField
-                {
-                    RawTitle = "FuBar"
-                });
+            var item = await _resource.UpdateAsync(new UserField
+            {
+                Id = 1,
+                RawTitle = "raw.title.1.new"
+            });
 
-            Assert.Equal("FuBar", userField.RawTitle);
-
-            userField.RawTitle = "BarFu";
-
-            userField = await _resource.UpdateAsync(userField);
-
-            Assert.Equal("BarFu", userField.RawTitle);
+            Assert.Equal(1, item.Id);
+            Assert.Equal("raw.title.1.new", item.RawTitle);
         }
 
         [Fact]
-        public async Task ShouldDeleteUserField()
+        public async Task UpdateAsync_WhenNotFound_ShouldReturnNull()
         {
-            var userField = await _resource.CreateAsync(
-                new UserField
-                {
-                    RawTitle = "FuBar"
-                });
+            var org = await _resource.UpdateAsync(new UserField
+            {
+                Id = int.MaxValue
+            });
 
-            var userField1 = await _resource.GetAsync(userField.Id.Value);
+            Assert.Null(org);
+        }
 
-            Assert.Equal(JsonConvert.SerializeObject(userField), JsonConvert.SerializeObject(userField1));
+        [Fact]
+        public async Task UpdateAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.UpdateAsync(new UserField
+            {
+                Id = int.MinValue
+            }));
+        }
 
-            await _resource.DeleteAsync(userField.Id.Value);
+        [Fact]
+        public async Task DeleteAsync_WhenCalled_ShouldDelete()
+        {
+            await _resource.DeleteAsync(1);
+        }
 
-            var userField2 = await _resource.GetAsync(userField.Id.Value);
-
-            Assert.Null(userField2);
+        [Fact]
+        public async Task DeleteAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(int.MinValue));
         }
     }
 }

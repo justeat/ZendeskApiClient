@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests.User;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
@@ -14,8 +15,24 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
     internal class UserFieldsResourceSampleSite : SampleSite<UserField>
     {
         public UserFieldsResourceSampleSite(string resource)
-            : base(resource, MatchesRequest)
+            : base(
+                resource, 
+                MatchesRequest,
+                null,
+                PopulateState)
         { }
+
+        private static void PopulateState(State<UserField> state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new UserField
+                {
+                    Id = i,
+                    RawTitle = $"raw.title.{i}"
+                });
+            }
+        }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -24,70 +41,62 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/user_fields/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var userField = state.Items.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UserFieldResponse { UserField = userField });
+                        return RequestHelper.GetById<UserFieldResponse, UserField>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new UserFieldResponse
+                            {
+                                UserField = item
+                            });
                     })
                     .MapGet("api/v2/user_fields", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new UserFieldsResponse { UserFields = state.Items.Values });
+                        return RequestHelper.List<UserFieldsResponse, UserField>(
+                            req,
+                            resp,
+                            items => new UserFieldsResponse
+                            {
+                                UserFields = items,
+                                Count = items.Count
+                            });
                     })
                     .MapPost("api/v2/user_fields", (req, resp, routeData) =>
                     {
-                        var user = req.Body.ReadAs<UserField>();
+                        var request = req.Body.ReadAs<UserFieldCreateUpdateRequest>();
+                        var field = request.UserField;
 
-                        if (user.Tag != null && user.Tag.Contains("error"))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
-
-                            return Task.CompletedTask;
-                        }
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
-
-                        user.Id = long.Parse(Rand.Next().ToString());
-                        state.Items.Add(user.Id.Value, user);
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(user);
+                        return RequestHelper.Create<UserFieldResponse, UserField>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item.Id,
+                            field,
+                            item => new UserFieldResponse
+                            {
+                                UserField = item
+                            });
                     })
                     .MapPut("api/v2/user_fields/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var user = req.Body.ReadAs<UserField>();
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
-
-                        state.Items[id] = user;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(state.Items[id]);
+                        return RequestHelper.Update<UserFieldResponse, UserField>(
+                            req,
+                            resp,
+                            routeData,
+                            req.Body
+                                .ReadAs<UserFieldCreateUpdateRequest>()
+                                .UserField,
+                            item => new UserFieldResponse
+                            {
+                                UserField = item
+                            });
                     })
                     .MapDelete("api/v2/user_fields/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserField>>();
-
-                        state.Items.Remove(id);
-
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
-                        return Task.CompletedTask;
+                        return RequestHelper.Delete<UserField>(
+                            req,
+                            resp,
+                            routeData);
                     })
                     ;
             }
