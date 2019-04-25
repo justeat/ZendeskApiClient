@@ -56,7 +56,8 @@ namespace ZendeskApi.Client.Resources
                 string.Format(CommentsResourceUri, requestId),
                 "getting-comments",
                 $"GetAllComments({requestId})",
-                $"Could not find any comments for request {requestId} as request was not found");
+                $"Could not find any comments for request {requestId} as request was not found",
+                pager);
         }
 
         public async Task<TicketComment> GetTicketCommentAsync(long requestId, long commentId)
