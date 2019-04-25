@@ -56,7 +56,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<UserIdentity> UpdateAsync(UserIdentity identity)
         {
             return await UpdateWithNotFoundCheckAsync<UserIdentity, UserIdentity>(
-                string.Format(ResourceUriFormat, identity.UserId),
+                $"{string.Format(ResourceUriFormat, identity.UserId)}/{identity.Id}",
                 identity,
                 "update-identity",
                 $"Cannot update identity as identity {identity.Id} cannot be found");

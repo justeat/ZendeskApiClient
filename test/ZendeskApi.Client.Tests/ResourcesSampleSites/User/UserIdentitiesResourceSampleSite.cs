@@ -80,7 +80,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req.Body.ReadAs<UserIdentity>(),
                             item => item);
                     })
-                    .MapPut("api/v2/users/{id}/identities", (req, resp, routeData) =>
+                    .MapPut("api/v2/users/{userId}/identities/{id}", (req, resp, routeData) =>
                     {
                         return RequestHelper.Update<UserIdentity, UserIdentity>(
                             req,
