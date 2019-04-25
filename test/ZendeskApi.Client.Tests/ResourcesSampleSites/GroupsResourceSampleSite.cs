@@ -1,22 +1,34 @@
 using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
-using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
     internal class GroupsResourceSampleSite : SampleSite<Group>
     {
         public GroupsResourceSampleSite(string resource)
-            : base(resource, MatchesRequest)
+            : base(
+                resource, 
+                MatchesRequest,
+                null,
+                PopulateState)
         { }
+
+        private static void PopulateState(State<Group> state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new Group
+                {
+                    Id = i,
+                    Name = $"name.{i}",
+                    Url = new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json")
+                });
+            }
+        }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -25,110 +37,98 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/groups/assignable", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
-
-                        var groups = state
-                            .Items
-                            .Where(x => x.Value.Name.Contains("Assign:true"))
-                            .Select(p => p.Value);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupListResponse { Groups = groups });
+                        return RequestHelper.List<GroupListResponse, Group>(
+                            req,
+                            resp,
+                            items => new GroupListResponse
+                            {
+                                Groups = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/groups/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var group = state.Items.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupResponse{ Group = group});
+                        return RequestHelper.GetById<GroupResponse, Group>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new GroupResponse
+                            {
+                                Group = item
+                            });
                     })
                     .MapGet("api/v2/groups", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupListResponse { Groups = state.Items.Values });
+                        return RequestHelper.List<GroupListResponse, Group>(
+                            req,
+                            resp,
+                            items => new GroupListResponse
+                            {
+                                Groups = items,
+                                Count = items.Count
+                            });
                     })
                     .MapGet("api/v2/users/{id}/groups", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
-
-                        var groups = state
-                            .Items
-                            .Where(x => x.Value.Name.Contains($"USER: {id}"))
-                            .Select(p => p.Value);
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupListResponse { Groups = groups });
+                        return RequestHelper.List<GroupListResponse, Group>(
+                            req,
+                            resp,
+                            items => new GroupListResponse
+                            {
+                                Groups = items,
+                                Count = items.Count
+                            });
                     })
                     .MapPost("api/v2/groups", (req, resp, routeData) =>
                     {
-                        var groupRequest = req.Body.ReadAs<GroupRequest<GroupCreateRequest>>();
-                        var group = groupRequest.Group;
-                        
-                        if (group.Name.Contains("error"))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
+                        var create = req.Body
+                            .ReadAs<GroupRequest<GroupCreateRequest>>()
+                            .Group;
 
-                            return Task.CompletedTask;
-                        }
+                        var id = string.IsNullOrWhiteSpace(create.Name) ? int.MinValue : long.Parse(Rand.Next().ToString());
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
-                        var groupId = long.Parse(Rand.Next().ToString());
-                        var newGroup = new Group
-                        {
-                            Name = group.Name,
-                            Id = groupId,
-                            Url = new Uri("https://company.zendesk.com/api/v2/groups/" + groupId + ".json")
-                        };
-                        
-                        state.Items.Add(newGroup.Id, newGroup);
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        
-                        return resp.WriteAsJson(new GroupResponse{Group = newGroup});
+                        return RequestHelper.Create<GroupResponse, Group>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item.Id,
+                            new Group {
+                                Id = id,
+                                Name = create.Name,
+                                Url = new Uri($"https://company.zendesk.com/api/v2/groups/{id}.json")
+                            }, 
+                            item => new GroupResponse
+                            {
+                                Group = item
+                            });
                     })
                     .MapPut("api/v2/groups/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
+                        var update = req.Body
+                            .ReadAs<GroupRequest<GroupUpdateRequest>>()
+                            .Group;
 
-                        var groupRequest = req.Body.ReadAs<GroupRequest<GroupUpdateRequest>>();
-                        var group = groupRequest.Group;
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
-                        var newGroup = new Group
-                        {
-                            Name = group.Name,
-                            Id = id
-                        };
-
-                        state.Items[id] = newGroup;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new GroupResponse{Group = state.Items[id]});
+                        return RequestHelper.Update<GroupResponse, Group>(
+                            req,
+                            resp,
+                            routeData,
+                            new Group
+                            {
+                                Id = update.Id,
+                                Name = update.Name,
+                                Url = new Uri($"https://company.zendesk.com/api/v2/groups/{update.Id}.json")
+                            },
+                            item => new GroupResponse
+                            {
+                                Group = item
+                            });
                     })
                     .MapDelete("api/v2/groups/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Group>>();
-
-                        state.Items.Remove(id);
-
-                        resp.StatusCode = (int)HttpStatusCode.NoContent;
-                        return Task.CompletedTask;
+                        return RequestHelper.Delete<Group>(
+                            req,
+                            resp,
+                            routeData);
                     });
             }
         }
