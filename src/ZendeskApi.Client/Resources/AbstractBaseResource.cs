@@ -42,7 +42,6 @@ namespace ZendeskApi.Client.Resources
 
         protected async Task<HttpResponseMessage> GetAsync(
             string resource,
-            string docs,
             string scope,
             PagerParameters pager = null)
         {
@@ -65,7 +64,6 @@ namespace ZendeskApi.Client.Resources
         {
             var response = await GetAsync(
                 resource,
-                docs,
                 scope,
                 pager);
 
@@ -94,7 +92,6 @@ namespace ZendeskApi.Client.Resources
         {
             var response = await GetAsync(
                 resource,
-                docs,
                 scope,
                 pager);
 
