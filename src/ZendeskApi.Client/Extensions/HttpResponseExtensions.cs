@@ -9,7 +9,7 @@ namespace ZendeskApi.Client.Extensions
 {
     internal static class HttpResponseExtensions
     {
-        internal static async Task<HttpResponseMessage> IsNullWhen(
+        internal static async Task<HttpResponseMessage> SetToNullWhen(
             this Task<HttpResponseMessage> response,
             HttpStatusCode code)
         {

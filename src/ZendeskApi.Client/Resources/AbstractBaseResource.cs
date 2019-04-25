@@ -66,7 +66,7 @@ namespace ZendeskApi.Client.Resources
             return await ExecuteRequest(async client =>
                     await client.GetAsync(resource, pager).ConfigureAwait(false), 
                     scope)
-                .IsNullWhen(HttpStatusCode.NotFound)
+                .SetToNullWhen(HttpStatusCode.NotFound)
                 .LogInformationWhenNull(Logger, notFoundLogMessage)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
                 .ReadContentAsAsync<T>();
@@ -158,7 +158,7 @@ namespace ZendeskApi.Client.Resources
             return await ExecuteRequest(async client => 
                     await client.PutAsJsonAsync(resource, item).ConfigureAwait(false), 
                     scope)
-                .IsNullWhen(HttpStatusCode.NotFound)
+                .SetToNullWhen(HttpStatusCode.NotFound)
                 .LogInformationWhenNull(Logger, notFoundLogMessage)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
                 .ReadContentAsAsync<TResponse>();
