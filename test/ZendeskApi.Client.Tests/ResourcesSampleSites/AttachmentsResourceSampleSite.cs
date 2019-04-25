@@ -14,8 +14,24 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
     internal class AttachmentsResourceSampleSite : SampleSite<State<Attachment>, Attachment>
     {
         public AttachmentsResourceSampleSite(string resource)
-        : base(resource, MatchesRequest)
+        : base(
+            resource, 
+            MatchesRequest,
+            null,
+            PopulateState)
         { }
+
+        private static void PopulateState(State<Attachment> state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new Attachment
+                {
+                    Id = i,
+                    FileName = $"filename.{i}"
+                });
+            }
+        }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -24,32 +40,30 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/attachments/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Attachment>>();
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var obj = state.Items.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(obj);
+                        return RequestHelper.GetById<Attachment, Attachment>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item);
                     })
                     .MapPost("api/v2/uploads", (req, resp, routeData) =>
                     {
-                        Debug.Assert(req.Query["filename"] == "crash.log");
-                        Debug.Assert(req.Query["token"] == "6bk3gql82em5nmf");
-                        Debug.Assert(req.ContentType == "application/binary");
+                        var filename = req.Query["filename"];
+
+                        if (string.IsNullOrWhiteSpace(filename))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
 
                         resp.Headers.Add("Location", "https://localhost/api/v2/attachments/498483");
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State<Attachment>>();
+                        var state = req
+                            .HttpContext
+                            .RequestServices
+                            .GetRequiredService<State<Attachment>>();
 
                         var attachment = new Attachment
                         {
@@ -70,6 +84,13 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         });
 
                         return Task.CompletedTask;
+                    })
+                    .MapDelete("api/v2/uploads/{id}", (req, resp, routeData) =>
+                    {
+                        return RequestHelper.Delete<Attachment>(
+                            req,
+                            resp,
+                            routeData);
                     });
             }
         }
