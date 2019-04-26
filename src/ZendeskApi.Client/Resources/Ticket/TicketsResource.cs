@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Formatters;
@@ -23,97 +24,131 @@ namespace ZendeskApi.Client.Resources
         private const string OrganizationResourceUriFormat = "api/v2/organizations/{0}/tickets";
         private const string UserResourceUriFormat = "api/v2/users/{0}/tickets";
 
-        public TicketsResource(IZendeskApiClient apiClient, ILogger logger)
+        public TicketsResource(
+            IZendeskApiClient apiClient, 
+            ILogger logger)
             : base(apiClient, logger, "tickets")
         { }
 
         #region List Tickets
-        public async Task<IPagination<Ticket>> ListAsync(PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<TicketsListResponse>(
                 ResourceUri,
                 "list-tickets",
                 "ListAsync",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
         
-        public async Task<IPagination<Ticket>> ListForOrganizationAsync(long organizationId, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListForOrganizationAsync(
+            long organizationId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetWithNotFoundCheckAsync<TicketsListResponse>(
                 string.Format(OrganizationResourceUriFormat, organizationId),
                 "list-tickets",
                 $"ListForOrganizationAsync({organizationId})",
                 $"Tickets in organization {organizationId} not found",
-                pager);
+                pager,
+                cancellationToken);
         }
 
-        public async Task<IPagination<Ticket>> ListRequestedByAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListRequestedByAsync(
+            long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetWithNotFoundCheckAsync<TicketsListResponse>(
                 $"{string.Format(UserResourceUriFormat, userId)}/requested",
                 "list-tickets",
                 $"ListRequestedByAsync({userId})",
                 $"Requested ticketsResponse for user {userId} not found",
-                pager);
+                pager,
+                cancellationToken);
         }
 
-        public async Task<IPagination<Ticket>> ListCcdAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListCcdAsync(
+            long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetWithNotFoundCheckAsync<TicketsListResponse>(
                 $"{string.Format(UserResourceUriFormat, userId)}/ccd",
                 "list-tickets",
                 $"ListCcdAsync({userId})",
                 $"CCD ticketsResponse for user {userId} not found",
-                pager);
+                pager,
+                cancellationToken);
         }
 
-        public async Task<IPagination<Ticket>> ListAssignedToAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> ListAssignedToAsync(
+            long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetWithNotFoundCheckAsync<TicketsListResponse>(
                 $"{string.Format(UserResourceUriFormat, userId)}/assigned",
                 "list-tickets",
                 $"ListAssignedToAsync({userId})",
                 $"Assigned ticketsResponse for user {userId} not found",
-                pager);
+                pager,
+                cancellationToken);
         }
         #endregion
 
         #region Show Tickets
-        public async Task<TicketResponse> GetAsync(long ticketId)
+        public async Task<TicketResponse> GetAsync(
+            long ticketId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetWithNotFoundCheckAsync<TicketResponse>(
                 $"{ResourceUri}/{ticketId}",
                 "show-ticket",
                 $"GetAsync({ticketId})",
-                $"TicketResponse {ticketId} not found");
+                $"TicketResponse {ticketId} not found",
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<IPagination<Ticket>> GetAsync(long[] ticketIds, PagerParameters pager = null)
+        public async Task<IPagination<Ticket>> GetAsync(
+            long[] ticketIds, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<TicketsListResponse>(
                 $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(ticketIds)}",
                 "show-multiple-tickets",
                 $"GetAllAsync({ZendeskFormatter.ToCsv(ticketIds)})",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
         #endregion
 
         #region Create Tickets
-        public async Task<TicketResponse> CreateAsync(TicketCreateRequest ticket)
+        public async Task<TicketResponse> CreateAsync(
+            TicketCreateRequest ticket,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await CreateAsync<TicketResponse, TicketRequest<TicketCreateRequest>>(
                 ResourceUri,
                 new TicketRequest<TicketCreateRequest>(ticket),
-                "create-ticket");
+                "create-ticket",
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<JobStatusResponse> CreateAsync(IEnumerable<TicketCreateRequest> tickets)
+        public async Task<JobStatusResponse> CreateAsync(
+            IEnumerable<TicketCreateRequest> tickets,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await CreateAsync<SingleJobStatusResponse, TicketListRequest<TicketCreateRequest>>(
                 $"{ResourceUri}/create_many",
                 new TicketListRequest<TicketCreateRequest>(tickets),
                 "create-many-tickets",
-                HttpStatusCode.OK);
+                HttpStatusCode.OK,
+                cancellationToken: cancellationToken);
 
             return response?
                 .JobStatus;
@@ -121,57 +156,74 @@ namespace ZendeskApi.Client.Resources
         #endregion
 
         #region Update Tickets
-        public async Task<TicketResponse> UpdateAsync(TicketUpdateRequest ticket)
+        public async Task<TicketResponse> UpdateAsync(
+            TicketUpdateRequest ticket,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await UpdateWithNotFoundCheckAsync<TicketResponse, TicketRequest<TicketUpdateRequest>>(
                 $"{ResourceUri}/{ticket.Id}",
                 new TicketRequest<TicketUpdateRequest>(ticket),
                 "update-ticket",
-                $"Cannot update ticketResponse as ticketResponse {ticket.Id} cannot be found");
+                $"Cannot update ticketResponse as ticketResponse {ticket.Id} cannot be found",
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<JobStatusResponse> UpdateAsync(IEnumerable<TicketUpdateRequest> tickets)
+        public async Task<JobStatusResponse> UpdateAsync(
+            IEnumerable<TicketUpdateRequest> tickets,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await UpdateAsync<JobStatusResponse, TicketListRequest<TicketUpdateRequest>>(
                 $"{ResourceUri}/update_many.json",
                 new TicketListRequest<TicketUpdateRequest>(tickets),
-                "update-many-tickets");
+                "update-many-tickets",
+                cancellationToken: cancellationToken);
         }
         #endregion
 
         #region Mark Ticket as Spam and Suspend Requester
-        public async Task<bool> MarkTicketAsSpamAndSuspendRequester(long ticketId)
+        public async Task<bool> MarkTicketAsSpamAndSuspendRequester(
+            long ticketId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await UpdateWithNotFoundCheckAsync<HttpResponseMessage, object>(
                 $"{ResourceUri}/{ticketId}/mark_as_spam",
                 new { },
                 "mark-ticket-as-spam-and-suspend-requester",
                 $"Cannot mark ticketResponse {ticketId} as spam as the ticketResponse is not found",
-                "MarkTicketAsSpamAndSuspendRequester");
+                "MarkTicketAsSpamAndSuspendRequester",
+                cancellationToken);
 
             return response != null;
         }
 
-        public async Task<JobStatusResponse> MarkTicketAsSpamAndSuspendRequester(long[] ticketIds)
+        public async Task<JobStatusResponse> MarkTicketAsSpamAndSuspendRequester(
+            long[] ticketIds,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await UpdateAsync<JobStatusResponse, object>(
                 $"{ResourceUri}/mark_many_as_spam.json?ids={ZendeskFormatter.ToCsv(ticketIds)}",
                 new {},
                 "bulk-mark-tickets-as-spam",
-                $"MarkTicketAsSpamAndSuspendRequester({ZendeskFormatter.ToCsv(ticketIds)})");
+                $"MarkTicketAsSpamAndSuspendRequester({ZendeskFormatter.ToCsv(ticketIds)})",
+                cancellationToken);
         }
         #endregion
 
         #region Delete Tickets
-        public async Task DeleteAsync(long ticketId)
+        public async Task DeleteAsync(
+            long ticketId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             await DeleteAsync(
                 ResourceUri,
                 ticketId,
-                "delete-ticket");
+                "delete-ticket",
+                cancellationToken: cancellationToken);
         }
 
-        public async Task DeleteAsync(IEnumerable<long> ticketIds)
+        public async Task DeleteAsync(
+            IEnumerable<long> ticketIds,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var ids = ticketIds
                 .ToList();
@@ -179,7 +231,8 @@ namespace ZendeskApi.Client.Resources
             await DeleteAsync(
                 $"{ResourceUri}/destroy_many.json",
                 ids,
-                "bulk-delete-tickets");
+                "bulk-delete-tickets",
+                cancellationToken: cancellationToken);
         }
         #endregion
     }
