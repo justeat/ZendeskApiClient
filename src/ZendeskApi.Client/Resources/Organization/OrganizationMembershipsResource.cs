@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
@@ -26,124 +27,166 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "organization_memberships")
         { }
 
-        public async Task<IPagination<OrganizationMembership>> GetAllAsync(PagerParameters pager = null)
+        public async Task<IPagination<OrganizationMembership>> GetAllAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<OrganizationMembershipsResponse>(
                 ResourceUri,
                 "list-memberships",
                 "GetAllAsync",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<IPagination<OrganizationMembership>> GetAllForOrganizationAsync(long organizationId, PagerParameters pager = null)
+        public async Task<IPagination<OrganizationMembership>> GetAllForOrganizationAsync(
+            long organizationId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<OrganizationMembershipsResponse>(
                 string.Format(OrganisationsUrlFormat, organizationId),
                 "list-memberships",
                 $"GetAllForOrganizationAsync({organizationId})",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<IPagination<OrganizationMembership>> GetAllForUserAsync(long userId, PagerParameters pager = null)
+        public async Task<IPagination<OrganizationMembership>> GetAllForUserAsync(
+            long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<OrganizationMembershipsResponse>(
                 string.Format(UsersUrlFormat, userId),
                 "list-memberships",
                 $"GetAllForUserAsync({userId})",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<OrganizationMembership> GetAsync(long id)
+        public async Task<OrganizationMembership> GetAsync(
+            long id,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<OrganizationMembershipResponse>(
                 $"{ResourceUri}/{id}",
                 "show-membership",
                 $"GetAsync({id})",
-                $"Requested Organization Membership {id} not found");
+                $"Requested Organization Membership {id} not found",
+                cancellationToken: cancellationToken);
 
             return response?
                 .OrganizationMembership;
         }
 
-        public async Task<OrganizationMembership> GetForUserAndOrganizationAsync(long userId, long organizationId)
+        public async Task<OrganizationMembership> GetForUserAndOrganizationAsync(
+            long userId, 
+            long organizationId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<OrganizationMembershipResponse>(
                 $"{string.Format(UsersUrlFormat, userId)}/{organizationId}",
                 "show-membership",
                 $"GetForUserAndOrganizationAsync({userId},{organizationId})",
-                $"Requested Organization Membership for user {userId} and organization {organizationId} not found");
+                $"Requested Organization Membership for user {userId} and organization {organizationId} not found",
+                cancellationToken: cancellationToken);
 
             return response?
                 .OrganizationMembership;
         }
 
-        public async Task<OrganizationMembership> CreateAsync(OrganizationMembership organizationMembership)
+        public async Task<OrganizationMembership> CreateAsync(
+            OrganizationMembership organizationMembership,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await CreateAsync<OrganizationMembershipResponse, OrganizationMembershipCreateRequest>(
                 ResourceUri,
                 new OrganizationMembershipCreateRequest(organizationMembership),
-                "create-membership"
+                "create-membership",
+                cancellationToken: cancellationToken
             );
 
             return response?
                 .OrganizationMembership;
         }
 
-        public async Task<OrganizationMembership> PostForUserAsync(OrganizationMembership organizationMembership, long userId)
+        public async Task<OrganizationMembership> PostForUserAsync(
+            OrganizationMembership organizationMembership, 
+            long userId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await CreateAsync<OrganizationMembershipResponse, OrganizationMembershipCreateRequest>(
                 string.Format(UsersUrlFormat, userId),
                 new OrganizationMembershipCreateRequest(organizationMembership),
                 "create-membership",
-                scope: $"PostAsync({userId})"
+                scope: $"PostAsync({userId})",
+                cancellationToken: cancellationToken
             );
 
             return response?
                 .OrganizationMembership;
         }
 
-        public async Task<JobStatusResponse> CreateAsync(IEnumerable<OrganizationMembership> organizationMemberships)
+        public async Task<JobStatusResponse> CreateAsync(
+            IEnumerable<OrganizationMembership> organizationMemberships,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await CreateAsync<JobStatusResponse, OrganizationMembershipsRequest>(
                 $"{ResourceUri}/create_many",
                 new OrganizationMembershipsRequest { Item = organizationMemberships },
                 "create-many-memberships",
                 HttpStatusCode.OK,
-                "PostAsync"
+                "PostAsync",
+                cancellationToken
             );
         }
 
-        public async Task DeleteAsync(long organizationMembershipId)
+        public async Task DeleteAsync(
+            long organizationMembershipId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             await DeleteAsync(
                 ResourceUri,
                 organizationMembershipId,
-                "delete-membership");
+                "delete-membership",
+                cancellationToken: cancellationToken);
         }
 
-        public async Task DeleteAsync(long userId, long organizationMembershipId)
+        public async Task DeleteAsync(
+            long userId, 
+            long organizationMembershipId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             await DeleteAsync(
                 string.Format(DeleteUsersUrlFormat, userId, organizationMembershipId),
                 "delete-membership",
-                scope: $"DeleteAsync({userId},{organizationMembershipId})");
+                scope: $"DeleteAsync({userId},{organizationMembershipId})",
+                cancellationToken: cancellationToken);
         }
 
-        public async Task DeleteAsync(IEnumerable<long> organizationMembershipIds)
+        public async Task DeleteAsync(
+            IEnumerable<long> organizationMembershipIds,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             await DeleteAsync(
                 $"{ResourceUri}/destroy_many.json",
                 organizationMembershipIds.ToArray(),
-                "bulk-delete-memberships");
+                "bulk-delete-memberships",
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<IPagination<OrganizationMembership>> MakeDefault(long userId, long organizationMembershipId)
+        public async Task<IPagination<OrganizationMembership>> MakeDefault(
+            long userId, 
+            long organizationMembershipId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await UpdateAsync<OrganizationMembershipsResponse, object>(
                 $"{string.Format(UsersUrlFormat, userId)}/{organizationMembershipId}/make_default.json",
                 new { },
                 "set-membership-as-default",
-                "MakeDefault");
+                "MakeDefault",
+                cancellationToken);
         }
     }
 }
