@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
@@ -22,76 +23,98 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "groups")
         { }
 
-        public async Task<GroupListResponse> ListAsync(PagerParameters pager = null)
+        public async Task<GroupListResponse> ListAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<GroupListResponse>(
                 GroupsResourceUri,
                 "list-groups",
                 "ListAsync",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<GroupListResponse> ListAsync(long userId, PagerParameters pager = null)
+        public async Task<GroupListResponse> ListAsync(
+            long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetWithNotFoundCheckAsync<GroupListResponse>(
                 string.Format(GroupsByUserResourceUriFormat, userId),
                 "list-groups",
                 $"ListAsync({userId})",
                 $"UserResponse {userId} not found",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<GroupListResponse> ListAssignableAsync(PagerParameters pager = null)
+        public async Task<GroupListResponse> ListAssignableAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<GroupListResponse>(
                 AssignableGroupUri,
                 "show-assignable-groups",
                 "ListAssignableAsync",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<Group> GetAsync(long groupId)
+        public async Task<Group> GetAsync(
+            long groupId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<GroupResponse>(
                 $"{GroupsResourceUri}/{groupId}",
                 "show-group",
                 $"GetAsync({groupId})",
-                $"GroupResponse {groupId} not found");
+                $"GroupResponse {groupId} not found",
+                cancellationToken: cancellationToken);
 
             return response?
                 .Group;
         }
 
-        public async Task<Group> CreateAsync(GroupCreateRequest group)
+        public async Task<Group> CreateAsync(
+            GroupCreateRequest group,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await CreateAsync<GroupResponse, GroupRequest<GroupCreateRequest>>(
                 GroupsResourceUri,
                 new GroupRequest<GroupCreateRequest>(group),
-                "create-group"
+                "create-group",
+                cancellationToken: cancellationToken
             );
 
             return response?
                 .Group;
         }
 
-        public async Task<Group> UpdateAsync(GroupUpdateRequest group)
+        public async Task<Group> UpdateAsync(
+            GroupUpdateRequest group,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await UpdateWithNotFoundCheckAsync<GroupResponse, GroupRequest<GroupUpdateRequest>>(
                 $"{GroupsResourceUri}/{group.Id}",
                 new GroupRequest<GroupUpdateRequest>(group),
                 "update-group",
-                $"Cannot update group as group {group.Id} cannot be found");
+                $"Cannot update group as group {group.Id} cannot be found",
+                cancellationToken: cancellationToken);
 
             return response?
                 .Group;
         }
 
-        public async Task DeleteAsync(long groupId)
+        public async Task DeleteAsync(
+            long groupId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             await DeleteAsync(
                 GroupsResourceUri,
                 groupId,
-                "delete-group");
+                "delete-group",
+                cancellationToken: cancellationToken);
         }
     }
 }
