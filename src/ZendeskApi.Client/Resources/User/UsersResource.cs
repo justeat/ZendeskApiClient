@@ -180,26 +180,22 @@ namespace ZendeskApi.Client.Resources
         public async Task<UserResponse> CreateOrUpdateAsync(
             UserCreateRequest user,
             CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (LoggerScope(Logger, "CreateOrUpdateAsync"))
-            using (var client = ApiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.PostAsJsonAsync(
-                        "create_or_update", 
-                        new UserRequest<UserCreateRequest>(user),
-                        cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
+        { 
+           var response = await ExecuteRequest(async (client, token) => 
+                       await client.PostAsJsonAsync(
+                           $"{ResourceUri}/create_or_update",
+                           new UserRequest<UserCreateRequest>(user),
+                           cancellationToken: token)
+                       .ConfigureAwait(false), 
+                    "CreateOrUpdateAsync", 
+                    cancellationToken)
+                .ThrowIfUnsuccessful(
+                    $"{DocsResource}#create-or-update-user",
+                    new[] { HttpStatusCode.Created, HttpStatusCode.OK })
+                .ReadContentAsAsync<SingleUserResponse>();
 
-                if (response.StatusCode != HttpStatusCode.Created && response.StatusCode != HttpStatusCode.OK)
-                {
-                    await response.ThrowZendeskRequestException(
-                        "users#create-or-update-user",
-                        new []{ HttpStatusCode.Created, HttpStatusCode.OK });
-                }
-
-                var result = await response.Content.ReadAsAsync<SingleUserResponse>();
-                return result.UserResponse;
-            }
+           return response?
+               .UserResponse;
         }
 
         public async Task DeleteAsync(
