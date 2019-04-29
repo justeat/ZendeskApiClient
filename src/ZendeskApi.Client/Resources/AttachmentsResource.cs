@@ -34,7 +34,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Upload> UploadAsync(string fileName, Stream inputStream, string token = null)
         {
-            var attachmentResponse = await ExecuteRequest(async client => 
+            var attachmentResponse = await ExecuteRequest(async (client, cancellationToken) => 
                     await client.PostAsBinaryAsync(
                         UploadsResourceUri + $"?filename={fileName}&token={token}",
                         inputStream,
