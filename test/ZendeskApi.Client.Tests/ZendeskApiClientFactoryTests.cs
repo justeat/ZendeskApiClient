@@ -1,19 +1,22 @@
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using FakeItEasy;
 using Microsoft.Extensions.Options;
 using Xunit;
 using ZendeskApi.Client.Options;
-#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests
 {
-    public class ZendeskApiClientTests
+    public class ZendeskApiClientFactoryTests
     {
         private const string Authorization = "Authorization";
 
         private readonly ZendeskOptions _options;
-        public ZendeskApiClientTests()
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public ZendeskApiClientFactoryTests()
         {
             _options = new ZendeskOptions
             {
@@ -21,13 +24,18 @@ namespace ZendeskApi.Client.Tests
                 Username = "testuser@gmail.com",
                 Token = "TESTTOKEN"
             };
+
+            _httpClientFactory = A.Fake<IHttpClientFactory>();
+
+            A.CallTo(() => _httpClientFactory.CreateClient("zendeskApiClient"))
+                .Returns(new HttpClient());
         }
 
         [Fact]
         public void ShouldDefaultBaseResourceAsEndpointUri()
         {
             var options = new OptionsWrapper<ZendeskOptions>(_options);
-            var client = new ZendeskApiClient(options);
+            var client = new ZendeskApiClientFactory(options, _httpClientFactory);
             var httpClient = client.CreateClient();
 
             Assert.Equal("http://kung.fu/", httpClient.BaseAddress.ToString());
@@ -37,7 +45,7 @@ namespace ZendeskApi.Client.Tests
         public void ShouldAppendResourceOnEndOfBaseResourceAsEndpointUri()
         {
             var options = new OptionsWrapper<ZendeskOptions>(_options);
-            var client = new ZendeskApiClient(options);
+            var client = new ZendeskApiClientFactory(options, _httpClientFactory);
             var httpClient = client.CreateClient("Bruce/Li");
 
             Assert.Equal("http://kung.fu/Bruce/Li/", httpClient.BaseAddress.ToString());
@@ -47,7 +55,7 @@ namespace ZendeskApi.Client.Tests
         public void ShouldAppendResourceOnEndOfBaseResourceAsEndpointUriWithWeirdSlashes()
         {
             var options = new OptionsWrapper<ZendeskOptions>(_options);
-            var client = new ZendeskApiClient(options);
+            var client = new ZendeskApiClientFactory(options, _httpClientFactory);
             var httpClient = client.CreateClient("/Bruce/Li/");
 
             Assert.Equal("http://kung.fu/Bruce/Li/", httpClient.BaseAddress.ToString());
@@ -62,7 +70,7 @@ namespace ZendeskApi.Client.Tests
                 Username = "testuser@gmail.com",
                 Token = "TESTTOKEN"
             });
-            var client = new ZendeskApiClient(options);
+            var client = new ZendeskApiClientFactory(options, _httpClientFactory);
 
             var httpClient = client.CreateClient();
 
@@ -79,7 +87,7 @@ namespace ZendeskApi.Client.Tests
                 EndpointUri = "http://kung.fu",
                 OAuthToken = "TESTTOKEN"
             });
-            var client = new ZendeskApiClient(options);
+            var client = new ZendeskApiClientFactory(options, _httpClientFactory);
 
             var httpClient = client.CreateClient();
 
@@ -87,6 +95,5 @@ namespace ZendeskApi.Client.Tests
             var expectedHeader = $"Bearer {options.Value.OAuthToken}";
             Assert.Equal(authHeader, expectedHeader);
         }
-
     }
 }
