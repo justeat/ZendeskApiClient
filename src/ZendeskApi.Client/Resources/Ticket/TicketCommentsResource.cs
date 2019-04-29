@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
@@ -23,18 +24,21 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketCommentsListResponse> ListAsync(
             long ticketId, 
-            PagerParameters pager = null)
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<TicketCommentsListResponse>(
                 string.Format(ResourceUri, ticketId),
                 "list-comments",
                 $"ListAsync({ticketId})",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
         public async Task AddComment(
             long ticketId, 
-            TicketComment ticketComment)
+            TicketComment ticketComment,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var ticket = new TicketUpdateRequest(ticketId)
             {
@@ -42,7 +46,7 @@ namespace ZendeskApi.Client.Resources
             };
 
             await _ticketsResource
-                .UpdateAsync(ticket)
+                .UpdateAsync(ticket, cancellationToken)
                 .ConfigureAwait(false);
         }
     }

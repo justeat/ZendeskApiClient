@@ -1,5 +1,6 @@
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
@@ -23,7 +24,9 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "attachments")
         { }
 
-        public async Task<Attachment> GetAsync(long attachmentId)
+        public async Task<Attachment> GetAsync(
+            long attachmentId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetWithNotFoundCheckAsync<Attachment>(
                 $"{AttachmentsResourceUri}/{attachmentId}",
@@ -32,26 +35,35 @@ namespace ZendeskApi.Client.Resources
                 $"Attachment {attachmentId} not found");
         }
 
-        public async Task<Upload> UploadAsync(string fileName, Stream inputStream, string token = null)
+        public async Task<Upload> UploadAsync(
+            string fileName, 
+            Stream inputStream, 
+            string token = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            var attachmentResponse = await ExecuteRequest(async (client, cancellationToken) => 
+            var attachmentResponse = await ExecuteRequest(async (client, canToken) => 
                     await client.PostAsBinaryAsync(
                         UploadsResourceUri + $"?filename={fileName}&token={token}",
                         inputStream,
-                        fileName)
+                        fileName,
+                        canToken)
                     .ConfigureAwait(false), 
-                    "UploadAsync")
+                    "UploadAsync",
+                    cancellationToken)
                 .ThrowIfUnsuccessful("attachments#upload-files", HttpStatusCode.Created)
                 .ReadContentAsAsync<UploadResponse>();
 
             return attachmentResponse.Upload;
         }
 
-        public async Task DeleteAsync(string token)
+        public async Task DeleteAsync(
+            string token,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             await DeleteAsync(
                 $"{UploadsResourceUri}/{token}",
-                "permanently-delete-user");
+                "permanently-delete-user",
+                cancellationToken: cancellationToken);
         }
     }
 }

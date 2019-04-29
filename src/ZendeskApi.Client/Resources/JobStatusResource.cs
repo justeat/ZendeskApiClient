@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Formatters;
@@ -17,34 +18,44 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "job_statuses")
         { }
 
-        public async Task<IPagination<JobStatusResponse>> ListAsync(PagerParameters pagerParameters = null)
+        public async Task<IPagination<JobStatusResponse>> ListAsync(
+            PagerParameters pagerParameters = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<JobStatusListResponse>(
                 ResourceUri,
                 "list-job-statuses",
                 "ListAsync",
-                pagerParameters);
+                pagerParameters,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<JobStatusResponse> GetAsync(string statusId)
+        public async Task<JobStatusResponse> GetAsync(
+            string statusId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<SingleJobStatusResponse>(
                 $"{ResourceUri}/{statusId}",
                 "show-job-status",
                 $"GetAsync({statusId})",
-                $"JobStatus {statusId} not found");
+                $"JobStatus {statusId} not found",
+                cancellationToken: cancellationToken);
 
             return response?
                 .JobStatus;
         }
 
-        public async Task<IPagination<JobStatusResponse>> GetAsync(string[] statusIds, PagerParameters pagerParameters = null)
+        public async Task<IPagination<JobStatusResponse>> GetAsync(
+            string[] statusIds, 
+            PagerParameters pagerParameters = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<JobStatusListResponse>(
                 $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(statusIds)}",
                 "show-many-job-statuses",
                 $"GetAllAsync({ZendeskFormatter.ToCsv(statusIds)})",
-                pagerParameters);
+                pagerParameters,
+                cancellationToken: cancellationToken);
         }
     }
 }

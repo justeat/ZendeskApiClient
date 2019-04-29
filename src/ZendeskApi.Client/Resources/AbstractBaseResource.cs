@@ -83,11 +83,13 @@ namespace ZendeskApi.Client.Resources
             TRequest item,
             string docs,
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created,
-            string scope = "CreateAsync")
+            string scope = "CreateAsync",
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await ExecuteRequest(async (client, token) => 
-                    await client.PostAsJsonAsync(resource, item).ConfigureAwait(false), 
-                    scope)
+                    await client.PostAsJsonAsync(resource, item, cancellationToken: token).ConfigureAwait(false), 
+                    scope,
+                    cancellationToken)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}", expectedStatusCode);
         }
 
@@ -96,7 +98,8 @@ namespace ZendeskApi.Client.Resources
             TRequest item,
             string docs,
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created,
-            string scope = "CreateAsync")
+            string scope = "CreateAsync",
+            CancellationToken cancellationToken = default(CancellationToken))
             where TResponse : class
         {
             return await CreateAsync<TRequest>(
@@ -104,18 +107,21 @@ namespace ZendeskApi.Client.Resources
                     item,
                     docs,
                     expectedStatusCode,
-                    scope)
+                    scope,
+                    cancellationToken)
                 .ReadContentAsAsync<TResponse>();
         }
 
         protected async Task<HttpResponseMessage> UpdateAsync(
             string resource,
             string docs,
-            string scope = "UpdateAsync")
+            string scope = "UpdateAsync",
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await ExecuteRequest(async (client, token) => 
-                    await client.PutAsJsonAsync(resource, new StringContent(string.Empty)).ConfigureAwait(false), 
-                    scope)
+                    await client.PutAsJsonAsync(resource, new StringContent(string.Empty), cancellationToken: cancellationToken).ConfigureAwait(false), 
+                    scope,
+                    cancellationToken)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}");
         }
 
@@ -123,7 +129,8 @@ namespace ZendeskApi.Client.Resources
             string resource,
             IReadOnlyList<long> ids,
             string docs,
-            string scope = "UpdateAsync")
+            string scope = "UpdateAsync",
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (ids == null)
                 throw new ArgumentNullException($"{nameof(ids)} must not be null", nameof(ids));
@@ -136,19 +143,22 @@ namespace ZendeskApi.Client.Resources
             return await UpdateAsync(
                 $"{resource}?ids={idsAsCsv}",
                 docs,
-                scope);
+                scope,
+                cancellationToken);
         }
 
         protected async Task<TResponse> UpdateAsync<TResponse, TRequest>(
             string resource,
             TRequest item,
             string docs,
-            string scope = "UpdateAsync")
+            string scope = "UpdateAsync",
+            CancellationToken cancellationToken = default(CancellationToken))
             where TResponse : class
         {
             return await ExecuteRequest(async (client, token) => 
-                    await client.PutAsJsonAsync(resource, item).ConfigureAwait(false), 
-                    scope)
+                    await client.PutAsJsonAsync(resource, item, cancellationToken: token).ConfigureAwait(false), 
+                    scope,
+                    cancellationToken)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
                 .ReadContentAsAsync<TResponse>();
         }
@@ -158,12 +168,14 @@ namespace ZendeskApi.Client.Resources
             TRequest item,
             string docs,
             string notFoundLogMessage,
-            string scope = "UpdateAsync")
+            string scope = "UpdateAsync",
+            CancellationToken cancellationToken = default(CancellationToken))
             where TResponse : class
         {
             return await ExecuteRequest(async (client, token) => 
-                    await client.PutAsJsonAsync(resource, item).ConfigureAwait(false), 
-                    scope)
+                    await client.PutAsJsonAsync(resource, item, cancellationToken: token).ConfigureAwait(false), 
+                    scope,
+                    cancellationToken)
                 .SetToNullWhen(HttpStatusCode.NotFound)
                 .LogInformationWhenNull(Logger, notFoundLogMessage)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}")

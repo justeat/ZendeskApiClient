@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -56,6 +57,28 @@ namespace ZendeskApi.Client.Extensions
             return await unwrappedResponse
                 .Content
                 .ReadAsAsync<T>(converter);
+        }
+
+        internal static async Task<HttpResponseMessage> ThrowIfUnsuccessful(
+            this Task<HttpResponseMessage> response,
+            string helpDocLink,
+            HttpStatusCode[] expected,
+            string helpDocLinkPrefix = "support")
+        {
+            var unwrappedResponse = await response;
+
+            if (unwrappedResponse == null)
+                return null;
+
+            if (!expected.Contains(unwrappedResponse.StatusCode))
+            {
+                await unwrappedResponse.ThrowZendeskRequestException(
+                    helpDocLink,
+                    expected,
+                    helpDocLinkPrefix);
+            }
+
+            return unwrappedResponse;
         }
 
         internal static async Task<HttpResponseMessage> ThrowIfUnsuccessful(

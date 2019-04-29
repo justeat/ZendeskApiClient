@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
@@ -17,33 +18,43 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "satisfaction_ratings")
         { }
 
-        public async Task<IPagination<SatisfactionRating>> GetAllAsync(PagerParameters pager = null)
+        public async Task<IPagination<SatisfactionRating>> GetAllAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<SatisfactionRatingsResponse>(
                 ResourceUri,
                 "list-satisfaction-ratings",
                 "GetAllAsync",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<SatisfactionRating> GetAsync(long satisficationRatingId)
+        public async Task<SatisfactionRating> GetAsync(
+            long satisficationRatingId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<SatisfactionRatingResponse>(
                 $"{ResourceUri}/{satisficationRatingId}",
                 "show-satisfaction-rating",
                 $"GetAsync({satisficationRatingId})",
-                $"Satisfaction Rating {satisficationRatingId} not found");
+                $"Satisfaction Rating {satisficationRatingId} not found",
+                cancellationToken: cancellationToken);
 
             return response?
                 .SatisfactionRating;
         }
 
-        public async Task<SatisfactionRating> CreateAsync(SatisfactionRating satisfactionRating, long ticketId)
+        public async Task<SatisfactionRating> CreateAsync(
+            SatisfactionRating satisfactionRating, 
+            long ticketId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await CreateAsync<SatisfactionRating, SatisfactionRating>(
                 string.Format(PostResourceUrlFormat, ticketId),
                 satisfactionRating,
-                "create-a-satisfaction-rating"
+                "create-a-satisfaction-rating",
+                cancellationToken: cancellationToken
             );
         }
     }

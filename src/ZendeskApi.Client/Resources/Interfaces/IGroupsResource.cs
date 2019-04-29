@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
@@ -7,12 +8,33 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IGroupsResource
     {
-        Task<GroupListResponse> ListAsync(PagerParameters pager = null);
-        Task<GroupListResponse> ListAsync(long userId, PagerParameters pager = null);
-        Task<GroupListResponse> ListAssignableAsync(PagerParameters pager = null);
-        Task<Group> GetAsync(long groupId);
-        Task<Group> CreateAsync(GroupCreateRequest group);
-        Task<Group> UpdateAsync(GroupUpdateRequest group);
-        Task DeleteAsync(long groupId);
+        Task<GroupListResponse> ListAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<GroupListResponse> ListAsync(
+            long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<GroupListResponse> ListAssignableAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<Group> GetAsync(
+            long groupId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<Group> CreateAsync(
+            GroupCreateRequest group,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<Group> UpdateAsync(
+            GroupUpdateRequest group,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task DeleteAsync(
+            long groupId,
+            CancellationToken cancellationToken = default(CancellationToken));
     }
 }

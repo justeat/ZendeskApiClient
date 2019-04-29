@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
@@ -20,34 +21,43 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "users")
         { }
 
-        public async Task<UsersListResponse> ListAsync(PagerParameters pager = null)
+        public async Task<UsersListResponse> ListAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<UsersListResponse>(
                 ResourceUri,
                 "list-deleted-users",
                 "ListAsync",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<UserResponse> GetAsync(long userId)
+        public async Task<UserResponse> GetAsync(
+            long userId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<SingleUserResponse>(
                 $"{ResourceUri}/{userId}",
                 "show-deleted-user",
                 $"GetAsync({userId})",
-                $"UserResponse {userId} not found");
+                $"UserResponse {userId} not found",
+                cancellationToken: cancellationToken);
 
             return response?
                 .UserResponse;
         }
 
-        public async Task PermanentlyDeleteAsync(long userId)
+        public async Task PermanentlyDeleteAsync(
+            long userId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             await DeleteAsync(
                 ResourceUri,
                 userId,
                 "permanently-delete-user",
-                HttpStatusCode.OK);
+                HttpStatusCode.OK,
+                cancellationToken: cancellationToken);
         }
     }
 }

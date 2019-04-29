@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
@@ -19,75 +20,99 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "requests")
         { }
         
-        public async Task<IPagination<Request>> GetAllAsync(PagerParameters pager = null)
+        public async Task<IPagination<Request>> GetAllAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<RequestsResponse>(
                 ResourceUri,
                 "list-requests",
                 "GetAllAsync",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<Request> GetAsync(long requestId)
+        public async Task<Request> GetAsync(
+            long requestId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<RequestResponse>(
                 $"{ResourceUri}/{requestId}",
                 "show-request",
                 $"GetAsync({requestId})",
-                $"Request {requestId} not found");
+                $"Request {requestId} not found",
+                cancellationToken: cancellationToken);
 
             return response?
                 .Request;
         }
 
         //TODO: FIx
-        public async Task<IPagination<Request>> SearchAsync(IZendeskQuery query, PagerParameters pager = null)
+        public async Task<IPagination<Request>> SearchAsync(
+            IZendeskQuery query, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<RequestsResponse>(
                 $"{ResourceUri}/search?" /*+ query.WithTypeFilter<Request>().BuildQuery()*/,
                 "search-requests",
                 "SearchAsync",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<IPagination<TicketComment>> GetAllComments(long requestId, PagerParameters pager = null)
+        public async Task<IPagination<TicketComment>> GetAllComments(
+            long requestId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetWithNotFoundCheckAsync<TicketCommentsResponse>(
                 string.Format(CommentsResourceUri, requestId),
                 "getting-comments",
                 $"GetAllComments({requestId})",
                 $"Could not find any comments for request {requestId} as request was not found",
-                pager);
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<TicketComment> GetTicketCommentAsync(long requestId, long commentId)
+        public async Task<TicketComment> GetTicketCommentAsync(
+            long requestId, 
+            long commentId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetWithNotFoundCheckAsync<TicketComment>(
                 $"{string.Format(CommentsResourceUri, requestId)}/{commentId}",
                 "getting-comments",
                 $"GetAllComments({requestId})",
-                $"Could not find any comment for request {requestId} and comment {commentId} was not found");
+                $"Could not find any comment for request {requestId} and comment {commentId} was not found",
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<Request> CreateAsync(Request request)
+        public async Task<Request> CreateAsync(
+            Request request,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await CreateAsync<RequestResponse, RequestCreateRequest>(
                 ResourceUri,
                 new RequestCreateRequest(request),
-                "create-request"
+                "create-request",
+                cancellationToken: cancellationToken
             );
 
             return response?
                 .Request;
         }
 
-        public async Task<Request> UpdateAsync(Request request)
+        public async Task<Request> UpdateAsync(
+            Request request,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await UpdateWithNotFoundCheckAsync<RequestResponse, RequestUpdateRequest>(
                 $"{ResourceUri}/{request.Id}",
                 new RequestUpdateRequest(request),
                 "update-request",
-                $"Cannot update request as request {request.Id} cannot be found");
+                $"Cannot update request as request {request.Id} cannot be found",
+                cancellationToken: cancellationToken);
 
             return response?
                 .Request;
