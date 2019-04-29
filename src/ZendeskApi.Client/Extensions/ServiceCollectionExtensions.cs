@@ -11,8 +11,7 @@ namespace ZendeskApi.Client.Extensions
         public static IServiceCollection AddZendeskClient(this IServiceCollection services,
             string endpointUri,
             string username,
-            string token
-            )
+            string token)
         {
             services.AddScoped<IZendeskClient, ZendeskClient>();
             services.AddScoped<IZendeskApiClient, ZendeskApiClient>();
@@ -30,8 +29,7 @@ namespace ZendeskApi.Client.Extensions
             string endpointUri,
             string username,
             string token,
-            Action<HttpClient> configureClient = null
-        )
+            Action<HttpClient> configureClient = null)
         {
             services.AddScoped<IZendeskClient, ZendeskClient>();
             services.AddScoped<IZendeskApiClient, ZendeskApiClientFactory>();
@@ -52,8 +50,7 @@ namespace ZendeskApi.Client.Extensions
 
         public static IServiceCollection AddZendeskClient(this IServiceCollection services,
             string endpointUri,
-            string oAuthToken
-        )
+            string oAuthToken)
         {
             services.AddScoped<IZendeskClient, ZendeskClient>();
             services.AddScoped<IZendeskApiClient, ZendeskApiClient>();
@@ -69,8 +66,7 @@ namespace ZendeskApi.Client.Extensions
         public static IServiceCollection AddZendeskClientWithHttpClientFactory(this IServiceCollection services,
             string endpointUri,
             string oAuthToken,
-            Action<HttpClient> configureClient = null
-        )
+            Action<HttpClient> configureClient = null)
         {
             services.AddScoped<IZendeskClient, ZendeskClient>();
             services.AddScoped<IZendeskApiClient, ZendeskApiClientFactory>();
