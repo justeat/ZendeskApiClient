@@ -1,8 +1,5 @@
-using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Queries;
 using ZendeskApi.Client.Requests;
@@ -10,154 +7,90 @@ using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class RequestsResource : IRequestsResource
+    public class RequestsResource : AbstractBaseResource<RequestsResource>,
+        IRequestsResource
     {
         private const string ResourceUri = "api/v2/requests";
         private const string CommentsResourceUri = "api/v2/requests/{0}/comments";
 
-        private readonly IZendeskApiClient _apiClient;
-        private readonly ILogger _logger;
-
-        private Func<ILogger, string, IDisposable> _loggerScope =
-            LoggerMessage.DefineScope<string>(typeof(RequestsResource).Name + ": {0}");
-
-        public RequestsResource(IZendeskApiClient apiClient,
+        public RequestsResource(
+            IZendeskApiClient apiClient,
             ILogger logger)
-        {
-            _apiClient = apiClient;
-            _logger = logger;
-        }
+            : base(apiClient, logger, "requests")
+        { }
         
         public async Task<IPagination<Request>> GetAllAsync(PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, "GetAllAsync"))
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
-
-                await response.ThrowIfUnsuccessful("requests#list-requests");
-
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<RequestsResponse>();
-            }
+            return await GetAsync<RequestsResponse>(
+                ResourceUri,
+                "list-requests",
+                "GetAllAsync",
+                pager);
         }
 
         public async Task<Request> GetAsync(long requestId)
         {
-            using (_loggerScope(_logger, $"GetAsync({requestId})"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.GetAsync(requestId.ToString()).ConfigureAwait(false);
+            var response = await GetWithNotFoundCheckAsync<RequestResponse>(
+                $"{ResourceUri}/{requestId}",
+                "show-request",
+                $"GetAsync({requestId})",
+                $"Request {requestId} not found");
 
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    _logger.LogInformation("Request {0} not found", requestId);
-                    return null;
-                }
-
-                await response.ThrowIfUnsuccessful("requests#show-request");
-
-                return (await response
-                    .Content
-                    .ReadAsAsync<RequestResponse>())
-                    .Request;
-            }
+            return response?
+                .Request;
         }
 
         //TODO: FIx
         public async Task<IPagination<Request>> SearchAsync(IZendeskQuery query, PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, $"SearchAsync"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.GetAsync("search?" /*+ query.WithTypeFilter<Request>().BuildQuery()*/, pager).ConfigureAwait(false);
-
-                await response.ThrowIfUnsuccessful("requests#search-requests");
-
-                return await response.Content.ReadAsAsync<RequestsResponse>();
-            }
+            return await GetAsync<RequestsResponse>(
+                $"{ResourceUri}/search?" /*+ query.WithTypeFilter<Request>().BuildQuery()*/,
+                "search-requests",
+                "SearchAsync",
+                pager);
         }
 
         public async Task<IPagination<TicketComment>> GetAllComments(long requestId, PagerParameters pager = null)
         {
-            using (_loggerScope(_logger, $"GetAllComments({requestId})"))
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.GetAsync(string.Format(CommentsResourceUri, requestId), pager).ConfigureAwait(false);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    _logger.LogInformation("Could not find any comments for request {0} as request was not found", requestId);
-                    return null;
-                }
-
-                await response.ThrowIfUnsuccessful("requests#getting-comments");
-
-                return await response.Content.ReadAsAsync<TicketCommentsResponse>();
-            }
+            return await GetWithNotFoundCheckAsync<TicketCommentsResponse>(
+                string.Format(CommentsResourceUri, requestId),
+                "getting-comments",
+                $"GetAllComments({requestId})",
+                $"Could not find any comments for request {requestId} as request was not found",
+                pager);
         }
 
         public async Task<TicketComment> GetTicketCommentAsync(long requestId, long commentId)
         {
-            using (_loggerScope(_logger, $"GetAsync({requestId},{commentId})"))
-            using (var client = _apiClient.CreateClient(string.Format(CommentsResourceUri, requestId)))
-            {
-                var response = await client.GetAsync(commentId.ToString()).ConfigureAwait(false);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    _logger.LogInformation("Could not find any comment for request {0} and comment {1} was not found", requestId, commentId);
-                    return null;
-                }
-
-                await response.ThrowIfUnsuccessful("requests#getting-comments");
-
-                return await response.Content.ReadAsAsync<TicketComment>();
-            }
+            return await GetWithNotFoundCheckAsync<TicketComment>(
+                $"{string.Format(CommentsResourceUri, requestId)}/{commentId}",
+                "getting-comments",
+                $"GetAllComments({requestId})",
+                $"Could not find any comment for request {requestId} and comment {commentId} was not found");
         }
 
         public async Task<Request> CreateAsync(Request request)
         {
-            using (_loggerScope(_logger, $"PostAsync"))
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.PostAsJsonAsync(ResourceUri, new RequestCreateRequest(request)).ConfigureAwait(false);
+            var response = await CreateAsync<RequestResponse, RequestCreateRequest>(
+                ResourceUri,
+                new RequestCreateRequest(request),
+                "create-request"
+            );
 
-                if (response.StatusCode != System.Net.HttpStatusCode.Created)
-                {
-                    await response.ThrowZendeskRequestException(
-                        "requests#create-request",
-                        System.Net.HttpStatusCode.Created);
-                }
-
-                return (await response
-                        .Content
-                        .ReadAsAsync<RequestResponse>())
-                    .Request;
-            }
+            return response?
+                .Request;
         }
 
         public async Task<Request> UpdateAsync(Request request)
         {
-            using (_loggerScope(_logger, "PutAsync"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.PutAsJsonAsync(request.Id.ToString(), new RequestUpdateRequest(request)).ConfigureAwait(false);
+            var response = await UpdateWithNotFoundCheckAsync<RequestResponse, RequestUpdateRequest>(
+                $"{ResourceUri}/{request.Id}",
+                new RequestUpdateRequest(request),
+                "update-request",
+                $"Cannot update request as request {request.Id} cannot be found");
 
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    _logger.LogInformation("Cannot update request as request {0} cannot be found", request.Id);
-                    return null;
-                }
-
-                await response.ThrowIfUnsuccessful("requests#update-request");
-
-                return (await response
-                        .Content
-                        .ReadAsAsync<RequestResponse>())
-                    .Request;
-            }
+            return response?
+                .Request;
         }
     }
 }
