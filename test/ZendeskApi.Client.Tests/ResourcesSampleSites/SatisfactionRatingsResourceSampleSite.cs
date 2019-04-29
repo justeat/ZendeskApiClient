@@ -1,27 +1,32 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
-using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    internal class SatisfactionRatingsState : State<SatisfactionRating>
-    {
-        public IDictionary<long, List<SatisfactionRating>> SatisfactionRatingsByTicket = new Dictionary<long, List<SatisfactionRating>>();
-    }
-
-    internal class SatisfactionRatingsResourceSampleSite : SampleSite<SatisfactionRatingsState, SatisfactionRating>
+    internal class SatisfactionRatingsResourceSampleSite : SampleSite<State<SatisfactionRating>, SatisfactionRating>
     {
         public SatisfactionRatingsResourceSampleSite(string resource)
-            : base(resource, MatchesRequest)
+            : base(
+                resource, 
+                MatchesRequest,
+                null,
+                PopulateState)
         { }
+
+        private static void PopulateState(State<SatisfactionRating> state)
+        {
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new SatisfactionRating
+                {
+                    Id = i,
+                    Comment = $"comment.{i}"
+                });
+            }
+        }
 
         public static Action<IRouteBuilder> MatchesRequest
         {
@@ -30,47 +35,35 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/satisfaction_ratings/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<SatisfactionRatingsState>();
-
-                        if (!state.Items.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var sr = state.Items.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new SatisfactionRatingResponse { SatisfactionRating = sr });
+                        return RequestHelper.GetById<SatisfactionRatingResponse, SatisfactionRating>(
+                            req,
+                            resp,
+                            routeData,
+                            item => new SatisfactionRatingResponse
+                            {
+                                SatisfactionRating = item
+                            });
                     })
                     .MapGet("api/v2/satisfaction_ratings", (req, resp, routeData) =>
                     {
-                        var state = req.HttpContext.RequestServices.GetRequiredService<SatisfactionRatingsState>();
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(new SatisfactionRatingsResponse { SatisfactionRatings = state.Items.Values });
+                        return RequestHelper.List<SatisfactionRatingsResponse, SatisfactionRating>(
+                            req,
+                            resp,
+                            items => new SatisfactionRatingsResponse
+                            {
+                                SatisfactionRatings = items,
+                                Count = items.Count
+                            });
                     })
                     .MapPost("api/v2/tickets/{ticketId}/satisfaction_rating", (req, resp, routeData) =>
                     {
-                        var sr = req.Body.ReadAs<SatisfactionRating>();
-                        var ticketId = long.Parse(routeData.Values["ticketId"].ToString());
-                        var state = req.HttpContext.RequestServices.GetRequiredService<SatisfactionRatingsState>();
-
-                        sr.Id = long.Parse(Rand.Next().ToString());
-                        state.Items.Add(sr.Id.Value, sr);
-
-                        if (state.SatisfactionRatingsByTicket.ContainsKey(ticketId))
-                        {
-                            state.SatisfactionRatingsByTicket[ticketId].Add(sr);
-                        }
-                        else {
-                            state.SatisfactionRatingsByTicket.Add(ticketId, new List<SatisfactionRating> { sr });
-                        }
-
-                        resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(sr);
+                        return RequestHelper.Create<SatisfactionRating, SatisfactionRating>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item.Id,
+                            req.Body.ReadAs<SatisfactionRating>(),
+                            item => item);
                     })
                     ;
             }
