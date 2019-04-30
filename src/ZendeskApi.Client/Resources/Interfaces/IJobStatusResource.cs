@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
@@ -8,14 +9,22 @@ namespace ZendeskApi.Client.Resources
     public interface IJobStatusResource
     {
         #region List
-        
+
         /// <summary>
         /// Shows the current statuses for background jobs running.
         /// </summary>
+        [Obsolete("Use `GetAllAsync` instead.")]
         Task<IPagination<JobStatusResponse>> ListAsync(
             PagerParameters pagerParameters = null,
             CancellationToken cancellationToken = default(CancellationToken));
-        
+
+        /// <summary>
+        /// Shows the current statuses for background jobs running.
+        /// </summary>
+        Task<IPagination<JobStatusResponse>> GetAllAsync(
+            PagerParameters pagerParameters = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         #endregion
 
         #region Show

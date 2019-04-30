@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,17 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "job_statuses")
         { }
 
+        [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<IPagination<JobStatusResponse>> ListAsync(
+            PagerParameters pagerParameters = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllAsync(
+                pagerParameters,
+                cancellationToken);
+        }
+
+        public async Task<IPagination<JobStatusResponse>> GetAllAsync(
             PagerParameters pagerParameters = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
