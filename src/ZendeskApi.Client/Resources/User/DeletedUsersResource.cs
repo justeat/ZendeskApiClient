@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +22,17 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "users")
         { }
 
+        [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<UsersListResponse> ListAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllAsync(
+                pager,
+                cancellationToken);
+        }
+
+        public async Task<UsersListResponse> GetAllAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {

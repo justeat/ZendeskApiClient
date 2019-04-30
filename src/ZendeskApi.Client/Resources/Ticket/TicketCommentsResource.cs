@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -22,15 +23,27 @@ namespace ZendeskApi.Client.Resources
             _ticketsResource = new TicketsResource(apiClient, logger);
         }
 
+        [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<TicketCommentsListResponse> ListAsync(
             long ticketId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllAsync(
+                ticketId,
+                pager,
+                cancellationToken);
+        }
+
+        public async Task<TicketCommentsListResponse> GetAllAsync(
+            long ticketId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<TicketCommentsListResponse>(
                 string.Format(ResourceUri, ticketId),
                 "list-comments",
-                $"ListAsync({ticketId})",
+                $"GetAllAsync({ticketId})",
                 pager,
                 cancellationToken: cancellationToken);
         }

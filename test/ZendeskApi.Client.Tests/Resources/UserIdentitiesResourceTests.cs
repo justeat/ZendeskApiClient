@@ -7,6 +7,7 @@ using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -58,6 +59,42 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalled_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByUserIdAsync(1);
+
+            Assert.Equal(1, results.Count);
+
+            var identity = results.First();
+
+            Assert.Equal(1, identity.Id);
+            Assert.Equal(1, identity.UserId);
+            Assert.Equal($"name.1", identity.Name);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithPaging_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByUserIdAsync(1, new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            Assert.Empty(results);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByUserIdAsync(1, new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
         public async Task GetIdentityForUserAsync_WhenCalled_ShouldGet()
         {
             var item = await _resource.GetIdentityForUserAsync(10, 10);
@@ -79,6 +116,30 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task GetIdentityForUserAsync_WhenServiceUnavailable_ShouldThrow()
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetIdentityForUserAsync(int.MinValue, int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetIdentityByUserIdAsync_WhenCalled_ShouldGet()
+        {
+            var item = await _resource.GetIdentityByUserIdAsync(10, 10);
+
+            Assert.Equal(10, item.Id);
+            Assert.Equal(10, item.UserId);
+            Assert.Equal($"name.10", item.Name);
+        }
+
+        [Fact]
+        public async Task GetIdentityByUserIdAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetIdentityByUserIdAsync(int.MaxValue, int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetIdentityByUserIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetIdentityByUserIdAsync(int.MinValue, int.MinValue));
         }
 
         [Fact]

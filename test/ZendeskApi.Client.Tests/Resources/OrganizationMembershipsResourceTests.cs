@@ -7,6 +7,7 @@ using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -98,6 +99,40 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllByOrganizationIdAsync_WhenCalled_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByOrganizationIdAsync(1);
+
+            Assert.Equal(1, results.Count);
+
+            var membership = results.First();
+
+            Assert.Equal(1, membership.Id);
+            Assert.Equal(1, membership.UserId);
+            Assert.Equal(1, membership.OrganizationId);
+        }
+
+        [Fact]
+        public async Task GetAllByOrganizationIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByOrganizationIdAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAllByOrganizationIdAsync_WhenCalledWithPaging_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByOrganizationIdAsync(
+                1,
+                new PagerParameters
+                {
+                    Page = 2,
+                    PageSize = 1
+                });
+
+            Assert.Equal(0, results.Count);
+        }
+
+        [Fact]
         public async Task GetAllForUserAsync_WhenCalled_ShouldGetAll()
         {
             var results = await _resource.GetAllForUserAsync(1);
@@ -112,12 +147,6 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllForUserAsync_WhenServiceUnavailable_ShouldThrow()
-        {
-            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllForUserAsync(int.MinValue));
-        }
-
-        [Fact]
         public async Task GetAllForUserAsync_WhenCalledWithPaging_ShouldGetAll()
         {
             var results = await _resource.GetAllForUserAsync(
@@ -129,6 +158,46 @@ namespace ZendeskApi.Client.Tests.Resources
                 });
 
             Assert.Equal(0, results.Count);
+        }
+
+        [Fact]
+        public async Task GetAllForUserAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllForUserAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalled_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByUserIdAsync(1);
+
+            Assert.Equal(1, results.Count);
+
+            var membership = results.First();
+
+            Assert.Equal(1, membership.Id);
+            Assert.Equal(1, membership.UserId);
+            Assert.Equal(1, membership.OrganizationId);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithPaging_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByUserIdAsync(
+                1,
+                new PagerParameters
+                {
+                    Page = 2,
+                    PageSize = 1
+                });
+
+            Assert.Equal(0, results.Count);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByUserIdAsync(int.MinValue));
         }
 
         [Fact]
@@ -180,6 +249,30 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetByUserIdAndOrganizationIdAsync_WhenCalled_ShouldGet()
+        {
+            var membership = await _resource.GetByUserIdAndOrganizationIdAsync(1, 1);
+
+            Assert.Equal(1, membership.Id);
+            Assert.Equal(1, membership.UserId);
+            Assert.Equal(1, membership.OrganizationId);
+        }
+
+        [Fact]
+        public async Task GetByUserIdAndOrganizationIdAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetByUserIdAndOrganizationIdAsync(int.MaxValue, int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetByUserIdAndOrganizationIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetByUserIdAndOrganizationIdAsync(int.MinValue, int.MinValue));
+        }
+
+        [Fact]
         public async Task CreateAsync_WhenCalled_ShouldCreate()
         {
             var membership = await _resource.CreateAsync(new OrganizationMembership
@@ -222,6 +315,30 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task PostForUserAsync_WhenUnexpectedHttpCode_ShouldThrow()
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.PostForUserAsync(new OrganizationMembership
+            {
+                Id = int.MinValue
+            }, 102));
+        }
+
+        [Fact]
+        public async Task PostByUserIdAsync_WhenCalled_ShouldCreate()
+        {
+            var membership = await _resource.PostByUserIdAsync(new OrganizationMembership
+            {
+                Id = 101,
+                UserId = 102,
+                OrganizationId = 103
+            }, 102);
+
+            Assert.Equal(101, membership.Id);
+            Assert.Equal(102, membership.UserId);
+            Assert.Equal(103, membership.OrganizationId);
+        }
+
+        [Fact]
+        public async Task PostByUserIdAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.PostByUserIdAsync(new OrganizationMembership
             {
                 Id = int.MinValue
             }, 102));
@@ -283,6 +400,18 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task DeleteAsync_WithUserIdWhenUnexpectedHttpCode_ShouldThrow()
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(int.MinValue, int.MinValue));
+        }
+
+        [Fact]
+        public async Task DeleteByUserIdAsync_WhenCalledWithUserId_ShouldDelete()
+        {
+            await _resource.DeleteByUserIdAsync(1, 1);
+        }
+
+        [Fact]
+        public async Task DeleteByUserIdAsync_WithUserIdWhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteByUserIdAsync(int.MinValue, int.MinValue));
         }
 
         [Fact]

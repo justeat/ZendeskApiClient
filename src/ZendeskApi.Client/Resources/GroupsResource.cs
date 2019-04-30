@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,39 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "groups")
         { }
 
+        [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<GroupListResponse> ListAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllAsync(
+                pager,
+                cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllByUserIdAsync` instead.")]
+        public async Task<GroupListResponse> ListAsync(
+            long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllByUserIdAsync(
+                userId,
+                pager,
+                cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllByAssignableAsync` instead.")]
+        public async Task<GroupListResponse> ListAssignableAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllByAssignableAsync(
+                pager,
+                cancellationToken);
+        }
+
+        public async Task<GroupListResponse> GetAllAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -35,8 +68,8 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<GroupListResponse> ListAsync(
-            long userId, 
+        public async Task<GroupListResponse> GetAllByUserIdAsync(
+            long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -49,7 +82,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<GroupListResponse> ListAssignableAsync(
+        public async Task<GroupListResponse> GetAllByAssignableAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {

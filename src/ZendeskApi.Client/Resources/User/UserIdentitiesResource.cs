@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -18,21 +19,45 @@ namespace ZendeskApi.Client.Resources
             :base (apiClient, logger, "user_identities")
         { }
 
+        [Obsolete("Use `GetAllByUserIdAsync` instead.")]
         public async Task<IPagination<UserIdentity>> GetAllForUserAsync(
             long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllByUserIdAsync(
+                userId,
+                pager,
+                cancellationToken);
+        }
+
+        public async Task<IPagination<UserIdentity>> GetAllByUserIdAsync(
+            long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<UserIdentitiesResponse>(
                 string.Format(ResourceUriFormat, userId),
                 "list-identities",
-                $"GetAllForUserAsync({userId})",
+                $"GetAllByUserIdAsync({userId})",
                 pager,
                 cancellationToken: cancellationToken);
         }
 
+        [Obsolete("Use `GetIdentityByUserIdAsync` instead.")]
         public async Task<UserIdentity> GetIdentityForUserAsync(
             long userId, 
+            long identityId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetIdentityByUserIdAsync(
+                userId,
+                identityId,
+                cancellationToken);
+        }
+
+        public async Task<UserIdentity> GetIdentityByUserIdAsync(
+            long userId,
             long identityId,
             CancellationToken cancellationToken = default(CancellationToken))
         {

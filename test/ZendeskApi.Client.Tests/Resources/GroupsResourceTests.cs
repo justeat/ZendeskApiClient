@@ -8,6 +8,7 @@ using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -145,6 +146,134 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ListAssignableAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListAssignableAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalled_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync();
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"name.2", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithUserId_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByUserIdAsync(1);
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllByUserIdAsync(1, new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"name.2", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByUserIdAsync(1, new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAllByAssignableAsync_WhenCalledWithUserId_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByAssignableAsync();
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllByAssignableAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllByAssignableAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"name.2", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
+        }
+
+        [Fact] public async Task GetAllByAssignableAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByAssignableAsync(new PagerParameters
             {
                 Page = int.MaxValue,
                 PageSize = int.MaxValue

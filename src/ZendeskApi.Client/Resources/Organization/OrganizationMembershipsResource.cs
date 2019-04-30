@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -39,28 +40,52 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        [Obsolete("Use `GetAllByOrganizationIdAsync` instead.")]
         public async Task<IPagination<OrganizationMembership>> GetAllForOrganizationAsync(
             long organizationId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllByOrganizationIdAsync(
+                organizationId,
+                pager,
+                cancellationToken);
+        }
+
+        public async Task<IPagination<OrganizationMembership>> GetAllByOrganizationIdAsync(
+            long organizationId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<OrganizationMembershipsResponse>(
                 string.Format(OrganisationsUrlFormat, organizationId),
                 "list-memberships",
-                $"GetAllForOrganizationAsync({organizationId})",
+                $"GetAllByOrganizationIdAsync({organizationId})",
                 pager,
                 cancellationToken: cancellationToken);
         }
 
+        [Obsolete("Use `GetAllByUserIdAsync` instead.")]
         public async Task<IPagination<OrganizationMembership>> GetAllForUserAsync(
             long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllByUserIdAsync(
+                userId,
+                pager,
+                cancellationToken);
+        }
+
+        public async Task<IPagination<OrganizationMembership>> GetAllByUserIdAsync(
+            long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<OrganizationMembershipsResponse>(
                 string.Format(UsersUrlFormat, userId),
                 "list-memberships",
-                $"GetAllForUserAsync({userId})",
+                $"GetAllByUserIdAsync({userId})",
                 pager,
                 cancellationToken: cancellationToken);
         }
@@ -80,15 +105,27 @@ namespace ZendeskApi.Client.Resources
                 .OrganizationMembership;
         }
 
+        [Obsolete("Use `GetByUserIdAndOrganizationIdAsync` instead.")]
         public async Task<OrganizationMembership> GetForUserAndOrganizationAsync(
             long userId, 
+            long organizationId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetByUserIdAndOrganizationIdAsync(
+                userId,
+                organizationId,
+                cancellationToken);
+        }
+
+        public async Task<OrganizationMembership> GetByUserIdAndOrganizationIdAsync(
+            long userId,
             long organizationId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<OrganizationMembershipResponse>(
                 $"{string.Format(UsersUrlFormat, userId)}/{organizationId}",
                 "show-membership",
-                $"GetForUserAndOrganizationAsync({userId},{organizationId})",
+                $"GetByUserIdAndOrganizationIdAsync({userId},{organizationId})",
                 $"Requested Organization Membership for user {userId} and organization {organizationId} not found",
                 cancellationToken: cancellationToken);
 
@@ -111,8 +148,20 @@ namespace ZendeskApi.Client.Resources
                 .OrganizationMembership;
         }
 
+        [Obsolete("Use `PostByUserIdAsync` instead.")]
         public async Task<OrganizationMembership> PostForUserAsync(
             OrganizationMembership organizationMembership, 
+            long userId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await PostByUserIdAsync(
+                organizationMembership,
+                userId,
+                cancellationToken);
+        }
+
+        public async Task<OrganizationMembership> PostByUserIdAsync(
+            OrganizationMembership organizationMembership,
             long userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -120,7 +169,7 @@ namespace ZendeskApi.Client.Resources
                 string.Format(UsersUrlFormat, userId),
                 new OrganizationMembershipCreateRequest(organizationMembership),
                 "create-membership",
-                scope: $"PostAsync({userId})",
+                scope: $"PostByUserIdAsync({userId})",
                 cancellationToken: cancellationToken
             );
 
@@ -153,8 +202,20 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        [Obsolete("Use `DeleteByUserIdAsync` instead.")]
         public async Task DeleteAsync(
             long userId, 
+            long organizationMembershipId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await DeleteByUserIdAsync(
+                userId,
+                organizationMembershipId,
+                cancellationToken);
+        }
+
+        public async Task DeleteByUserIdAsync(
+            long userId,
             long organizationMembershipId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
