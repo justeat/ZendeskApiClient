@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -10,7 +9,12 @@ namespace ZendeskApi.Client.Resources
     public interface IDeletedUsersResource
     {
         #region List Deleted Users
+        [Obsolete("Use `GetAllAsync` instead.")]
         Task<UsersListResponse> ListAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<UsersListResponse> GetAllAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
         #endregion
