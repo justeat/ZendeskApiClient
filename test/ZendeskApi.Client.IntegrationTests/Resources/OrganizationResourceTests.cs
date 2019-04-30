@@ -142,7 +142,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 
             await client
                 .OrganizationMemberships
-                .DeleteAsync(organisationMembership.Id.Value);
+                .DeleteAsync(organisationMembership.Id);
 
             await client
                 .Users

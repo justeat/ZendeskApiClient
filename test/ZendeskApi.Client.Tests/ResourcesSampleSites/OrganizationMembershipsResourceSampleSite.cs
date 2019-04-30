@@ -122,15 +122,20 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/organization_memberships", (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationMembershipCreateRequest>();
+                        var request = req.Body.ReadAs<OrganizationMembershipRequest<OrganizationMembershipCreateRequest>>();
                         var membership = request.OrganizationMembership;
 
-                        return RequestHelper.Create<OrganizationMembershipResponse, OrganizationMembership>(
+                        return RequestHelper.CreateModel<OrganizationMembershipResponse, OrganizationMembershipCreateRequest, OrganizationMembership>(
                             req,
                             resp,
                             routeData,
-                            item => item.Id,
+                            item => item.UserId,
                             membership,
+                            (model, createRequest) =>
+                            {
+                                model.UserId = createRequest.UserId;
+                                model.OrganizationId = createRequest.OrganizationId;
+                            },
                             item => new OrganizationMembershipResponse
                             {
                                 OrganizationMembership = item
@@ -138,15 +143,20 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/users/{userId}/organization_memberships", (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationMembershipCreateRequest>();
+                        var request = req.Body.ReadAs<OrganizationMembershipRequest<OrganizationMembershipCreateRequest>>();
                         var membership = request.OrganizationMembership;
 
-                        return RequestHelper.Create<OrganizationMembershipResponse, OrganizationMembership>(
+                        return RequestHelper.CreateModel<OrganizationMembershipResponse, OrganizationMembershipCreateRequest, OrganizationMembership>(
                             req,
                             resp,
                             routeData,
-                            item => item.Id,
+                            item => item.UserId,
                             membership,
+                            (model, createRequest) =>
+                            {
+                                model.UserId = createRequest.UserId;
+                                model.OrganizationId = createRequest.OrganizationId;
+                            },
                             item => new OrganizationMembershipResponse
                             {
                                 OrganizationMembership = item
@@ -154,15 +164,20 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/organization_memberships/create_many", (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationMembershipsRequest>();
-                        var memberships = request.Item;
+                        var request = req.Body.ReadAs<OrganizationMembershipListRequest<OrganizationMembershipCreateRequest>>();
+                        var memberships = request.Items;
 
-                        return RequestHelper.CreateMany<JobStatusResponse, OrganizationMembership>(
+                        return RequestHelper.CreateManyModel<JobStatusResponse, OrganizationMembershipCreateRequest, OrganizationMembership>(
                             req,
                             resp,
                             routeData,
-                            item => item.Id,
+                            item => item.UserId,
                             memberships,
+                            (model, createRequest) =>
+                            {
+                                model.UserId = createRequest.UserId;
+                                model.OrganizationId = createRequest.OrganizationId;
+                            },
                             items => new JobStatusResponse
                             {
                                 Total = items.Count()

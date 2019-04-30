@@ -65,7 +65,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 
             var membership = await client
                 .OrganizationMemberships
-                .GetAsync(setup.OrganizationMembership.Id.Value);
+                .GetAsync(setup.OrganizationMembership.Id);
 
             Assert.NotNull(membership);
 
@@ -93,7 +93,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 
             var membership = await client
                 .OrganizationMemberships
-                .GetForUserAndOrganizationAsync(setup.User.Id, setup.OrganizationMembership.Id.Value);
+                .GetForUserAndOrganizationAsync(setup.User.Id, setup.OrganizationMembership.Id);
 
             Assert.NotNull(membership);
 
@@ -143,17 +143,15 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                     UserId = setup.User.Id
                 });
 
-            Assert.True(createdOrganisationMembership.Id.HasValue);
-
             var getOrganisationMembership = await client
                 .OrganizationMemberships
-                .GetAsync(createdOrganisationMembership.Id.Value);
+                .GetAsync(createdOrganisationMembership.Id);
 
             Assert.NotNull(getOrganisationMembership);
 
             await client
                 .OrganizationMemberships
-                .DeleteAsync(createdOrganisationMembership.Id.Value);
+                .DeleteAsync(createdOrganisationMembership.Id);
 
             await Teardown(client, setup);
         }
@@ -173,17 +171,15 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                     UserId = setup.User.Id
                 }, setup.User.Id);
 
-            Assert.True(createdOrganisationMembership.Id.HasValue);
-
             var getOrganisationMembership = await client
                 .OrganizationMemberships
-                .GetAsync(createdOrganisationMembership.Id.Value);
+                .GetAsync(createdOrganisationMembership.Id);
 
             Assert.NotNull(getOrganisationMembership);
 
             await client
                 .OrganizationMemberships
-                .DeleteAsync(createdOrganisationMembership.Id.Value);
+                .DeleteAsync(createdOrganisationMembership.Id);
 
             await Teardown(client, setup);
         }
@@ -224,7 +220,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 
             try
             {
-                foreach (var membership in membershipOne.Concat(membershipTwo).Where(x => x.Id.HasValue).Select(x => x.Id.Value))
+                foreach (var membership in membershipOne.Concat(membershipTwo).Select(x => x.Id))
                 {
                     await client
                         .OrganizationMemberships
@@ -247,11 +243,11 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 
             await client
                 .OrganizationMemberships
-                .DeleteAsync(setup.OrganizationMembership.Id.Value);
+                .DeleteAsync(setup.OrganizationMembership.Id);
 
             var getOrganisationMembershipAfterDelete = await client
                 .OrganizationMemberships
-                .GetAsync(setup.OrganizationMembership.Id.Value);
+                .GetAsync(setup.OrganizationMembership.Id);
 
             Assert.Null(getOrganisationMembershipAfterDelete);
 
@@ -277,11 +273,11 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 
             await client
                 .OrganizationMemberships
-                .DeleteAsync(setup.User.Id, setup.OrganizationMembership.Id.Value);
+                .DeleteAsync(setup.User.Id, setup.OrganizationMembership.Id);
 
             var getOrganisationMembershipAfterDelete = await client
                 .OrganizationMemberships
-                .GetAsync(setup.OrganizationMembership.Id.Value);
+                .GetAsync(setup.OrganizationMembership.Id);
 
             Assert.Null(getOrganisationMembershipAfterDelete);
 
@@ -329,11 +325,9 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                     UserId = setup.User.Id
                 });
 
-            Assert.True(createdOrganisationMembership.Id.HasValue);
-
             var getOrganisationMembership = await client
                 .OrganizationMemberships
-                .GetAsync(createdOrganisationMembership.Id.Value);
+                .GetAsync(createdOrganisationMembership.Id);
 
             Assert.NotNull(getOrganisationMembership);
 
@@ -347,7 +341,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         {
             await client
                 .OrganizationMemberships
-                .DeleteAsync(setup.OrganizationMembership.Id.Value);
+                .DeleteAsync(setup.OrganizationMembership.Id);
 
             await Teardown(client, setup);
         }

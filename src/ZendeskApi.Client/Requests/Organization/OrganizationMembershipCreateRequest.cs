@@ -5,15 +5,19 @@ namespace ZendeskApi.Client.Requests
 {
     public class OrganizationMembershipCreateRequest
     {
-        public OrganizationMembershipCreateRequest(OrganizationMembership membership)
-        {
-            OrganizationMembership = membership;
-        }
+        [JsonProperty("user_id")]
+        public long UserId { get; set; }
 
-        /// <summary>
-        /// The OrganizationMembership to create
-        /// </summary>
-        [JsonProperty("organization_membership")]
-        public OrganizationMembership OrganizationMembership { get; set; }
+        [JsonProperty("organization_id")]
+        public long OrganizationId { get; set; }
+
+        public OrganizationMembershipCreateRequest()
+        { }
+
+        public OrganizationMembershipCreateRequest(OrganizationMembership organizationMembership)
+        {
+            UserId = organizationMembership.UserId;
+            OrganizationId = organizationMembership.OrganizationId;
+        }
     }
 }

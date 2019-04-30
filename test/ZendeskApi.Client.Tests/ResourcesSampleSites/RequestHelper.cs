@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
@@ -308,6 +309,69 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             return resp.WriteAsJson(outputFunc(item));
         }
 
+        public static Task CreateModel<TResponse, TCreationModel, TModel>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            Func<TCreationModel, long?> serviceUnavailableAccessor,
+            TCreationModel item,
+            Action<TModel, TCreationModel> modelMapper,
+            Func<TModel, TResponse> outputFunc)
+            where TCreationModel : class
+            where TModel : class, IZendeskEntity, new()
+        {
+            return CreateModel<TResponse, TCreationModel, TModel, State<TModel>>(
+                req,
+                resp,
+                routeData,
+                serviceUnavailableAccessor,
+                item,
+                modelMapper,
+                outputFunc);
+        }
+
+        public static Task CreateModel<TResponse, TCreationModel, TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            Func<TCreationModel, long?> serviceUnavailableAccessor,
+            TCreationModel item,
+            Action<TModel, TCreationModel> modelMapper,
+            Func<TModel, TResponse> outputFunc)
+            where TCreationModel : class
+            where TModel : class, IZendeskEntity, new()
+            where TState : State<TModel>
+        {
+            var unavailable = serviceUnavailableAccessor(item);
+
+            if (!unavailable.HasValue || unavailable == int.MinValue)
+            {
+                resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                return Task.CompletedTask;
+            }
+
+            var state = req
+                .HttpContext
+                .RequestServices
+                .GetRequiredService<TState>();
+
+            var id = state.Items.Keys.Max() + 1;
+
+            var createdModel = new TModel
+            {
+                Id = id,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            modelMapper(createdModel, item);
+
+            state.Items.Add(id, createdModel);
+
+            resp.StatusCode = (int)HttpStatusCode.Created;
+
+            return resp.WriteAsJson(outputFunc(createdModel));
+        }
+
         public static Task CreateMany<TResponse, TModel>(
             HttpRequest req,
             HttpResponse resp,
@@ -361,6 +425,75 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
             resp.StatusCode = (int)HttpStatusCode.OK;
 
             return resp.WriteAsJson(outputFunc(itemsList));
+        }
+
+        public static Task CreateManyModel<TResponse, TCreationModel, TModel>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            Func<TCreationModel, long?> serviceUnavailableAccessor,
+            IEnumerable<TCreationModel> items,
+            Action<TModel, TCreationModel> modelMapper,
+            Func<IEnumerable<TModel>, TResponse> outputFunc)
+            where TModel : class, IZendeskEntity, new()
+        {
+            return CreateManyModel<TResponse, TCreationModel, TModel, State<TModel>>(
+                req,
+                resp,
+                routeData,
+                serviceUnavailableAccessor,
+                items,
+                modelMapper,
+                outputFunc);
+        }
+
+        public static Task CreateManyModel<TResponse, TCreationModel, TModel, TState>(
+            HttpRequest req,
+            HttpResponse resp,
+            RouteData routeData,
+            Func<TCreationModel, long?> serviceUnavailableAccessor,
+            IEnumerable<TCreationModel> items,
+            Action<TModel, TCreationModel> modelMapper,
+            Func<IEnumerable<TModel>, TResponse> outputFunc)
+            where TModel : class, IZendeskEntity, new()
+            where TState : State<TModel>
+        {
+            var itemsList = items
+                .ToList();
+
+            if (itemsList.Any(item => !serviceUnavailableAccessor(item).HasValue || serviceUnavailableAccessor(item) == int.MinValue))
+            {
+                resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                return Task.CompletedTask;
+            }
+
+            IList<TModel> mapped = new List<TModel>();
+
+            var state = req
+                .HttpContext
+                .RequestServices
+                .GetRequiredService<TState>();
+
+            foreach (var item in itemsList)
+            {
+                var id = state.Items.Keys.Max() + 1;
+
+                var created = new TModel
+                {
+                    Id = id,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                modelMapper(created, item);
+
+                state.Items.Add(id, created);
+
+                mapped.Add(created);
+            }
+
+            resp.StatusCode = (int)HttpStatusCode.OK;
+
+            return resp.WriteAsJson(outputFunc(mapped));
         }
 
         public static Task Update<TResponse, TModel>(

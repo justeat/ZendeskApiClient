@@ -292,7 +292,9 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(new OrganizationMembership
             {
-               Id = int.MinValue
+               Id = int.MinValue,
+               UserId = int.MinValue,
+               OrganizationId = int.MinValue
             }));
         }
 
@@ -316,7 +318,9 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.PostForUserAsync(new OrganizationMembership
             {
-                Id = int.MinValue
+                Id = int.MinValue,
+                UserId = int.MinValue,
+                OrganizationId = int.MinValue
             }, 102));
         }
 
@@ -340,7 +344,9 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.PostByUserIdAsync(new OrganizationMembership
             {
-                Id = int.MinValue
+                Id = int.MinValue,
+                UserId = int.MinValue,
+                OrganizationId = int.MinValue
             }, 102));
         }
 
@@ -373,7 +379,9 @@ namespace ZendeskApi.Client.Tests.Resources
             {
                 new OrganizationMembership
                 {
-                    Id = int.MinValue
+                    Id = int.MinValue,
+                    UserId = int.MinValue,
+                    OrganizationId = int.MinValue
                 }
             }));
         }
