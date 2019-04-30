@@ -10,27 +10,56 @@ namespace ZendeskApi.Client.Resources
     public interface IUsersResource
     {
         #region List Users
+        [Obsolete("Use `GetAllAsync` instead.")]
         Task<UsersListResponse> ListAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        [Obsolete("Use `GetAllAsync` instead.")]
         Task<UsersListResponse> ListAsync(
             long[] userIds, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        [Obsolete("Use `GetAllInGroupAsync` instead.")]
         Task<UsersListResponse> ListInGroupAsync(
             long groupId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        [Obsolete("Use `GetAllInOrganizationAsync` instead.")]
         Task<UsersListResponse> ListInOrganizationAsync(
             long organizationId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        [Obsolete("Use `GetAllByExternalIdsAsync` instead.")]
         Task<UsersListResponse> ListByExternalIdsAsync(
             string[] externalIds, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<UsersListResponse> GetAllAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<UsersListResponse> GetAllAsync(
+            long[] userIds,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<UsersListResponse> GetAllInGroupAsync(
+            long groupId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<UsersListResponse> GetAllInOrganizationAsync(
+            long organizationId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<UsersListResponse> GetAllByExternalIdsAsync(
+            string[] externalIds,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 

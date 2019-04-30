@@ -10,6 +10,7 @@ using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -201,6 +202,186 @@ namespace ZendeskApi.Client.Tests.Resources
         public async Task ListByExternalIdsAsync_WhenCalledWithExternalIdsButServiceUnavailable_ShouldThrow()
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListByExternalIdsAsync(new string[] { long.MinValue.ToString() }));
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalled_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllAsync();
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var user = results.ElementAt(i - 1);
+
+                Assert.Equal($"name.{i}", user.Name);
+                Assert.Equal($"email.{i}", user.Email);
+                Assert.Equal(i.ToString(), user.ExternalId);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var user = results.First();
+
+            Assert.Equal("name.2", user.Name);
+            Assert.Equal("email.2", user.Email);
+            Assert.Equal("2", user.ExternalId);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAllInGroupAsync_WhenCalled_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllInGroupAsync(1);
+
+            Assert.Equal(1, results.Count);
+
+            var user = results.First();
+
+            Assert.Equal("name.1", user.Name);
+            Assert.Equal("email.1", user.Email);
+            Assert.Equal("1", user.ExternalId);
+            Assert.Equal(1, user.DefaultGroupId);
+        }
+
+        [Fact]
+        public async Task GetAllInGroupAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAllInGroupAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAllInGroupAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllInGroupAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAllInOrganizationAsync_WhenCalled_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllInOrganizationAsync(1);
+
+            Assert.Equal(1, results.Count);
+
+            var user = results.First();
+
+            Assert.Equal("name.1", user.Name);
+            Assert.Equal("email.1", user.Email);
+            Assert.Equal("1", user.ExternalId);
+            Assert.Equal(1, user.DefaultGroupId);
+            Assert.Equal(1, user.OrganizationId);
+        }
+
+        [Fact]
+        public async Task GetAllInOrganizationAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAllInOrganizationAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAllInOrganizationAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllInOrganizationAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOrganizationIds_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllAsync(new long[] { 1, 2, 3 });
+
+            Assert.Equal(3, results.Count);
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var user = results.ElementAt(i - 1);
+
+                Assert.Equal($"name.{i}", user.Name);
+                Assert.Equal(i.ToString(), user.ExternalId);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithPaging_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllAsync(
+                new long[] { 1, 2, 3 },
+                new PagerParameters
+                {
+                    Page = 2,
+                    PageSize = 1
+                });
+
+            var user = results.First();
+
+            Assert.Equal("name.2", user.Name);
+            Assert.Equal("2", user.ExternalId);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOrganizationIdsButServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new long[] { long.MinValue }));
+        }
+
+        [Fact]
+        public async Task GetAllByExternalIdsAsync_WhenCalledWithExternalIds_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllByExternalIdsAsync(new string[] { "1", "2", "3" });
+
+            Assert.Equal(3, results.Count);
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var user = results.ElementAt(i - 1);
+
+                Assert.Equal($"name.{i}", user.Name);
+                Assert.Equal(i.ToString(), user.ExternalId);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllByExternalIdsAsync_WhenCalledWithExternalIdsAndWithPaging_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllByExternalIdsAsync(
+                new string[] { "1", "2", "3" },
+                new PagerParameters
+                {
+                    Page = 2,
+                    PageSize = 1
+                });
+
+            var user = results.First();
+
+            Assert.Equal("name.2", user.Name);
+            Assert.Equal("2", user.ExternalId);
+        }
+
+        [Fact]
+        public async Task GetAllByExternalIdsAsync_WhenCalledWithExternalIdsButServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByExternalIdsAsync(new string[] { long.MinValue.ToString() }));
         }
 
         [Fact]

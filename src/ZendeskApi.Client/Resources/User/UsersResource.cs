@@ -28,7 +28,65 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "users")
         { }
 
+        [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<UsersListResponse> ListAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllAsync(
+                pager,
+                cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllInGroupAsync` instead.")]
+        public async Task<UsersListResponse> ListInGroupAsync(
+            long groupId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllInGroupAsync(
+                groupId,
+                pager,
+                cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllInOrganizationAsync` instead.")]
+        public async Task<UsersListResponse> ListInOrganizationAsync(
+            long organizationId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllInOrganizationAsync(
+                organizationId,
+                pager,
+                cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllAsync` instead.")]
+        public async Task<UsersListResponse> ListAsync(
+            long[] userIds,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllAsync(
+                userIds,
+                pager,
+                cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllByExternalIdsAsync` instead.")]
+        public async Task<UsersListResponse> ListByExternalIdsAsync(
+            string[] externalIds,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllByExternalIdsAsync(
+                externalIds,
+                pager,
+                cancellationToken);
+        }
+
+        public async Task<UsersListResponse> GetAllAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -40,8 +98,8 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<UsersListResponse> ListInGroupAsync(
-            long groupId, 
+        public async Task<UsersListResponse> GetAllInGroupAsync(
+            long groupId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -54,8 +112,8 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        public async Task<UsersListResponse> ListInOrganizationAsync(
-            long organizationId, 
+        public async Task<UsersListResponse> GetAllInOrganizationAsync(
+            long organizationId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -83,7 +141,7 @@ namespace ZendeskApi.Client.Resources
                 .UserResponse;
         }
         
-        public async Task<UsersListResponse> ListAsync(
+        public async Task<UsersListResponse> GetAllAsync(
             long[] userIds, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -96,7 +154,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<UsersListResponse> ListByExternalIdsAsync(
+        public async Task<UsersListResponse> GetAllByExternalIdsAsync(
             string[] externalIds, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
