@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,26 +13,57 @@ namespace ZendeskApi.Client.Resources
     /// </summary>
     public interface ITicketsResource
     {
+        #region GetAll Tickets
+        Task<IPagination<Ticket>> GetAllAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<IPagination<Ticket>> GetAllForOrganizationAsync(
+            long organizationId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<IPagination<Ticket>> GetAllRequestedByAsync(
+            long userId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<IPagination<Ticket>> GetAllCcdAsync(
+            long userId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<IPagination<Ticket>> GetAllAssignedToAsync(
+            long userId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
+        #endregion
+
         #region List Tickets
+        [Obsolete("Use `GetAllAsync` instead.")]
         Task<IPagination<Ticket>> ListAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        [Obsolete("Use `GetAllForOrganizationAsync` instead.")]
         Task<IPagination<Ticket>> ListForOrganizationAsync(
             long organizationId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        [Obsolete("Use `GetAllRequestedByAsync` instead.")]
         Task<IPagination<Ticket>> ListRequestedByAsync(
             long userId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        [Obsolete("Use `GetAllCcdAsync` instead.")]
         Task<IPagination<Ticket>> ListCcdAsync(
             long userId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        [Obsolete("Use `GetAllAssignedToAsync` instead.")]
         Task<IPagination<Ticket>> ListAssignedToAsync(
             long userId, 
             PagerParameters pager = null,

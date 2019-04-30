@@ -11,6 +11,7 @@ using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -23,6 +24,171 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             _client = new DisposableZendeskApiClient<TicketResourceState, Ticket>((resource) => new TicketResourceSampleSite(resource));
             _resource = new TicketsResource(_client, NullLogger.Instance);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllAsync();
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var ticket = results.ElementAt(i - 1);
+
+                Assert.Equal(i, ticket.Id);
+                Assert.Equal($"My printer is on fire! {i}", ticket.Subject);
+                Assert.Equal(i.ToString(), ticket.ExternalId);
+                Assert.Equal(i, ticket.OrganisationId);
+                Assert.Equal(i, ticket.RequesterId);
+                Assert.Equal(i, ticket.AssigneeId);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var ticket = results.First();
+
+            Assert.Equal(2, ticket.Id);
+            Assert.Equal("My printer is on fire! 2", ticket.Subject);
+            Assert.Equal("2", ticket.ExternalId);
+            Assert.Equal(2, ticket.OrganisationId);
+            Assert.Equal(2, ticket.RequesterId);
+            Assert.Equal(2, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAllForOrganizationAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllForOrganizationAsync(10);
+
+            var ticket = results.First();
+
+            Assert.Equal(10, ticket.Id);
+            Assert.Equal($"My printer is on fire! 10", ticket.Subject);
+            Assert.Equal(10.ToString(), ticket.ExternalId);
+            Assert.Equal(10, ticket.OrganisationId);
+            Assert.Equal(10, ticket.RequesterId);
+            Assert.Equal(10, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllForOrganizationAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAllForOrganizationAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAllForOrganizationAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllForOrganizationAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAllRequestedByAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllRequestedByAsync(40);
+
+            var ticket = results.First();
+
+            Assert.Equal(40, ticket.Id);
+            Assert.Equal($"My printer is on fire! 40", ticket.Subject);
+            Assert.Equal(40.ToString(), ticket.ExternalId);
+            Assert.Equal(40, ticket.OrganisationId);
+            Assert.Equal(40, ticket.RequesterId);
+            Assert.Equal(40, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllRequestedByAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAllRequestedByAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAllRequestedByAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllRequestedByAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAllCcdAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllCcdAsync(20);
+
+            var ticket = results.First();
+
+            Assert.Equal(20, ticket.Id);
+            Assert.Equal($"My printer is on fire! 20", ticket.Subject);
+            Assert.Equal(20.ToString(), ticket.ExternalId);
+            Assert.Equal(20, ticket.OrganisationId);
+            Assert.Equal(20, ticket.RequesterId);
+            Assert.Equal(20, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllCcdAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAllCcdAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAllCcdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllCcdAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAllAssignedToAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllAssignedToAsync(30);
+
+            var ticket = results.First();
+
+            Assert.Equal(30, ticket.Id);
+            Assert.Equal($"My printer is on fire! 30", ticket.Subject);
+            Assert.Equal(30.ToString(), ticket.ExternalId);
+            Assert.Equal(30, ticket.OrganisationId);
+            Assert.Equal(30, ticket.RequesterId);
+            Assert.Equal(30, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllAssignedToAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAllAssignedToAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAllAssignedToAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAssignedToAsync(int.MinValue));
         }
 
         [Fact]
