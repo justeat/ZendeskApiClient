@@ -34,24 +34,24 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        [Obsolete("Use `GetAllAsync` instead.")]
+        [Obsolete("Use `GetAllByUserIdAsync` instead.")]
         public async Task<GroupListResponse> ListAsync(
             long userId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await GetAllAsync(
+            return await GetAllByUserIdAsync(
                 userId,
                 pager,
                 cancellationToken);
         }
 
-        [Obsolete("Use `GetAllAssignableAsync` instead.")]
+        [Obsolete("Use `GetAllByAssignableAsync` instead.")]
         public async Task<GroupListResponse> ListAssignableAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await GetAllAssignableAsync(
+            return await GetAllByAssignableAsync(
                 pager,
                 cancellationToken);
         }
@@ -68,7 +68,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<GroupListResponse> GetAllAsync(
+        public async Task<GroupListResponse> GetAllByUserIdAsync(
             long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -82,7 +82,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<GroupListResponse> GetAllAssignableAsync(
+        public async Task<GroupListResponse> GetAllByAssignableAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {

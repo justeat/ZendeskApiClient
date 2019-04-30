@@ -14,13 +14,13 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        [Obsolete("Use `GetAllAsync` instead.")]
+        [Obsolete("Use `GetAllByUserIdAsync` instead.")]
         Task<GroupListResponse> ListAsync(
             long userId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        [Obsolete("Use `GetAllAssignableAsync` instead.")]
+        [Obsolete("Use `GetAllByAssignableAsync` instead.")]
         Task<GroupListResponse> ListAssignableAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
@@ -29,12 +29,12 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<GroupListResponse> GetAllAsync(
+        Task<GroupListResponse> GetAllByUserIdAsync(
             long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<GroupListResponse> GetAllAssignableAsync(
+        Task<GroupListResponse> GetAllByAssignableAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 

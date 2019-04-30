@@ -196,9 +196,9 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithUserId_ShouldGetAll()
+        public async Task GetAllByUserIdAsync_WhenCalledWithUserId_ShouldGetAll()
         {
-            var results = await _resource.GetAllAsync(1);
+            var results = await _resource.GetAllByUserIdAsync(1);
 
             Assert.Equal(100, results.Count);
 
@@ -213,9 +213,9 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        public async Task GetAllByUserIdAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
         {
-            var results = await _resource.GetAllAsync(1, new PagerParameters
+            var results = await _resource.GetAllByUserIdAsync(1, new PagerParameters
             {
                 Page = 2,
                 PageSize = 1
@@ -229,9 +229,9 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
+        public async Task GetAllByUserIdAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
         {
-            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(1, new PagerParameters
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByUserIdAsync(1, new PagerParameters
             {
                 Page = int.MaxValue,
                 PageSize = int.MaxValue
@@ -239,9 +239,9 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAssignableAsync_WhenCalledWithUserId_ShouldGetAll()
+        public async Task GetAllByAssignableAsync_WhenCalledWithUserId_ShouldGetAll()
         {
-            var results = await _resource.GetAllAssignableAsync();
+            var results = await _resource.GetAllByAssignableAsync();
 
             Assert.Equal(100, results.Count);
 
@@ -256,9 +256,9 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAssignableAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        public async Task GetAllByAssignableAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
         {
-            var results = await _resource.GetAllAssignableAsync(new PagerParameters
+            var results = await _resource.GetAllByAssignableAsync(new PagerParameters
             {
                 Page = 2,
                 PageSize = 1
@@ -271,9 +271,9 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
         }
 
-        [Fact] public async Task GetAllAssignableAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
+        [Fact] public async Task GetAllByAssignableAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
         {
-            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAssignableAsync(new PagerParameters
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByAssignableAsync(new PagerParameters
             {
                 Page = int.MaxValue,
                 PageSize = int.MaxValue
