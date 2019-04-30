@@ -163,5 +163,44 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAsync(new string[] { long.MinValue.ToString() }));
         }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithIds_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync(new string[] { "1", "2", "3" });
+
+            Assert.Equal(3, results.Count);
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i.ToString(), item.Id);
+                Assert.Equal($"status.{i}", item.Status);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithIdsAndWithPaging_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync(
+                new string[] { "1", "2", "3" },
+                new PagerParameters
+                {
+                    Page = 2,
+                    PageSize = 1
+                });
+
+            var item = results.First();
+
+            Assert.Equal(2.ToString(), item.Id);
+            Assert.Equal($"status.2", item.Status);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithIdsButServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new string[] { long.MinValue.ToString() }));
+        }
     }
 }

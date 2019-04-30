@@ -56,8 +56,20 @@ namespace ZendeskApi.Client.Resources
                 .JobStatus;
         }
 
+        [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<IPagination<JobStatusResponse>> GetAsync(
             string[] statusIds, 
+            PagerParameters pagerParameters = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAllAsync(
+                statusIds,
+                pagerParameters,
+                cancellationToken);
+        }
+
+        public async Task<IPagination<JobStatusResponse>> GetAllAsync(
+            string[] statusIds,
             PagerParameters pagerParameters = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {

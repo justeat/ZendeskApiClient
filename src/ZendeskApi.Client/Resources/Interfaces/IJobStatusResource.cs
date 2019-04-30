@@ -38,16 +38,27 @@ namespace ZendeskApi.Client.Resources
         Task<JobStatusResponse> GetAsync(
             string statusId,
             CancellationToken cancellationToken = default(CancellationToken));
-        
+
         /// <summary>
         /// Shows the status of multiple background jobs.
         /// A job may no longer exist to query. Zendesk only logs the last 100 jobs. Jobs also expire within an hour.
         /// </summary>
         /// <param name="statusIds">Array of IDs of requested job statuses.</param>
+        [Obsolete("Use `GetAllAsync` instead.")]
         Task<IPagination<JobStatusResponse>> GetAsync(
             string[] statusIds, 
             PagerParameters pagerParameters = null,
-            CancellationToken cancellationToken = default(CancellationToken));        
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Shows the status of multiple background jobs.
+        /// A job may no longer exist to query. Zendesk only logs the last 100 jobs. Jobs also expire within an hour.
+        /// </summary>
+        /// <param name="statusIds">Array of IDs of requested job statuses.</param>
+        Task<IPagination<JobStatusResponse>> GetAllAsync(
+            string[] statusIds,
+            PagerParameters pagerParameters = null,
+            CancellationToken cancellationToken = default(CancellationToken));
 
         #endregion
     }
