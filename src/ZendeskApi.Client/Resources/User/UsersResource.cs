@@ -38,25 +38,25 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        [Obsolete("Use `GetAllInGroupAsync` instead.")]
+        [Obsolete("Use `GetAllByGroupIdAsync` instead.")]
         public async Task<UsersListResponse> ListInGroupAsync(
             long groupId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await GetAllInGroupAsync(
+            return await GetAllByGroupIdAsync(
                 groupId,
                 pager,
                 cancellationToken);
         }
 
-        [Obsolete("Use `GetAllInOrganizationAsync` instead.")]
+        [Obsolete("Use `GetAllByOrganizationIdAsync` instead.")]
         public async Task<UsersListResponse> ListInOrganizationAsync(
             long organizationId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await GetAllInOrganizationAsync(
+            return await GetAllByOrganizationIdAsync(
                 organizationId,
                 pager,
                 cancellationToken);
@@ -98,7 +98,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<UsersListResponse> GetAllInGroupAsync(
+        public async Task<UsersListResponse> GetAllByGroupIdAsync(
             long groupId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -112,7 +112,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        public async Task<UsersListResponse> GetAllInOrganizationAsync(
+        public async Task<UsersListResponse> GetAllByOrganizationIdAsync(
             long organizationId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))

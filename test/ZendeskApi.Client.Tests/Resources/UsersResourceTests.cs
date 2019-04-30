@@ -248,9 +248,9 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllInGroupAsync_WhenCalled_ShouldGetAllUsers()
+        public async Task GetAllByGroupIdAsync_WhenCalled_ShouldGetAllUsers()
         {
-            var results = await _resource.GetAllInGroupAsync(1);
+            var results = await _resource.GetAllByGroupIdAsync(1);
 
             Assert.Equal(1, results.Count);
 
@@ -263,23 +263,23 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllInGroupAsync_WhenNotFound_ShouldReturnNull()
+        public async Task GetAllByGroupIdAsync_WhenNotFound_ShouldReturnNull()
         {
-            var results = await _resource.GetAllInGroupAsync(int.MaxValue);
+            var results = await _resource.GetAllByGroupIdAsync(int.MaxValue);
 
             Assert.Null(results);
         }
 
         [Fact]
-        public async Task GetAllInGroupAsync_WhenServiceUnavailable_ShouldThrow()
+        public async Task GetAllByGroupIdAsync_WhenServiceUnavailable_ShouldThrow()
         {
-            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllInGroupAsync(int.MinValue));
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByGroupIdAsync(int.MinValue));
         }
 
         [Fact]
-        public async Task GetAllInOrganizationAsync_WhenCalled_ShouldGetAllUsers()
+        public async Task GetAllByOrganizationIdAsync_WhenCalled_ShouldGetAllUsers()
         {
-            var results = await _resource.GetAllInOrganizationAsync(1);
+            var results = await _resource.GetAllByOrganizationIdAsync(1);
 
             Assert.Equal(1, results.Count);
 
@@ -293,17 +293,17 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllInOrganizationAsync_WhenNotFound_ShouldReturnNull()
+        public async Task GetAllByOrganizationIdAsync_WhenNotFound_ShouldReturnNull()
         {
-            var results = await _resource.GetAllInOrganizationAsync(int.MaxValue);
+            var results = await _resource.GetAllByOrganizationIdAsync(int.MaxValue);
 
             Assert.Null(results);
         }
 
         [Fact]
-        public async Task GetAllInOrganizationAsync_WhenServiceUnavailable_ShouldThrow()
+        public async Task GetAllByOrganizationIdAsync_WhenServiceUnavailable_ShouldThrow()
         {
-            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllInOrganizationAsync(int.MinValue));
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByOrganizationIdAsync(int.MinValue));
         }
 
         [Fact]

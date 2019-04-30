@@ -21,13 +21,13 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        [Obsolete("Use `GetAllInGroupAsync` instead.")]
+        [Obsolete("Use `GetAllByGroupIdAsync` instead.")]
         Task<UsersListResponse> ListInGroupAsync(
             long groupId, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        [Obsolete("Use `GetAllInOrganizationAsync` instead.")]
+        [Obsolete("Use `GetAllByOrganizationIdAsync` instead.")]
         Task<UsersListResponse> ListInOrganizationAsync(
             long organizationId, 
             PagerParameters pager = null,
@@ -48,12 +48,12 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<UsersListResponse> GetAllInGroupAsync(
+        Task<UsersListResponse> GetAllByGroupIdAsync(
             long groupId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<UsersListResponse> GetAllInOrganizationAsync(
+        Task<UsersListResponse> GetAllByOrganizationIdAsync(
             long organizationId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
