@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -51,22 +52,22 @@ namespace ZendeskApi.Client.Resources
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<OrganizationMembership> CreateAsync(
-            OrganizationMembership organizationMembership,
+            IOrganizationMembershipCreateOperation organizationMembership,
             CancellationToken cancellationToken = default(CancellationToken));
 
         [Obsolete("Use `PostByUserIdAsync` instead.")]
         Task<OrganizationMembership> PostForUserAsync(
-            OrganizationMembership organizationMembership, 
+            IOrganizationMembershipCreateOperation organizationMembership, 
             long userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<OrganizationMembership> PostByUserIdAsync(
-            OrganizationMembership organizationMembership,
+            IOrganizationMembershipCreateOperation organizationMembership,
             long userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<JobStatusResponse> CreateAsync(
-            IEnumerable<OrganizationMembership> organizationMemberships,
+            IEnumerable<IOrganizationMembershipCreateOperation> organizationMemberships,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IPagination<OrganizationMembership>> MakeDefault(

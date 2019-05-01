@@ -129,8 +129,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req,
                             resp,
                             routeData,
-                            item => item.Id,
-                            membership,
+                            item => item.UserId,
+                            new OrganizationMembership
+                            {
+                                UserId = membership.UserId,
+                                OrganizationId = membership.OrganizationId
+                            },
                             item => new OrganizationMembershipResponse
                             {
                                 OrganizationMembership = item
@@ -145,8 +149,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req,
                             resp,
                             routeData,
-                            item => item.Id,
-                            membership,
+                            item => item.UserId,
+                            new OrganizationMembership
+                            {
+                                UserId = membership.UserId,
+                                OrganizationId = membership.OrganizationId
+                            },
                             item => new OrganizationMembershipResponse
                             {
                                 OrganizationMembership = item
@@ -161,8 +169,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             req,
                             resp,
                             routeData,
-                            item => item.Id,
-                            memberships,
+                            item => item.UserId,
+                            memberships.Select(x => new OrganizationMembership
+                            {
+                                UserId = x.UserId,
+                                OrganizationId = x.OrganizationId
+                            }),
                             items => new JobStatusResponse
                             {
                                 Total = items.Count()

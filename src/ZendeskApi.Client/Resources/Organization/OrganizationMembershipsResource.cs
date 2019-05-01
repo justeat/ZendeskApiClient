@@ -134,12 +134,12 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<OrganizationMembership> CreateAsync(
-            OrganizationMembership organizationMembership,
+            IOrganizationMembershipCreateOperation organizationMembership,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await CreateAsync<OrganizationMembershipResponse, OrganizationMembershipCreateRequest>(
                 ResourceUri,
-                new OrganizationMembershipCreateRequest(organizationMembership),
+                new OrganizationMembershipCreateRequest(new OrganizationMembershipCreateOperation(organizationMembership)),
                 "create-membership",
                 cancellationToken: cancellationToken
             );
@@ -150,7 +150,7 @@ namespace ZendeskApi.Client.Resources
 
         [Obsolete("Use `PostByUserIdAsync` instead.")]
         public async Task<OrganizationMembership> PostForUserAsync(
-            OrganizationMembership organizationMembership, 
+            IOrganizationMembershipCreateOperation organizationMembership, 
             long userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -161,13 +161,13 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<OrganizationMembership> PostByUserIdAsync(
-            OrganizationMembership organizationMembership,
+            IOrganizationMembershipCreateOperation organizationMembership,
             long userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await CreateAsync<OrganizationMembershipResponse, OrganizationMembershipCreateRequest>(
                 string.Format(UsersUrlFormat, userId),
-                new OrganizationMembershipCreateRequest(organizationMembership),
+                new OrganizationMembershipCreateRequest(new OrganizationMembershipCreateOperation(organizationMembership)),
                 "create-membership",
                 scope: $"PostByUserIdAsync({userId})",
                 cancellationToken: cancellationToken
@@ -178,12 +178,12 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<JobStatusResponse> CreateAsync(
-            IEnumerable<OrganizationMembership> organizationMemberships,
+            IEnumerable<IOrganizationMembershipCreateOperation> organizationMemberships,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await CreateAsync<JobStatusResponse, OrganizationMembershipsRequest>(
                 $"{ResourceUri}/create_many",
-                new OrganizationMembershipsRequest { Item = organizationMemberships },
+                new OrganizationMembershipsRequest { Item = organizationMemberships.Select(x => new OrganizationMembershipCreateOperation(x)).ToList() },
                 "create-many-memberships",
                 HttpStatusCode.OK,
                 "PostAsync",

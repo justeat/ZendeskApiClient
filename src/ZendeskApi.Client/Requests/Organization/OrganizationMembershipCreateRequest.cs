@@ -1,11 +1,10 @@
 using Newtonsoft.Json;
-using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.Requests
 {
-    public class OrganizationMembershipCreateRequest
+    internal class OrganizationMembershipCreateRequest
     {
-        public OrganizationMembershipCreateRequest(OrganizationMembership membership)
+        public OrganizationMembershipCreateRequest(OrganizationMembershipCreateOperation membership)
         {
             OrganizationMembership = membership;
         }
@@ -14,6 +13,6 @@ namespace ZendeskApi.Client.Requests
         /// The OrganizationMembership to create
         /// </summary>
         [JsonProperty("organization_membership")]
-        public OrganizationMembership OrganizationMembership { get; set; }
+        public OrganizationMembershipCreateOperation OrganizationMembership { get; set; }
     }
 }

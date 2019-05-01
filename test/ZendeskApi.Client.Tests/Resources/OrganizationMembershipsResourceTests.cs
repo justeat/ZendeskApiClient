@@ -277,12 +277,10 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var membership = await _resource.CreateAsync(new OrganizationMembership
             {
-                Id = 101,
                 UserId = 102,
                 OrganizationId = 103
             });
 
-            Assert.Equal(101, membership.Id);
             Assert.Equal(102, membership.UserId);
             Assert.Equal(103, membership.OrganizationId);
         }
@@ -301,12 +299,10 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var membership = await _resource.PostForUserAsync(new OrganizationMembership
             {
-                Id = 101,
                 UserId = 102,
                 OrganizationId = 103
             }, 102);
 
-            Assert.Equal(101, membership.Id);
             Assert.Equal(102, membership.UserId);
             Assert.Equal(103, membership.OrganizationId);
         }
@@ -325,12 +321,10 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var membership = await _resource.PostByUserIdAsync(new OrganizationMembership
             {
-                Id = 101,
                 UserId = 102,
                 OrganizationId = 103
             }, 102);
 
-            Assert.Equal(101, membership.Id);
             Assert.Equal(102, membership.UserId);
             Assert.Equal(103, membership.OrganizationId);
         }
@@ -351,13 +345,11 @@ namespace ZendeskApi.Client.Tests.Resources
             {
                 new OrganizationMembership
                 {
-                    Id = 101,
                     UserId = 102,
                     OrganizationId = 103
                 },
                 new OrganizationMembership
                 {
-                    Id = 102,
                     UserId = 103,
                     OrganizationId = 104
                 }
@@ -373,7 +365,7 @@ namespace ZendeskApi.Client.Tests.Resources
             {
                 new OrganizationMembership
                 {
-                    Id = int.MinValue
+                    UserId = int.MinValue
                 }
             }));
         }

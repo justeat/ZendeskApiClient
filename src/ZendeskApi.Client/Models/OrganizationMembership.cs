@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
+using ZendeskApi.Client.Requests;
 
 namespace ZendeskApi.Client.Models
 {
     [JsonObject("organization_membership")]
-    public class OrganizationMembership
+    public class OrganizationMembership : 
+        IOrganizationMembershipCreateOperation
     {
         [JsonProperty]
         public long? Id { get; set; }
