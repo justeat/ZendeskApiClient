@@ -96,7 +96,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPost("api/v2/organizations", (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationCreateRequest>();
+                        var request = req.Body.ReadAs<OrganizationRequest<CreateOrganizationOperation>>();
                         var org = new Organization
                         {
                             Name = request.Organization.Name,
@@ -133,7 +133,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     .MapPut("api/v2/organizations/{id}", (req, resp, routeData) =>
                     {
                         var request = req.Body
-                            .ReadAs<OrganizationUpdateRequest>();
+                            .ReadAs<OrganizationRequest<UpdateOrganizationOperation>>();
 
                         return RequestHelper.Update<OrganizationResponse, Organization>(
                             req,

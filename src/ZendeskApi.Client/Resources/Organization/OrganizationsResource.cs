@@ -91,9 +91,9 @@ namespace ZendeskApi.Client.Resources
             ICreateOrganizationOperation organization,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var response = await CreateAsync<OrganizationResponse, OrganizationCreateRequest>(
+            var response = await CreateAsync<OrganizationResponse, OrganizationRequest<CreateOrganizationOperation>>(
                 ResourceUri,
-                new OrganizationCreateRequest(new CreateOrganizationOperation(organization)),
+                new OrganizationRequest<CreateOrganizationOperation>(new CreateOrganizationOperation(organization)),
                 "create-organization",
                 cancellationToken: cancellationToken
             );
@@ -106,9 +106,9 @@ namespace ZendeskApi.Client.Resources
             IUpdateOrganizationOperation organization,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var response = await UpdateWithNotFoundCheckAsync<OrganizationResponse, OrganizationUpdateRequest>(
+            var response = await UpdateWithNotFoundCheckAsync<OrganizationResponse, OrganizationRequest<UpdateOrganizationOperation>>(
                 $"{ResourceUri}/{organization.Id}",
-                new OrganizationUpdateRequest(new UpdateOrganizationOperation(organization)),
+                new OrganizationRequest<UpdateOrganizationOperation>(new UpdateOrganizationOperation(organization)),
                 "update-organization",
                 $"Cannot update organization as organization {organization.Id} cannot be found",
                 cancellationToken: cancellationToken);
