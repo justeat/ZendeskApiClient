@@ -97,7 +97,19 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     .MapPost("api/v2/organizations", (req, resp, routeData) =>
                     {
                         var request = req.Body.ReadAs<OrganizationCreateRequest>();
-                        var org = request.Organization;
+                        var org = new Organization
+                        {
+                            Name = request.Organization.Name,
+                            Details = request.Organization.Details,
+                            Notes = request.Organization.Notes,
+                            CustomFields = request.Organization.CustomFields,
+                            Tags = request.Organization.Tags,
+                            ExternalId = request.Organization.ExternalId,
+                            DomainNames = request.Organization.DomainNames,
+                            SharedTickets = request.Organization.SharedTickets,
+                            SharedComments = request.Organization.SharedComments,
+                            GroupId = request.Organization.GroupId
+                        };
 
                         if (string.IsNullOrEmpty(org.Name))
                         {
@@ -120,13 +132,27 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapPut("api/v2/organizations/{id}", (req, resp, routeData) =>
                     {
+                        var request = req.Body
+                            .ReadAs<OrganizationUpdateRequest>();
+
                         return RequestHelper.Update<OrganizationResponse, Organization>(
                             req,
                             resp,
                             routeData,
-                            req.Body
-                                .ReadAs<OrganizationUpdateRequest>()
-                                .Organization,
+                            new Organization
+                            {
+                                Id = request.Organization.Id,
+                                Name = request.Organization.Name,
+                                Details = request.Organization.Details,
+                                Notes = request.Organization.Notes,
+                                CustomFields = request.Organization.CustomFields,
+                                Tags = request.Organization.Tags,
+                                ExternalId = request.Organization.ExternalId,
+                                DomainNames = request.Organization.DomainNames,
+                                SharedTickets = request.Organization.SharedTickets,
+                                SharedComments = request.Organization.SharedComments,
+                                GroupId = request.Organization.GroupId
+                            },
                             item => new OrganizationResponse
                             {
                                 Organization = item

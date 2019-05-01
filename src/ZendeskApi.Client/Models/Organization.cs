@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Converters;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Models
 {
     [SearchResultType("organization")]
-    public class Organization : ISearchResult
+    public class Organization : 
+        ISearchResult,
+        ICreateOrganizationOperation,
+        IUpdateOrganizationOperation
     {
         [JsonProperty("id")]
         public long Id { get; set; }

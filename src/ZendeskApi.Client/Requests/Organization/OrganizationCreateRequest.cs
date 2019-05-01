@@ -6,9 +6,9 @@ namespace ZendeskApi.Client.Requests
     /// <summary>
     /// See: https://developer.zendesk.com/rest_api/docs/core/organizations#create-organization
     /// </summary>
-    public class OrganizationCreateRequest
+    internal class OrganizationCreateRequest
     {
-        public OrganizationCreateRequest(Organization organization)
+        public OrganizationCreateRequest(CreateOrganizationOperation organization)
         {
             Organization = organization;
         }
@@ -17,6 +17,6 @@ namespace ZendeskApi.Client.Requests
         /// The Organization to create
         /// </summary>
         [JsonProperty("organization")]
-        public Organization Organization { get; set; }
+        public CreateOrganizationOperation Organization { get; set; }
     }
 }

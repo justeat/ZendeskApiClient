@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -31,11 +32,11 @@ namespace ZendeskApi.Client.Resources
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<Organization> CreateAsync(
-            Organization organization,
+            ICreateOrganizationOperation organization,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<Organization> UpdateAsync(
-            Organization organization,
+            IUpdateOrganizationOperation organization,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteAsync(
