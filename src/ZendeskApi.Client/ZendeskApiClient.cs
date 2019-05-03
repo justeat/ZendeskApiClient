@@ -7,6 +7,7 @@ using ZendeskApi.Client.Options;
 
 namespace ZendeskApi.Client
 {
+    [Obsolete("Use ZendeskApiClientFactory as this uses IHttpClientFactory")]
     public class ZendeskApiClient : IZendeskApiClient
     {
         private readonly Func<HttpMessageHandler> _httpMessageHandlerFactory;
