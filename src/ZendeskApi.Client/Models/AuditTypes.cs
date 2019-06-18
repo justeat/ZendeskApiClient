@@ -1,0 +1,29 @@
+namespace ZendeskApi.Client.Models
+{
+    public enum AuditTypes
+    {
+        Create,
+        Change,
+        Comment,
+        CommentRedactionEvent,
+        AttachmentRedactionEvent,
+        VoiceComment,
+        CommentPrivacyChange,
+        Notification,
+        NotificationWithCcs,
+        Cc,
+        FollowerNotificationEvent,
+        FollowersChange,
+        EmailCcChange,
+        SatisfactionRating,
+        TicketSharingEvent,
+        OrganizationActivity,
+        Error,
+        Tweet,
+        FacebookEvent,
+        FacebookComment,
+        External,
+        LogMeInTranscript,
+        Push
+    }
+}
