@@ -1,27 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using ZendeskApi.Client.Converters;
 using ZendeskApi.Client.Models.AuditEvents;
 
 namespace ZendeskApi.Client.Models
 {
+    [JsonObject]
     public class TicketAudit
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
         
         [JsonProperty("ticket_id")]
-        public int TicketId { get; set; }
+        public long TicketId { get; set; }
         
         [JsonProperty("created_at")]
         public DateTime CreatedAt { get; set; }
         
         [JsonProperty("author_id")]
-        public int AuthorId { get; set; }
+        public long AuthorId { get; set; }
         
         [JsonProperty("events")]
         [JsonConverter(typeof(AuditEventJsonConverter))]
