@@ -62,12 +62,12 @@ namespace ZendeskApi.Client.Resources
         protected async Task<T> GetAsyncWithCursor<T>(string resource,
             string docs,
             string scope,
-            string cursor = null,
+            CursorPager pager,
             CancellationToken cancellationToken = default(CancellationToken))
             where T : class
         {
             return await ExecuteRequest(async (client, token) =>
-                        await client.GetAsync(resource, cursor, token).ConfigureAwait(false),
+                        await client.GetAsync(resource, pager, token).ConfigureAwait(false),
                     scope,
                     cancellationToken)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}")

@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -17,13 +18,13 @@ namespace ZendeskApi.Client.Resources
         }
 
 
-        public async Task<TicketAuditResponse> GetAllAsync(string cursor = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TicketAuditResponse> GetAllAsync(CursorPager pager = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsyncWithCursor<TicketAuditResponse>(
                 ResourceUri,
                 "list-all-ticket-audits",
                 "GetAllAsync",
-                cursor,
+                pager,
                 cancellationToken);
         }
 

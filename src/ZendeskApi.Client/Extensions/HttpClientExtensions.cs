@@ -25,16 +25,24 @@ namespace ZendeskApi.Client.Extensions
             return client.GetAsync(requestUri, cancellationToken);
         }
 
-        public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, string cursor,
+        public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, CursorPager pager,
             CancellationToken cancellationToken = default(CancellationToken))
-        {
-            if (!string.IsNullOrEmpty(cursor))
+        {   
+            if (pager == null)
+                pager = new CursorPager();
+            
+            if (!string.IsNullOrEmpty(pager.Cursor))
             {
                 if (requestUri.Contains("?"))
-                    requestUri += $"&cursor={cursor}";
+                    requestUri += $"&cursor={pager.Cursor}";
                 else
-                    requestUri += $"?cursor={cursor}";
+                    requestUri += $"?cursor={pager.Cursor}";
             }
+
+            if (requestUri.Contains("?"))
+                requestUri += $"&limit={pager.ResultsLimit}";
+            else
+                requestUri += $"?limit={pager.ResultsLimit}";
 
             return client.GetAsync(requestUri, cancellationToken);
         }

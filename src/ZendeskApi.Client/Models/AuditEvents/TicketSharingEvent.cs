@@ -7,6 +7,6 @@ namespace ZendeskApi.Client.Models.AuditEvents
         [JsonProperty("agreement_id")]
         public int AgreementId { get; set; }
         [JsonProperty("action")]
-        public string Action { get; set; } // todo: this could be an enum instead
+        public string Action { get; set; }
     }
 }
