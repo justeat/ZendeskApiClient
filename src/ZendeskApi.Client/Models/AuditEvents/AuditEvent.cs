@@ -5,7 +5,7 @@ namespace ZendeskApi.Client.Models.AuditEvents
     public class AuditEvent
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
         
         [JsonProperty("type")]
         public AuditTypes Type { get; set; }

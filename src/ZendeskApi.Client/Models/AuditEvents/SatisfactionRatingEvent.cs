@@ -7,7 +7,7 @@ namespace ZendeskApi.Client.Models.AuditEvents
         [JsonProperty("score")]
         public string Score { get; set; }
         [JsonProperty("assignee_id")]
-        public int AssigneeId { get; set; }
+        public long AssigneeId { get; set; }
         [JsonProperty("body")]
         public string Body { get; set; }
     }

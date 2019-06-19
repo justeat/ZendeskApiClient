@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Models.AuditEvents
         [JsonProperty("trusted")]
         public bool Trusted { get; set; }
         [JsonProperty("author_id")]
-        public int AuthorId { get; set; }
+        public long AuthorId { get; set; }
         [JsonProperty("transcription_visible")]
         public bool TranscriptionVisible { get; set; }
         [JsonProperty("attachments")]

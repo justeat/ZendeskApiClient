@@ -9,6 +9,6 @@ namespace ZendeskApi.Client.Models.AuditEvents
         [JsonProperty("body")]
         public string Body { get; set; }
         [JsonProperty("recipients")]
-        public int[] Recipients { get; set; }
+        public long[] Recipients { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ZendeskApi.Client.Models;
@@ -38,23 +39,26 @@ namespace ZendeskApi.Client.Converters
         
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(IEnumerable<IAuditEvent>) ||
-                   objectType == typeof(JObject);
+            return objectType == typeof(JObject);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             switch (reader.TokenType)
             {
-                case JsonToken.StartObject:
-                {
-                    JObject item = JObject.Load(reader);
-                    if (item["type"] != null && Enum.TryParse(item["type"].ToString(), out AuditTypes type))
+                case JsonToken.StartArray:
+                    var array = JArray.Load(reader);
+                    var result = new List<IAuditEvent>();
+
+                    foreach (var child in array.Children())
                     {
-                        return item.ToObject(_typeMappings[type]);
+                        if (child["type"] != null && Enum.TryParse(child["type"].ToString(), out AuditTypes type))
+                        {
+                            result.Add((IAuditEvent)child.ToObject(_typeMappings[type]));
+                        }
                     }
-                    break;
-                }
+
+                    return result;
             }
 
             return null;

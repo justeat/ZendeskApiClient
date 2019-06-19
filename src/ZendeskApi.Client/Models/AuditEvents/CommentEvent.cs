@@ -14,7 +14,7 @@ namespace ZendeskApi.Client.Models.AuditEvents
         [JsonProperty("public")]
         public bool Public { get; set; }
         [JsonProperty("author_id")]
-        public int AuthorId { get; set; }
+        public long AuthorId { get; set; }
         [JsonProperty("attachments")]
         public Attachment[] Attachments { get; set; }
         [JsonProperty("via")]
