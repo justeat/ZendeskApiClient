@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models.AuditEvents
 {
-    public class NotificationEvent : AuditEvent, IAuditEvent
+    public class NotificationEvent : AuditEvent
     {
         [JsonProperty("subject")]
         public string Subject { get; set; }

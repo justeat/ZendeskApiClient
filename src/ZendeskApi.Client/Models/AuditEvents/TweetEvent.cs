@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Models.AuditEvents
 {
-    public class TweetEvent : AuditEvent, IAuditEvent
+    public class TweetEvent : AuditEvent
     {
         [JsonProperty("direct_message")]
         public bool DirectMessage { get; set; }
