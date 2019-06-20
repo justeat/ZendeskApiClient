@@ -27,79 +27,141 @@ namespace ZendeskApi.Client.Models
         public IEnumerable<IAuditEvent> Events { get; set; }
 
         [JsonIgnore]
-        public IEnumerable<CreateEvent> CreateEvents => Events.OfType<CreateEvent>();
+        private Lazy<IEnumerable<CreateEvent>> LazyCreateEvents => new Lazy<IEnumerable<CreateEvent>>(() => Events.OfType<CreateEvent>());
+        
+        [JsonIgnore]
+        public IEnumerable<CreateEvent> CreateEvents => LazyCreateEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<ChangeEvent> ChangeEvents => Events.OfType<ChangeEvent>();
+        private Lazy<IEnumerable<ChangeEvent>> LazyChangeEvents => new Lazy<IEnumerable<ChangeEvent>>(() => Events.OfType<ChangeEvent>());
+        
+        [JsonIgnore]
+        public IEnumerable<ChangeEvent> ChangeEvents => LazyChangeEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<CommentEvent> CommentEvents => Events.OfType<CommentEvent>();
+        private Lazy<IEnumerable<CommentEvent>> LazyCommentEvents => new Lazy<IEnumerable<CommentEvent>>(() => Events.OfType<CommentEvent>());
 
         [JsonIgnore]
-        public IEnumerable<CommentRedactionEvent> CommentRedactionEvents => Events.OfType<CommentRedactionEvent>();
+        public IEnumerable<CommentEvent> CommentEvents => LazyCommentEvents.Value;
+        
+        [JsonIgnore]
+        private Lazy<IEnumerable<CommentRedactionEvent>> LazyCommentRedactionEvents => new Lazy<IEnumerable<CommentRedactionEvent>>(() => Events.OfType<CommentRedactionEvent>());
 
         [JsonIgnore]
-        public IEnumerable<AttachmentRedactionEvent> AttachmentRedactionEvents =>
-            Events.OfType<AttachmentRedactionEvent>();
+        public IEnumerable<CommentRedactionEvent> CommentRedactionEvents => LazyCommentRedactionEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<VoiceCommentEvent> VoiceCommentEvents => Events.OfType<VoiceCommentEvent>();
+        private Lazy<IEnumerable<AttachmentRedactionEvent>> LazyAttachmentRedactionEvents => new Lazy<IEnumerable<AttachmentRedactionEvent>>(() => Events.OfType<AttachmentRedactionEvent>());
 
         [JsonIgnore]
-        public IEnumerable<CommentPrivacyChangeEvent> CommentPrivacyChangeEvents =>
-            Events.OfType<CommentPrivacyChangeEvent>();
+        public IEnumerable<AttachmentRedactionEvent> AttachmentRedactionEvents => LazyAttachmentRedactionEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<NotificationEvent> NotificationEvents => Events.OfType<NotificationEvent>();
+        private Lazy<IEnumerable<VoiceCommentEvent>> LazyVoiceCommentEvents => new Lazy<IEnumerable<VoiceCommentEvent>>(() => Events.OfType<VoiceCommentEvent>());
 
         [JsonIgnore]
-        public IEnumerable<NotificationWithCCsEvent> NotificationWithCCsEvents =>
-            Events.OfType<NotificationWithCCsEvent>();
+        public IEnumerable<VoiceCommentEvent> VoiceCommentEvents => LazyVoiceCommentEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<CCEvent> CcEvents => Events.OfType<CCEvent>();
+        private Lazy<IEnumerable<CommentPrivacyChangeEvent>> LazyCommentPrivacyChangeEvents => new Lazy<IEnumerable<CommentPrivacyChangeEvent>>(() => Events.OfType<CommentPrivacyChangeEvent>());
 
         [JsonIgnore]
-        public IEnumerable<FollowerNotificationEvent> FollowerNotificationEvents =>
-            Events.OfType<FollowerNotificationEvent>();
+        public IEnumerable<CommentPrivacyChangeEvent> CommentPrivacyChangeEvents => LazyCommentPrivacyChangeEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<FollowerChangeEvent> FollowerChangeEvents => Events.OfType<FollowerChangeEvent>();
+        private Lazy<IEnumerable<NotificationEvent>> LazyNotificationEvents => new Lazy<IEnumerable<NotificationEvent>>(() => Events.OfType<NotificationEvent>());
 
         [JsonIgnore]
-        public IEnumerable<EmailCCChangeEvent> EmailCcChangeEvents => Events.OfType<EmailCCChangeEvent>();
+        public IEnumerable<NotificationEvent> NotificationEvents => LazyNotificationEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<SatisfactionRatingEvent> SatisfactionRatingEvents =>
-            Events.OfType<SatisfactionRatingEvent>();
+        private Lazy<IEnumerable<NotificationWithCCsEvent>> LazyNotificationWithCCEvents => new Lazy<IEnumerable<NotificationWithCCsEvent>>(() => Events.OfType<NotificationWithCCsEvent>());
 
+        [JsonIgnore]
+        public IEnumerable<NotificationWithCCsEvent> NotificationWithCCsEvents => LazyNotificationWithCCEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<CCEvent>> LazyCCEvents => new Lazy<IEnumerable<CCEvent>>(() => Events.OfType<CCEvent>());
+
+        [JsonIgnore]
+        public IEnumerable<CCEvent> CcEvents => LazyCCEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<FollowerNotificationEvent>> LazyFollowerNotificationEvents => new Lazy<IEnumerable<FollowerNotificationEvent>>(() => Events.OfType<FollowerNotificationEvent>());
+
+        [JsonIgnore]
+        public IEnumerable<FollowerNotificationEvent> FollowerNotificationEvents => LazyFollowerNotificationEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<FollowerChangeEvent>> LazyFollowerChangeEvents => new Lazy<IEnumerable<FollowerChangeEvent>>(() => Events.OfType<FollowerChangeEvent>());
+
+        [JsonIgnore]
+        public IEnumerable<FollowerChangeEvent> FollowerChangeEvents => LazyFollowerChangeEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<EmailCCChangeEvent>> LazyEmailCcChangeEvents => new Lazy<IEnumerable<EmailCCChangeEvent>>(() => Events.OfType<EmailCCChangeEvent>());
+
+        [JsonIgnore]
+        public IEnumerable<EmailCCChangeEvent> EmailCcChangeEvents => LazyEmailCcChangeEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<SatisfactionRatingEvent>> LazySatisfactionRatingEvents => new Lazy<IEnumerable<SatisfactionRatingEvent>>(() => Events.OfType<SatisfactionRatingEvent>());
+
+        [JsonIgnore]
+        public IEnumerable<SatisfactionRatingEvent> SatisfactionRatingEvents => LazySatisfactionRatingEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<TicketSharingEvent>> LazyTicketSharingEvents => new Lazy<IEnumerable<TicketSharingEvent>>(() => Events.OfType<TicketSharingEvent>());
         [JsonIgnore]
         public IEnumerable<TicketSharingEvent> TicketSharingEvents => Events.OfType<TicketSharingEvent>();
 
         [JsonIgnore]
-        public IEnumerable<OrganizationActivityEvent> OrganizationActivityEvents =>
-            Events.OfType<OrganizationActivityEvent>();
+        private Lazy<IEnumerable<OrganizationActivityEvent>> LazyOrganizationActivityEvents => new Lazy<IEnumerable<OrganizationActivityEvent>>(() => Events.OfType<OrganizationActivityEvent>());
 
         [JsonIgnore]
-        public IEnumerable<ErrorEvent> ErrorEvents => Events.OfType<ErrorEvent>();
+        public IEnumerable<OrganizationActivityEvent> OrganizationActivityEvents => LazyOrganizationActivityEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<TweetEvent> TweetEvents => Events.OfType<TweetEvent>();
+        private Lazy<IEnumerable<ErrorEvent>> LazyErrorEvents => new Lazy<IEnumerable<ErrorEvent>>(() => Events.OfType<ErrorEvent>());
 
         [JsonIgnore]
-        public IEnumerable<FacebookEvent> FacebookEvents => Events.OfType<FacebookEvent>();
+        public IEnumerable<ErrorEvent> ErrorEvents => LazyErrorEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<FacebookCommentEvent> FacebookCommentEvents => Events.OfType<FacebookCommentEvent>();
+        private Lazy<IEnumerable<TweetEvent>> LazyTweetEvents => new Lazy<IEnumerable<TweetEvent>>(() => Events.OfType<TweetEvent>());
 
         [JsonIgnore]
-        public IEnumerable<ExternalEvent> ExternalEvents => Events.OfType<ExternalEvent>();
+        public IEnumerable<TweetEvent> TweetEvents => LazyTweetEvents.Value;
 
         [JsonIgnore]
-        public IEnumerable<LogMeInTranscriptEvent> LogMeInTranscriptEvents => Events.OfType<LogMeInTranscriptEvent>();
+        private Lazy<IEnumerable<FacebookEvent>> LazyFacebookEvents => new Lazy<IEnumerable<FacebookEvent>>(() => Events.OfType<FacebookEvent>());
 
         [JsonIgnore]
-        public IEnumerable<PushEvent> PushEvents => Events.OfType<PushEvent>();
+        public IEnumerable<FacebookEvent> FacebookEvents => LazyFacebookEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<FacebookCommentEvent>> LazyFacebookCommentEvents => new Lazy<IEnumerable<FacebookCommentEvent>>(() => Events.OfType<FacebookCommentEvent>());
+
+        [JsonIgnore]
+        public IEnumerable<FacebookCommentEvent> FacebookCommentEvents => LazyFacebookCommentEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<ExternalEvent>> LazyExternalEvents => new Lazy<IEnumerable<ExternalEvent>>(() => Events.OfType<ExternalEvent>());
+
+        [JsonIgnore]
+        public IEnumerable<ExternalEvent> ExternalEvents => LazyExternalEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<LogMeInTranscriptEvent>> LazyLogMeInTranscriptEvents => new Lazy<IEnumerable<LogMeInTranscriptEvent>>(() => Events.OfType<LogMeInTranscriptEvent>());
+
+        [JsonIgnore]
+        public IEnumerable<LogMeInTranscriptEvent> LogMeInTranscriptEvents => LazyLogMeInTranscriptEvents.Value;
+
+        [JsonIgnore]
+        private Lazy<IEnumerable<PushEvent>> LazyPushEvents => new Lazy<IEnumerable<PushEvent>>(() => Events.OfType<PushEvent>());
+
+        [JsonIgnore]
+        public IEnumerable<PushEvent> PushEvents => LazyPushEvents.Value;
 
     }
 }
