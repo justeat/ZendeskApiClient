@@ -52,6 +52,9 @@ namespace ZendeskApi.Client
         private Lazy<ITicketFormsResource> TicketFormsLazy => new Lazy<ITicketFormsResource>(() => new TicketFormsResource(_apiClient, _logger));
         public ITicketFormsResource TicketForms => TicketFormsLazy.Value;
 
+        private Lazy<ITicketAuditResource> TicketAuditsLazy => new Lazy<ITicketAuditResource>(() => new TicketAuditResource(_apiClient, _logger));
+        public ITicketAuditResource TicketAudits => TicketAuditsLazy.Value;
+
         private Lazy<IOrganizationMembershipsResource> OrganizationMembershipsLazy => new Lazy<IOrganizationMembershipsResource>(() => new OrganizationMembershipsResource(_apiClient, _logger));
         public IOrganizationMembershipsResource OrganizationMemberships => OrganizationMembershipsLazy.Value;
 

@@ -59,6 +59,21 @@ namespace ZendeskApi.Client.Resources
                 .ReadContentAsAsync<T>(converter);
         }
 
+        protected async Task<T> GetAsyncWithCursor<T>(string resource,
+            string docs,
+            string scope,
+            CursorPager pager,
+            CancellationToken cancellationToken = default(CancellationToken))
+            where T : class
+        {
+            return await ExecuteRequest(async (client, token) =>
+                        await client.GetAsync(resource, pager, token).ConfigureAwait(false),
+                    scope,
+                    cancellationToken)
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
+                .ReadContentAsAsync<T>();
+        }
+
         protected async Task<T> GetWithNotFoundCheckAsync<T>(
             string resource,
             string docs,

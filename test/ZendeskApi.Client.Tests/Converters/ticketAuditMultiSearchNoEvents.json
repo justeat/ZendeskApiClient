@@ -1,0 +1,32 @@
+{
+    "audits": [
+        {
+            "id": 465545759138,
+            "ticket_id": 1588880,
+            "created_at": "2019-06-19T13:43:29Z",
+            "author_id": 489650852,
+            "metadata": {
+                "system": {
+                    "ip_address": "1.0.0.0",
+                    "location": "Dublin, 07, Ireland",
+                    "latitude": 1.000,
+                    "longitude": -6.234
+                },
+                "custom": {}
+            },
+            "events": [],
+            "via": {
+                "channel": "api",
+                "source": {
+                    "from": {},
+                    "to": {},
+                    "rel": null
+                }
+            }
+        }
+    ],
+    "after_url": "https://zendesk.com/api/v2/ticket_audits.json?cursor=MTU2MDk1MTgwOS4wfHw0NjU1NDU3NTkxMzh8&limit=1",
+    "before_url": "https://zendesk.com/api/v2/ticket_audits.json?cursor=fDE1NjA5NTE4MDkuMHx8NDY1NTQ1NzU5MTM4&limit=1",
+    "after_cursor": "MTU2MDk1MTgwOS4wfHw0NjU1NDU3NTkxMzh8",
+    "before_cursor": "fDE1NjA5NTE4MDkuMHx8NDY1NTQ1NzU5MTM4"
+}
