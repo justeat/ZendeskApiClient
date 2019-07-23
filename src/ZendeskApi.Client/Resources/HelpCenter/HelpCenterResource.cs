@@ -19,5 +19,8 @@ namespace ZendeskApi.Client.Resources
 
         private Lazy<IHelpCenterCategoriesResource> CategoriesLazy => new Lazy<IHelpCenterCategoriesResource>(() => new HelpCenterCategoriesResource(_apiClient, _logger));
         public IHelpCenterCategoriesResource Categories => CategoriesLazy.Value;
+
+        private Lazy<IHelpCenterSectionsResource> SectionsLazy => new Lazy<IHelpCenterSectionsResource>(() => new HelpCenterSectionsResource(_apiClient, _logger));
+        public IHelpCenterSectionsResource Sections => SectionsLazy.Value;
     }
 }
