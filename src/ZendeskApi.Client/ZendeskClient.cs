@@ -2,6 +2,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Resources.Interfaces;
 
 namespace ZendeskApi.Client
 {
@@ -71,5 +72,8 @@ namespace ZendeskApi.Client
             new Lazy<IJobStatusResource>(() => new JobStatusResource(_apiClient, _logger));
 
         public IJobStatusResource JobStatuses => JobStatusesLazy.Value;
+
+        private Lazy<IServiceStatusResource> ServiceStatusLazy => new Lazy<IServiceStatusResource>(() => new ServiceStatusResource(_apiClient, _logger));
+        public IServiceStatusResource ServiceStatus => ServiceStatusLazy.Value;
     }
 }

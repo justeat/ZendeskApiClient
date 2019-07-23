@@ -1,4 +1,5 @@
 using ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Resources.Interfaces;
 
 namespace ZendeskApi.Client
 {
@@ -22,5 +23,6 @@ namespace ZendeskApi.Client
         ISatisfactionRatingsResource SatisfactionRatings { get; }
         IUserFieldsResource UserFields { get; }
         IJobStatusResource JobStatuses { get; }
+        IServiceStatusResource ServiceStatus { get; }
     }
 }
