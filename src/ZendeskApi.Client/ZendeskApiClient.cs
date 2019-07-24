@@ -64,5 +64,26 @@ namespace ZendeskApi.Client
 
             return client;
         }
+
+        public HttpClient CreateServiceStatusClient()
+        {
+            var handler = _httpMessageHandlerFactory();
+
+            var client = new HttpClient(handler)
+            {
+                BaseAddress = new Uri("https://status.zendesk.com")
+            };
+
+            client.DefaultRequestHeaders
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            if (_options.Timeout != null)
+            {
+                client.Timeout = _options.Timeout.Value;
+            }
+
+            return client;
+        }
     }
 }
