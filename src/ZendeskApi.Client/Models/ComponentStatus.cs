@@ -4,6 +4,7 @@ namespace ZendeskApi.Client.Models
     {
         Operational,
         Impeded,
-        Inoperative
+        Inoperative,
+        Monitoring
     }
 }
