@@ -8,7 +8,8 @@ using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class OrganizationFieldsResource : AbstractBaseResource<OrganizationFieldsResource>
+    public class OrganizationFieldsResource : AbstractBaseResource<OrganizationFieldsResource>,
+        IOrganizationFieldsResource
     {
         private const string ResourceUri = "api/v2/organization_fields";
 
