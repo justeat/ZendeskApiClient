@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -7,7 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
+using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
+using ZendeskApi.Client.Requests.User;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.Extensions;
 
@@ -220,6 +223,28 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         {
                             UserResponse = userNew
                         });
+                    })
+                    .MapPut("api/v2/users/update_many", (req, resp, routeData) =>
+                    {
+                        var users = req.Body.ReadAs<UserListRequest<UserUpdateRequest>>();
+
+                        var ids = users.Users.Select(user => user.Id);
+
+                        var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
+
+                        if (ids.Any(id => id == long.MinValue))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
+                        
+                        var status = new SingleJobStatusResponse{JobStatus = new JobStatusResponse
+                        {
+                            Id = Rand.Next().ToString()
+                        }};
+
+                        resp.StatusCode = (int) HttpStatusCode.OK;
+                        return resp.WriteAsJson(status);
                     })
                     .MapPut("api/v2/users/{id}", (req, resp, routeData) =>
                     {

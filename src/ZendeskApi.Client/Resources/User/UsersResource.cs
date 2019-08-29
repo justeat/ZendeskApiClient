@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Formatters;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
+using ZendeskApi.Client.Requests.User;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -233,6 +235,19 @@ namespace ZendeskApi.Client.Resources
 
             return response?
                 .UserResponse;
+        }
+
+        public async Task<JobStatusResponse> UpdateAsync(IEnumerable<UserUpdateRequest> users,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var response = await UpdateAsync<SingleJobStatusResponse, UserListRequest<UserUpdateRequest>>(
+                $"{ResourceUri}/update_many",
+                new UserListRequest<UserUpdateRequest>(users),
+                "update-many-users",
+                "UpdateAsync",
+                cancellationToken);
+            
+            return response.JobStatus;
         }
 
         public async Task<UserResponse> CreateOrUpdateAsync(
