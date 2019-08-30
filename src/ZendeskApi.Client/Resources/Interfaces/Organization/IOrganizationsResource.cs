@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
@@ -36,6 +37,10 @@ namespace ZendeskApi.Client.Resources
 
         Task<Organization> UpdateAsync(
             Organization organization,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<JobStatusResponse> UpdateAsync(
+            IEnumerable<Organization> organizations,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteAsync(

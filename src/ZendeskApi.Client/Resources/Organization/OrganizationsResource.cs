@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -115,6 +117,19 @@ namespace ZendeskApi.Client.Resources
 
             return response?
                 .Organization;
+        }
+
+        public async Task<JobStatusResponse> UpdateAsync(IEnumerable<Organization> organizations, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var response =
+                await UpdateAsync<SingleJobStatusResponse, OrganizationListRequest<Organization>>(
+                    $"{ResourceUri}/update_many",
+                    new OrganizationListRequest<Organization>(organizations),
+                    "update-many-organizations",
+                    "UpdateAsync",
+                    cancellationToken);
+
+            return response?.JobStatus;
         }
 
         public async Task DeleteAsync(
