@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ZendeskApi.Client.Models;
@@ -85,6 +86,9 @@ namespace ZendeskApi.Client.Resources
         #region Update Users
         Task<UserResponse> UpdateAsync(
             UserUpdateRequest user,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<JobStatusResponse> UpdateAsync(IEnumerable<UserUpdateRequest> users,
             CancellationToken cancellationToken = default(CancellationToken));
         #endregion
 

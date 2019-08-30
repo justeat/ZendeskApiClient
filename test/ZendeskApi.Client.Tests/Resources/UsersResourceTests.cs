@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -485,6 +486,33 @@ namespace ZendeskApi.Client.Tests.Resources
             {
                 Name = string.Empty
             }));
+        }
+
+        [Fact]
+        public async Task UpdateAsync_Should_UpdateMultiple()
+        {
+            var users = new List<UserUpdateRequest>
+            {
+                new UserUpdateRequest(1),
+                new UserUpdateRequest(2),
+                new UserUpdateRequest(3)
+            };
+
+            var response = await _resource.UpdateAsync(users);
+            Assert.NotNull(response);
+            Assert.NotNull(response.Id);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenMultiple_And_UnexpectedHttpCode_ShouldThrow()
+        {
+            var users = new List<UserUpdateRequest>
+            {
+                new UserUpdateRequest(1),
+                new UserUpdateRequest(long.MinValue)
+            };
+
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.UpdateAsync(users));
         }
 
         [Fact]
