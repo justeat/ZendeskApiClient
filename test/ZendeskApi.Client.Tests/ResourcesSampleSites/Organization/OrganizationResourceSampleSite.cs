@@ -118,6 +118,26 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             Organization = org
                         });
                     })
+                    .MapPut("api/v2/organizations/update_many", (req, resp, routeData) =>
+                    {
+                        var orgs = req.Body.ReadAs<OrganizationListRequest<Organization>>();
+
+                        var ids = orgs.Organizations.Select(org => org.Id);
+
+                        if (ids.Any(id => id == long.MinValue))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
+                        
+                        var status = new SingleJobStatusResponse{JobStatus = new JobStatusResponse
+                        {
+                            Id = Rand.Next().ToString()
+                        }};
+
+                        resp.StatusCode = (int) HttpStatusCode.OK;
+                        return resp.WriteAsJson(status);
+                    })
                     .MapPut("api/v2/organizations/{id}", (req, resp, routeData) =>
                     {
                         return RequestHelper.Update<OrganizationResponse, Organization>(

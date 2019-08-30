@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -259,6 +260,33 @@ namespace ZendeskApi.Client.Tests.Resources
                 Id = int.MinValue,
                 Name = string.Empty
             }));
+        }
+
+        [Fact]
+        public async Task UpdateAsync_Should_UpdateMultiple()
+        {
+            var orgs = new List<Organization>
+            {
+                new Organization {Id = 1},
+                new Organization {Id = 2},
+                new Organization {Id = 3}
+            };
+            
+            var response = await _resource.UpdateAsync(orgs);
+            Assert.NotNull(response);
+            Assert.NotNull(response.Id);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenMultiple_And_UnexpectedHttpCode_ShouldThrow()
+        {
+            var orgs = new List<Organization>
+            {
+                new Organization {Id = long.MinValue},
+                new Organization {Id = 2},
+            };
+            
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.UpdateAsync(orgs));
         }
 
         [Fact]
