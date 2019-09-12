@@ -8,13 +8,13 @@ namespace ZendeskApi.Client.Resources.Interfaces
     public interface IHelpCenterCategoriesResource
     {
         Task<HelpCenterCategoryListResponse> GetAllAsync(
-            string locale,
+            string locale = null,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<HelpCenterCategory> GetAsync(
-            string locale,
             long id,
+            string locale = null,
             CancellationToken cancellationToken = default(CancellationToken));
     }
 }

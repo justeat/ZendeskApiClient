@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var sections = await client
                 .HelpCenter
                 .Sections
-                .GetAllAsync("en-gb", 200506022);
+                .GetAllAsync(200506022, "en-gb");
 
             Assert.NotEmpty(sections);
         }
@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var section = await client
                 .HelpCenter
                 .Sections
-                .GetAsync("en-gb", 115000024785);
+                .GetAsync(115000024785, "en-gb");
 
             Assert.NotNull(section);
         }
