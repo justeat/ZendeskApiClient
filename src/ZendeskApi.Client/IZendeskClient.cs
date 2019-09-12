@@ -25,5 +25,6 @@ namespace ZendeskApi.Client
         IUserFieldsResource UserFields { get; }
         IJobStatusResource JobStatuses { get; }
         IServiceStatusResource ServiceStatus { get; }
+        IHelpCenterResource HelpCenter { get; }
     }
 }
