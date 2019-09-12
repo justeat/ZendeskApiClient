@@ -76,3 +76,14 @@ In order to run integration tests against your own zendesk instance use the Cake
 ```powershell
 .\build.ps1 -Target "Run-Integration-Tests" -ScriptArgs '-zendeskUrl="<your zendesk url>"', '-zendeskUsername="<your zendesk username>"', '-zendeskToken="<your zendesk token>"'
 ```
+
+# Contributing
+
+We are happy for anyone to contribute into this client, and help us evolve it over time.
+
+## Versioning
+
+We aim to follow [Semantic Versioning](https://semver.org/) guidelines within this library. When increasing the version there are multiple places that will need to be changed:
+
+* [appveyor.yml](https://github.com/justeat/ZendeskApiClient/blob/master/appveyor.yml)
+* [ZendeskApi.Commons.props](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Build/ZendeskApi.Commons.props)

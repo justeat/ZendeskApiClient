@@ -49,6 +49,11 @@ namespace ZendeskApi.Client.Tests
             return _createdSite.Client;
         }
 
+        public HttpClient CreateServiceStatusClient()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Dispose()
         {
             _createdSite?.Dispose();

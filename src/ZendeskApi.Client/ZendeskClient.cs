@@ -56,6 +56,9 @@ namespace ZendeskApi.Client
         private Lazy<ITicketAuditResource> TicketAuditsLazy => new Lazy<ITicketAuditResource>(() => new TicketAuditResource(_apiClient, _logger));
         public ITicketAuditResource TicketAudits => TicketAuditsLazy.Value;
 
+        private Lazy<IOrganizationFieldsResource> OrganizationFieldsLazy => new Lazy<IOrganizationFieldsResource>(() => new OrganizationFieldsResource(_apiClient, _logger));
+        public IOrganizationFieldsResource OrganizationFields => OrganizationFieldsLazy.Value;
+        
         private Lazy<IOrganizationMembershipsResource> OrganizationMembershipsLazy => new Lazy<IOrganizationMembershipsResource>(() => new OrganizationMembershipsResource(_apiClient, _logger));
         public IOrganizationMembershipsResource OrganizationMemberships => OrganizationMembershipsLazy.Value;
 
@@ -73,6 +76,9 @@ namespace ZendeskApi.Client
 
         public IJobStatusResource JobStatuses => JobStatusesLazy.Value;
 
+        private Lazy<IServiceStatusResource> ServiceStatusLazy => new Lazy<IServiceStatusResource>(() => new ServiceStatusResource(_apiClient, _logger));
+        public IServiceStatusResource ServiceStatus => ServiceStatusLazy.Value;
+        
         private Lazy<IHelpCenterResource> HelpCenterLazy =>
             new Lazy<IHelpCenterResource>(() => new HelpCenterResource(_apiClient, _logger));
         public IHelpCenterResource HelpCenter => HelpCenterLazy.Value;
