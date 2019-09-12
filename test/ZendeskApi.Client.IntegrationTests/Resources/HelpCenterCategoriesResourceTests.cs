@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var category = await client
                 .HelpCenter
                 .Categories
-                .GetAsync("en-gb", 200523402);
+                .GetAsync(200523402, "en-gb");
 
             Assert.NotNull(category);
         }

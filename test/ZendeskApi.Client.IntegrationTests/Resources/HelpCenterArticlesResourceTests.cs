@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var articles = await client
                 .HelpCenter
                 .Articles
-                .GetAllByCategoryIdAsync("en-gb", 200523402);
+                .GetAllByCategoryIdAsync(200523402, "en-gb");
 
             Assert.NotEmpty(articles);
         }
@@ -52,7 +52,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var articles = await client
                 .HelpCenter
                 .Articles
-                .GetAllBySectionIdAsync("en-gb", 115000024785);
+                .GetAllBySectionIdAsync(115000024785, "en-gb");
 
             Assert.NotEmpty(articles);
         }
@@ -65,7 +65,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var articles = await client
                 .HelpCenter
                 .Articles
-                .GetAllByUserIdAsync("en-gb", 485750562);
+                .GetAllByUserIdAsync(485750562);
 
             Assert.NotEmpty(articles);
         }
@@ -78,7 +78,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var article = await client
                 .HelpCenter
                 .Articles
-                .GetAsync("en-gb", 203576272);
+                .GetAsync(203576272, "en-gb");
 
             Assert.NotNull(article);
         }

@@ -19,12 +19,12 @@ namespace ZendeskApi.Client.Resources
         { }
 
         public async Task<HelpCenterSectionListResponse> GetAllAsync(
-            string locale,
+            string locale = null,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<HelpCenterSectionListResponse>(
-                $"{ResourceUri}/{locale}/sections",
+                locale == null ? $"{ResourceUri}/sections" : $"{ResourceUri}/{locale}/sections",
                 "list-sections",
                 "GetAllAsync",
                 pager,
@@ -32,13 +32,13 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<HelpCenterSectionListResponse> GetAllAsync(
-            string locale,
             long categoryId,
+            string locale = null,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<HelpCenterSectionListResponse>(
-                $"{ResourceUri}/{locale}/categories/{categoryId}/sections",
+                locale == null ? $"{ResourceUri}/categories/{categoryId}/sections" :$"{ResourceUri}/{locale}/categories/{categoryId}/sections",
                 "list-sections",
                 "GetAllAsync",
                 pager,
@@ -46,12 +46,12 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<HelpCenterSection> GetAsync(
-            string locale,
             long id,
+            string locale = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<SingleHelpCenterSectionResponse>(
-                $"{ResourceUri}/{locale}/sections/{id}",
+                locale == null ? $"{ResourceUri}/sections/{id}" : $"{ResourceUri}/{locale}/sections/{id}",
                 "show-job-status",
                 $"GetAsync({locale}, {id})",
                 $"Help center category {locale} {id} not found",

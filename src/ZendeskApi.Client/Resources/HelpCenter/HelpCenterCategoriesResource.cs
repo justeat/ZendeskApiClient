@@ -19,12 +19,12 @@ namespace ZendeskApi.Client.Resources
         { }
 
         public async Task<HelpCenterCategoryListResponse> GetAllAsync(
-            string locale,
+            string locale = null,
             PagerParameters pager = null, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<HelpCenterCategoryListResponse>(
-                $"{ResourceUri}/{locale}/categories",
+                locale == null ? $"{ResourceUri}/categories" : $"{ResourceUri}/{locale}/categories",
                 "list-categories",
                 "GetAllAsync",
                 pager,
@@ -32,12 +32,12 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<HelpCenterCategory> GetAsync(
-            string locale, 
-            long id, 
+            long id,
+            string locale = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<SingleHelpCenterCategoryResponse>(
-                $"{ResourceUri}/{locale}/categories/{id}",
+                locale == null ? $"{ResourceUri}/categories/{id}" : $"{ResourceUri}/{locale}/categories/{id}",
                 "show-job-status",
                 $"GetAsync({locale}, {id})",
                 $"Help center category {locale} {id} not found",

@@ -8,31 +8,30 @@ namespace ZendeskApi.Client.Resources.Interfaces
     public interface IHelpCenterArticlesResource
     {
         Task<HelpCenterArticleListResponse> GetAllAsync(
-            string locale,
+            string locale = null,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<HelpCenterArticleListResponse> GetAllByCategoryIdAsync(
-            string locale,
             long categoryId,
+            string locale = null,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<HelpCenterArticleListResponse> GetAllBySectionIdAsync(
-            string locale,
             long sectionId,
+            string locale = null,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<HelpCenterArticleListResponse> GetAllByUserIdAsync(
-            string locale,
             long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<HelpCenterArticle> GetAsync(
-            string locale,
             long id,
+            string locale = null,
             CancellationToken cancellationToken = default(CancellationToken));
     }
 }

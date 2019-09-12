@@ -19,12 +19,12 @@ namespace ZendeskApi.Client.Resources
         { }
 
         public async Task<HelpCenterArticleListResponse> GetAllAsync(
-            string locale,
+            string locale = null,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<HelpCenterArticleListResponse>(
-                $"{ResourceUri}/{locale}/articles",
+                 locale == null ? $"{ResourceUri}/articles" : $"{ResourceUri}/{locale}/articles",
                 "list-articles",
                 "GetAllAsync",
                 pager,
@@ -32,13 +32,13 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<HelpCenterArticleListResponse> GetAllByCategoryIdAsync(
-            string locale,
             long categoryId,
+            string locale = null,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<HelpCenterArticleListResponse>(
-                $"{ResourceUri}/{locale}/categories/{categoryId}/articles",
+                locale == null ? $"{ResourceUri}/categories/{categoryId}/articles" : $"{ResourceUri}/{locale}/categories/{categoryId}/articles",
                 "list-articles",
                 "GetAllByCategoryIdAsync",
                 pager,
@@ -46,13 +46,13 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<HelpCenterArticleListResponse> GetAllBySectionIdAsync(
-            string locale,
             long sectionId,
+            string locale = null,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetAsync<HelpCenterArticleListResponse>(
-                $"{ResourceUri}/{locale}/sections/{sectionId}/articles",
+                locale == null ? $"{ResourceUri}/sections/{sectionId}/articles" : $"{ResourceUri}/{locale}/sections/{sectionId}/articles",
                 "list-articles",
                 "GetAllBySectionIdAsync",
                 pager,
@@ -60,7 +60,6 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<HelpCenterArticleListResponse> GetAllByUserIdAsync(
-            string locale,
             long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -74,12 +73,12 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<HelpCenterArticle> GetAsync(
-            string locale,
             long id,
+            string locale = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await GetWithNotFoundCheckAsync<SingleHelpCenterArticleResponse>(
-                $"{ResourceUri}/{locale}/articles/{id}",
+                locale == null ? $"{ResourceUri}/articles/{id}" : $"{ResourceUri}/{locale}/articles/{id}",
                 "show-article",
                 $"GetAsync({locale}, {id})",
                 $"Help center article {locale} {id} not found",
