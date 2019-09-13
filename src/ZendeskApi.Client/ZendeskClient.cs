@@ -82,5 +82,9 @@ namespace ZendeskApi.Client
         private Lazy<IHelpCenterResource> HelpCenterLazy =>
             new Lazy<IHelpCenterResource>(() => new HelpCenterResource(_apiClient, _logger));
         public IHelpCenterResource HelpCenter => HelpCenterLazy.Value;
+
+        private Lazy<ILocaleResource> LocalesLazy =>
+            new Lazy<ILocaleResource>(() => new LocaleResource(_apiClient, _logger));
+        public ILocaleResource Locales => LocalesLazy.Value;
     }
 }
