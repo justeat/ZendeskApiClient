@@ -5,5 +5,6 @@ namespace ZendeskApi.Client.Resources.Interfaces
         IHelpCenterCategoriesResource Categories { get; }
         IHelpCenterSectionsResource Sections { get; }
         IHelpCenterArticlesResource Articles { get; }
+        IHelpCenterLocalesResource Locales { get; }
     }
 }
