@@ -16,6 +16,8 @@ namespace ZendeskApi.Client.Exceptions
         private List<HttpStatusCode> _expectedStatusCode;
         private string _helpDocsResource;
 
+        private static int[] _doNotBuildErrorModelResponseCodes = { 429 };
+
         public ZendeskRequestExceptionBuilder()
         {
             
@@ -53,7 +55,9 @@ namespace ZendeskApi.Client.Exceptions
             var message = new StringBuilder();
             ErrorResponse error = null;
 
-            if (_response != null && (int)_response.StatusCode <= 499)
+            if (_response != null && 
+                (int)_response.StatusCode <= 499 && 
+                !_doNotBuildErrorModelResponseCodes.Contains((int)_response.StatusCode))
             {
                 error = await _response.Content.ReadAsAsync<ErrorResponse>();
 
