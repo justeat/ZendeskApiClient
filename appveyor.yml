@@ -1,6 +1,13 @@
 image: Visual Studio 2017
 version: 3.12.1-alpha-{build}
 configuration: Release
+environment:
+  ZendeskApi_Credentials_Url:
+    secure: C2FCZYsQc4saCFZ4Uw6gkBqHoyXZPsKucJRXKGKBhYp9cBxCXxupzuo9jB0ftVah
+  ZendeskApi_Credentials_Username: 
+    secure: ft+ZIlhKYIHzQ+0Phrool1mjCK1QksYDv6hWtq/pPP0=
+  ZendeskApi_Credentials_Token: 
+    secure: GRSdM9G3MmHr5PymLoHbtyU2sD7/pz/tv4FUlt2JY3zZm7OYBR1zFT6pmusYiRjx
 before_build:
   - dotnet restore
 build:
@@ -21,3 +28,10 @@ deploy:
   artifact: /.*nupkg/
   on:
     APPVEYOR_REPO_TAG: true
+for:
+-
+  branches:
+    only:
+      - master
+  test_script:
+    - dotnet test -c Release .\test\ZendeskApi.Client.IntegrationTests\ZendeskApi.Client.IntegrationTests.csproj
