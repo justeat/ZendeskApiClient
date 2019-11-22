@@ -1,82 +1,61 @@
-using System;
-using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
 {
-    public class SatisfactionRatingsResource : ISatisfactionRatingsResource
+    public class SatisfactionRatingsResource : AbstractBaseResource<SatisfactionRatingsResource>,
+        ISatisfactionRatingsResource
     {
         private const string ResourceUri = "api/v2/satisfaction_ratings";
         private const string PostResourceUrlFormat = "api/v2/tickets/{0}/satisfaction_rating";
 
-        private readonly IZendeskApiClient _apiClient;
-        private readonly ILogger _logger;
-
-        private Func<ILogger, string, IDisposable> _loggerScope =
-            LoggerMessage.DefineScope<string>(typeof(SatisfactionRatingsResource).Name + ": {0}");
-
-        public SatisfactionRatingsResource(IZendeskApiClient apiClient,
+        public SatisfactionRatingsResource(
+            IZendeskApiClient apiClient,
             ILogger logger)
+            : base(apiClient, logger, "satisfaction_ratings")
+        { }
+
+        public async Task<IPagination<SatisfactionRating>> GetAllAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            _apiClient = apiClient;
-            _logger = logger;
+            return await GetAsync<SatisfactionRatingsResponse>(
+                ResourceUri,
+                "list-satisfaction-ratings",
+                "GetAllAsync",
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<IPagination<SatisfactionRating>> GetAllAsync(PagerParameters pager = null)
+        public async Task<SatisfactionRating> GetAsync(
+            long satisficationRatingId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (_loggerScope(_logger, "GetAllAsync"))
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.GetAsync(ResourceUri, pager).ConfigureAwait(false);
+            var response = await GetWithNotFoundCheckAsync<SatisfactionRatingResponse>(
+                $"{ResourceUri}/{satisficationRatingId}",
+                "show-satisfaction-rating",
+                $"GetAsync({satisficationRatingId})",
+                $"Satisfaction Rating {satisficationRatingId} not found",
+                cancellationToken: cancellationToken);
 
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<SatisfactionRatingsResponse>();
-            }
+            return response?
+                .SatisfactionRating;
         }
 
-        public async Task<SatisfactionRating> GetAsync(long satisficationRatingId)
+        public async Task<SatisfactionRating> CreateAsync(
+            SatisfactionRating satisfactionRating, 
+            long ticketId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (_loggerScope(_logger, $"GetAsync({satisficationRatingId})"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.GetAsync(satisficationRatingId.ToString()).ConfigureAwait(false);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    _logger.LogInformation("Satisfaction Rating {0} not found", satisficationRatingId);
-                    return null;
-                }
-
-                response.EnsureSuccessStatusCode();
-
-                var single = await response.Content.ReadAsAsync<SatisfactionRatingResponse>();
-                return single.SatisfactionRating;
-            }
+            return await CreateAsync<SatisfactionRating, SatisfactionRating>(
+                string.Format(PostResourceUrlFormat, ticketId),
+                satisfactionRating,
+                "create-a-satisfaction-rating",
+                cancellationToken: cancellationToken
+            );
         }
-
-        public async Task<SatisfactionRating> CreateAsync(SatisfactionRating satisfactionRating, long ticketId)
-        {
-            using (_loggerScope(_logger, $"PostAsync"))
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.PostAsJsonAsync(string.Format(PostResourceUrlFormat, ticketId), satisfactionRating).ConfigureAwait(false);
-
-                if (response.StatusCode != System.Net.HttpStatusCode.Created)
-                {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/satisfaction_ratings#create-a-satisfaction-rating");
-                }
-
-                return await response.Content.ReadAsAsync<SatisfactionRating>();
-            }
-        }
-
     }
 }

@@ -1,8 +1,7 @@
 using System;
-using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -12,143 +11,143 @@ namespace ZendeskApi.Client.Resources
     /// <summary>
     /// <see cref="https://developer.zendesk.com/rest_api/docs/core/groups"/>
     /// </summary>
-    public class GroupsResource : IGroupsResource
+    public class GroupsResource : AbstractBaseResource<GroupsResource>, 
+        IGroupsResource
     {
         private const string GroupsResourceUri = "api/v2/groups";
         private const string GroupsByUserResourceUriFormat = "api/v2/users/{0}/groups";
         private const string AssignableGroupUri = @"api/v2/groups/assignable";
 
-        private readonly IZendeskApiClient _apiClient;
-        private readonly ILogger _logger;
-
-        private readonly Func<ILogger, string, IDisposable> _loggerScope =
-            LoggerMessage.DefineScope<string>(typeof(GroupsResource).Name + ": {0}");
-
-        public GroupsResource(IZendeskApiClient apiClient,
+        public GroupsResource(
+            IZendeskApiClient apiClient,
             ILogger logger)
+            : base(apiClient, logger, "groups")
+        { }
+
+        [Obsolete("Use `GetAllAsync` instead.")]
+        public async Task<GroupListResponse> ListAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            _apiClient = apiClient;
-            _logger = logger;
+            return await GetAllAsync(
+                pager,
+                cancellationToken);
         }
 
-        public async Task<GroupListResponse> ListAsync(PagerParameters pager = null)
+        [Obsolete("Use `GetAllByUserIdAsync` instead.")]
+        public async Task<GroupListResponse> ListAsync(
+            long userId, 
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (_loggerScope(_logger, "ListAsync"))
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.GetAsync(GroupsResourceUri, pager).ConfigureAwait(false);
-
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<GroupListResponse>();
-            }
+            return await GetAllByUserIdAsync(
+                userId,
+                pager,
+                cancellationToken);
         }
 
-        public async Task<GroupListResponse> ListAsync(long userId, PagerParameters pager = null)
+        [Obsolete("Use `GetAllByAssignableAsync` instead.")]
+        public async Task<GroupListResponse> ListAssignableAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (_loggerScope(_logger, $"ListAsync({userId})"))
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.GetAsync(string.Format(GroupsByUserResourceUriFormat, userId), pager).ConfigureAwait(false);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    _logger.LogInformation("UserResponse {0} not found", userId);
-                    return null;
-                }
-
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<GroupListResponse>();
-            }
+            return await GetAllByAssignableAsync(
+                pager,
+                cancellationToken);
         }
 
-        public async Task<GroupListResponse> ListAssignableAsync(PagerParameters pager = null)
+        public async Task<GroupListResponse> GetAllAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (_loggerScope(_logger, "ListAssignableAsync"))
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.GetAsync(AssignableGroupUri, pager).ConfigureAwait(false);
-
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<GroupListResponse>();
-            }
+            return await GetAsync<GroupListResponse>(
+                GroupsResourceUri,
+                "list-groups",
+                "ListAsync",
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<Group> GetAsync(long groupId)
+        public async Task<GroupListResponse> GetAllByUserIdAsync(
+            long userId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (_loggerScope(_logger, $"GetAsync({groupId})"))
-            using (var client = _apiClient.CreateClient(GroupsResourceUri))
-            {
-                var response = await client.GetAsync(groupId.ToString()).ConfigureAwait(false);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    _logger.LogInformation("GroupResponse {0} not found", groupId);
-                    return null;
-                }
-
-                response.EnsureSuccessStatusCode();
-
-                var groupResponse = await response.Content.ReadAsAsync<GroupResponse>();
-                return groupResponse.Group;
-            }
+            return await GetWithNotFoundCheckAsync<GroupListResponse>(
+                string.Format(GroupsByUserResourceUriFormat, userId),
+                "list-groups",
+                $"ListAsync({userId})",
+                $"UserResponse {userId} not found",
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<Group> CreateAsync(GroupCreateRequest group)
+        public async Task<GroupListResponse> GetAllByAssignableAsync(
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (_loggerScope(_logger, "PostAsync")) // Maybe incluse the request in the log?
-            using (var client = _apiClient.CreateClient())
-            {
-                var response = await client.PostAsJsonAsync(GroupsResourceUri, group).ConfigureAwait(false);
-
-                if (response.StatusCode != System.Net.HttpStatusCode.Created)
-                {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 201 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/groups#create-groups");
-                }
-                
-                return await response.Content.ReadAsAsync<Group>();
-            }
+            return await GetAsync<GroupListResponse>(
+                AssignableGroupUri,
+                "show-assignable-groups",
+                "ListAssignableAsync",
+                pager,
+                cancellationToken: cancellationToken);
         }
 
-        public async Task<Group> UpdateAsync(GroupUpdateRequest group)
+        public async Task<Group> GetAsync(
+            long groupId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (_loggerScope(_logger, "PutAsync"))
-            using (var client = _apiClient.CreateClient(GroupsResourceUri))
-            {
-                var response = await client.PutAsJsonAsync(group.Id.ToString(), group).ConfigureAwait(false);
+            var response = await GetWithNotFoundCheckAsync<GroupResponse>(
+                $"{GroupsResourceUri}/{groupId}",
+                "show-group",
+                $"GetAsync({groupId})",
+                $"GroupResponse {groupId} not found",
+                cancellationToken: cancellationToken);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    _logger.LogInformation("Cannot update group as group {0} cannot be found", group.Id);
-                    return null;
-                }
-
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<Group>();
-            }
+            return response?
+                .Group;
         }
 
-        public async Task DeleteAsync(long groupId)
+        public async Task<Group> CreateAsync(
+            GroupCreateRequest group,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (_loggerScope(_logger, $"DeleteAsync({groupId})"))
-            using (var client = _apiClient.CreateClient(GroupsResourceUri))
-            {
-                var response = await client.DeleteAsync(groupId.ToString()).ConfigureAwait(false);
+            var response = await CreateAsync<GroupResponse, GroupRequest<GroupCreateRequest>>(
+                GroupsResourceUri,
+                new GroupRequest<GroupCreateRequest>(group),
+                "create-group",
+                cancellationToken: cancellationToken
+            );
 
-                if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
-                {
-                    throw new HttpRequestException(
-                        $"Status code retrieved was {response.StatusCode} and not a 204 as expected" +
-                        Environment.NewLine +
-                        "See: https://developer.zendesk.com/rest_api/docs/core/attachments#delete-upload");
-                }
-            }
+            return response?
+                .Group;
+        }
+
+        public async Task<Group> UpdateAsync(
+            GroupUpdateRequest group,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var response = await UpdateWithNotFoundCheckAsync<GroupResponse, GroupRequest<GroupUpdateRequest>>(
+                $"{GroupsResourceUri}/{group.Id}",
+                new GroupRequest<GroupUpdateRequest>(group),
+                "update-group",
+                $"Cannot update group as group {group.Id} cannot be found",
+                cancellationToken: cancellationToken);
+
+            return response?
+                .Group;
+        }
+
+        public async Task DeleteAsync(
+            long groupId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await DeleteAsync(
+                GroupsResourceUri,
+                groupId,
+                "delete-group",
+                cancellationToken: cancellationToken);
         }
     }
 }

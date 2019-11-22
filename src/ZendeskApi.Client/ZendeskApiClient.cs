@@ -7,6 +7,7 @@ using ZendeskApi.Client.Options;
 
 namespace ZendeskApi.Client
 {
+    [Obsolete("Use ZendeskApiClientFactory as this uses IHttpClientFactory")]
     public class ZendeskApiClient : IZendeskApiClient
     {
         private readonly Func<HttpMessageHandler> _httpMessageHandlerFactory;
@@ -55,6 +56,27 @@ namespace ZendeskApi.Client
             client.DefaultRequestHeaders
               .Accept
               .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            if (_options.Timeout != null)
+            {
+                client.Timeout = _options.Timeout.Value;
+            }
+
+            return client;
+        }
+
+        public HttpClient CreateServiceStatusClient()
+        {
+            var handler = _httpMessageHandlerFactory();
+
+            var client = new HttpClient(handler)
+            {
+                BaseAddress = new Uri("https://status.zendesk.com")
+            };
+
+            client.DefaultRequestHeaders
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             if (_options.Timeout != null)
             {

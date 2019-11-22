@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Xunit;
 using ZendeskApi.Client.Options;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests
 {

@@ -11,6 +11,7 @@ using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -21,233 +22,464 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public TicketsResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new TicketResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<TicketResourceState, Ticket>((resource) => new TicketResourceSampleSite(resource));
             _resource = new TicketsResource(_client, NullLogger.Instance);
         }
 
         [Fact]
-        public async Task ShouldListAllTickets()
+        public async Task GetAllAsync_WhenCalled_ShouldGetAllTickets()
         {
-            var tickets = await CreateTickets(2);
+            var results = await _resource.GetAllAsync();
 
-            var retrievedTickets = (await _resource.ListAsync()).ToArray();
+            Assert.Equal(100, results.Count);
 
-            Assert.Equal(2, retrievedTickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(tickets[1]), JsonConvert.SerializeObject(retrievedTickets[1]));
-        }
-
-        [Fact]
-        public async Task ShouldPaginateThoughTickets()
-        {
-            var tickets = await CreateTickets(10);
-
-            var retrievedTickets = (await _resource.ListAsync(new PagerParameters { Page = 1, PageSize = 5 })).ToArray();
-
-            Assert.Equal(5, retrievedTickets.Length);
-            for (var i = 0; i < 5; i++)
+            for (var i = 1; i <= 100; i++)
             {
-                Assert.Equal(JsonConvert.SerializeObject(tickets[i]), JsonConvert.SerializeObject(retrievedTickets[i]));
-            }
+                var ticket = results.ElementAt(i - 1);
 
-            var retrievedTickets2 = (await _resource.ListAsync(new PagerParameters { Page = 2, PageSize = 5 })).ToArray();
-
-            Assert.Equal(5, retrievedTickets2.Length);
-            for (var i = 0; i < 5; i++)
-            {
-                Assert.Equal(JsonConvert.SerializeObject(tickets[i + 5]), JsonConvert.SerializeObject(retrievedTickets2[i]));
+                Assert.Equal(i, ticket.Id);
+                Assert.Equal($"My printer is on fire! {i}", ticket.Subject);
+                Assert.Equal(i.ToString(), ticket.ExternalId);
+                Assert.Equal(i, ticket.OrganisationId);
+                Assert.Equal(i, ticket.RequesterId);
+                Assert.Equal(i, ticket.AssigneeId);
             }
         }
 
         [Fact]
-        public async Task ShouldListAllForOrganizationTickets()
+        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllTickets()
         {
-            var ticket1 = new TicketCreateRequest("description")
+            var results = await _resource.GetAllAsync(new PagerParameters
             {
-                Subject = "My printer is on fire! 1",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 1"
-                },
-                OrganisationId = 16230
-            };
+                Page = 2,
+                PageSize = 1
+            });
 
-            var ticket2 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 2",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 2"
-                }
-            };
+            var ticket = results.First();
 
-            var ticket3 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 3",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 3"
-                },
-                OrganisationId = 16230
-            };
-
-            var ticketsCreated = await CreateTickets(ticket1, ticket2, ticket3);
-
-            var tickets = (await _resource.ListForOrganizationAsync(16230L)).ToArray();
-
-            Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[0]), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[2]), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(2, ticket.Id);
+            Assert.Equal("My printer is on fire! 2", ticket.Subject);
+            Assert.Equal("2", ticket.ExternalId);
+            Assert.Equal(2, ticket.OrganisationId);
+            Assert.Equal(2, ticket.RequesterId);
+            Assert.Equal(2, ticket.AssigneeId);
         }
 
         [Fact]
-        public async Task ShouldListAllForRequestedUserTickets()
+        public async Task GetAllAsync_WhenServiceUnavailable_ShouldThrow()
         {
-            var ticket1 = new TicketCreateRequest("description")
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new PagerParameters
             {
-                Subject = "My printer is on fire! 1",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 1"
-                },
-                RequesterId = 10000
-            };
-
-            var ticket2 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 2",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 2"
-                },
-                RequesterId = 10000
-            };
-
-            var ticket3 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 3",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 3"
-                }
-            };
-
-            var ticketsCreated = await CreateTickets(ticket1, ticket2, ticket3);
-
-            var tickets = (await _resource.ListRequestedByAsync(10000L)).ToArray();
-
-            Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[0]), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[1]), JsonConvert.SerializeObject(tickets[1]));
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
         }
 
         [Fact]
-        public async Task ShouldListAllForCcdUserTickets()
+        public async Task GetAllByOrganizationIdAsync_WhenCalled_ShouldGetAllTickets()
         {
-            var ticket1 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 1",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 1"
-                },
-                CollaboratorIds = new System.Collections.Generic.List<long> { }
-            };
+            var results = await _resource.GetAllByOrganizationIdAsync(10);
 
-            var ticket2 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 2",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 2"
-                },
-                CollaboratorIds = new System.Collections.Generic.List<long> { 2293 }
-            };
+            var ticket = results.First();
 
-            var ticket3 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 3",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 3"
-                },
-                CollaboratorIds = new System.Collections.Generic.List<long> { 2293 }
-            };
-
-            var ticketsCrearted = await CreateTickets(ticket1, ticket2, ticket3);
-
-            var tickets = (await _resource.ListCcdAsync(2293L)).ToArray();
-
-            Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticketsCrearted[1]), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticketsCrearted[2]), JsonConvert.SerializeObject(tickets[1]));
-        }
-        
-        [Fact]
-        public async Task ShouldListAllForAssignedForUserTickets()
-        {
-            var ticket1 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 1",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 1"
-                },
-                AssigneeId = 2233
-            };
-
-            var ticket2 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 2",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 2"
-                }
-            };
-
-            var ticket3 = new TicketCreateRequest("description")
-            {
-                Subject = "My printer is on fire! 3",
-                Comment = new TicketComment
-                {
-                    Body = "The smoke is very colorful. 3"
-                },
-                AssigneeId = 2233
-            };
-
-            var ticketsCreated = await CreateTickets(ticket1, ticket2, ticket3);
-
-            var tickets = (await _resource.ListAssignedToAsync(2233L)).ToArray();
-
-            Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[0]), JsonConvert.SerializeObject(tickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(ticketsCreated[2]), JsonConvert.SerializeObject(tickets[1]));
+            Assert.Equal(10, ticket.Id);
+            Assert.Equal($"My printer is on fire! 10", ticket.Subject);
+            Assert.Equal(10.ToString(), ticket.ExternalId);
+            Assert.Equal(10, ticket.OrganisationId);
+            Assert.Equal(10, ticket.RequesterId);
+            Assert.Equal(10, ticket.AssigneeId);
         }
 
         [Fact]
-        public async Task ShouldGetTicket()
+        public async Task GetAllByOrganizationIdAsync_WhenNotFound_ShouldReturnNull()
         {
-            var ticket = (await CreateTickets(1)).First();
+            var results = await _resource.GetAllByOrganizationIdAsync(int.MaxValue);
 
-            var response = await _resource.GetAsync(ticket.Id);
-
-            Assert.Equal(JsonConvert.SerializeObject(new TicketResponse{Ticket = ticket}), JsonConvert.SerializeObject(response));
+            Assert.Null(results);
         }
 
         [Fact]
-        public async Task ShouldGetAllTicketsForIds()
+        public async Task GetAllByOrganizationIdAsync_WhenServiceUnavailable_ShouldThrow()
         {
-            var tickets = await CreateTickets(2);
-            
-            var retrievedTickets = (await _resource.GetAsync(new[] { tickets[0].Id, 543521L, tickets[1].Id, 123445L })).ToArray();
-            
-            Assert.Equal(2, tickets.Length);
-            Assert.Equal(JsonConvert.SerializeObject(tickets[0]), JsonConvert.SerializeObject(retrievedTickets[0]));
-            Assert.Equal(JsonConvert.SerializeObject(tickets[1]), JsonConvert.SerializeObject(retrievedTickets[1]));
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByOrganizationIdAsync(int.MinValue));
         }
 
         [Fact]
-        public async Task ShouldCreateTicket()
+        public async Task GetAllByRequestedByIdAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllByRequestedByIdAsync(40);
+
+            var ticket = results.First();
+
+            Assert.Equal(40, ticket.Id);
+            Assert.Equal($"My printer is on fire! 40", ticket.Subject);
+            Assert.Equal(40.ToString(), ticket.ExternalId);
+            Assert.Equal(40, ticket.OrganisationId);
+            Assert.Equal(40, ticket.RequesterId);
+            Assert.Equal(40, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllByRequestedByIdAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAllByRequestedByIdAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAllByRequestedByIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByRequestedByIdAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAllByCcdIdAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllByCcdIdAsync(20);
+
+            var ticket = results.First();
+
+            Assert.Equal(20, ticket.Id);
+            Assert.Equal($"My printer is on fire! 20", ticket.Subject);
+            Assert.Equal(20.ToString(), ticket.ExternalId);
+            Assert.Equal(20, ticket.OrganisationId);
+            Assert.Equal(20, ticket.RequesterId);
+            Assert.Equal(20, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllByCcdIdAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAllByCcdIdAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAllByCcdIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByCcdIdAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAllByAssignedToIdAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllByAssignedToIdAsync(30);
+
+            var ticket = results.First();
+
+            Assert.Equal(30, ticket.Id);
+            Assert.Equal($"My printer is on fire! 30", ticket.Subject);
+            Assert.Equal(30.ToString(), ticket.ExternalId);
+            Assert.Equal(30, ticket.OrganisationId);
+            Assert.Equal(30, ticket.RequesterId);
+            Assert.Equal(30, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllByAssignedToIdAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAllByAssignedToIdAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAllByAssignedToIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByAssignedToIdAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task ListAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.ListAsync();
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var ticket = results.ElementAt(i - 1);
+
+                Assert.Equal(i, ticket.Id);
+                Assert.Equal($"My printer is on fire! {i}", ticket.Subject);
+                Assert.Equal(i.ToString(), ticket.ExternalId);
+                Assert.Equal(i, ticket.OrganisationId);
+                Assert.Equal(i, ticket.RequesterId);
+                Assert.Equal(i, ticket.AssigneeId);
+            }
+        }
+
+        [Fact]
+        public async Task ListAsync_WhenCalledWithPaging_ShouldGetAllTickets()
+        {
+            var results = await _resource.ListAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var ticket = results.First();
+
+            Assert.Equal(2, ticket.Id);
+            Assert.Equal("My printer is on fire! 2", ticket.Subject);
+            Assert.Equal("2", ticket.ExternalId);
+            Assert.Equal(2, ticket.OrganisationId);
+            Assert.Equal(2, ticket.RequesterId);
+            Assert.Equal(2, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task ListAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task ListForOrganizationAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.ListForOrganizationAsync(10);
+
+            var ticket = results.First();
+
+            Assert.Equal(10, ticket.Id);
+            Assert.Equal($"My printer is on fire! 10", ticket.Subject);
+            Assert.Equal(10.ToString(), ticket.ExternalId);
+            Assert.Equal(10, ticket.OrganisationId);
+            Assert.Equal(10, ticket.RequesterId);
+            Assert.Equal(10, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task ListForOrganizationAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.ListForOrganizationAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task ListForOrganizationAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListForOrganizationAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task ListRequestedByAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.ListRequestedByAsync(40);
+
+            var ticket = results.First();
+
+            Assert.Equal(40, ticket.Id);
+            Assert.Equal($"My printer is on fire! 40", ticket.Subject);
+            Assert.Equal(40.ToString(), ticket.ExternalId);
+            Assert.Equal(40, ticket.OrganisationId);
+            Assert.Equal(40, ticket.RequesterId);
+            Assert.Equal(40, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task ListRequestedByAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.ListRequestedByAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task ListRequestedByAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListRequestedByAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task ListCcdAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.ListCcdAsync(20);
+
+            var ticket = results.First();
+
+            Assert.Equal(20, ticket.Id);
+            Assert.Equal($"My printer is on fire! 20", ticket.Subject);
+            Assert.Equal(20.ToString(), ticket.ExternalId);
+            Assert.Equal(20, ticket.OrganisationId);
+            Assert.Equal(20, ticket.RequesterId);
+            Assert.Equal(20, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task ListCcdAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.ListCcdAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task ListCcdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListCcdAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task ListAssignedToAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.ListAssignedToAsync(30);
+
+            var ticket = results.First();
+
+            Assert.Equal(30, ticket.Id);
+            Assert.Equal($"My printer is on fire! 30", ticket.Subject);
+            Assert.Equal(30.ToString(), ticket.ExternalId);
+            Assert.Equal(30, ticket.OrganisationId);
+            Assert.Equal(30, ticket.RequesterId);
+            Assert.Equal(30, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task ListAssignedToAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.ListAssignedToAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task ListAssignedToAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListAssignedToAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalled_ShouldGetTicket()
+        {
+            var ticket = (await _resource.GetAsync(1))
+                .Ticket;
+
+            Assert.Equal(1, ticket.Id);
+            Assert.Equal($"My printer is on fire! 1", ticket.Subject);
+            Assert.Equal(1.ToString(), ticket.ExternalId);
+            Assert.Equal(1, ticket.OrganisationId);
+            Assert.Equal(1, ticket.RequesterId);
+            Assert.Equal(1, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalledWithTicketIds_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAsync(new long[] { 1, 2, 3 });
+
+            Assert.Equal(3, results.Count);
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var ticket = results.ElementAt(i - 1);
+
+                Assert.Equal(i, ticket.Id);
+                Assert.Equal($"My printer is on fire! {i}", ticket.Subject);
+                Assert.Equal(i.ToString(), ticket.ExternalId);
+                Assert.Equal(i, ticket.OrganisationId);
+                Assert.Equal(i, ticket.RequesterId);
+                Assert.Equal(i, ticket.AssigneeId);
+            }
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalledWithTicketIdsAndWithPaging_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAsync(
+                new long[] { 1, 2, 3 },
+                new PagerParameters
+                {
+                    Page = 2,
+                    PageSize = 1
+                });
+
+            var ticket = results.First();
+
+            Assert.Equal(2, ticket.Id);
+            Assert.Equal($"My printer is on fire! 2", ticket.Subject);
+            Assert.Equal(2.ToString(), ticket.ExternalId);
+            Assert.Equal(2, ticket.OrganisationId);
+            Assert.Equal(2, ticket.RequesterId);
+            Assert.Equal(2, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalledWithTicketIdsButServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAsync(new long[] { long.MinValue }));
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithTicketIds_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllAsync(new long[] { 1, 2, 3 });
+
+            Assert.Equal(3, results.Count);
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var ticket = results.ElementAt(i - 1);
+
+                Assert.Equal(i, ticket.Id);
+                Assert.Equal($"My printer is on fire! {i}", ticket.Subject);
+                Assert.Equal(i.ToString(), ticket.ExternalId);
+                Assert.Equal(i, ticket.OrganisationId);
+                Assert.Equal(i, ticket.RequesterId);
+                Assert.Equal(i, ticket.AssigneeId);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithTicketIdsAndWithPaging_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllAsync(
+                new long[] { 1, 2, 3 },
+                new PagerParameters
+                {
+                    Page = 2,
+                    PageSize = 1
+                });
+
+            var ticket = results.First();
+
+            Assert.Equal(2, ticket.Id);
+            Assert.Equal($"My printer is on fire! 2", ticket.Subject);
+            Assert.Equal(2.ToString(), ticket.ExternalId);
+            Assert.Equal(2, ticket.OrganisationId);
+            Assert.Equal(2, ticket.RequesterId);
+            Assert.Equal(2, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithTicketIdsButServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new long[] { long.MinValue }));
+        }
+
+        [Fact]
+        public async Task CreateAsync_WhenCalled_ShouldCreateTicket()
         {
             var response = await _resource.CreateAsync(
                 new TicketCreateRequest("description")
@@ -264,7 +496,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public Task ShouldThrowErrorWhenNot201()
+        public Task CreateAsync_WhenUnexpectedHttpCode_ShouldThrow()
         {
             return Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(
                 new TicketCreateRequest("description")
@@ -281,7 +513,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
         
         [Fact]
-        public async Task ShouldUpdateTicket()
+        public async Task UpdateAsync_WhenCalled_ShouldUpdateTicket()
         {
             var ticket = (await CreateTickets(1)).First();
             
@@ -296,9 +528,29 @@ namespace ZendeskApi.Client.Tests.Resources
 
             Assert.Equal("I COMMAND YOU TO UPDATE!!!", ticket.Subject);
         }
-        
+
         [Fact]
-        public async Task ShouldUpdateMultipleTickets()
+        public async Task UpdateAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var org = await _resource.UpdateAsync(new TicketUpdateRequest(int.MaxValue)
+            {
+                Subject = "I COMMAND YOU TO UPDATE!!!"
+            });
+
+            Assert.Null(org);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.UpdateAsync(new TicketUpdateRequest(int.MinValue)
+            {
+                Subject = string.Empty
+            }));
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenCalled_ShouldUpdateMultipleTickets()
         {
             var tickets = await CreateTickets(3);
 
@@ -322,7 +574,16 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ShouldDeleteTicket()
+        public async Task UpdateAsync_WhenManyAndUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () =>
+            {
+                await _resource.UpdateAsync(new [] { new TicketUpdateRequest(int.MinValue) });
+            });
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenCalled_ShouldDeleteTicket()
         {
             var ticket = (await CreateTickets(1)).First();
 
@@ -338,7 +599,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ShouldDeleteMultipleTickets()
+        public async Task DeleteAsync_WhenCalled_ShouldDeleteMultiple()
         {
             var tickets = await CreateTickets(3);
             var ticketIds = tickets.Select(t => t.Id).ToArray();

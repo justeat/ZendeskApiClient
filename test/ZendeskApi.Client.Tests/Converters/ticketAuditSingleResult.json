@@ -1,0 +1,68 @@
+{
+    "audit": {
+        "id": 465580327958,
+        "ticket_id": 1588899,
+        "created_at": "2019-06-19T14:56:55Z",
+        "author_id": 489650852,
+        "metadata": {
+            "system": {
+                "ip_address": "1.0.0.0",
+                "location": "Dublin, 07, Ireland",
+                "latitude": 1.000,
+                "longitude": -6.234
+            },
+            "custom": {}
+        },
+        "events": [
+            {
+                "id": 123,
+                "type": "Comment",
+                "author_id": 456,
+                "body": "TEST COMMENT BODY",
+                "html_body": "<div class=\"zd-comment\" dir=\"auto\"><p dir=\"auto\">TEST COMMENT BODY</p></div>",
+                "plain_body": "TEST COMMENT BODY",
+                "public": true,
+                "attachments": [],
+                "audit_id": 789
+            },
+            {
+                "id": 465545759478,
+                "type": "Create",
+                "value": "360919616038",
+                "field_name": "requester_id"
+            },
+            {
+                "id": 465545759598,
+                "type": "Create",
+                "value": "TEST SUBJECT",
+                "field_name": "subject"
+            },
+            {
+                "id": 465545759698,
+                "type": "Create",
+                "value": "360000034798",
+                "field_name": "ticket_form_id"
+            },
+            {
+                "id": 465545759718,
+                "type": "Create",
+                "value": "incident",
+                "field_name": "type"
+            },
+            {
+                "id": 465545759818,
+                "type": "Create",
+                "value": "349797442",
+                "field_name": "24472982"
+            }
+        ],
+        "via": {
+            "channel": "api",
+            "source": {
+                "from": {},
+                "to": {},
+                "rel": null
+            }
+        }
+    }
+}

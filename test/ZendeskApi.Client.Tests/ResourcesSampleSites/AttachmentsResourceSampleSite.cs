@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
@@ -16,11 +11,26 @@ using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
-    public class AttachmentsResourceSampleSite : SampleSite
+    internal class AttachmentsResourceSampleSite : SampleSite<State<Attachment>, Attachment>
     {
-        private class State
+        public AttachmentsResourceSampleSite(string resource)
+        : base(
+            resource, 
+            MatchesRequest,
+            null,
+            PopulateState)
+        { }
+
+        private static void PopulateState(State<Attachment> state)
         {
-            public readonly IDictionary<long, Attachment> Attachments = new Dictionary<long, Attachment>();
+            for (var i = 1; i <= 100; i++)
+            {
+                state.Items.Add(i, new Attachment
+                {
+                    Id = i,
+                    FileName = $"filename.{i}"
+                });
+            }
         }
 
         public static Action<IRouteBuilder> MatchesRequest
@@ -30,33 +40,31 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                 return rb => rb
                     .MapGet("api/v2/attachments/{id}", (req, resp, routeData) =>
                     {
-                        var id = long.Parse(routeData.Values["id"].ToString());
-
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
-
-                        if (!state.Attachments.ContainsKey(id))
-                        {
-                            resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        var obj = state.Attachments.Single(x => x.Key == id).Value;
-
-                        resp.StatusCode = (int)HttpStatusCode.OK;
-                        return resp.WriteAsJson(obj);
+                        return RequestHelper.GetById<Attachment, Attachment>(
+                            req,
+                            resp,
+                            routeData,
+                            item => item);
                     })
                     .MapPost("api/v2/uploads", (req, resp, routeData) =>
                     {
-                        Debug.Assert(req.Query["filename"] == "crash.log");
-                        Debug.Assert(req.Query["token"] == "6bk3gql82em5nmf");
-                        Debug.Assert(req.ContentType == "application/binary");
+                        var filename = req.Query["filename"];
+
+                        if (string.IsNullOrWhiteSpace(filename))
+                        {
+                            resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                            return Task.FromResult(resp);
+                        }
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
 
                         resp.Headers.Add("Location", "https://localhost/api/v2/attachments/498483");
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<State>();
-                        
+                        var state = req
+                            .HttpContext
+                            .RequestServices
+                            .GetRequiredService<State<Attachment>>();
+
                         var attachment = new Attachment
                         {
                             ContentType = "text/plain",
@@ -66,7 +74,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             Id = long.Parse(Rand.Next().ToString())
                         };
 
-                        state.Attachments.Add(attachment.Id.Value, attachment);
+                        state.Items.Add(attachment.Id.Value, attachment);
 
                         resp.WriteAsJson(new UploadResponse{
                             Upload = new Upload {
@@ -76,56 +84,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         });
 
                         return Task.CompletedTask;
+                    })
+                    .MapDelete("api/v2/uploads/{id}", (req, resp, routeData) =>
+                    {
+                        return RequestHelper.Delete<Attachment>(
+                            req,
+                            resp,
+                            routeData);
                     });
             }
-        }
-
-        private readonly TestServer _server;
-
-        private HttpClient _client;
-        public override HttpClient Client => _client;
-
-        public AttachmentsResourceSampleSite(string resource)
-        {
-            var webhostbuilder = new WebHostBuilder();
-            webhostbuilder
-                .ConfigureServices(services => {
-                    services.AddSingleton<State>((_) => new State());
-                    services.AddRouting();
-                    services.AddMemoryCache();
-                })
-                .Configure(app =>
-                {
-                    app.UseRouter(MatchesRequest);
-                });
-
-            _server = new TestServer(webhostbuilder);
-
-            RefreshClient(resource);
-        }
-
-        public override void RefreshClient(string resource)
-        {
-            _client = _server.CreateClient();
-            _client.BaseAddress = new Uri($"http://localhost/{CreateResource(resource)}");
-        }
-
-        private string CreateResource(string resource)
-        {
-            resource = resource?.Trim('/');
-
-            return resource != null ? resource + "/" : resource;
-        }
-
-        public Uri BaseUri
-        {
-            get { return Client.BaseAddress; }
-        }
-
-        public override void Dispose()
-        {
-            Client.Dispose();
-            _server.Dispose();
         }
     }
 }

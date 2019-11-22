@@ -1,15 +1,14 @@
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Resources;
-using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -20,115 +19,348 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public GroupsResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new GroupsResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<Group>((resource) => new GroupsResourceSampleSite(resource));
             _resource = new GroupsResource(_client, NullLogger.Instance);
         }
 
         [Fact]
-        public async Task ShouldListAllGroups()
+        public async Task ListAsync_WhenCalled_ShouldGetAll()
         {
-            var group1 = await _resource.CreateAsync(new GroupCreateRequest("DJs"));
+            var results = await _resource.ListAsync();
 
-            var group2 = await _resource.CreateAsync(new GroupCreateRequest("MCs"));
+            Assert.Equal(100, results.Count);
 
-            var retrievedGroups = (await _resource.ListAsync()).ToArray();
-
-            Assert.Equal(2, retrievedGroups.Length);
-            Assert.Equal(JsonConvert.SerializeObject(group1), JsonConvert.SerializeObject(retrievedGroups[0]));
-            Assert.Equal(JsonConvert.SerializeObject(group2), JsonConvert.SerializeObject(retrievedGroups[1]));
-        }
-
-        [Fact]
-        public async Task ShouldListAllGroupsForUser()
-        {
-            // NOTE: Using name rather than calling user api to assign groups.
-            var group1 = await _resource.CreateAsync(new GroupCreateRequest("DJs USER: 1"));
-
-            var group2 = await _resource.CreateAsync(new GroupCreateRequest("MCs USER: 2"));
-
-            var group3 = await _resource.CreateAsync(new GroupCreateRequest("DJs USER: 1"));
-
-            var retrievedGroups = (await _resource.ListAsync(1L)).ToArray();
-
-            Assert.Equal(2, retrievedGroups.Length);
-            Assert.Equal(JsonConvert.SerializeObject(group1), JsonConvert.SerializeObject(retrievedGroups[0]));
-            Assert.Equal(JsonConvert.SerializeObject(group3), JsonConvert.SerializeObject(retrievedGroups[1]));
-        }
-
-        [Fact]
-        public async Task ShouldListAllAssignable()
-        {
-            var group1 = await _resource.CreateAsync(new GroupCreateRequest("DJs Assign:true"));
-
-            var group2 = await _resource.CreateAsync(new GroupCreateRequest("MCs Assign:true"));
-
-            var group3 = await _resource.CreateAsync(new GroupCreateRequest("DJs Assign:false"));
-
-            var groups = (await _resource.ListAssignableAsync()).ToArray();
-
-            Assert.Equal(2, groups.Length);
-            Assert.Equal(JsonConvert.SerializeObject(group1), JsonConvert.SerializeObject(groups[0]));
-            Assert.Equal(JsonConvert.SerializeObject(group2), JsonConvert.SerializeObject(groups[1]));
-        }
-
-        [Fact]
-        public async Task ShouldGetGroupById()
-        {
-            var group1 = await _resource.CreateAsync(new GroupCreateRequest("DJs"));
-
-            var group2 = await _resource.CreateAsync(new GroupCreateRequest("MCs"));
-
-            var group = await _resource.GetAsync(group2.Id);
-
-            Assert.Equal(JsonConvert.SerializeObject(group2), JsonConvert.SerializeObject(group));
-        }
-
-        [Fact]
-        public async Task ShouldCreateGroup()
-        {
-            var response = await _resource.CreateAsync(new GroupCreateRequest("I'm a group!"));
-            
-            Assert.Equal("I'm a group!", response.Name);
-            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{response.Id}.json"), response.Url);
-        }
-
-        [Fact]
-        public Task ShouldThrowErrorWhenNot201()
-        {
-            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateAsync(new GroupCreateRequest("I'm an error group!")));
-
-            // could use tags to simulate httpstatus codes in fake client?
-        }
-
-        [Fact]
-        public async Task ShouldUpdateGroup()
-        {
-            var group = await _resource.CreateAsync(new GroupCreateRequest("I'm a group!"));
-
-            Assert.Equal("I'm a group!", group.Name);
-
-            var groupUpdate = await _resource.UpdateAsync(new GroupUpdateRequest(group.Id)
+            for (var i = 1; i <= 100; i++)
             {
-                Name = "Im a new group!"
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
+        public async Task ListAsync_WhenCalledWithPaging_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.ListAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
             });
 
-            Assert.Equal("Im a new group!", groupUpdate.Name);
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"name.2", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
         }
 
         [Fact]
-        public async Task ShouldDeleteGroup()
+        public async Task ListAsync_WhenServiceUnavailable_ShouldThrow()
         {
-            var group = await _resource.CreateAsync(new GroupCreateRequest ("I'm a group!"));
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
 
-            var group1 = await _resource.GetAsync(group.Id);
+        [Fact]
+        public async Task ListAsync_WhenCalledWithUserId_ShouldGetAll()
+        {
+            var results = await _resource.ListAsync(1);
 
-            Assert.Equal(JsonConvert.SerializeObject(group), JsonConvert.SerializeObject(group1));
+            Assert.Equal(100, results.Count);
 
-            await _resource.DeleteAsync(group.Id);
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
 
-            var group2 = await _resource.GetAsync(group.Id);
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
 
-            Assert.Null(group2);
+        [Fact]
+        public async Task ListAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.ListAsync(1, new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"name.2", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
+        }
+
+        [Fact]
+        public async Task ListAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListAsync(1, new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task ListAssignableAsync_WhenCalledWithUserId_ShouldGetAll()
+        {
+            var results = await _resource.ListAssignableAsync();
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
+        public async Task ListAssignableAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.ListAssignableAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"name.2", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
+        }
+
+        [Fact]
+        public async Task ListAssignableAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.ListAssignableAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalled_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync();
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"name.2", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithUserId_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByUserIdAsync(1);
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllByUserIdAsync(1, new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"name.2", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByUserIdAsync(1, new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAllByAssignableAsync_WhenCalledWithUserId_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByAssignableAsync();
+
+            Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllByAssignableAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllByAssignableAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"name.2", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/2.json"), item.Url);
+        }
+
+        [Fact] public async Task GetAllByAssignableAsync_WithUserIdWhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByAssignableAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalled_ShouldGet()
+        {
+            var item = await _resource.GetAsync(1);
+
+            Assert.Equal(1, item.Id);
+            Assert.Equal($"name.1", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/1.json"), item.Url);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task CreateAsync_WhenCalled_ShouldCreateOrganization()
+        {
+            var item = await _resource.CreateAsync(new GroupCreateRequest("I'm a group!"));
+
+            Assert.Equal($"I'm a group!", item.Name);
+            Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{item.Id}.json"), item.Url);
+        }
+
+        [Fact]
+        public async Task CreateAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(new GroupCreateRequest("")));
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenCalled_ShouldCreate()
+        {
+            var item = await _resource.UpdateAsync(new GroupUpdateRequest(1)
+            {
+                Name = "name.1.new"
+            });
+
+            Assert.Equal(1, item.Id);
+            Assert.Equal("name.1.new", item.Name);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var org = await _resource.UpdateAsync(new GroupUpdateRequest(int.MaxValue)
+            {
+                Name = "name.1.new"
+            });
+
+            Assert.Null(org);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.UpdateAsync(new GroupUpdateRequest(int.MinValue)
+            {
+                Name = string.Empty
+            }));
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenCalled_ShouldDeleteOrganization()
+        {
+            await _resource.DeleteAsync(1);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(int.MinValue));
         }
 
         public void Dispose()

@@ -3,8 +3,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Exceptions;
+using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 
@@ -17,26 +18,35 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public AttachmentsResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new AttachmentsResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<Attachment>((resource) => new AttachmentsResourceSampleSite(resource));
             _resource = new AttachmentsResource(_client, NullLogger.Instance);
         }
 
         [Fact]
-        public async Task ShouldGetAttachmentById()
+        public async Task GetAsync_WhenCalled_ShouldGet()
         {
-            var byteArray = Encoding.UTF8.GetBytes("Hi there guys!");
-            var stream = new MemoryStream(byteArray);
+            var attachment = await _resource.GetAsync(1);
 
-            var response = await _resource
-                .UploadAsync("crash.log", stream, "6bk3gql82em5nmf");
-
-            var attachment = await _resource.GetAsync(response.Attachment.Id.Value);
-
-            Assert.Equal(JsonConvert.SerializeObject(response.Attachment), JsonConvert.SerializeObject(attachment));
+            Assert.Equal(1, attachment.Id);
+            Assert.Equal("filename.1", attachment.FileName);
         }
 
         [Fact]
-        public async Task ShouldCreateAttachment()
+        public async Task GetAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task UploadAsync_WhenCalled_ShouldCreateAttachment()
         {
             var byteArray = Encoding.UTF8.GetBytes("Hi there guys!");
             var stream = new MemoryStream(byteArray);
@@ -47,6 +57,24 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Equal("6bk3gql82em5nmf", response.Token);
             Assert.Equal("text/plain", response.Attachment.ContentType);
             Assert.Equal(new MemoryStream(byteArray).Length, response.Attachment.Size);
+        }
+
+        [Fact]
+        public async Task UploadAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.UploadAsync(string.Empty, new MemoryStream(), "6bk3gql82em5nmf"));
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenCalled_ShouldDelete()
+        {
+            await _resource.DeleteAsync("1");
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(int.MinValue.ToString()));
         }
 
         public void Dispose()

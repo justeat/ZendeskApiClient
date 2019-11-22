@@ -1,4 +1,5 @@
 using ZendeskApi.Client.Resources;
+using ZendeskApi.Client.Resources.Interfaces;
 
 namespace ZendeskApi.Client
 {
@@ -16,9 +17,15 @@ namespace ZendeskApi.Client
         IAttachmentsResource Attachments { get; }
         ITicketFieldsResource TicketFields { get; }
         ITicketFormsResource TicketForms { get; }
+        ITicketAuditResource TicketAudits { get; }
+        IOrganizationFieldsResource OrganizationFields { get; }
         IOrganizationMembershipsResource OrganizationMemberships { get; }
         IRequestsResource Requests { get; }
         ISatisfactionRatingsResource SatisfactionRatings { get; }
         IUserFieldsResource UserFields { get; }
+        IJobStatusResource JobStatuses { get; }
+        IServiceStatusResource ServiceStatus { get; }
+        IHelpCenterResource HelpCenter { get; }
+        ILocaleResource Locales { get; }
     }
 }

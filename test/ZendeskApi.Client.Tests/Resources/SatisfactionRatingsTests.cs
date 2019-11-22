@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
@@ -17,54 +17,94 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public SatisfactionRatingsTests()
         {
-            _client = new DisposableZendeskApiClient(resource => new SatisfactionRatingsResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<State<SatisfactionRating>, SatisfactionRating>(resource => new SatisfactionRatingsResourceSampleSite(resource));
             _resource = new SatisfactionRatingsResource(_client, NullLogger.Instance);
         }
 
         [Fact]
-        public async Task ShouldListAllSatisfactionRatings()
+        public async Task GetAllAsync_WhenCalled_ShouldGetAll()
         {
-            var obj1 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
-            var obj2 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu2.com" }, 1);
+            var results = await _resource.GetAllAsync();
 
-            var objs = (await _resource.GetAllAsync()).ToArray();
+            Assert.Equal(100, results.Count);
 
-            Assert.Equal(2, objs.Length);
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs[0]));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs[1]));
-        }
-        
-        [Fact]
-        public async Task ShouldGetSatisfactionRating()
-        {
-            var obj1 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
-
-            var response = await _resource.GetAsync(obj1.Id.Value);
-
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(response));
-        }
-
-        [Fact]
-        public async Task ShouldHandleSatisfactionRatingComment()
-        {
-            var obj1 = await _resource.CreateAsync(new SatisfactionRating
+            for (var i = 1; i <= 100; i++)
             {
-                Url = "http://fu.com",
-                Comment = "Very satified indeed"
-            }, 1);
+                var item = results.ElementAt(i - 1);
 
-            var response = await _resource.GetAsync(obj1.Id.Value);
-
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(response));
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"comment.{i}", item.Comment);
+            }
         }
-        
-        [Fact]
-        public async Task ShouldCreateTicket()
-        {
-            var obj1 = await _resource.CreateAsync(new SatisfactionRating { Url = "http://fu.com" }, 1);
 
-            Assert.NotNull(obj1.Id);
-            Assert.Equal("http://fu.com", obj1.Url);
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = 2,
+                PageSize = 1
+            });
+
+            var item = results.First();
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal($"comment.2", item.Comment);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllAsync(new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalled_ShouldGetOrganization()
+        {
+            var item = await _resource.GetAsync(1);
+
+            Assert.Equal(1, item.Id);
+            Assert.Equal($"comment.1", item.Comment);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetAsync(int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAsync(int.MinValue));
+        }
+
+        [Fact]
+        public async Task CreateAsync_WhenCalled_ShouldCreateOrganization()
+        {
+            var item = await _resource.CreateAsync(new SatisfactionRating
+            {
+                Id = 101,
+                Comment = "comment.101"
+            }, 101);
+
+            Assert.Equal(101, item.Id);
+            Assert.Equal($"comment.101", item.Comment);
+        }
+
+        [Fact]
+        public async Task CreateAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateAsync(new SatisfactionRating
+            {
+                Id = int.MinValue
+            }, int.MinValue));
         }
         
         public void Dispose()

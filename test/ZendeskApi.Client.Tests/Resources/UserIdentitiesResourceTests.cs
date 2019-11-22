@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Newtonsoft.Json;
 using Xunit;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -18,118 +18,224 @@ namespace ZendeskApi.Client.Tests.Resources
 
         public UserIdentitiesResourceTests()
         {
-            _client = new DisposableZendeskApiClient((resource) => new UserIdentitiesResourceSampleSite(resource));
+            _client = new DisposableZendeskApiClient<State<UserIdentity>, UserIdentity>((resource) => new UserIdentitiesResourceSampleSite(resource));
             _resource = new UserIdentitiesResource(_client, NullLogger.Instance);
         }
 
         [Fact]
-        public async Task ShouldListAllIdentitiesForUser()
+        public async Task GetAllForUserAsync_WhenCalled_ShouldGetAll()
         {
-            var obj1 = await _resource.CreateUserIdentityAsync(new UserIdentity
-            {
-                UserId = 123,
-                Value = "fu"
-            }, 123);
+            var results = await _resource.GetAllForUserAsync(1);
 
-            var obj2 = await _resource.CreateUserIdentityAsync(new UserIdentity
-            {
-                UserId = 234123,
-                Value = "fasdsadsau"
-            }, 234123);
+            Assert.Equal(1, results.Count);
 
-            var objs1 = (await _resource.GetAllForUserAsync(123)).ToArray();
-            var objs2 = (await _resource.GetAllForUserAsync(234123)).ToArray();
+            var identity = results.First();
 
-            Assert.Single(objs1);
-            Assert.Single(objs2);
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs1[0]));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs2[0]));
+            Assert.Equal(1, identity.Id);
+            Assert.Equal(1, identity.UserId);
+            Assert.Equal($"name.1", identity.Name);
         }
 
         [Fact]
-        public async Task ShouldGetIdentityForUser()
+        public async Task GetAllForUserAsync_WhenCalledWithPaging_ShouldGetAll()
         {
-            var obj1 = await _resource.CreateUserIdentityAsync(new UserIdentity
+            var results = await _resource.GetAllForUserAsync(1, new PagerParameters
             {
-                UserId = 123,
-                Value = "fu"
-            }, 123);
+                Page = 2,
+                PageSize = 1
+            });
 
-            var obj2 = await _resource.CreateUserIdentityAsync(new UserIdentity
-            {
-                UserId = 234123,
-                Value = "fasdsadsau"
-            }, 234123);
-
-            var objs1 = await _resource.GetIdentityForUserAsync(123, obj1.Id.Value);
-            var objs2 = await _resource.GetIdentityForUserAsync(234123, obj2.Id.Value);
-
-            Assert.Equal(JsonConvert.SerializeObject(obj1), JsonConvert.SerializeObject(objs1));
-            Assert.Equal(JsonConvert.SerializeObject(obj2), JsonConvert.SerializeObject(objs2));
-        }
-        
-        [Fact]
-        public async Task ShouldCreateUserIdentity()
-        {
-            var obj1 = await _resource.CreateUserIdentityAsync(new UserIdentity
-            {
-                UserId = 123,
-                Value = "fu"
-            }, 123);
-
-            Assert.NotNull(obj1.Id);
-            Assert.Equal("fu", obj1.Value);
+            Assert.Empty(results);
         }
 
         [Fact]
-        public Task ShouldThrowErrorWhenNot201()
+        public async Task GetAllForUserAsync_WhenServiceUnavailable_ShouldThrow()
         {
-            return Assert.ThrowsAsync<HttpRequestException>(async () => await _resource.CreateUserIdentityAsync(
-                new UserIdentity
-                {
-                    UserId = 123,
-                    Value = "fu error"
-                }, 123));
-
-            // could use tags to simulate httpstatus codes in fake client?
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllForUserAsync(1, new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
         }
 
         [Fact]
-        public async Task ShouldUpdateGroup()
+        public async Task GetAllByUserIdAsync_WhenCalled_ShouldGetAll()
         {
-            var obj = await _resource.CreateUserIdentityAsync(new UserIdentity
-            {
-                UserId = 123,
-                Value = "fu"
-            }, 123);
+            var results = await _resource.GetAllByUserIdAsync(1);
 
-            Assert.Equal("fu", obj.Value);
+            Assert.Equal(1, results.Count);
 
-            obj.Value = "kung fu!";
+            var identity = results.First();
 
-            obj = await _resource.UpdateAsync(obj);
-
-            Assert.Equal("kung fu!", obj.Value);
+            Assert.Equal(1, identity.Id);
+            Assert.Equal(1, identity.UserId);
+            Assert.Equal($"name.1", identity.Name);
         }
 
         [Fact]
-        public async Task ShouldDeleteGroup()
+        public async Task GetAllByUserIdAsync_WhenCalledWithPaging_ShouldGetAll()
         {
-            var obj = await _resource.CreateUserIdentityAsync(new UserIdentity
+            var results = await _resource.GetAllByUserIdAsync(1, new PagerParameters
             {
-                UserId = 123,
-                Value = "fu"
-            }, 123);
+                Page = 2,
+                PageSize = 1
+            });
 
-            var obj1 = await _resource.GetIdentityForUserAsync(obj.UserId.Value, obj.Id.Value);
+            Assert.Empty(results);
+        }
 
-            Assert.Equal(JsonConvert.SerializeObject(obj), JsonConvert.SerializeObject(obj1));
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByUserIdAsync(1, new PagerParameters
+            {
+                Page = int.MaxValue,
+                PageSize = int.MaxValue
+            }));
+        }
 
-            await _resource.DeleteAsync(obj.UserId.Value, obj.Id.Value);
+        [Fact]
+        public async Task GetIdentityForUserAsync_WhenCalled_ShouldGet()
+        {
+            var item = await _resource.GetIdentityForUserAsync(10, 10);
 
-            var obj2 = await _resource.GetIdentityForUserAsync(obj.UserId.Value, obj.Id.Value);
+            Assert.Equal(10, item.Id);
+            Assert.Equal(10, item.UserId);
+            Assert.Equal($"name.10", item.Name);
+        }
 
-            Assert.Null(obj2);
+        [Fact]
+        public async Task GetIdentityForUserAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetIdentityForUserAsync(int.MaxValue, int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetIdentityForUserAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetIdentityForUserAsync(int.MinValue, int.MinValue));
+        }
+
+        [Fact]
+        public async Task GetIdentityByUserIdAsync_WhenCalled_ShouldGet()
+        {
+            var item = await _resource.GetIdentityByUserIdAsync(10, 10);
+
+            Assert.Equal(10, item.Id);
+            Assert.Equal(10, item.UserId);
+            Assert.Equal($"name.10", item.Name);
+        }
+
+        [Fact]
+        public async Task GetIdentityByUserIdAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var results = await _resource.GetIdentityByUserIdAsync(int.MaxValue, int.MaxValue);
+
+            Assert.Null(results);
+        }
+
+        [Fact]
+        public async Task GetIdentityByUserIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetIdentityByUserIdAsync(int.MinValue, int.MinValue));
+        }
+
+        [Fact]
+        public async Task CreateUserIdentityAsync_WhenCalled_ShouldCreate()
+        {
+            var item = await _resource.CreateUserIdentityAsync(new UserIdentity
+            {
+                Id = 101,
+                Name = "name.101",
+                UserId = 101
+            }, 101);
+
+            Assert.Equal(101, item.Id);
+            Assert.Equal("name.101", item.Name);
+        }
+
+        [Fact]
+        public async Task CreateUserIdentityAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateUserIdentityAsync(new UserIdentity
+            {
+                Id = int.MinValue,
+                UserId = int.MinValue
+            }, int.MinValue));
+        }
+
+        [Fact]
+        public async Task CreateEndUserIdentityAsync_WhenCalled_ShouldCreate()
+        {
+            var item = await _resource.CreateEndUserIdentityAsync(new UserIdentity
+            {
+                Id = 102,
+                Name = "name.102",
+                UserId = 102
+            }, 102);
+
+            Assert.Equal(102, item.Id);
+            Assert.Equal("name.102", item.Name);
+        }
+
+        [Fact]
+        public async Task CreateEndUserIdentityAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.CreateEndUserIdentityAsync(new UserIdentity
+            {
+                Id = int.MinValue,
+                UserId = int.MinValue
+            }, int.MinValue));
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenCalled_ShouldUpdate()
+        {
+            var item = await _resource.UpdateAsync(new UserIdentity
+            {
+                Id = 1,
+                Name = "name.new.1",
+                UserId = 1
+            });
+
+            Assert.Equal(1, item.Id);
+            Assert.Equal("name.new.1", item.Name);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenNotFound_ShouldReturnNull()
+        {
+            var org = await _resource.UpdateAsync(new UserIdentity
+            {
+                Id = int.MaxValue,
+                UserId = int.MaxValue
+            });
+
+            Assert.Null(org);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.UpdateAsync(new UserIdentity
+            {
+                Id = int.MinValue,
+                UserId = int.MinValue
+            }));
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenCalled_ShouldDelete()
+        {
+            await _resource.DeleteAsync(1, 1);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenUnexpectedHttpCode_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(int.MinValue, int.MinValue));
         }
 
         public void Dispose()
