@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.IntegrationTests.Factories;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
@@ -323,7 +324,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         {
             var client = _clientFactory.GetClient();
 
-            await Assert.ThrowsAsync<HttpRequestException>(() => client.Organizations
+            await Assert.ThrowsAsync<ZendeskRequestException>(() => client.Organizations
                 .DeleteAsync(long.MaxValue));
         }
     }
