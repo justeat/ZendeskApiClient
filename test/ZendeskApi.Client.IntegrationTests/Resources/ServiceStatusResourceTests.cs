@@ -10,7 +10,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         private readonly ITestOutputHelper _output;
         private readonly ZendeskClientFactory _clientFactory;
 
-        private const string Subdomain = "<your subdomain>";
+        private const string Subdomain = "d3v-just-eat";
 
         public ServiceStatusResourceTests(
             ITestOutputHelper output,
