@@ -86,4 +86,4 @@ We are happy for anyone to contribute into this client, and help us evolve it ov
 We aim to follow [Semantic Versioning](https://semver.org/) guidelines within this library. When increasing the version there are multiple places that will need to be changed:
 
 * [appveyor.yml](https://github.com/justeat/ZendeskApiClient/blob/master/appveyor.yml)
-* [ZendeskApi.Commons.props](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Build/ZendeskApi.Commons.props)
+* [ZendeskApi.Commons.props](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Build/ZendeskApi.Commons.props) 
