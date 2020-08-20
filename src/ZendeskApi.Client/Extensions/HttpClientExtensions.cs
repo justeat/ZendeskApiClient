@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,10 +34,12 @@ namespace ZendeskApi.Client.Extensions
             
             if (!string.IsNullOrEmpty(pager.Cursor))
             {
+                var encodedCursor = Uri.EscapeDataString(pager.Cursor);
+
                 if (requestUri.Contains("?"))
-                    requestUri += $"&cursor={pager.Cursor}";
+                    requestUri += $"&cursor={encodedCursor}";
                 else
-                    requestUri += $"?cursor={pager.Cursor}";
+                    requestUri += $"?cursor={encodedCursor}";
             }
 
             if (requestUri.Contains("?"))
