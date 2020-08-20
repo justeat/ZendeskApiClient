@@ -58,6 +58,21 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     .ToList();
             }
 
+            if (req.Query.ContainsKey("limit") && 
+                int.TryParse(req.Query["limit"].ToString(), out var limit))
+            {
+                if (limit == int.MaxValue)
+                {
+                    resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                    return Task.FromResult(resp);
+                }
+
+                items = items
+                    .Skip(0)
+                    .Take(limit)
+                    .ToList();
+            }
+
             resp.StatusCode = (int)HttpStatusCode.OK;
 
             return resp.WriteAsJson(outputFunc(items));
