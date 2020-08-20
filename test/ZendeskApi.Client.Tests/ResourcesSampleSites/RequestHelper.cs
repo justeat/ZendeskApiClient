@@ -58,7 +58,8 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     .ToList();
             }
 
-            if (req.Query.ContainsKey("limit") && int.TryParse(req.Query["limit"].ToString(), out var limit))
+            if (req.Query.ContainsKey("limit") && 
+                int.TryParse(req.Query["limit"].ToString(), out var limit))
             {
                 if (limit == int.MaxValue)
                 {
