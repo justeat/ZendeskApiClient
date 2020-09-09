@@ -5,6 +5,7 @@ namespace ZendeskApi.Client.Models
         Operational,
         Impeded,
         Inoperative,
-        Monitoring
+        Monitoring,
+        Identified
     }
 }
