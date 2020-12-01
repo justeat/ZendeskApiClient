@@ -98,6 +98,19 @@ namespace ZendeskApi.Client.Resources
                 pager,
                 cancellationToken);
         }
+
+        public async Task<IPagination<Ticket>> GetAllByExternalIdAsync(
+            string externalId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await GetAsync<TicketsListResponse>(
+                $"{ResourceUri}?external_id={externalId}",
+                "list-tickets-by-external-id",
+                $"GetAllByExternalIdAsync({externalId})",
+                pager,
+                cancellationToken: cancellationToken);
+        }
         #endregion
 
         #region List Tickets
