@@ -94,6 +94,16 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     })
                     .MapGet("api/v2/tickets", (req, resp, routeData) =>
                     {
+                        if (req.Query.ContainsKey("external_id"))
+                        {
+                            return RequestHelper.FilteredList<TicketsListResponse, Ticket, TicketResourceState>(
+                                req,
+                                resp,
+                                req.Query["external_id"].ToString(),
+                                (id, items) => items.Where(x => long.Parse(x.ExternalId) == id),
+                                items => new TicketsListResponse {Tickets = items, Count = items.Count});
+                        }
+
                         return RequestHelper.List<TicketsListResponse, Ticket, TicketResourceState>(
                             req,
                             resp,

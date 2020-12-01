@@ -192,6 +192,35 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllByExternalIdAsync_WhenCalled_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllByExternalIdAsync("40");
+
+            var ticket = results.First();
+
+            Assert.Equal(40, ticket.Id);
+            Assert.Equal($"My printer is on fire! 40", ticket.Subject);
+            Assert.Equal(40.ToString(), ticket.ExternalId);
+            Assert.Equal(40, ticket.OrganisationId);
+            Assert.Equal(40, ticket.RequesterId);
+            Assert.Equal(40, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllByExternalIdAsync_WhenNotFound_ShouldReturnEmpty()
+        {
+            var results = await _resource.GetAllByExternalIdAsync("100000");
+
+            Assert.Empty(results);
+        }
+
+        [Fact]
+        public async Task GetAllByExternalIdAsync_WhenServiceUnavailable_ShouldThrow()
+        {
+            await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.GetAllByExternalIdAsync(int.MinValue.ToString()));
+        }
+
+        [Fact]
         public async Task ListAsync_WhenCalled_ShouldGetAllTickets()
         {
             var results = await _resource.ListAsync();

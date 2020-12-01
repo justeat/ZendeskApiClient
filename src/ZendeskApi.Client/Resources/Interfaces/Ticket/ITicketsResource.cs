@@ -37,6 +37,11 @@ namespace ZendeskApi.Client.Resources
             long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<IPagination<Ticket>> GetAllByExternalIdAsync(
+            string externalId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default(CancellationToken));
         #endregion
 
         #region List Tickets
