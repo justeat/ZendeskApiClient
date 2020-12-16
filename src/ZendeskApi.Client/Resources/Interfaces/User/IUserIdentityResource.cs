@@ -17,6 +17,11 @@ namespace ZendeskApi.Client.Resources
             long identityId,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        Task<UserIdentity> GetIdentityByUserIdAsync(
+            long userId,
+            long identityId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         Task<UserIdentity> CreateUserIdentityAsync(
             UserIdentity identity, 
             long userId,

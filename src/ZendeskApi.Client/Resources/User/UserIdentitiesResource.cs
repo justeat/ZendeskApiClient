@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Resources
@@ -61,12 +62,13 @@ namespace ZendeskApi.Client.Resources
             long identityId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await GetWithNotFoundCheckAsync<UserIdentity>(
-                $"{string.Format(ResourceUriFormat, userId)}/{identityId}",
-                "show-identity",
-                $"GetIdentityForUserAsync({userId},{identityId})",
-                $"Identity {identityId} for user {userId} not found",
-                cancellationToken: cancellationToken);
+            return (await GetWithNotFoundCheckAsync<UserIdentityResponse<UserIdentity>>(
+                    $"{string.Format(ResourceUriFormat, userId)}/{identityId}",
+                    "show-identity",
+                    $"GetIdentityForUserAsync({userId},{identityId})",
+                    $"Identity {identityId} for user {userId} not found",
+                    cancellationToken: cancellationToken))
+                .Identity;
         }
 
         public async Task<UserIdentity> CreateUserIdentityAsync(
@@ -74,12 +76,13 @@ namespace ZendeskApi.Client.Resources
             long userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await CreateAsync<UserIdentity, UserIdentity>(
-                string.Format(ResourceUriFormat, userId),
-                identity,
-                "create-identity",
-                scope: $"CreateUserIdentityAsync({userId})",
-                cancellationToken: cancellationToken);
+            return (await CreateAsync<UserIdentityResponse<UserIdentity>, UserIdentityRequest<UserIdentity>>(
+                    string.Format(ResourceUriFormat, userId),
+                    new UserIdentityRequest<UserIdentity>(identity),
+                    "create-identity",
+                    scope: $"CreateUserIdentityAsync({userId})",
+                    cancellationToken: cancellationToken))
+                .Identity;
         }
 
         public async Task<UserIdentity> CreateEndUserIdentityAsync(
@@ -87,24 +90,26 @@ namespace ZendeskApi.Client.Resources
             long endUserId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await CreateAsync<UserIdentity, UserIdentity>(
-                string.Format(EndUsersResourceUriFormat, endUserId),
-                identity,
-                "create-identity",
-                scope: $"CreateEndUserIdentityAsync({endUserId})",
-                cancellationToken: cancellationToken);
+            return (await CreateAsync<UserIdentityResponse<UserIdentity>, UserIdentityRequest<UserIdentity>>(
+                    string.Format(EndUsersResourceUriFormat, endUserId),
+                    new UserIdentityRequest<UserIdentity>(identity),
+                    "create-identity",
+                    scope: $"CreateEndUserIdentityAsync({endUserId})",
+                    cancellationToken: cancellationToken))
+                .Identity;
         }
 
         public async Task<UserIdentity> UpdateAsync(
             UserIdentity identity,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await UpdateWithNotFoundCheckAsync<UserIdentity, UserIdentity>(
-                $"{string.Format(ResourceUriFormat, identity.UserId)}/{identity.Id}",
-                identity,
-                "update-identity",
-                $"Cannot update identity as identity {identity.Id} cannot be found",
-                cancellationToken: cancellationToken);
+            return (await UpdateWithNotFoundCheckAsync<UserIdentityResponse<UserIdentity>, UserIdentityRequest<UserIdentity>>(
+                    $"{string.Format(ResourceUriFormat, identity.UserId)}/{identity.Id}",
+                    new UserIdentityRequest<UserIdentity>(identity),
+                    "update-identity",
+                    $"Cannot update identity as identity {identity.Id} cannot be found",
+                    cancellationToken: cancellationToken))
+                .Identity;
         }
 
         public async Task DeleteAsync(
