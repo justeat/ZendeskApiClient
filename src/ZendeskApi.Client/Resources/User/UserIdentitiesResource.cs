@@ -68,7 +68,7 @@ namespace ZendeskApi.Client.Resources
                     $"GetIdentityForUserAsync({userId},{identityId})",
                     $"Identity {identityId} for user {userId} not found",
                     cancellationToken: cancellationToken))
-                .Identity;
+                ?.Identity;
         }
 
         public async Task<UserIdentity> CreateUserIdentityAsync(
@@ -109,7 +109,7 @@ namespace ZendeskApi.Client.Resources
                     "update-identity",
                     $"Cannot update identity as identity {identity.Id} cannot be found",
                     cancellationToken: cancellationToken))
-                .Identity;
+                ?.Identity;
         }
 
         public async Task DeleteAsync(
