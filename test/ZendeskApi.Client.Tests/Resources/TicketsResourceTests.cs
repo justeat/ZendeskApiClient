@@ -612,6 +612,30 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task TagListsUpdateAsync_WhenCalled_ShouldUpdateTagsInMultipleTickets()
+        {
+            var tickets = await CreateTickets(3);
+
+            var updateTicketRequest = new TicketTagListsUpdateRequest
+            {
+                AdditionalTags = new[] { "tag_1" },
+                RemoveTags = new[] { "tag_to_remove" }
+            };
+
+            var jobStatusResponse = await _resource.TagListsUpdateAsync(tickets.Select(x => x.Id).ToArray(), updateTicketRequest);
+
+            Assert.NotNull(jobStatusResponse);
+
+            var ticket1 = await _resource.GetAsync(tickets.First().Id);
+            Assert.Contains("tag_1", ticket1.Ticket.Tags);
+            Assert.DoesNotContain("tag_to_remove", ticket1.Ticket.Tags);
+
+            var ticket2 = await _resource.GetAsync(tickets.First().Id);
+            Assert.Contains("tag_1", ticket2.Ticket.Tags);
+            Assert.DoesNotContain("tag_to_remove", ticket2.Ticket.Tags);
+        }
+
+        [Fact]
         public async Task DeleteAsync_WhenCalled_ShouldDeleteTicket()
         {
             var ticket = (await CreateTickets(1)).First();
