@@ -263,6 +263,18 @@ namespace ZendeskApi.Client.Resources
                 "update-many-tickets",
                 cancellationToken: cancellationToken);
         }
+
+        public async Task<JobStatusResponse> TagListsUpdateAsync(
+            long[] ticketIds,
+            TicketTagListsUpdateRequest tickets,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await UpdateAsync<JobStatusResponse, TicketRequest<TicketTagListsUpdateRequest>>(
+                $"{ResourceUri}/update_many.json?ids={ZendeskFormatter.ToCsv(ticketIds)}",
+                new TicketRequest<TicketTagListsUpdateRequest>(tickets),
+                "updating-tag-lists",
+                cancellationToken: cancellationToken);
+        }
         #endregion
 
         #region Mark Ticket as Spam and Suspend Requester

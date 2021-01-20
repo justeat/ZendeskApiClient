@@ -7,7 +7,7 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Requests
 {
     /// <summary>
-    /// <see href="https://developer.zendesk.com/rest_api/docs/core/tickets#request-body">Request body</see> <see href="https://developer.zendesk.com/rest_api/docs/core/tickets#create-ticket">Create Ticket</see>.
+    /// <see href="https://developer.zendesk.com/rest_api/docs/support/tickets#updating-tag-lists">Updating tag lists</see> <see href="https://developer.zendesk.com/rest_api/docs/support/tickets#update-many-tickets">Update Many Tickets</see>.
     /// </summary>
     public class TicketUpdateRequest
     {
