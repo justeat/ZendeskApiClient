@@ -104,6 +104,11 @@ namespace ZendeskApi.Client.Resources
         Task<JobStatusResponse> UpdateAsync(
             IEnumerable<TicketUpdateRequest> tickets,
             CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<JobStatusResponse> TagListsUpdateAsync(
+            long[] ticketIds,
+            TicketTagListsUpdateRequest tickets,
+            CancellationToken cancellationToken = default(CancellationToken));
         #endregion
 
         #region Mark Ticket as Spam and Suspend Requester

@@ -215,9 +215,47 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     {
                         var theIds = req.Query["ids"]
                             .SelectMany(q => q.Split(','))
-                            .Select(long.Parse);
+                            .Select(long.Parse).ToArray();
 
-                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>();
+                        var state = req.HttpContext.RequestServices.GetRequiredService<TicketResourceState>(); 
+                        
+                        if (theIds.Any())
+                        {
+                            var ticketRequestWrappers = req.Body.ReadAs<TicketRequest<TicketTagListsUpdateRequest>>();
+
+                            if (ticketRequestWrappers?.Ticket != null && (ticketRequestWrappers.Ticket.AdditionalTags.Any() || ticketRequestWrappers.Ticket.RemoveTags.Any()) )
+                            {
+                                foreach (var id in theIds)
+                                {
+                                    if (state.Items.ContainsKey(id))
+                                    {
+                                        var currentTags = (List<string>)state.Items[theIds.First()].Tags ?? new List<string>();
+
+                                        foreach (var tag in ticketRequestWrappers.Ticket.AdditionalTags)
+                                        {
+                                            currentTags.Add(tag);
+                                        }
+
+                                        foreach (var tag in ticketRequestWrappers.Ticket.RemoveTags)
+                                        {
+                                            if (currentTags.Contains(tag))
+                                            {
+                                                currentTags.Remove(tag);
+                                            }
+                                        }
+
+                                        state.Items[theIds.First()].Tags = currentTags;
+                                    }
+                                }
+
+                                resp.StatusCode = (int)HttpStatusCode.OK;
+
+                                return resp.WriteAsJson(new JobStatusResult
+                                {
+                                    Id = Rand.Next()
+                                });
+                            }
+                        }
 
                         var ticketRequestWrapper = req.Body.ReadAs<TicketListRequest<TicketUpdateRequest>>();
 
