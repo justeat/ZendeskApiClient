@@ -100,6 +100,11 @@ namespace ZendeskApi.Client.Resources
         Task DeleteAsync(
             long userId,
             CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<JobStatusResponse> DeleteAsync(
+            IEnumerable<long> userIds,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         #endregion
     }
 }
