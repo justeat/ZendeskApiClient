@@ -142,7 +142,22 @@ namespace ZendeskApi.Client.Resources
             return response?
                 .UserResponse;
         }
-        
+
+        public async Task<UserRelatedInformationResponse> GetRelatedInformationAsync(
+            long userId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var response = await GetWithNotFoundCheckAsync<SingleUserRelatedInformationResponse>(
+                $"{ResourceUri}/{userId}/related",
+                "show-user-related-information",
+                $"GetRelatedInformationAsync({userId})",
+                $"User {userId} not found",
+                cancellationToken: cancellationToken);
+
+            return response?
+                .UserRelatedInformationResponse;
+        }
+
         public async Task<UsersListResponse> GetAllAsync(
             long[] userIds, 
             PagerParameters pager = null,
