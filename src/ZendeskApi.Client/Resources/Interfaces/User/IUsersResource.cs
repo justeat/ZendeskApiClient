@@ -72,6 +72,10 @@ namespace ZendeskApi.Client.Resources
             long userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        Task<UserRelatedInformationResponse> GetRelatedInformationAsync(
+            long userId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         Task<IncrementalUsersResponse<UserResponse>> GetIncrementalExport(
             DateTime startTime,
             CancellationToken cancellationToken = default(CancellationToken));
@@ -96,6 +100,11 @@ namespace ZendeskApi.Client.Resources
         Task DeleteAsync(
             long userId,
             CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<JobStatusResponse> DeleteAsync(
+            IEnumerable<long> userIds,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         #endregion
     }
 }

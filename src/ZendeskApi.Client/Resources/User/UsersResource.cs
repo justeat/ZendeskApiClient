@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -142,7 +143,22 @@ namespace ZendeskApi.Client.Resources
             return response?
                 .UserResponse;
         }
-        
+
+        public async Task<UserRelatedInformationResponse> GetRelatedInformationAsync(
+            long userId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var response = await GetWithNotFoundCheckAsync<SingleUserRelatedInformationResponse>(
+                $"{ResourceUri}/{userId}/related",
+                "show-user-related-information",
+                $"GetRelatedInformationAsync({userId})",
+                $"User {userId} not found",
+                cancellationToken: cancellationToken);
+
+            return response?
+                .UserRelatedInformationResponse;
+        }
+
         public async Task<UsersListResponse> GetAllAsync(
             long[] userIds, 
             PagerParameters pager = null,
@@ -281,6 +297,23 @@ namespace ZendeskApi.Client.Resources
                 "delete-user",
                 HttpStatusCode.OK,
                 cancellationToken: cancellationToken);
+        }
+
+        public async Task<JobStatusResponse> DeleteAsync(
+            IEnumerable<long> userIds,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var ids = userIds
+                .ToList();
+
+            var jobStatusResponse = await DeleteAsync<SingleJobStatusResponse>(
+                $"{ResourceUri}/destroy_many.json",
+                ids,
+                "bulk-deleting-users",
+                cancellationToken: cancellationToken);
+
+            return jobStatusResponse?
+                .JobStatus;
         }
     }
 }
