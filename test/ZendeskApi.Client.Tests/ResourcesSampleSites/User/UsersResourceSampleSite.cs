@@ -282,6 +282,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             user
                         });
                     })
+                    .MapDelete("api/v2/users/destroy_many.json", (req, resp, routeData) =>
+                    {
+                        return RequestHelper.DeleteMany<UserResponse, State<UserResponse>>(
+                            req,
+                            resp);
+                    })
                     .MapDelete("api/v2/users/{id}", (req, resp, routeData) =>
                     {
                         return RequestHelper.Delete<UserResponse>(

@@ -550,5 +550,51 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             await Assert.ThrowsAsync<ZendeskRequestException>(async () => await _resource.DeleteAsync(int.MinValue));
         }
+
+        [Fact]
+        public async Task DeleteAsync_WhenCalled_ShouldDeleteMultiple()
+        {
+            var users = await CreateUsers(3);
+            var userIds = users.Select(t => t.Id).ToArray();
+
+            await _resource.DeleteAsync(userIds);
+
+            foreach (var userId in userIds)
+            {
+                var user = await _resource.GetAsync(userId);
+                Assert.Null(user);
+            }
+        }
+
+        private async Task<UserResponse[]> CreateUsers(int numberOfUsersToCreate)
+        {
+            var users = new List<UserCreateRequest>();
+
+            for (var i = 0; i < numberOfUsersToCreate; i++)
+            {
+                var user = new UserCreateRequest("Description is required")
+                {
+                    Name = $"CreatedUser{i}",
+                    Email = $"CreatedUser{i}@justeatakeaway.com"
+                };
+
+                users.Add(user);
+            }
+
+            return await CreateUsers(users.ToArray());
+        }
+
+        private async Task<UserResponse[]> CreateUsers(params UserCreateRequest[] users)
+        {
+            var createdUsers = new List<UserResponse>();
+
+            foreach (var userCreateRequest in users)
+            {
+                var response = await _resource.CreateAsync(userCreateRequest);
+                createdUsers.Add(response);
+            }
+
+            return createdUsers.ToArray();
+        }
     }
 }
