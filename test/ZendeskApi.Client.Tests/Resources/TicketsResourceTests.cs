@@ -664,6 +664,19 @@ namespace ZendeskApi.Client.Tests.Resources
             Assert.Empty(doTicketsStillExistResult);
         }
 
+        [Fact]
+        public async Task DeleteAsyncUpdated_WhenCalled_ShouldDeleteMultiple()
+        {
+            var tickets = await CreateTickets(3);
+            var ticketIds = tickets.Select(t => t.Id).ToArray();
+
+            await _resource.DeleteAsyncUpdated(ticketIds);
+
+            var doTicketsStillExistResult = await _resource.GetAsync(ticketIds);
+
+            Assert.Empty(doTicketsStillExistResult);
+        }
+
         private async Task<Ticket[]> CreateTickets(int numberOfTicketsToCreate)
         {
             var tickets = new List<TicketCreateRequest>();
