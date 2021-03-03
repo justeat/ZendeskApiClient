@@ -318,21 +318,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task DeleteAsync(
-            IEnumerable<long> ticketIds,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var ids = ticketIds
-                .ToList();
-
-            await DeleteAsync(
-                $"{ResourceUri}/destroy_many.json",
-                ids,
-                "bulk-delete-tickets",
-                cancellationToken: cancellationToken);
-        }
-
-        public async Task<JobStatusResponse> DeleteAsyncUpdated(
+        public async Task<JobStatusResponse> DeleteAsync(
             IEnumerable<long> ticketIds,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -344,7 +330,7 @@ namespace ZendeskApi.Client.Resources
                 ids,
                 "bulk-delete-tickets",
                 cancellationToken: cancellationToken);
-
+            
             return jobStatusResponse?
                 .JobStatus;
         }
