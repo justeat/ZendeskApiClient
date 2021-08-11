@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
         protected async Task<HttpResponseMessage> ExecuteRequest(
             Func<HttpClient, CancellationToken, Task<HttpResponseMessage>> requestBodyAccessor,
             string scope,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             using (LoggerScope(Logger, scope))
             using (var client = ApiClient.CreateClient())
@@ -48,7 +48,7 @@ namespace ZendeskApi.Client.Resources
             string scope,
             PagerParameters pager = null,
             JsonConverter converter = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where T : class
         {
             return await ExecuteRequest(async (client, token) => 
@@ -59,11 +59,28 @@ namespace ZendeskApi.Client.Resources
                 .ReadContentAsAsync<T>(converter);
         }
 
-        protected async Task<T> GetAsyncWithCursor<T>(string resource,
+        protected async Task<T> GetAsyncWithCursor<T>(
+            string resource,
             string docs,
             string scope,
             CursorPager pager,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
+            where T : class
+        {
+            return await ExecuteRequest(async (client, token) =>
+                        await client.GetAsync(resource, pager, token).ConfigureAwait(false),
+                    scope,
+                    cancellationToken)
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
+                .ReadContentAsAsync<T>();
+        }
+
+        protected async Task<T> GetAsyncWithCursorVariant<T>(
+            string resource,
+            string docs,
+            string scope,
+            CursorPagerVariant pager,
+            CancellationToken cancellationToken = default)
             where T : class
         {
             return await ExecuteRequest(async (client, token) =>
@@ -85,6 +102,25 @@ namespace ZendeskApi.Client.Resources
         {
             return await ExecuteRequest(async (client, token) =>
                     await client.GetAsync(resource, pager, token).ConfigureAwait(false), 
+                    scope,
+                    cancellationToken)
+                .SetToNullWhen(HttpStatusCode.NotFound)
+                .LogInformationWhenNull(Logger, notFoundLogMessage)
+                .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
+                .ReadContentAsAsync<T>();
+        }
+
+        protected async Task<T> GetWithNotFoundCheckAsyncCursor<T>(
+            string resource,
+            string docs,
+            string scope,
+            string notFoundLogMessage,
+            CursorPager pager = null,
+            CancellationToken cancellationToken = default(CancellationToken))
+            where T : class
+        {
+            return await ExecuteRequest(async (client, token) =>
+                        await client.GetAsync(resource, pager, token).ConfigureAwait(false),
                     scope,
                     cancellationToken)
                 .SetToNullWhen(HttpStatusCode.NotFound)
