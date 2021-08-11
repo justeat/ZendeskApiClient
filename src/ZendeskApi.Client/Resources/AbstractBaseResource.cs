@@ -59,7 +59,7 @@ namespace ZendeskApi.Client.Resources
                 .ReadContentAsAsync<T>(converter);
         }
 
-        protected async Task<T> GetWithCursorAsync<T>(
+        protected async Task<T> GetAsync<T>(
             string resource,
             string docs,
             string scope,
@@ -75,7 +75,7 @@ namespace ZendeskApi.Client.Resources
                 .ReadContentAsAsync<T>();
         }
 
-        protected async Task<T> GetWithCursorVariantAsync<T>(
+        protected async Task<T> GetAsync<T>(
             string resource,
             string docs,
             string scope,
@@ -97,7 +97,7 @@ namespace ZendeskApi.Client.Resources
             string scope,
             string notFoundLogMessage,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where T : class
         {
             return await ExecuteRequest(async (client, token) =>
@@ -110,13 +110,13 @@ namespace ZendeskApi.Client.Resources
                 .ReadContentAsAsync<T>();
         }
 
-        protected async Task<T> GetWithNotFoundCheckWithCursorAsync<T>(
+        protected async Task<T> GetWithNotFoundCheckAsync<T>(
             string resource,
             string docs,
             string scope,
             string notFoundLogMessage,
-            CursorPager pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
             where T : class
         {
             return await ExecuteRequest(async (client, token) =>
@@ -135,7 +135,7 @@ namespace ZendeskApi.Client.Resources
             string docs,
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created,
             string scope = "CreateAsync",
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await ExecuteRequest(async (client, token) => 
                     await client.PostAsJsonAsync(resource, item, cancellationToken: token).ConfigureAwait(false), 
@@ -150,7 +150,7 @@ namespace ZendeskApi.Client.Resources
             string docs,
             HttpStatusCode expectedStatusCode = HttpStatusCode.Created,
             string scope = "CreateAsync",
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where TResponse : class
         {
             return await CreateAsync<TRequest>(
@@ -167,7 +167,7 @@ namespace ZendeskApi.Client.Resources
             string resource,
             string docs,
             string scope = "UpdateAsync",
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await ExecuteRequest(async (client, token) => 
                     await client.PutAsJsonAsync(resource, new StringContent(string.Empty), cancellationToken: cancellationToken).ConfigureAwait(false), 
@@ -181,7 +181,7 @@ namespace ZendeskApi.Client.Resources
             IReadOnlyList<long> ids,
             string docs,
             string scope = "UpdateAsync",
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (ids == null)
                 throw new ArgumentNullException($"{nameof(ids)} must not be null", nameof(ids));
@@ -203,7 +203,7 @@ namespace ZendeskApi.Client.Resources
             TRequest item,
             string docs,
             string scope = "UpdateAsync",
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where TResponse : class
         {
             return await ExecuteRequest(async (client, token) => 
@@ -220,7 +220,7 @@ namespace ZendeskApi.Client.Resources
             string docs,
             string notFoundLogMessage,
             string scope = "UpdateAsync",
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where TResponse : class
         {
             return await ExecuteRequest(async (client, token) => 
@@ -238,7 +238,7 @@ namespace ZendeskApi.Client.Resources
             string docs,
             HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
             string scope = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await ExecuteRequest(async (client, token) => 
                     await client.DeleteAsync(resource, token).ConfigureAwait(false), 
@@ -253,7 +253,7 @@ namespace ZendeskApi.Client.Resources
             string docs,
             HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
             string scope = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await DeleteAsync(
                 $"{resource}/{id}",
@@ -269,7 +269,7 @@ namespace ZendeskApi.Client.Resources
             string docs,
             HttpStatusCode expectedHttpStatusCode = HttpStatusCode.NoContent,
             string scope = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where TResponse : class
         {
             return await DeleteAsync(
@@ -287,7 +287,7 @@ namespace ZendeskApi.Client.Resources
             IReadOnlyList<long> ids,
             string docs,
             string scope = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (ids == null)
                 throw new ArgumentNullException($"{nameof(ids)} must not be null", nameof(ids));
@@ -310,7 +310,7 @@ namespace ZendeskApi.Client.Resources
             IReadOnlyList<long> ids,
             string docs,
             string scope = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where TResponse : class
         {
             return await DeleteAsync(
