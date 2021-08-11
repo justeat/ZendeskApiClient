@@ -59,7 +59,7 @@ namespace ZendeskApi.Client.Resources
                 .ReadContentAsAsync<T>(converter);
         }
 
-        protected async Task<T> GetAsyncWithCursor<T>(
+        protected async Task<T> GetWithCursorAsync<T>(
             string resource,
             string docs,
             string scope,
@@ -75,7 +75,7 @@ namespace ZendeskApi.Client.Resources
                 .ReadContentAsAsync<T>();
         }
 
-        protected async Task<T> GetAsyncWithCursorVariant<T>(
+        protected async Task<T> GetWithCursorVariantAsync<T>(
             string resource,
             string docs,
             string scope,
@@ -110,7 +110,7 @@ namespace ZendeskApi.Client.Resources
                 .ReadContentAsAsync<T>();
         }
 
-        protected async Task<T> GetWithNotFoundCheckAsyncCursor<T>(
+        protected async Task<T> GetWithNotFoundCheckWithCursorAsync<T>(
             string resource,
             string docs,
             string scope,
