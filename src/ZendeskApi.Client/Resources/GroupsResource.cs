@@ -73,7 +73,7 @@ namespace ZendeskApi.Client.Resources
             CursorPager pager,
             CancellationToken cancellationToken = default)
         {
-            return await GetWithCursorAsync<GroupListCursorResponse>(
+            return await GetAsync<GroupListCursorResponse>(
                 GroupsResourceUri,
                 "list-groups",
                 "ListAsync",
@@ -112,7 +112,7 @@ namespace ZendeskApi.Client.Resources
             CursorPager pager,
             CancellationToken cancellationToken = default)
         {
-            return await GetWithCursorAsync<GroupListCursorResponse>(
+            return await GetAsync<GroupListCursorResponse>(
                 AssignableGroupUri,
                 "show-assignable-groups",
                 "ListAssignableAsync",

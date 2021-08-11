@@ -25,7 +25,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead..")]
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<GroupListResponse> GetAllAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
