@@ -27,7 +27,7 @@ namespace ZendeskApi.Client.Resources
         [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<GroupListResponse> ListAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 pager,
@@ -38,7 +38,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<GroupListResponse> ListAsync(
             long userId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByUserIdAsync(
                 userId,
@@ -49,16 +49,17 @@ namespace ZendeskApi.Client.Resources
         [Obsolete("Use `GetAllByAssignableAsync` instead.")]
         public async Task<GroupListResponse> ListAssignableAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByAssignableAsync(
                 pager,
                 cancellationToken);
         }
 
+        [Obsolete("Use `GetAllAsyncWithCursor` instead.")]
         public async Task<GroupListResponse> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<GroupListResponse>(
                 GroupsResourceUri,
@@ -68,10 +69,22 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<GroupListCursorResponse> GetAllAsyncWithCursor(
+            CursorPager pager = null,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsyncWithCursor<GroupListCursorResponse>(
+                GroupsResourceUri,
+                "list-groups",
+                "ListAsync",
+                pager,
+                cancellationToken);
+        }
+
         public async Task<GroupListResponse> GetAllByUserIdAsync(
             long userId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<GroupListResponse>(
                 string.Format(GroupsByUserResourceUriFormat, userId),
@@ -79,12 +92,13 @@ namespace ZendeskApi.Client.Resources
                 $"ListAsync({userId})",
                 $"UserResponse {userId} not found",
                 pager,
-                cancellationToken: cancellationToken);
+                cancellationToken);
         }
 
+        [Obsolete("Use `GetAllByAssignableAsyncWithCursor` instead.")]
         public async Task<GroupListResponse> GetAllByAssignableAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<GroupListResponse>(
                 AssignableGroupUri,
@@ -92,6 +106,18 @@ namespace ZendeskApi.Client.Resources
                 "ListAssignableAsync",
                 pager,
                 cancellationToken: cancellationToken);
+        }
+
+        public async Task<GroupListCursorResponse> GetAllByAssignableAsyncWithCursor(
+            CursorPager pager = null,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsyncWithCursor<GroupListCursorResponse>(
+                AssignableGroupUri,
+                "show-assignable-groups",
+                "ListAssignableAsync",
+                pager,
+                cancellationToken);
         }
 
         public async Task<Group> GetAsync(
