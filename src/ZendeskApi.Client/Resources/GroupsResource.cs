@@ -122,7 +122,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Group> GetAsync(
             long groupId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<GroupResponse>(
                 $"{GroupsResourceUri}/{groupId}",
@@ -137,7 +137,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Group> CreateAsync(
             GroupCreateRequest group,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<GroupResponse, GroupRequest<GroupCreateRequest>>(
                 GroupsResourceUri,
@@ -152,7 +152,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Group> UpdateAsync(
             GroupUpdateRequest group,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateWithNotFoundCheckAsync<GroupResponse, GroupRequest<GroupUpdateRequest>>(
                 $"{GroupsResourceUri}/{group.Id}",
@@ -167,7 +167,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(
             long groupId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 GroupsResourceUri,

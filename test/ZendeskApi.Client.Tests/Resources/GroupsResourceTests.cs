@@ -170,6 +170,44 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllAsyncWithCursor_WhenCalled_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsyncWithCursor();
+
+            Assert.Equal(100, results.Groups.Count());
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsyncWithCursor_WhenCalledWithSize_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsyncWithCursor(
+                new CursorPager()
+                {
+                    Size = 10
+                });
+
+            Assert.Equal(10, results.Groups.Count());
+
+            for (var i = 1; i <= 10; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+        [Fact]
         public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
@@ -239,11 +277,29 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllByAssignableAsync_WhenCalledWithUserId_ShouldGetAll()
+        public async Task GetAllByAssignableAsync_WhenCalled_ShouldGetAll()
         {
             var results = await _resource.GetAllByAssignableAsync();
 
             Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"name.{i}", item.Name);
+                Assert.Equal(new Uri($"https://company.zendesk.com/api/v2/groups/{i}.json"), item.Url);
+            }
+        }
+
+
+        [Fact]
+        public async Task GetAllByAssignableAsyncWithCursor_WhenCalled_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByAssignableAsyncWithCursor();
+
+            Assert.Equal(100, results.Groups.Count());
 
             for (var i = 1; i <= 100; i++)
             {
