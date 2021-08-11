@@ -73,6 +73,21 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                     .ToList();
             }
 
+            if (req.Query.ContainsKey("page[size]") &&
+                int.TryParse(req.Query["page[size]"].ToString(), out var pageSize))
+            {
+                if (pageSize == int.MaxValue)
+                {
+                    resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                    return Task.FromResult(resp);
+                }
+
+                items = items
+                    .Skip(0)
+                    .Take(pageSize)
+                    .ToList();
+            }
+
             resp.StatusCode = (int)HttpStatusCode.OK;
 
             return resp.WriteAsJson(outputFunc(items));
