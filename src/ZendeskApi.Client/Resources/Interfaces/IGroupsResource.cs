@@ -25,13 +25,13 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        [Obsolete("Use `GetAllAsyncWithCursor` instead.")]
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead..")]
         Task<GroupListResponse> GetAllAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<GroupListCursorResponse> GetAllAsyncWithCursor(
-            CursorPager pager = null,
+        Task<GroupListCursorResponse> GetAllAsync(
+            CursorPager pager,
             CancellationToken cancellationToken = default);
 
         Task<GroupListResponse> GetAllByUserIdAsync(
@@ -39,13 +39,13 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        [Obsolete("Use `GetAllByAssignableAsync` instead.")]
+        [Obsolete("Use `GetAllByAssignableAsync` with CursorPager parameter instead.")]
         Task<GroupListResponse> GetAllByAssignableAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<GroupListCursorResponse> GetAllByAssignableAsyncWithCursor(
-            CursorPager pager = null,
+        Task<GroupListCursorResponse> GetAllByAssignableAsync(
+            CursorPager pager,
             CancellationToken cancellationToken = default);
 
         Task<Group> GetAsync(

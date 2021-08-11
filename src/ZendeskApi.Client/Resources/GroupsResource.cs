@@ -56,7 +56,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        [Obsolete("Use `GetAllAsyncWithCursor` instead.")]
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<GroupListResponse> GetAllAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default)
@@ -69,11 +69,11 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<GroupListCursorResponse> GetAllAsyncWithCursor(
-            CursorPager pager = null,
+        public async Task<GroupListCursorResponse> GetAllAsync(
+            CursorPager pager,
             CancellationToken cancellationToken = default)
         {
-            return await GetAsyncWithCursor<GroupListCursorResponse>(
+            return await GetWithCursorAsync<GroupListCursorResponse>(
                 GroupsResourceUri,
                 "list-groups",
                 "ListAsync",
@@ -95,7 +95,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        [Obsolete("Use `GetAllByAssignableAsyncWithCursor` instead.")]
+        [Obsolete("Use `GetAllByAssignableAsync` with CursorPager parameter instead.")]
         public async Task<GroupListResponse> GetAllByAssignableAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default)
@@ -108,11 +108,11 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<GroupListCursorResponse> GetAllByAssignableAsyncWithCursor(
-            CursorPager pager = null,
+        public async Task<GroupListCursorResponse> GetAllByAssignableAsync(
+            CursorPager pager,
             CancellationToken cancellationToken = default)
         {
-            return await GetAsyncWithCursor<GroupListCursorResponse>(
+            return await GetWithCursorAsync<GroupListCursorResponse>(
                 AssignableGroupUri,
                 "show-assignable-groups",
                 "ListAssignableAsync",
