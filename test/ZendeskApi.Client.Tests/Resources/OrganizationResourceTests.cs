@@ -7,6 +7,7 @@ using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -26,6 +27,22 @@ namespace ZendeskApi.Client.Tests.Resources
             var results = await _resource.GetAllAsync();
 
             Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var org = results.ElementAt(i - 1);
+
+                Assert.Equal($"org.{i}", org.Name);
+                Assert.Equal(i.ToString(), org.ExternalId);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager{Size = 100});
+
+            Assert.Equal(100, results.Count());
 
             for (var i = 1; i <= 100; i++)
             {
@@ -89,6 +106,19 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithCursorPagination_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllByUserIdAsync(
+                1,
+                new CursorPager
+                {
+                    Size = 1
+                });
+
+            Assert.Single(results);
+        }
+
+        [Fact]
         public async Task GetAllByUserIdAsync_WhenCalledWithPaging_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllByUserIdAsync(
@@ -116,6 +146,19 @@ namespace ZendeskApi.Client.Tests.Resources
                 Assert.Equal($"org.{i}", org.Name);
                 Assert.Equal(i.ToString(), org.ExternalId);
             }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithCursorPagination_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllAsync(
+                new long[] { 1, 2, 3 },
+                new CursorPager());
+
+            var org = results.ElementAt(1);
+
+            Assert.Equal("org.2", org.Name);
+            Assert.Equal("2", org.ExternalId);
         }
 
         [Fact]
@@ -155,6 +198,19 @@ namespace ZendeskApi.Client.Tests.Resources
                 Assert.Equal($"org.{i}", org.Name);
                 Assert.Equal(i.ToString(), org.ExternalId);
             }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithExternalIdsAndWithCursorPagination_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllByExternalIdsAsync(
+                new [] { "1", "2", "3" },
+                new CursorPager());
+
+            var org = results.ElementAt(1);
+
+            Assert.Equal("org.2", org.Name);
+            Assert.Equal("2", org.ExternalId);
         }
 
         [Fact]

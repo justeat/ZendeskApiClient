@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,43 +9,67 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IOrganizationsResource
     {
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<IPagination<Organization>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
+        Task<OrganizationsCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default);
+
+        [Obsolete("Use `GetAllByUserIdAsync` with CursorPager parameter instead.")]
         Task<IPagination<Organization>> GetAllByUserIdAsync(
             long userId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
+
+        Task<OrganizationsCursorResponse> GetAllByUserIdAsync(
+            long userId,
+            CursorPager pager,
+            CancellationToken cancellationToken = default);
 
         Task<Organization> GetAsync(
             long organizationId,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<IPagination<Organization>> GetAllAsync(
             long[] organizationIds, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
+        Task<OrganizationsCursorResponse> GetAllAsync(
+            long[] organizationIds,
+            CursorPager pager,
+            CancellationToken cancellationToken = default);
+
+        [Obsolete("Use `GetAllByExternalIdsAsync` with CursorPager parameter instead.")]
         Task<IPagination<Organization>> GetAllByExternalIdsAsync(
             string[] externalIds, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
+
+        Task<OrganizationsCursorResponse> GetAllByExternalIdsAsync(
+            string[] externalIds,
+            CursorPager pager,
+            CancellationToken cancellationToken = default);
+
 
         Task<Organization> CreateAsync(
             Organization organization,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task<Organization> UpdateAsync(
             Organization organization,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task<JobStatusResponse> UpdateAsync(
             IEnumerable<Organization> organizations,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task DeleteAsync(
             long organizationId,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
     }
 }

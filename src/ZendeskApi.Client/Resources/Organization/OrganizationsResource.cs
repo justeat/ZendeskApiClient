@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -22,9 +23,10 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "organizations")
         { }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<Organization>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<OrganizationsResponse>(
                 ResourceUri,
@@ -34,10 +36,23 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<OrganizationsCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<OrganizationsCursorResponse>(
+                ResourceUri,
+                "list-organizations",
+                "GetAllAsync",
+                pager,
+                cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllByUserIdAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<Organization>> GetAllByUserIdAsync(
             long userId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<OrganizationsResponse>(
                 string.Format(UserResourceUriFormat, userId),
@@ -48,9 +63,23 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
+        public async Task<OrganizationsCursorResponse> GetAllByUserIdAsync(
+            long userId,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetWithNotFoundCheckAsync<OrganizationsCursorResponse>(
+                string.Format(UserResourceUriFormat, userId),
+                "list-organizations",
+                $"GetAllAsync({userId})",
+                $"Organization for user {userId} not found",
+                pager,
+                cancellationToken);
+        }
+
         public async Task<Organization> GetAsync(
             long organizationId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<OrganizationResponse>(
                 $"{ResourceUri}/{organizationId}",
@@ -62,11 +91,13 @@ namespace ZendeskApi.Client.Resources
             return response?
                 .Organization;
         }
-
+        
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
+        // Potential naming inconsistency here, should be: GetAllByOrganizationIdsAsync
         public async Task<IPagination<Organization>> GetAllAsync(
             long[] organizationIds, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<OrganizationsResponse>(
                 $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(organizationIds)}",
@@ -76,10 +107,24 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<OrganizationsCursorResponse> GetAllAsync(
+            long[] organizationIds,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<OrganizationsCursorResponse>(
+                $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(organizationIds)}",
+                "show-many-organizations",
+                $"GetAllAsync({ZendeskFormatter.ToCsv(organizationIds)})",
+                pager,
+                cancellationToken);
+        }
+        
+        [Obsolete("Use `GetAllByExternalIdsAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<Organization>> GetAllByExternalIdsAsync(
             string[] externalIds, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<OrganizationsResponse>(
                 $"{ResourceUri}/show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}",
@@ -89,9 +134,22 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<OrganizationsCursorResponse> GetAllByExternalIdsAsync(
+            string[] externalIds,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<OrganizationsCursorResponse>(
+                $"{ResourceUri}/show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}",
+                "show-many-organizations",
+                $"GetAllByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})",
+                pager,
+                cancellationToken);
+        }
+
         public async Task<Organization> CreateAsync(
             Organization organization,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<OrganizationResponse, OrganizationCreateRequest>(
                 ResourceUri,
@@ -106,7 +164,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Organization> UpdateAsync(
             Organization organization,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateWithNotFoundCheckAsync<OrganizationResponse, OrganizationUpdateRequest>(
                 $"{ResourceUri}/{organization.Id}",
@@ -119,7 +177,7 @@ namespace ZendeskApi.Client.Resources
                 .Organization;
         }
 
-        public async Task<JobStatusResponse> UpdateAsync(IEnumerable<Organization> organizations, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<JobStatusResponse> UpdateAsync(IEnumerable<Organization> organizations, CancellationToken cancellationToken = default)
         {
             var response =
                 await UpdateAsync<SingleJobStatusResponse, OrganizationListRequest<Organization>>(
@@ -134,7 +192,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(
             long organizationId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 ResourceUri,
