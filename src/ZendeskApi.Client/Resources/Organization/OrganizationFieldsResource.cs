@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -18,9 +19,10 @@ namespace ZendeskApi.Client.Resources
         {
         }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<OrganizationField>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<OrganizationFieldsResponse>(
                 ResourceUri,
@@ -29,10 +31,22 @@ namespace ZendeskApi.Client.Resources
                 pager,
                 cancellationToken: cancellationToken);
         }
-        
+
+        public async Task<OrganizationFieldsCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<OrganizationFieldsCursorResponse>(
+                ResourceUri,
+                "list-organization-fields",
+                "GetAllAsync",
+                pager,
+                cancellationToken);
+        }
+
         public async Task<OrganizationField> GetAsync(
             long orgFieldId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<OrganizationFieldResponse>(
                 $"{ResourceUri}/{orgFieldId}",
@@ -47,7 +61,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<OrganizationField> CreateAsync(
             OrganizationField organizationField,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<OrganizationFieldResponse, OrganizationFieldCreateUpdateRequest>(
                 ResourceUri,
@@ -61,7 +75,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<OrganizationField> UpdateAsync(
             OrganizationField organizationField,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response =
                 await UpdateWithNotFoundCheckAsync<OrganizationFieldResponse, OrganizationFieldCreateUpdateRequest>(
@@ -77,7 +91,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task DeleteAsync(
             long orgFieldId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 ResourceUri,
@@ -87,7 +101,7 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task ReorderAsync(OrganizationFieldsReorderRequest request,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await ExecuteRequest(async (client, token) =>
                     await client.PutAsJsonAsync($"{ResourceUri}/reorder", request, cancellationToken: cancellationToken)
