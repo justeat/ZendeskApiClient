@@ -39,6 +39,23 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager{Size = 100});
+
+            Assert.Equal(100, results.Count());
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var membership = results.ElementAt(i - 1);
+
+                Assert.Equal(i, membership.Id);
+                Assert.Equal(i, membership.UserId);
+                Assert.Equal(i, membership.OrganizationId);
+            }
+        }
+
+        [Fact]
         public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAll()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
@@ -119,6 +136,19 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllByOrganizationIdAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByOrganizationIdAsync(
+                1,
+                new CursorPager()
+                {
+                    Size = 1
+                });
+
+            Assert.Single(results);
+        }
+
+        [Fact]
         public async Task GetAllByOrganizationIdAsync_WhenCalledWithPaging_ShouldGetAll()
         {
             var results = await _resource.GetAllByOrganizationIdAsync(
@@ -172,6 +202,20 @@ namespace ZendeskApi.Client.Tests.Resources
             var results = await _resource.GetAllByUserIdAsync(1);
 
             Assert.Equal(1, results.Count);
+
+            var membership = results.First();
+
+            Assert.Equal(1, membership.Id);
+            Assert.Equal(1, membership.UserId);
+            Assert.Equal(1, membership.OrganizationId);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByUserIdAsync(1, new CursorPager{Size = 100});
+
+            Assert.Single(results.OrganizationMemberships);
 
             var membership = results.First();
 
