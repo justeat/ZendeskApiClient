@@ -20,7 +20,6 @@ namespace ZendeskApi.Client.Resources
         ITicketsResource
     {
         private const string ResourceUri = "api/v2/tickets";
-
         private const string OrganizationResourceUriFormat = "api/v2/organizations/{0}/tickets";
         private const string UserResourceUriFormat = "api/v2/users/{0}/tickets";
 
@@ -33,7 +32,7 @@ namespace ZendeskApi.Client.Resources
         #region GetAll Tickets
         public async Task<IPagination<Ticket>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketsListResponse>(
                 ResourceUri,
@@ -43,10 +42,22 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<TicketsListCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<TicketsListCursorResponse>(
+                ResourceUri,
+                "list-tickets",
+                "ListAsync",
+                pager,
+                cancellationToken);
+        }
+
         public async Task<IPagination<Ticket>> GetAllByOrganizationIdAsync(
             long organizationId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<TicketsListResponse>(
                 string.Format(OrganizationResourceUriFormat, organizationId),
@@ -60,7 +71,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> GetAllByRequestedByIdAsync(
             long userId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<TicketsListResponse>(
                 $"{string.Format(UserResourceUriFormat, userId)}/requested",
@@ -74,7 +85,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> GetAllByCcdIdAsync(
             long userId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<TicketsListResponse>(
                 $"{string.Format(UserResourceUriFormat, userId)}/ccd",
@@ -88,7 +99,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> GetAllByAssignedToIdAsync(
             long userId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<TicketsListResponse>(
                 $"{string.Format(UserResourceUriFormat, userId)}/assigned",
@@ -102,7 +113,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> GetAllByExternalIdAsync(
             string externalId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketsListResponse>(
                 $"{ResourceUri}?external_id={externalId}",
@@ -117,7 +128,7 @@ namespace ZendeskApi.Client.Resources
         [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<IPagination<Ticket>> ListAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 pager,
@@ -128,7 +139,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> ListForOrganizationAsync(
             long organizationId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByOrganizationIdAsync(
                 organizationId,
@@ -140,7 +151,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> ListRequestedByAsync(
             long userId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByRequestedByIdAsync(
                 userId,
@@ -152,7 +163,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> ListCcdAsync(
             long userId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByCcdIdAsync(
                 userId,
@@ -164,7 +175,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> ListAssignedToAsync(
             long userId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByAssignedToIdAsync(
                 userId,
@@ -176,7 +187,7 @@ namespace ZendeskApi.Client.Resources
         #region Show Tickets
         public async Task<TicketResponse> GetAsync(
             long ticketId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<TicketResponse>(
                 $"{ResourceUri}/{ticketId}",
@@ -190,7 +201,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> GetAsync(
             long[] ticketIds, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 ticketIds,
@@ -201,7 +212,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Ticket>> GetAllAsync(
             long[] ticketIds,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketsListResponse>(
                 $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(ticketIds)}",
