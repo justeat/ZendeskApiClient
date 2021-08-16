@@ -1,11 +1,9 @@
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 #pragma warning disable 618
@@ -29,6 +27,22 @@ namespace ZendeskApi.Client.Tests.Resources
             var results = await _resource.GetAllAsync();
 
             Assert.Equal(100, results.Count);
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var item = results.ElementAt(i - 1);
+
+                Assert.Equal(i, item.Id);
+                Assert.Equal($"raw.title.{i}", item.RawTitle);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager{Size = 100});
+
+            Assert.Equal(100, results.Count());
 
             for (var i = 1; i <= 100; i++)
             {
