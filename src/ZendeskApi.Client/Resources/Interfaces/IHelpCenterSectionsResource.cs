@@ -10,17 +10,28 @@ namespace ZendeskApi.Client.Resources.Interfaces
         Task<HelpCenterSectionListResponse> GetAllAsync(
             string locale = null,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
-        Task<HelpCenterSection> GetAsync(
-            long id,
+        Task<HelpCenterSectionListCursorResponse> GetAllAsync(
+            CursorPager pager,
             string locale = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task<HelpCenterSectionListResponse> GetAllAsync(
             long categoryId,
             string locale = null,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
+
+        Task<HelpCenterSectionListCursorResponse> GetAllAsync(
+            CursorPager pager,
+            long categoryId,
+            string locale = null,
+            CancellationToken cancellationToken = default);
+
+        Task<HelpCenterSection> GetAsync(
+            long id,
+            string locale = null,
+            CancellationToken cancellationToken = default);
     }
 }
