@@ -5,7 +5,7 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
-    public class HelpCenterCategoryListCursorResponse : PaginationResponse<HelpCenterCategory>
+    public class HelpCenterCategoryListCursorResponse : CursorPaginationResponse<HelpCenterCategory>
     {
         [JsonProperty("categories")]
         public IEnumerable<HelpCenterCategory> Groups { get; set; }
