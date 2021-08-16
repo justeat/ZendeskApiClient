@@ -31,7 +31,7 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task GetAllAsync_WhenCalledAndLimitSet_ShouldGetAllTicketAudits()
         {
-            var results = await _resource.GetAllAsync(new CursorPager
+            var results = await _resource.GetAllAsync(new CursorPagerVariant
             {
                 ResultsLimit = 10
             });
