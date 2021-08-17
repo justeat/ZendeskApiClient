@@ -74,7 +74,7 @@ Querying and searching is limited by the searchable fields on the zendesk api
 In order to run integration tests against your own zendesk instance use the Cake script provided by:
 
 ```powershell
-.\build.ps1 -Target "Run-Integration-Tests" -ScriptArgs '-zendeskUrl="<your zendesk url>"', '-zendeskUsername="<your zendesk username>"', '-zendeskToken="<your zendesk token>"'
+.\build.ps1 --target=Run-Integration-Tests --zendeskUrl="<your zendesk url>" --zendeskUsername="<your zendesk username>" --zendeskToken="<your zendesk token>"
 ```
 
 # Contributing
