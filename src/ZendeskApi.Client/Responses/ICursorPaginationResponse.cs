@@ -6,27 +6,12 @@ namespace ZendeskApi.Client.Responses
 {
     public interface ICursorPaginationResponse<T> : IEnumerable<T>
     {
+        Meta Meta { get; set; }
+        Links Links { get; set; }
     }
 
     public abstract class CursorPaginationResponse<T> : ICursorPaginationResponse<T>
     {
-
-            [JsonProperty("has_more")]
-            public bool HasMore { get; set; }
-            [JsonProperty("after_cursor")]
-            public string AfterCursor { get; set; }
-            [JsonProperty("before_cursor")]
-            public string BeforeCursor { get; set; }
-        
-
-      
-            [JsonProperty("first")]
-            public string First { get; set; }
-            [JsonProperty("last")]
-            public string Last { get; set; }
-            [JsonProperty("next")]
-            public string Next { get; set; }
-
 
         protected abstract IEnumerable<T> Enumerable { get; }
 
@@ -39,5 +24,28 @@ namespace ZendeskApi.Client.Responses
         {
             return Enumerable.GetEnumerator();
         }
+
+        public Meta Meta { get; set; }
+        public Links Links { get; set; }
     }
+
+    public class Meta
+    {
+        [JsonProperty("has_more")]
+        public bool HasMore { get; set; }
+        [JsonProperty("after_cursor")]
+        public string AfterCursor { get; set; }
+        [JsonProperty("before_cursor")]
+        public string BeforeCursor { get; set; }
+
+    }
+
+    public class Links
+    {
+        [JsonProperty("prev")]
+        public string Prev { get; set; }
+        [JsonProperty("next")]
+        public string Next { get; set; }
+    }
+
 }
