@@ -20,6 +20,7 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "search")
         { }
 
+        [Obsolete("Use `SearchAsync` with CursorPager parameter instead.")]
         public async Task<SearchResponse<ISearchResult>> SearchAsync(
             Action<IZendeskQuery> builder,
             PagerParameters pager = null, 
@@ -52,10 +53,11 @@ namespace ZendeskApi.Client.Resources
                 "list-search-results",
                 "SearchAsync",
                 pager,
-                new SearchJsonConverter(),
+                new SearchCursorJsonConverter(),
                 cancellationToken);
         }
 
+        [Obsolete("Use `SearchAsync` with CursorPager parameter instead.")]
         public async Task<SearchResponse<T>> SearchAsync<T>(
             Action<IZendeskQuery> builder, 
             PagerParameters pager = null,
@@ -69,6 +71,26 @@ namespace ZendeskApi.Client.Resources
             query.WithTypeFilter<T>();
 
             return await GetAsync<SearchResponse<T>>(
+                $"{SearchUri}?{query.BuildQuery()}",
+                "list-search-results",
+                "SearchAsync",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
+        public async Task<SearchCursorResponse<T>> SearchAsync<T>(
+            Action<IZendeskQuery> builder,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+            where T : ISearchResult
+        {
+            var query = new ZendeskQuery();
+
+            builder(query);
+
+            query.WithTypeFilter<T>();
+
+            return await GetAsync<SearchCursorResponse<T>>(
                 $"{SearchUri}?{query.BuildQuery()}",
                 "list-search-results",
                 "SearchAsync",

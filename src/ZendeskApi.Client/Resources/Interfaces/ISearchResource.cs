@@ -9,15 +9,29 @@ namespace ZendeskApi.Client.Resources
 {
     public interface ISearchResource
     {
+        [Obsolete("Use `SearchAsync` with CursorPager parameter instead.")]
         Task<SearchResponse<ISearchResult>> SearchAsync(
             Action<IZendeskQuery> builder, 
             PagerParameters pager = null, 
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
+        Task<SearchCursorResponse<ISearchResult>> SearchAsync(
+            Action<IZendeskQuery> builder,
+            CursorPager pager,
+            CancellationToken cancellationToken = default);
+
+
+        [Obsolete("Use `SearchAsync` with CursorPager parameter instead.")]
         Task<SearchResponse<T>> SearchAsync<T>(
             Action<IZendeskQuery> builder, 
             PagerParameters pager = null, 
-            CancellationToken cancellationToken = default(CancellationToken)) 
+            CancellationToken cancellationToken = default)
+            where T : ISearchResult;
+
+        Task<SearchCursorResponse<T>> SearchAsync<T>(
+            Action<IZendeskQuery> builder,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
             where T : ISearchResult;
     }
 }
