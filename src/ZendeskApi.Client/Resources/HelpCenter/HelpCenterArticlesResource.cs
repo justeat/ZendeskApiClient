@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "help_center/articles")
         { }
 
-        [Obsolete("Use `GetAsync` with CursorPager parameter instead.")]
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<HelpCenterArticleListResponse> GetAllAsync(
             string locale = null,
             PagerParameters pager = null,

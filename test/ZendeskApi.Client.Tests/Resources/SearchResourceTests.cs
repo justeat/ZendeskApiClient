@@ -9,6 +9,7 @@ using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Responses;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
 using Group = ZendeskApi.Client.Models.Group;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
