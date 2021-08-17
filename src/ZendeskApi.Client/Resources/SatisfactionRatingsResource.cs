@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -18,9 +19,10 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "satisfaction_ratings")
         { }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<SatisfactionRating>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<SatisfactionRatingsResponse>(
                 ResourceUri,
@@ -30,9 +32,21 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<SatisfactionRatingsCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<SatisfactionRatingsCursorResponse>(
+                ResourceUri,
+                "list-satisfaction-ratings",
+                "GetAllAsync",
+                pager,
+                cancellationToken);
+        }
+
         public async Task<SatisfactionRating> GetAsync(
             long satisficationRatingId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<SatisfactionRatingResponse>(
                 $"{ResourceUri}/{satisficationRatingId}",
@@ -48,7 +62,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<SatisfactionRating> CreateAsync(
             SatisfactionRating satisfactionRating, 
             long ticketId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await CreateAsync<SatisfactionRating, SatisfactionRating>(
                 string.Format(PostResourceUrlFormat, ticketId),
