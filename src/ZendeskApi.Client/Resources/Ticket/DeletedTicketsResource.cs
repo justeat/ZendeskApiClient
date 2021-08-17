@@ -26,19 +26,20 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "tickets")
         { }
 
-        [Obsolete("Use `GetAllAsync` instead.")]
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<DeletedTicketsListResponse> ListAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 pager, 
                 cancellationToken);
         }
-        
+
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<DeletedTicketsListResponse> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<DeletedTicketsListResponse>(
                 $"{ResourceUri}",
@@ -48,22 +49,35 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        [Obsolete("Use `GetAllAsync` instead.")]
+        public async Task<DeletedTicketsListCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<DeletedTicketsListCursorResponse>(
+                $"{ResourceUri}",
+                "show-deleted-tickets",
+                "GetAllAsync",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<DeletedTicketsListResponse> ListAsync(
             Action<IZendeskQuery> builder,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 builder, 
                 pager,
                 cancellationToken);
         }
-        
+
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<DeletedTicketsListResponse> GetAllAsync(
             Action<IZendeskQuery> builder, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var query = new ZendeskQuery();
 
@@ -78,9 +92,27 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
+        public async Task<DeletedTicketsListCursorResponse> GetAllAsync(
+            Action<IZendeskQuery> builder,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            var query = new ZendeskQuery();
+
+            builder(query);
+
+            return await GetAsync<DeletedTicketsListCursorResponse>(
+                $"{ResourceUri}?{query.BuildQuery()}",
+                "show-deleted-tickets",
+                "GetAllAsync",
+                pager,
+                null,
+                cancellationToken);
+        }
+
         public async Task RestoreAsync(
             long ticketId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await UpdateAsync(
                 $"{ResourceUri}/{ticketId}/restore",
@@ -90,7 +122,7 @@ namespace ZendeskApi.Client.Resources
         
         public async Task RestoreAsync(
             IEnumerable<long> ticketIds,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await UpdateAsync(
                 $"{ResourceUri}/restore_many",
@@ -101,7 +133,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<JobStatusResponse> PurgeAsync(
             long ticketId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await DeleteAsync<JobStatusResponse>(
                 $"{ResourceUri}",
@@ -114,7 +146,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<JobStatusResponse> PurgeAsync(
             IEnumerable<long> ticketIds,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await DeleteAsync<SingleJobStatusResponse>(
                 $"{ResourceUri}/destroy_many",
