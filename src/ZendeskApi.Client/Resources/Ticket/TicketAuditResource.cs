@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
                 string.Format(TicketAuditsUri, ticketId),
                 "list-audits-for-a-ticket",
                 $"GetAllByTicketAsync({ticketId}",
-                null,
+                new PagerParameters(),
                 null,
                 cancellationToken);
         }
@@ -44,7 +44,7 @@ namespace ZendeskApi.Client.Resources
                 string.Format(SpecificTicketAuditUri, ticketId, auditId),
                 "show-audit",
                 $"Get({ticketId}, {auditId})",
-                null,
+                new PagerParameters(),
                 null,
                 cancellationToken);
         }

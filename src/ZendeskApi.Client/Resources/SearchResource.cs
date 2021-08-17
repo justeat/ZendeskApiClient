@@ -23,7 +23,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<SearchResponse<ISearchResult>> SearchAsync(
             Action<IZendeskQuery> builder,
             PagerParameters pager = null, 
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var query = new ZendeskQuery();
 
@@ -38,10 +38,28 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
+        public async Task<SearchCursorResponse<ISearchResult>> SearchAsync(
+            Action<IZendeskQuery> builder,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            var query = new ZendeskQuery();
+
+            builder(query);
+
+            return await GetAsync<SearchCursorResponse<ISearchResult>>(
+                $"{SearchUri}?{query.BuildQuery()}",
+                "list-search-results",
+                "SearchAsync",
+                pager,
+                new SearchJsonConverter(),
+                cancellationToken);
+        }
+
         public async Task<SearchResponse<T>> SearchAsync<T>(
             Action<IZendeskQuery> builder, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken)) 
+            CancellationToken cancellationToken = default) 
             where T : ISearchResult
         {
             var query = new ZendeskQuery();

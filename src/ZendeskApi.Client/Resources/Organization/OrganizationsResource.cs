@@ -45,7 +45,7 @@ namespace ZendeskApi.Client.Resources
                 "list-organizations",
                 "GetAllAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         [Obsolete("Use `GetAllByUserIdAsync` with CursorPager parameter instead.")]
@@ -117,7 +117,7 @@ namespace ZendeskApi.Client.Resources
                 "show-many-organizations",
                 $"GetAllAsync({ZendeskFormatter.ToCsv(organizationIds)})",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
         
         [Obsolete("Use `GetAllByExternalIdsAsync` with CursorPager parameter instead.")]
@@ -144,7 +144,7 @@ namespace ZendeskApi.Client.Resources
                 "show-many-organizations",
                 $"GetAllByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<Organization> CreateAsync(

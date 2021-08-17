@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Resources
                 "list-categories",
                 "GetAllAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<HelpCenterCategory> GetAsync(

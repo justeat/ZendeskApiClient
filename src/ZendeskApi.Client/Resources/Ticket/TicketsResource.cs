@@ -51,7 +51,7 @@ namespace ZendeskApi.Client.Resources
                 "list-tickets",
                 "ListAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<IPagination<Ticket>> GetAllByOrganizationIdAsync(

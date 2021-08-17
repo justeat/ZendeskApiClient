@@ -64,6 +64,7 @@ namespace ZendeskApi.Client.Resources
             string docs,
             string scope,
             CursorPager pager,
+            JsonConverter converter = null,
             CancellationToken cancellationToken = default)
             where T : class
         {
@@ -72,7 +73,7 @@ namespace ZendeskApi.Client.Resources
                     scope,
                     cancellationToken)
                 .ThrowIfUnsuccessful($"{DocsResource}#{docs}")
-                .ReadContentAsAsync<T>();
+                .ReadContentAsAsync<T>(converter);
         }
 
         protected async Task<T> GetAsync<T>(

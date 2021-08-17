@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Resources
                 "list-sections",
                 "GetAllAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
@@ -74,7 +74,7 @@ namespace ZendeskApi.Client.Resources
                 "list-sections",
                 "GetAllAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<HelpCenterSection> GetAsync(

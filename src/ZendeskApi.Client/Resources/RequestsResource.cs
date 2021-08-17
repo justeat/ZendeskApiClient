@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Resources
                 "list-requests",
                 "GetAllAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<Request> GetAsync(

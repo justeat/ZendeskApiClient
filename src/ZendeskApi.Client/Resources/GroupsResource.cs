@@ -78,7 +78,7 @@ namespace ZendeskApi.Client.Resources
                 "list-groups",
                 "ListAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<GroupListResponse> GetAllByUserIdAsync(
@@ -117,7 +117,7 @@ namespace ZendeskApi.Client.Resources
                 "show-assignable-groups",
                 "ListAssignableAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<Group> GetAsync(

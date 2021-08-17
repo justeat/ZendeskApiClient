@@ -41,7 +41,7 @@ namespace ZendeskApi.Client.Resources
                 "list-organization-fields",
                 "GetAllAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<OrganizationField> GetAsync(

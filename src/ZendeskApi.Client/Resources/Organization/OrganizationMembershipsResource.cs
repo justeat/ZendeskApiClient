@@ -50,7 +50,7 @@ namespace ZendeskApi.Client.Resources
                 "list-memberships",
                 "GetAllAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
 
@@ -90,7 +90,7 @@ namespace ZendeskApi.Client.Resources
                 "list-memberships",
                 $"GetAllByOrganizationIdAsync({organizationId})",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         [Obsolete("Use `GetAllByUserIdAsync` with CursorPager parameter instead.")]
@@ -129,7 +129,7 @@ namespace ZendeskApi.Client.Resources
                 "list-memberships",
                 $"GetAllByUserIdAsync({userId})",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<OrganizationMembership> GetAsync(

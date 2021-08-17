@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Resources
                 "list-articles",
                 "GetAllAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         [Obsolete("Use `GetAllByCategoryIdAsync` with CursorPager parameter instead.")]
@@ -71,7 +71,7 @@ namespace ZendeskApi.Client.Resources
                 "list-articles",
                 "GetAllByCategoryIdAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
         
         [Obsolete("Use `GetAllBySectionIdAsync` with CursorPager parameter instead.")]
@@ -100,7 +100,7 @@ namespace ZendeskApi.Client.Resources
                 "list-articles",
                 "GetAllBySectionIdAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         [Obsolete("Use `GetAllByUserIdAsync` with CursorPager parameter instead.")]
@@ -127,7 +127,7 @@ namespace ZendeskApi.Client.Resources
                 "list-articles",
                 "GetAllBySectionIdAsync",
                 pager,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         public async Task<HelpCenterArticle> GetAsync(
