@@ -27,20 +27,34 @@ namespace ZendeskApi.Client.Resources
         public async Task<TicketCommentsListResponse> ListAsync(
             long ticketId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 ticketId,
                 pager,
                 cancellationToken);
         }
-
+        
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<TicketCommentsListResponse> GetAllAsync(
             long ticketId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketCommentsListResponse>(
+                string.Format(ResourceUri, ticketId),
+                "list-comments",
+                $"GetAllAsync({ticketId})",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
+        public async Task<TicketCommentsListCursorResponse> GetAllAsync(
+            long ticketId,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<TicketCommentsListCursorResponse>(
                 string.Format(ResourceUri, ticketId),
                 "list-comments",
                 $"GetAllAsync({ticketId})",
@@ -51,7 +65,7 @@ namespace ZendeskApi.Client.Resources
         public async Task AddComment(
             long ticketId, 
             TicketComment ticketComment,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var ticket = new TicketUpdateRequest(ticketId)
             {

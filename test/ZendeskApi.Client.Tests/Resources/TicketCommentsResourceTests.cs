@@ -56,6 +56,33 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAllCommentsForTicket()
+        {
+            var ticket = await _ticketResource.CreateAsync(new TicketCreateRequest("description") { Subject = "Test 1" });
+
+            var comments = await _resource.GetAllAsync(ticket.Ticket.Id, new CursorPager{Size=1});
+            Assert.Single(comments);
+            Assert.NotNull(comments.ElementAt(0).Id);
+            Assert.Equal("description", comments.ElementAt(0).Body);
+
+            await _resource.AddComment(ticket.Ticket.Id, new Models.TicketComment { Body = "Hi there! im a comments..." });
+
+            comments = await _resource.GetAllAsync(ticket.Ticket.Id, new CursorPager { Size = 1 });
+            Assert.Equal(2, comments.Count());
+            Assert.NotNull(comments.ElementAt(1).Id);
+            Assert.Equal("Hi there! im a comments...", comments.ElementAt(1).Body);
+
+            await _resource.AddComment(ticket.Ticket.Id, new Models.TicketComment { Body = "Hi there! im a second comment..." });
+
+            comments = await _resource.GetAllAsync(ticket.Ticket.Id, new CursorPager { Size = 1 });
+            Assert.Equal(3, comments.Count());
+            Assert.NotNull(comments.ElementAt(1).Id);
+            Assert.Equal("Hi there! im a comments...", comments.ElementAt(1).Body);
+            Assert.NotNull(comments.ElementAt(2).Id);
+            Assert.Equal("Hi there! im a second comment...", comments.ElementAt(2).Body);
+        }
+
+        [Fact]
         public async Task GetAllAsync_WhenCalled_ShouldGetAllCommentsForTicket()
         {
             var ticket = await _ticketResource.CreateAsync(new TicketCreateRequest("description") { Subject = "Test 1" });
