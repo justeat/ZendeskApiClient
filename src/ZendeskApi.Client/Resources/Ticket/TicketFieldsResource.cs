@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -18,11 +19,23 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "ticket_fields")
         { }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<TicketField>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketFieldsResponse>(
+                ResourceUri,
+                "list-ticket-fields",
+                "GetAllAsync",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+        public async Task<TicketFieldsCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<TicketFieldsCursorResponse>(
                 ResourceUri,
                 "list-ticket-fields",
                 "GetAllAsync",
@@ -32,7 +45,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketField> GetAsync(
             long ticketFieldId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<TicketFieldResponse>(
                 $"{ResourceUri}/{ticketFieldId}",
@@ -47,7 +60,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketField> CreateAsync(
             TicketField ticketField,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<TicketFieldResponse, TicketFieldCreateUpdateRequest>(
                 ResourceUri,
@@ -61,7 +74,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketField> UpdateAsync(
             TicketField ticketField,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateWithNotFoundCheckAsync<TicketFieldResponse, TicketFieldCreateUpdateRequest>(
                 $"{ResourceUri}/{ticketField.Id}",
@@ -76,7 +89,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(
             long ticketFieldId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 ResourceUri,
