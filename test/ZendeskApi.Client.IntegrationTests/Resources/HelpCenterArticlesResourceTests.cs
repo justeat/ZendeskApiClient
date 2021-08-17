@@ -40,7 +40,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var articles = await client
                 .HelpCenter
                 .Articles
-                .GetAllAsync(new CursorPager{Size = 10}, "en-gb");
+                .GetAllAsync(new CursorPager{Size = 100}, "en-gb");
 
             Assert.NotEmpty(articles);
         }
