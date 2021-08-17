@@ -93,6 +93,24 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager()
+            {
+                Size = 3
+            });
+
+            var ticket = results.ElementAt(1);
+
+            Assert.Equal(2, ticket.Id);
+            Assert.Equal("My printer is on fire! 2", ticket.Subject);
+            Assert.Equal("2", ticket.ExternalId);
+            Assert.Equal(2, ticket.OrganisationId);
+            Assert.Equal(2, ticket.RequesterId);
+            Assert.Equal(2, ticket.AssigneeId);
+        }
+
+        [Fact]
         public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAll()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
@@ -192,6 +210,26 @@ namespace ZendeskApi.Client.Tests.Resources
                 Assert.Equal(i, ticket.RequesterId);
                 Assert.Equal(i, ticket.AssigneeId);
             }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithQueryWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync(
+                query => query.WithOrdering(SortBy.CreatedAt, SortOrder.Asc),
+                new CursorPager()
+                {
+                    Size = 3
+                });
+
+            var ticket = results.ElementAt(1);
+            
+            Assert.Equal(2, ticket.Id);
+            Assert.Equal("My printer is on fire! 2", ticket.Subject);
+            Assert.Equal("2", ticket.ExternalId);
+            Assert.Equal(2, ticket.OrganisationId);
+            Assert.Equal(2, ticket.RequesterId);
+            Assert.Equal(2, ticket.AssigneeId);
         }
 
         [Fact]
