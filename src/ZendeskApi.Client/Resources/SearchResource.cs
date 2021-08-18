@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Resources
                 "list-search-results",
                 "SearchAsync",
                 pager,
-                new SearchCursorJsonConverter(),
+                new SearchJsonConverter(),
                 cancellationToken);
         }
 
