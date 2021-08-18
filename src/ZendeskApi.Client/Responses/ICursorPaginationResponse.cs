@@ -4,13 +4,13 @@ using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Responses
 {
-    public interface ICursorPaginationResponse<T> : IEnumerable<T>
+    public interface ICursorPagination<T> : IEnumerable<T>
     {
         Meta Meta { get; set; }
         Links Links { get; set; }
     }
 
-    public abstract class CursorPaginationResponse<T> : ICursorPaginationResponse<T>
+    public abstract class CursorPaginationResponse<T> : ICursorPagination<T>
     {
 
         protected abstract IEnumerable<T> Enumerable { get; }
