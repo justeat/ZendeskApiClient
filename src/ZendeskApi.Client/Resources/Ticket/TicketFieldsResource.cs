@@ -31,7 +31,7 @@ namespace ZendeskApi.Client.Resources
                 pager,
                 cancellationToken: cancellationToken);
         }
-        public async Task<TicketFieldsCursorResponse> GetAllAsync(
+        public async Task<ICursorPagination<TicketField>> GetAllAsync(
             CursorPager pager,
             CancellationToken cancellationToken = default)
         {

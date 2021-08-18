@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -36,7 +35,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<OrganizationsCursorResponse> GetAllAsync(
+        public async Task<ICursorPagination<Organization>> GetAllAsync(
             CursorPager pager,
             CancellationToken cancellationToken = default)
         {
@@ -63,7 +62,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        public async Task<OrganizationsCursorResponse> GetAllByUserIdAsync(
+        public async Task<ICursorPagination<Organization>> GetAllByUserIdAsync(
             long userId,
             CursorPager pager,
             CancellationToken cancellationToken = default)
@@ -107,7 +106,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<OrganizationsCursorResponse> GetAllAsync(
+        public async Task<ICursorPagination<Organization>> GetAllAsync(
             long[] organizationIds,
             CursorPager pager,
             CancellationToken cancellationToken = default)
@@ -134,7 +133,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<OrganizationsCursorResponse> GetAllByExternalIdsAsync(
+        public async Task<ICursorPagination<Organization>> GetAllByExternalIdsAsync(
             string[] externalIds,
             CursorPager pager,
             CancellationToken cancellationToken = default)

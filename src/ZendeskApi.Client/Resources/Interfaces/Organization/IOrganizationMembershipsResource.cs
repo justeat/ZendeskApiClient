@@ -9,8 +9,13 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IOrganizationMembershipsResource
     {
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<IPagination<OrganizationMembership>> GetAllAsync(
             PagerParameters pager = null,
+            CancellationToken cancellationToken = default);
+
+        Task<ICursorPagination<OrganizationMembership>> GetAllAsync(
+            CursorPager pager,
             CancellationToken cancellationToken = default);
 
         [Obsolete("Use `GetAllByOrganizationIdAsync` with CursorPager parameter instead.")]
@@ -25,7 +30,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<OrganizationMembershipsCursorResponse> GetAllByOrganizationIdAsync(
+        Task<ICursorPagination<OrganizationMembership>> GetAllByOrganizationIdAsync(
             long organizationId,
             CursorPager pager,
             CancellationToken cancellationToken = default);
@@ -42,7 +47,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<OrganizationMembershipsCursorResponse> GetAllByUserIdAsync(
+        Task<ICursorPagination<OrganizationMembership>> GetAllByUserIdAsync(
             long userId,
             CursorPager pager = null,
             CancellationToken cancellationToken = default);

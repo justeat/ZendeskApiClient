@@ -14,7 +14,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<OrganizationFieldsCursorResponse> GetAllAsync(
+        Task<ICursorPagination<OrganizationField>> GetAllAsync(
             CursorPager pager,
             CancellationToken cancellationToken = default);
 

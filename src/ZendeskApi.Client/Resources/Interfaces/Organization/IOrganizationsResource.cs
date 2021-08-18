@@ -14,7 +14,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<OrganizationsCursorResponse> GetAllAsync(
+        Task<ICursorPagination<Organization>> GetAllAsync(
             CursorPager pager,
             CancellationToken cancellationToken = default);
 
@@ -24,7 +24,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<OrganizationsCursorResponse> GetAllByUserIdAsync(
+        Task<ICursorPagination<Organization>> GetAllByUserIdAsync(
             long userId,
             CursorPager pager,
             CancellationToken cancellationToken = default);
@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<OrganizationsCursorResponse> GetAllAsync(
+        Task<ICursorPagination<Organization>> GetAllAsync(
             long[] organizationIds,
             CursorPager pager,
             CancellationToken cancellationToken = default);
@@ -50,7 +50,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<OrganizationsCursorResponse> GetAllByExternalIdsAsync(
+        Task<ICursorPagination<Organization>> GetAllByExternalIdsAsync(
             string[] externalIds,
             CursorPager pager,
             CancellationToken cancellationToken = default);

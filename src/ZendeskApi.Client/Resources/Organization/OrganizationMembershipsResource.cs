@@ -41,7 +41,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<OrganizationMembershipsCursorResponse> GetAllAsync(
+        public async Task<ICursorPagination<OrganizationMembership>> GetAllAsync(
             CursorPager pager,
             CancellationToken cancellationToken = default)
         {
@@ -80,7 +80,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<OrganizationMembershipsCursorResponse> GetAllByOrganizationIdAsync(
+        public async Task<ICursorPagination<OrganizationMembership>> GetAllByOrganizationIdAsync(
             long organizationId,
             CursorPager pager,
             CancellationToken cancellationToken = default)
@@ -119,7 +119,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<OrganizationMembershipsCursorResponse> GetAllByUserIdAsync(
+        public async Task<ICursorPagination<OrganizationMembership>> GetAllByUserIdAsync(
             long userId,
             CursorPager pager,
             CancellationToken cancellationToken = default)

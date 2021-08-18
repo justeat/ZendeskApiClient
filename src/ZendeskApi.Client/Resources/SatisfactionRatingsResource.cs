@@ -32,7 +32,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<SatisfactionRatingsCursorResponse> GetAllAsync(
+        public async Task<ICursorPagination<SatisfactionRating>> GetAllAsync(
             CursorPager pager,
             CancellationToken cancellationToken = default)
         {

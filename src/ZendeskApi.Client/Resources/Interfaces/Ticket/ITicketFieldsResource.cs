@@ -13,7 +13,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<TicketFieldsCursorResponse> GetAllAsync(
+        Task<ICursorPagination<TicketField>> GetAllAsync(
             CursorPager pager,
             CancellationToken cancellationToken = default);
 
