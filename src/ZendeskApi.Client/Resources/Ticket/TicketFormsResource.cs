@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -19,9 +20,10 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "ticket_forms")
         { }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<TicketForm>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketFormsResponse>(
                 ResourceUri,
@@ -31,9 +33,21 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<ICursorPagination<TicketForm>> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<TicketFormsCursorResponse>(
+                ResourceUri,
+                "list-ticket-forms",
+                "GetAllAsync",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
         public async Task<TicketForm> GetAsync(
             long ticketformId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<TicketFormResponse>(
                 $"{ResourceUri}/{ticketformId}",
@@ -45,11 +59,12 @@ namespace ZendeskApi.Client.Resources
             return response?
                 .TicketForm;
         }
-
+        
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<TicketForm>> GetAllAsync(
             long[] ticketFormsIds, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var ids = ZendeskFormatter.ToCsv(ticketFormsIds);
 
@@ -61,9 +76,24 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<ICursorPagination<TicketForm>> GetAllAsync(
+            long[] ticketFormsIds,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            var ids = ZendeskFormatter.ToCsv(ticketFormsIds);
+
+            return await GetAsync<TicketFormsCursorResponse>(
+                $"{ResourceUri}/show_many?ids={ids}",
+                "show-many-ticket-forms",
+                $"GetAllAsync({ids})",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
         public async Task<TicketForm> CreateAsync(
             TicketForm ticketForm,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<TicketFormResponse, TicketFormCreateUpdateRequest>(
                 ResourceUri,
@@ -77,7 +107,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketForm> UpdateAsync(
             TicketForm ticketForm,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateWithNotFoundCheckAsync<TicketFormResponse, TicketFormCreateUpdateRequest>(
                 $"{ResourceUri}/{ticketForm.Id}",
@@ -92,7 +122,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(
             long ticketFormId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 ResourceUri,
