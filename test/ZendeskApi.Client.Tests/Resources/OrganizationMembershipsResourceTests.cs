@@ -213,9 +213,9 @@ namespace ZendeskApi.Client.Tests.Resources
         [Fact]
         public async Task GetAllByUserIdAsync_WhenCalledWithCursorPagination_ShouldGetAll()
         {
-            var results = await _resource.GetAllByUserIdAsync(1, new CursorPager{Size = 100});
+            var results = await _resource.GetAllByUserIdAsync(1, new CursorPager());
 
-            Assert.Single(results.OrganizationMemberships);
+            Assert.Single(results);
 
             var membership = results.First();
 

@@ -77,10 +77,10 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var results = await _resource.GetAllByUserIdAsync(1, new CursorPager()
             {
-                Size = 1
+                Size = 3
             });
 
-            Assert.Empty(results);
+            Assert.Single(results);
         }
 
         [Fact]

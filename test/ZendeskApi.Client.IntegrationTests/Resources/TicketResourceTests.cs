@@ -9,17 +9,13 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 {
     public class TicketResourceTests : IClassFixture<ZendeskClientFactory>
     {
-        private readonly ITestOutputHelper _output;
         private readonly ZendeskClientFactory _clientFactory;
 
         public TicketResourceTests(
-            ITestOutputHelper output,
             ZendeskClientFactory clientFactory)
         {
-            _output = output;
             _clientFactory = clientFactory;
         }
-
 
         [Fact]
         public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnTickets()
@@ -31,6 +27,21 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
 
             Assert.NotNull(results);
             Assert.Equal(100, results.Count());
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnSpecificAmountOfTickets()
+        {
+            var client = _clientFactory.GetClient();
+
+            var results = await client
+                .Tickets.GetAllAsync(new CursorPager()
+                {
+                    Size=10
+                });
+
+            Assert.NotNull(results);
+            Assert.Equal(10, results.Count());
         }
     }
 }
