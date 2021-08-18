@@ -223,6 +223,21 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager()
+            {
+                Size = 3
+            });
+
+            var user = results.ElementAt(1);
+
+            Assert.Equal("name.2", user.Name);
+            Assert.Equal("email.2", user.Email);
+            Assert.Equal("2", user.ExternalId);
+        }
+
+        [Fact]
         public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllUsers()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
@@ -321,6 +336,22 @@ namespace ZendeskApi.Client.Tests.Resources
                 Assert.Equal($"name.{i}", user.Name);
                 Assert.Equal(i.ToString(), user.ExternalId);
             }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithCursorPagination_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllAsync(
+                new long[] { 1, 2, 3 },
+                new CursorPager()
+                {
+                    Size = 3
+                });
+
+            var user = results.ElementAt(1);
+
+            Assert.Equal("name.2", user.Name);
+            Assert.Equal("2", user.ExternalId);
         }
 
         [Fact]
