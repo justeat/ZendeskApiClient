@@ -37,7 +37,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllForUserAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllForUserAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllForUserAsync(1, new PagerParameters
             {
@@ -84,7 +84,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllByUserIdAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllByUserIdAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllByUserIdAsync(1, new PagerParameters
             {

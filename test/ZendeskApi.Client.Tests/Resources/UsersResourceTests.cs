@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListAsync_WhenCalledWithPaging_ShouldGetAllUsers()
+        public async Task ListAsync_WhenCalledWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.ListAsync(new PagerParameters
             {
@@ -144,7 +144,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListAsync_WhenCalledWithOrganizationIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task ListAsync_WhenCalledWithOrganizationIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.ListAsync(
                 new long[] { 1, 2, 3 },
@@ -183,7 +183,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListByExternalIdsAsync_WhenCalledWithExternalIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task ListByExternalIdsAsync_WhenCalledWithExternalIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.ListByExternalIdsAsync(
                 new string[] { "1", "2", "3" },
@@ -238,7 +238,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllUsers()
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
             {
@@ -355,7 +355,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAllAsync(
                 new long[] { 1, 2, 3 },
@@ -394,7 +394,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllByExternalIdsAsync_WhenCalledWithExternalIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task GetAllByExternalIdsAsync_WhenCalledWithExternalIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAllByExternalIdsAsync(
                 new string[] { "1", "2", "3" },

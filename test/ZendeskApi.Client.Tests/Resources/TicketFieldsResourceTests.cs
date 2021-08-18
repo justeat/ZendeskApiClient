@@ -53,7 +53,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
             {

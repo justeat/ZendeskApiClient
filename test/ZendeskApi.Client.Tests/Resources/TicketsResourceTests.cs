@@ -65,7 +65,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllTickets()
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAllTickets()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
             {
@@ -259,7 +259,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListAsync_WhenCalledWithPaging_ShouldGetAllTickets()
+        public async Task ListAsync_WhenCalledWithOffsetPagination_ShouldGetAllTickets()
         {
             var results = await _resource.ListAsync(new PagerParameters
             {
@@ -452,7 +452,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAsync_WhenCalledWithTicketIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task GetAsync_WhenCalledWithTicketIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAsync(
                 new long[] { 1, 2, 3 },
@@ -499,7 +499,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithTicketIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task GetAllAsync_WhenCalledWithTicketIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAllAsync(
                 new long[] { 1, 2, 3 },

@@ -35,7 +35,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task SearchAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task SearchAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.SearchAsync(
                 query => { }, 
@@ -73,7 +73,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task SearchAsync_WhenCalledWithTypeAndWithPaging_ShouldGetAll()
+        public async Task SearchAsync_WhenCalledWithTypeAndWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.SearchAsync<Ticket>(
                 query => { },

@@ -41,7 +41,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListAsync_WhenCalledWithPaging_ShouldGetAllOrganizations()
+        public async Task ListAsync_WhenCalledWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.ListAsync(new PagerParameters
             {
@@ -84,7 +84,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        public async Task ListAsync_WhenCalledWithUserIdWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.ListAsync(1, new PagerParameters
             {
@@ -127,7 +127,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListAssignableAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        public async Task ListAssignableAsync_WhenCalledWithUserIdWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.ListAssignableAsync(new PagerParameters
             {
@@ -188,7 +188,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllOrganizations()
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
             {
@@ -231,7 +231,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllByUserIdAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        public async Task GetAllByUserIdAsync_WhenCalledWithUserIdWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllByUserIdAsync(1, new PagerParameters
             {
@@ -293,7 +293,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllByAssignableAsync_WhenCalledWithUserIdWithPaging_ShouldGetAllOrganizations()
+        public async Task GetAllByAssignableAsync_WhenCalledWithUserIdWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllByAssignableAsync(new PagerParameters
             {
