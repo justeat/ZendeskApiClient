@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -18,9 +19,10 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "user_fields")
         { }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<UserField>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<UserFieldsResponse>(
                 ResourceUri,
@@ -30,9 +32,21 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<ICursorPagination<UserField>> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<UserFieldsCursorResponse>(
+                ResourceUri,
+                "list-user-fields",
+                "GetAllAsync",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
         public async Task<UserField> GetAsync(
             long userFieldId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<UserFieldResponse>(
                 $"{ResourceUri}/{userFieldId}",
@@ -47,7 +61,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<UserField> CreateAsync(
             UserField userField,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<UserFieldResponse, UserFieldCreateUpdateRequest>(
                 ResourceUri,
@@ -61,7 +75,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<UserField> UpdateAsync(
             UserField userField,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateWithNotFoundCheckAsync<UserFieldResponse, UserFieldCreateUpdateRequest>(
                 $"{ResourceUri}/{userField.Id}",
@@ -76,7 +90,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(
             long userFieldId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 ResourceUri,
