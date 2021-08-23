@@ -55,4 +55,48 @@ namespace ZendeskApi.Client.Converters
             throw new NotSupportedException();
         }
     }
+
+    public class SearchJsonCursorConverter : JsonConverter
+    {
+        private static readonly Type[] DeserializableSearchTypes =
+        {
+            typeof(Ticket),
+            typeof(UserResponse),
+            typeof(Group),
+            typeof(Organization)
+        };
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType.IsConstructedGenericType && objectType.GetGenericTypeDefinition() == typeof(SearchCursorResponse<>).GetGenericTypeDefinition();
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            var resultTypes = DeserializableSearchTypes.ToDictionary(
+                k => k.GetTypeInfo().GetCustomAttribute<SearchResultTypeAttribute>().ResultType,
+                v => v
+            );
+
+            var token = serializer
+                .Deserialize<JObject>(reader);
+
+            var results = token.SelectToken("results")
+                .Children()
+                .Select(result => (ISearchResult)result.ToObject(resultTypes[result.Value<string>("result_type")]))
+                .ToList();
+
+            return new SearchCursorResponse<ISearchResult>
+            {
+                Meta = token.Value<Meta>("meta"),
+                Links = token.Value<Links>("links"),
+                Results = results
+            };
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotSupportedException();
+        }
+    }
 }

@@ -12,7 +12,6 @@ namespace ZendeskApi.Client.Responses
 
     public abstract class CursorPaginationResponse<T> : ICursorPagination<T>
     {
-
         protected abstract IEnumerable<T> Enumerable { get; }
 
         public IEnumerator<T> GetEnumerator()
@@ -37,7 +36,6 @@ namespace ZendeskApi.Client.Responses
         public string AfterCursor { get; set; }
         [JsonProperty("before_cursor")]
         public string BeforeCursor { get; set; }
-
     }
 
     public class Links
@@ -47,5 +45,4 @@ namespace ZendeskApi.Client.Responses
         [JsonProperty("next")]
         public string Next { get; set; }
     }
-
 }

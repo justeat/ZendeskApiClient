@@ -106,7 +106,7 @@ namespace ZendeskApi.Client.Resources
                 "show-deleted-tickets",
                 "GetAllAsync",
                 pager,
-                null,
+                new SearchJsonCursorConverter(),
                 cancellationToken);
         }
 
