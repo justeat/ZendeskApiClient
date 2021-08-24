@@ -27,17 +27,5 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             Assert.NotNull(results);
             Assert.Equal(10, results.Count());
         }
-
-        [Fact]
-        public async Task GetAllAsync_WhenCalledWithQueryWithCursorPagination_ShouldReturnDeletedTickets()
-        {
-            var client = _clientFactory.GetClient();
-
-            var results = await client
-                .DeletedTickets.GetAllAsync(query => { }, new CursorPager { Size = 10 });
-
-            Assert.NotNull(results);
-            Assert.Equal(10, results.Count());
-        }
     }
 }

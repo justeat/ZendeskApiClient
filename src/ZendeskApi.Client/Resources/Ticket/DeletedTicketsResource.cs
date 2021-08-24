@@ -92,24 +92,6 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        public async Task<DeletedTicketsListCursorResponse> GetAllAsync(
-            Action<IZendeskQuery> builder,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            var query = new ZendeskQuery();
-
-            builder(query);
-
-            return await GetAsync<DeletedTicketsListCursorResponse>(
-                $"{ResourceUri}?{query.BuildQuery()}",
-                "show-deleted-tickets",
-                "GetAllAsync",
-                pager,
-                new SearchJsonCursorConverter(),
-                cancellationToken);
-        }
-
         public async Task RestoreAsync(
             long ticketId,
             CancellationToken cancellationToken = default)
