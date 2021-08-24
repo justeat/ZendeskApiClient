@@ -95,6 +95,20 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
+        public async Task<GroupListCursorResponse> GetAllByUserIdAsync(
+            long userId,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetWithNotFoundCheckAsync<GroupListCursorResponse>(
+                string.Format(GroupsByUserResourceUriFormat, userId),
+                "list-groups",
+                $"ListAsync({userId})",
+                $"UserResponse {userId} not found",
+                pager,
+                cancellationToken);
+        }
+
         [Obsolete("Use `GetAllByAssignableAsync` with CursorPager parameter instead.")]
         public async Task<GroupListResponse> GetAllByAssignableAsync(
             PagerParameters pager = null,
