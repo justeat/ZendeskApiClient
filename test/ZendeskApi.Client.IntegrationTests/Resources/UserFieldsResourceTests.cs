@@ -16,7 +16,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
         
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnDeletedTickets()
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnUserFields()
         {
             var client = _clientFactory.GetClient();
 

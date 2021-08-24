@@ -44,7 +44,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
-        public async Task GetAllByOrganizationIdAsync_WhenCalledWithCursorPagination_ShouldReturnSpecificAmountOfTickets()
+        public async Task GetAllByOrganizationIdAsync_WhenCalledWithCursorPagination_ShouldReturnTickets()
         {
             var client = _clientFactory.GetClient();
 

@@ -16,7 +16,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnTicketComments()
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnTicketFields()
         {
             var client = _clientFactory.GetClient();
 
