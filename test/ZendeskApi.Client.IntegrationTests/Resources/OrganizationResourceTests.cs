@@ -99,33 +99,6 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithOrganisationIdsAndWithCursorPagination_ReturnsOrganisations()
-        {
-            var client = _clientFactory.GetClient();
-
-            var id = Guid.NewGuid().ToString();
-
-            var created = await client.Organizations
-                .CreateAsync(new Organization
-                {
-                    ExternalId = id,
-                    Name = $"ZendeskApi.Client.IntegrationTests {id}"
-                });
-
-            var organisations = await client
-                .Organizations
-                .GetAllByOrganizationIdsAsync(new[]
-                {
-                    created.Id
-                }, new CursorPager());
-
-            Assert.NotEmpty(organisations);
-
-            await client.Organizations
-                .DeleteAsync(created.Id);
-        }
-
-        [Fact]
         public async Task GetAllAsync_WhenCalledWithExternalIds_ReturnsOrganisations()
         {
             var client = _clientFactory.GetClient();
@@ -133,45 +106,11 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var id = Guid.NewGuid().ToString();
 
             var created = await client.Organizations
-                .CreateAsync(new Organization
-                {
-                    ExternalId = id,
-                    Name = $"ZendeskApi.Client.IntegrationTests {id}"
-                });
+                .CreateAsync(new Organization {ExternalId = id, Name = $"ZendeskApi.Client.IntegrationTests {id}"});
 
             var organisations = await client
                 .Organizations
-                .GetAllByExternalIdsAsync(new[]
-                {
-                    created.ExternalId
-                });
-
-            Assert.NotEmpty(organisations);
-
-            await client.Organizations
-                .DeleteAsync(created.Id);
-        }
-
-        [Fact]
-        public async Task GetAllAsync_WhenCalledWithExternalIdsAndWithCursorPager_ReturnsOrganisations()
-        {
-            var client = _clientFactory.GetClient();
-
-            var id = Guid.NewGuid().ToString();
-
-            var created = await client.Organizations
-                .CreateAsync(new Organization
-                {
-                    ExternalId = id,
-                    Name = $"ZendeskApi.Client.IntegrationTests {id}"
-                });
-
-            var organisations = await client
-                .Organizations
-                .GetAllByExternalIdsAsync(new[]
-                {
-                    created.ExternalId
-                }, new CursorPager());
+                .GetAllByExternalIdsAsync(new[] {created.ExternalId});
 
             Assert.NotEmpty(organisations);
 

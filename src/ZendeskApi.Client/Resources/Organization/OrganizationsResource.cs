@@ -91,7 +91,6 @@ namespace ZendeskApi.Client.Resources
                 .Organization;
         }
         
-        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         // Potential naming inconsistency here, should be: GetAllByOrganizationIdsAsync
         public async Task<IPagination<Organization>> GetAllAsync(
             long[] organizationIds, 
@@ -106,19 +105,6 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<ICursorPagination<Organization>> GetAllByOrganizationIdsAsync(
-            long[] organizationIds,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetAsync<OrganizationsCursorResponse>(
-                $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(organizationIds)}",
-                "show-many-organizations",
-                $"GetAllAsync({ZendeskFormatter.ToCsv(organizationIds)})",
-                pager,
-                cancellationToken: cancellationToken);
-        }
-        
         [Obsolete("Use `GetAllByExternalIdsAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<Organization>> GetAllByExternalIdsAsync(
             string[] externalIds, 
@@ -126,19 +112,6 @@ namespace ZendeskApi.Client.Resources
             CancellationToken cancellationToken = default)
         {
             return await GetAsync<OrganizationsResponse>(
-                $"{ResourceUri}/show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}",
-                "show-many-organizations",
-                $"GetAllByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})",
-                pager,
-                cancellationToken: cancellationToken);
-        }
-
-        public async Task<ICursorPagination<Organization>> GetAllByExternalIdsAsync(
-            string[] externalIds,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetAsync<OrganizationsCursorResponse>(
                 $"{ResourceUri}/show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}",
                 "show-many-organizations",
                 $"GetAllByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})",

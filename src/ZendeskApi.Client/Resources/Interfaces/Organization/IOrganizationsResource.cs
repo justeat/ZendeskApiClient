@@ -33,28 +33,15 @@ namespace ZendeskApi.Client.Resources
             long organizationId,
             CancellationToken cancellationToken = default);
 
-        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<IPagination<Organization>> GetAllAsync(
             long[] organizationIds, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<Organization>> GetAllByOrganizationIdsAsync(
-            long[] organizationIds,
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
-
-        [Obsolete("Use `GetAllByExternalIdsAsync` with CursorPager parameter instead.")]
         Task<IPagination<Organization>> GetAllByExternalIdsAsync(
             string[] externalIds, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
-
-        Task<ICursorPagination<Organization>> GetAllByExternalIdsAsync(
-            string[] externalIds,
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
-
 
         Task<Organization> CreateAsync(
             Organization organization,
