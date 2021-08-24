@@ -20,24 +20,11 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "ticket_forms")
         { }
 
-        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<TicketForm>> GetAllAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketFormsResponse>(
-                ResourceUri,
-                "list-ticket-forms",
-                "GetAllAsync",
-                pager,
-                cancellationToken: cancellationToken);
-        }
-
-        public async Task<ICursorPagination<TicketForm>> GetAllAsync(
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetAsync<TicketFormsCursorResponse>(
                 ResourceUri,
                 "list-ticket-forms",
                 "GetAllAsync",
@@ -60,7 +47,6 @@ namespace ZendeskApi.Client.Resources
                 .TicketForm;
         }
         
-        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<TicketForm>> GetAllAsync(
             long[] ticketFormsIds, 
             PagerParameters pager = null,
@@ -69,21 +55,6 @@ namespace ZendeskApi.Client.Resources
             var ids = ZendeskFormatter.ToCsv(ticketFormsIds);
 
             return await GetAsync<TicketFormsResponse>(
-                $"{ResourceUri}/show_many?ids={ids}",
-                "show-many-ticket-forms",
-                $"GetAllAsync({ids})",
-                pager,
-                cancellationToken: cancellationToken);
-        }
-
-        public async Task<ICursorPagination<TicketForm>> GetAllAsync(
-            long[] ticketFormsIds,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            var ids = ZendeskFormatter.ToCsv(ticketFormsIds);
-
-            return await GetAsync<TicketFormsCursorResponse>(
                 $"{ResourceUri}/show_many?ids={ids}",
                 "show-many-ticket-forms",
                 $"GetAllAsync({ids})",
