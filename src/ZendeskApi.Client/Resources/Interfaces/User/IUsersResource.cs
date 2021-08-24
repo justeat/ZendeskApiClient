@@ -16,21 +16,21 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        [Obsolete("Use `GetAllAsync` instead.")]
-        Task<UsersListResponse> ListAsync(
-            long[] userIds, 
-            PagerParameters pager = null,
-            CancellationToken cancellationToken = default);
-
         [Obsolete("Use `GetAllByGroupIdAsync` instead.")]
         Task<UsersListResponse> ListInGroupAsync(
-            long groupId, 
+            long groupId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
         [Obsolete("Use `GetAllByOrganizationIdAsync` instead.")]
         Task<UsersListResponse> ListInOrganizationAsync(
-            long organizationId, 
+            long organizationId,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default);
+
+        [Obsolete("Use `GetAllAsync` instead.")]
+        Task<UsersListResponse> ListAsync(
+            long[] userIds, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
@@ -40,23 +40,15 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
+        #endregion
+
+        #region Get Users
         [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<UsersListResponse> GetAllAsync(
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
-
-        Task<ICursorPagination<UserResponse>> GetAllAsync(
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
-
-        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
-        Task<UsersListResponse> GetAllAsync(
-            long[] userIds,
-            PagerParameters pager = null,
-            CancellationToken cancellationToken = default);
-
+        
         Task<UsersListCursorResponse> GetAllAsync(
-            long[] userIds,
             CursorPager pager,
             CancellationToken cancellationToken = default);
 
@@ -66,39 +58,34 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<UserResponse>> GetAllByGroupIdAsync(
+        Task<UsersListCursorResponse> GetAllByGroupIdAsync(
             long groupId,
             CursorPager pager,
             CancellationToken cancellationToken = default);
-
+        
         [Obsolete("Use `GetAllByOrganizationIdAsync` with CursorPager parameter instead.")]
         Task<UsersListResponse> GetAllByOrganizationIdAsync(
             long organizationId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<UserResponse>> GetAllByOrganizationIdAsync(
+        Task<UsersListCursorResponse> GetAllByOrganizationIdAsync(
             long organizationId,
             CursorPager pager,
             CancellationToken cancellationToken = default);
 
-        [Obsolete("Use `GetAllByExternalIdsAsync` with CursorPager parameter instead.")]
         Task<UsersListResponse> GetAllByExternalIdsAsync(
             string[] externalIds,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<UserResponse>> GetAllByExternalIdsAsync(
-            string[] externalIds,
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
-
-        //Task<UserResponse> ListRelatedUsersAsync(long userId); //TODO: Fix this
-        #endregion
-
-        #region Get Users
         Task<UserResponse> GetAsync(
             long userId,
+            CancellationToken cancellationToken = default);
+
+        Task<UsersListResponse> GetAllAsync(
+            long[] userIds,
+            PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
         Task<UserRelatedInformationResponse> GetRelatedInformationAsync(
