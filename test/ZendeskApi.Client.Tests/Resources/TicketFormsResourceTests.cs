@@ -39,20 +39,6 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAll()
-        {
-            var results = await _resource.GetAllAsync(new CursorPager
-            {
-                Size = 3
-            });
-
-            var item = results.ElementAt(1);
-
-            Assert.Equal(2, item.Id);
-            Assert.Equal("name.2", item.Name);
-        }
-
-        [Fact]
         public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllAsync(new PagerParameters

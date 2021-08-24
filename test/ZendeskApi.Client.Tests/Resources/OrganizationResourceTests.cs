@@ -149,19 +149,6 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithCursorPagination_ShouldGetAllOrganizations()
-        {
-            var results = await _resource.GetAllAsync(
-                new long[] { 1, 2, 3 },
-                new CursorPager());
-
-            var org = results.ElementAt(1);
-
-            Assert.Equal("org.2", org.Name);
-            Assert.Equal("2", org.ExternalId);
-        }
-
-        [Fact]
         public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllAsync(
