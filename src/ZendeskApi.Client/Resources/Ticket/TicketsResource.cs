@@ -84,7 +84,6 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        [Obsolete("Use `GetAllByRequestedByIdAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<Ticket>> GetAllByRequestedByIdAsync(
             long userId,
             PagerParameters pager = null,
@@ -99,21 +98,6 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        public async Task<ICursorPagination<Ticket>> GetAllByRequestedByIdAsync(
-            long userId,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetWithNotFoundCheckAsync<TicketsListCursorResponse>(
-                $"{string.Format(UserResourceUriFormat, userId)}/requested",
-                "list-tickets",
-                $"GetAllByRequestedByIdAsync({userId})",
-                $"Requested ticketsResponse for user {userId} not found",
-                pager,
-                cancellationToken);
-        }
-
-        [Obsolete("Use `GetAllByCcdIdAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<Ticket>> GetAllByCcdIdAsync(
             long userId,
             PagerParameters pager = null,
@@ -128,21 +112,6 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        public async Task<ICursorPagination<Ticket>> GetAllByCcdIdAsync(
-            long userId,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetWithNotFoundCheckAsync<TicketsListCursorResponse>(
-                $"{string.Format(UserResourceUriFormat, userId)}/ccd",
-                "list-tickets",
-                $"GetAllByCcdIdAsync({userId})",
-                $"CCD ticketsResponse for user {userId} not found",
-                pager,
-                cancellationToken);
-        }
-
-        [Obsolete("Use `GetAllByAssignedToIdAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<Ticket>> GetAllByAssignedToIdAsync(
             long userId,
             PagerParameters pager = null,
@@ -156,39 +125,13 @@ namespace ZendeskApi.Client.Resources
                 pager,
                 cancellationToken);
         }
-        public async Task<ICursorPagination<Ticket>> GetAllByAssignedToIdAsync(
-            long userId,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetWithNotFoundCheckAsync<TicketsListCursorResponse>(
-                $"{string.Format(UserResourceUriFormat, userId)}/assigned",
-                "list-tickets",
-                $"ListAssignedToAsync({userId})",
-                $"Assigned ticketsResponse for user {userId} not found",
-                pager,
-                cancellationToken);
-        }
 
-        [Obsolete("Use `GetAllByExternalIdAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<Ticket>> GetAllByExternalIdAsync(
             string externalId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketsListResponse>(
-                $"{ResourceUri}?external_id={externalId}",
-                "list-tickets-by-external-id",
-                $"GetAllByExternalIdAsync({externalId})",
-                pager,
-                cancellationToken: cancellationToken);
-        }
-        public async Task<ICursorPagination<Ticket>> GetAllByExternalIdAsync(
-            string externalId,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetAsync<TicketsListCursorResponse>(
                 $"{ResourceUri}?external_id={externalId}",
                 "list-tickets-by-external-id",
                 $"GetAllByExternalIdAsync({externalId})",

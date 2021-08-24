@@ -34,49 +34,26 @@ namespace ZendeskApi.Client.Resources
             CursorPager pager,
             CancellationToken cancellationToken = default);
 
-        [Obsolete("Use `GetAllByRequestedByIdAsync` with CursorPager parameter instead.")]
         Task<IPagination<Ticket>> GetAllByRequestedByIdAsync(
             long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<Ticket>> GetAllByRequestedByIdAsync(
-            long userId,
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
-
-        [Obsolete("Use `GetAllByCcdIdAsync` with CursorPager parameter instead.")]
         Task<IPagination<Ticket>> GetAllByCcdIdAsync(
             long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<Ticket>> GetAllByCcdIdAsync(
-            long userId,
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
-
-        [Obsolete("Use `GetAllByAssignedToIdAsync` with CursorPager parameter instead.")]
         Task<IPagination<Ticket>> GetAllByAssignedToIdAsync(
             long userId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<Ticket>> GetAllByAssignedToIdAsync(
-            long userId,
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
-
-        [Obsolete("Use `GetAllByExternalIdAsync` with CursorPager parameter instead.")]
         Task<IPagination<Ticket>> GetAllByExternalIdAsync(
             string externalId,
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<Ticket>> GetAllByExternalIdAsync(
-            string externalId,
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
         #endregion
 
         #region List Tickets

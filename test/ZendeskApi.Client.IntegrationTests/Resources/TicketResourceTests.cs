@@ -42,5 +42,16 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             Assert.NotNull(results);
             Assert.Equal(10, results.Count());
         }
+
+        [Fact]
+        public async Task GetAllByOrganizationIdAsync_WhenCalledWithCursorPagination_ShouldReturnSpecificAmountOfTickets()
+        {
+            var client = _clientFactory.GetClient();
+
+            var results = await client
+                .Tickets.GetAllByOrganizationIdAsync(360014155169, new CursorPager());
+
+            Assert.NotNull(results);
+        }
     }
 }
