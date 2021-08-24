@@ -295,7 +295,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<ICursorPagination<Ticket>> GetAllAsync(
+        public async Task<ICursorPagination<Ticket>> GetAllByIdsAsync(
             long[] ticketIds,
             CursorPager pager,
             CancellationToken cancellationToken = default)
