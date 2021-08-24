@@ -6,6 +6,12 @@
     <AssemblyName>ZendeskApi.Client.Tests</AssemblyName>
     <PackageId>ZendeskApi.Client.Tests</PackageId>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
