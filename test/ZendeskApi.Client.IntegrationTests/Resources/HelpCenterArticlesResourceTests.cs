@@ -20,7 +20,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalled_ShouldReturnSections()
+        public async Task GetAllAsync_WhenCalled_ShouldReturnArticles()
         {
             var client = _clientFactory.GetClient();
 
@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithCursor_ShouldReturnSections()
+        public async Task GetAllAsync_WhenCalledWithCursor_ShouldReturnArticles()
         {
             var client = _clientFactory.GetClient();
 
@@ -46,7 +46,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithCategory_ShouldReturnSections()
+        public async Task GetAllAsync_WhenCalledWithCategory_ShouldReturnArticles()
         {
             var client = _clientFactory.GetClient();
 
@@ -59,7 +59,20 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithSection_ShouldReturnSections()
+        public async Task GetAllAsync_WhenCalledWithCategoryIdAndWithCursorPagination_ShouldReturnArticles()
+        {
+            var client = _clientFactory.GetClient();
+
+            var articles = await client
+                .HelpCenter
+                .Articles
+                .GetAllByCategoryIdAsync(360003544498, new CursorPager(), "en-gb");
+
+            Assert.NotEmpty(articles);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithSection_ShouldReturnArticles()
         {
             var client = _clientFactory.GetClient();
 
@@ -72,7 +85,20 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithUser_ShouldReturnSections()
+        public async Task GetAllAsync_WhenCalledWithSectionAndWithCursorPagination_ShouldReturnArticles()
+        {
+            var client = _clientFactory.GetClient();
+
+            var articles = await client
+                .HelpCenter
+                .Articles
+                .GetAllBySectionIdAsync(360005462017, new CursorPager(), "en-gb");
+
+            Assert.NotEmpty(articles);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithUser_ShouldReturnArticles()
         {
             var client = _clientFactory.GetClient();
 
@@ -85,7 +111,20 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
-        public async Task GetAsync_WhenCalled_ShouldReturnSection()
+        public async Task GetAllAsync_WhenCalledWithUserAndWithCursorPagination_ShouldReturnArticles()
+        {
+            var client = _clientFactory.GetClient();
+
+            var articles = await client
+                .HelpCenter
+                .Articles
+                .GetAllByUserIdAsync(794337992, new CursorPager());
+
+            Assert.NotEmpty(articles);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenCalled_ShouldReturnArticle()
         {
             var client = _clientFactory.GetClient();
 

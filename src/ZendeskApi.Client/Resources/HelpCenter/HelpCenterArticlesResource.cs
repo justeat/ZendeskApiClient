@@ -60,6 +60,7 @@ namespace ZendeskApi.Client.Resources
                 pager,
                 cancellationToken: cancellationToken);
         }
+
         public async Task<HelpCenterArticleListCursorResponse> GetAllByCategoryIdAsync(
             long categoryId,
             CursorPager pager,
