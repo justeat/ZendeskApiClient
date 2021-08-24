@@ -23,7 +23,7 @@ namespace ZendeskApi.Client.Resources.Interfaces
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<HelpCenterSectionListCursorResponse> GetAllAsync(
+        Task<HelpCenterSectionListCursorResponse> GetAllByCategoryIdAsync(
             CursorPager pager,
             long categoryId,
             string locale = null,

@@ -46,8 +46,8 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
-        // Potential naming inconsistency here, should be: GetAllByCategoryIdAsync
+        [Obsolete("Use `GetAllByCategoryIdAsync` with CursorPager parameter instead.")]
+        // Potential naming inconsistency here, should be: GetAllByCategoryIdAsync, updated the cursor paginated endpoint.
         public async Task<HelpCenterSectionListResponse> GetAllAsync(
             long categoryId,
             string locale = null,
@@ -62,8 +62,7 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        // Potential naming inconsistency here, should be: GetAllByCategoryIdAsync
-        public async Task<HelpCenterSectionListCursorResponse> GetAllAsync(
+        public async Task<HelpCenterSectionListCursorResponse> GetAllByCategoryIdAsync(
             CursorPager pager,
             long categoryId,
             string locale = null,
