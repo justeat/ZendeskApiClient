@@ -14,10 +14,6 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<Request>> GetAllAsync(
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
-
         Task<Request> GetAsync(
             long requestId,
             CancellationToken cancellationToken = default);
@@ -31,11 +27,6 @@ namespace ZendeskApi.Client.Resources
         Task<IPagination<TicketComment>> GetAllComments(
             long requestId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default);
-
-        Task<TicketCommentsCursorResponse> GetAllComments(
-            long requestId,
-            CursorPager pager,
             CancellationToken cancellationToken = default);
 
         Task<TicketComment> GetTicketCommentAsync(

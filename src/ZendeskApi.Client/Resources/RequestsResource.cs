@@ -34,17 +34,6 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<ICursorPagination<Request>> GetAllAsync(
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetAsync<RequestsCursorResponse>(
-                ResourceUri,
-                "list-requests",
-                "GetAllAsync",
-                pager,
-                cancellationToken: cancellationToken);
-        }
 
         public async Task<Request> GetAsync(
             long requestId,
@@ -82,20 +71,6 @@ namespace ZendeskApi.Client.Resources
             CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<TicketCommentsResponse>(
-                string.Format(CommentsResourceUri, requestId),
-                "getting-comments",
-                $"GetAllComments({requestId})",
-                $"Could not find any comments for request {requestId} as request was not found",
-                pager,
-                cancellationToken);
-        }
-
-        public async Task<TicketCommentsCursorResponse> GetAllComments(
-            long requestId,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetWithNotFoundCheckAsync<TicketCommentsCursorResponse>(
                 string.Format(CommentsResourceUri, requestId),
                 "getting-comments",
                 $"GetAllComments({requestId})",

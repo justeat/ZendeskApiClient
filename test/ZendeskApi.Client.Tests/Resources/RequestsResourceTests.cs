@@ -39,23 +39,6 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAll()
-        {
-            var results = await _resource.GetAllAsync(new CursorPager{Size = 100});
-
-            Assert.Equal(100, results.Count());
-
-            for (var i = 1; i <= 100; i++)
-            {
-                var item = results.ElementAt(i - 1);
-
-                Assert.Equal(i, item.Id);
-                Assert.Equal($"subject.{i}", item.Subject);
-                Assert.Equal($"description.{i}", item.Description);
-            }
-        }
-
-        [Fact]
         public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
@@ -120,20 +103,6 @@ namespace ZendeskApi.Client.Tests.Resources
                 Assert.Equal(i, item.Id);
                 Assert.Equal($"body.{i}", item.Body);
             }
-        }
-
-        [Fact]
-        public async Task GetAllComments_WhenCalledWithCursorPagination_ShouldGetAll()
-        {
-            var results = await _resource.GetAllComments(1, new CursorPager
-            {
-                Size = 5
-            });
-
-            var item = results.ElementAt(1);
-
-            Assert.Equal(2, item.Id);
-            Assert.Equal("body.2", item.Body);
         }
 
         [Fact]
