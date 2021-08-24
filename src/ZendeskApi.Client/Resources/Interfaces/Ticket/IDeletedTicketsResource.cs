@@ -36,11 +36,6 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<DeletedTicketsListCursorResponse> GetAllAsync(
-            Action<IZendeskQuery> builder,
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
-
         Task RestoreAsync(
             long ticketId,
             CancellationToken cancellationToken = default);
