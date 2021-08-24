@@ -1,4 +1,3 @@
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,8 +15,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         {
             _clientFactory = clientFactory;
         }
-
-
+        
         [Fact]
         public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnDeletedTickets()
         {
