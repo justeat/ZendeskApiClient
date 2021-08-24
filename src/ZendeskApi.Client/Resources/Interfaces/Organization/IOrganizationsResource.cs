@@ -39,7 +39,7 @@ namespace ZendeskApi.Client.Resources
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
 
-        Task<ICursorPagination<Organization>> GetAllAsync(
+        Task<ICursorPagination<Organization>> GetAllByOrganizationIdsAsync(
             long[] organizationIds,
             CursorPager pager,
             CancellationToken cancellationToken = default);
