@@ -237,19 +237,6 @@ namespace ZendeskApi.Client.Resources
                 pager,
                 cancellationToken: cancellationToken);
         }
-
-        public async Task<ICursorPagination<Ticket>> GetAllByIdsAsync(
-            long[] ticketIds,
-            CursorPager pager,
-            CancellationToken cancellationToken = default)
-        {
-            return await GetAsync<TicketsListCursorResponse>(
-                $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(ticketIds)}",
-                "show-multiple-tickets",
-                $"GetAllAsync({ZendeskFormatter.ToCsv(ticketIds)})",
-                pager,
-                cancellationToken: cancellationToken);
-        }
         #endregion
 
         #region Create Tickets

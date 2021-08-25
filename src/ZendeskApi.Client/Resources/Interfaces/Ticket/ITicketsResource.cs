@@ -96,11 +96,6 @@ namespace ZendeskApi.Client.Resources
             long[] ticketIds, 
             PagerParameters pager = null,
             CancellationToken cancellationToken = default);
-
-        Task<ICursorPagination<Ticket>> GetAllByIdsAsync(
-            long[] ticketIds,
-            CursorPager pager,
-            CancellationToken cancellationToken = default);
         #endregion
 
         #region Create Tickets
