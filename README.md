@@ -8,6 +8,10 @@ A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 # Breaking Changes
 
+## 4.x.x
+This will allow for cursor pagination on some endpoints. We have kept the original offset pagination available so that this release is backward compatible, however due to Zendesk adding a variation of cursor pagination to this single [endpoint](https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination), we have modified the original `cursorPager` class to now be `cursorPagerVariant`. If you use the TicketAudits endpoint please update your code.
+
+
 ## 3.x.x
 This is a complete rewrite so expect breaking changes.
 
