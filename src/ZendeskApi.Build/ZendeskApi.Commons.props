@@ -22,7 +22,7 @@
   </PropertyGroup>
   <PropertyGroup>
       <Major>4</Major>
-      <Minor>15</Minor>
+      <Minor>0</Minor>
       <Revision>0</Revision>
 
       <BuildNumber Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">$(APPVEYOR_BUILD_NUMBER)</BuildNumber>
