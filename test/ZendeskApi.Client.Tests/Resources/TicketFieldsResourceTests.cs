@@ -7,6 +7,7 @@ using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -38,7 +39,21 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager()
+            {
+                Size = 3
+            });
+
+            var item = results.ElementAt(1);
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal("raw.title.2", item.RawTitle);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
             {

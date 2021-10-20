@@ -25,16 +25,17 @@ namespace ZendeskApi.Client.Resources
         [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<UsersListResponse> ListAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 pager,
                 cancellationToken);
         }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<UsersListResponse> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<UsersListResponse>(
                 ResourceUri,
@@ -44,9 +45,21 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<ICursorPagination<UserResponse>> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<UsersListCursorResponse>(
+                ResourceUri,
+                "list-deleted-users",
+                "ListAsync",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
         public async Task<UserResponse> GetAsync(
             long userId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<SingleUserResponse>(
                 $"{ResourceUri}/{userId}",
@@ -61,7 +74,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task PermanentlyDeleteAsync(
             long userId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 ResourceUri,

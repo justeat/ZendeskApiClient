@@ -39,7 +39,24 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager{Size = 100});
+
+            Assert.Equal(100, results.Count());
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var membership = results.ElementAt(i - 1);
+
+                Assert.Equal(i, membership.Id);
+                Assert.Equal(i, membership.UserId);
+                Assert.Equal(i, membership.OrganizationId);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
             {
@@ -85,7 +102,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllForOrganizationAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllForOrganizationAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllForOrganizationAsync(
                 1,
@@ -119,7 +136,20 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllByOrganizationIdAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllByOrganizationIdAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByOrganizationIdAsync(
+                1,
+                new CursorPager()
+                {
+                    Size = 1
+                });
+
+            Assert.Single(results);
+        }
+
+        [Fact]
+        public async Task GetAllByOrganizationIdAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllByOrganizationIdAsync(
                 1,
@@ -147,7 +177,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllForUserAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllForUserAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllForUserAsync(
                 1,
@@ -181,7 +211,21 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllByUserIdAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllByUserIdAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+            var results = await _resource.GetAllByUserIdAsync(1, new CursorPager());
+
+            Assert.Single(results);
+
+            var membership = results.First();
+
+            Assert.Equal(1, membership.Id);
+            Assert.Equal(1, membership.UserId);
+            Assert.Equal(1, membership.OrganizationId);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
             var results = await _resource.GetAllByUserIdAsync(
                 1,

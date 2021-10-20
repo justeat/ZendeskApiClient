@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -37,6 +36,23 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                 .GetAllAsync();
 
             Assert.NotEmpty(memberships);
+
+            await TeardownAndDeleteMembership(client, setup);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnMemberships()
+        {
+            var client = _clientFactory.GetClient();
+
+            var setup = await SetupAndCreateMembership(client);
+
+            var memberships = await client
+                .OrganizationMemberships
+                .GetAllAsync(new CursorPager());
+
+            Assert.NotEmpty(memberships);
+            Assert.Equal(100, memberships.Count());
 
             await TeardownAndDeleteMembership(client, setup);
         }
@@ -123,6 +139,38 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var memberships = await client
                 .OrganizationMemberships
                 .GetAllForOrganizationAsync(setup.Organization.Id);
+
+            Assert.NotEmpty(memberships);
+
+            await TeardownAndDeleteMembership(client, setup);
+        }
+
+        [Fact]
+        public async Task GetAllByOrganizationIdAsync_WhenCalledWithCursorPagination_ShouldReturnMemberships()
+        {
+            var client = _clientFactory.GetClient();
+
+            var setup = await SetupAndCreateMembership(client);
+
+            var memberships = await client
+                .OrganizationMemberships
+                .GetAllByOrganizationIdAsync(setup.Organization.Id, new CursorPager());
+
+            Assert.NotEmpty(memberships);
+
+            await TeardownAndDeleteMembership(client, setup);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithCursorPagination_ShouldReturnMemberships()
+        {
+            var client = _clientFactory.GetClient();
+
+            var setup = await SetupAndCreateMembership(client);
+
+            var memberships = await client
+                .OrganizationMemberships
+                .GetAllByUserIdAsync(setup.User.Id, new CursorPager());
 
             Assert.NotEmpty(memberships);
 

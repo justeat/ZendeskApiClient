@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Newtonsoft.Json;
 using Xunit;
 using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
@@ -43,7 +42,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListAsync_WhenCalledWithPaging_ShouldGetAllUsers()
+        public async Task ListAsync_WhenCalledWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.ListAsync(new PagerParameters
             {
@@ -144,7 +143,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListAsync_WhenCalledWithOrganizationIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task ListAsync_WhenCalledWithOrganizationIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.ListAsync(
                 new long[] { 1, 2, 3 },
@@ -183,7 +182,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListByExternalIdsAsync_WhenCalledWithExternalIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task ListByExternalIdsAsync_WhenCalledWithExternalIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.ListByExternalIdsAsync(
                 new string[] { "1", "2", "3" },
@@ -223,7 +222,22 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllUsers()
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager()
+            {
+                Size = 3
+            });
+
+            var user = results.ElementAt(1);
+
+            Assert.Equal("name.2", user.Name);
+            Assert.Equal("email.2", user.Email);
+            Assert.Equal("2", user.ExternalId);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
             {
@@ -264,6 +278,21 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
+        public async Task GetAllByGroupIdAsync_WhenCalledWithCursorPagination_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllByGroupIdAsync(1, new CursorPager());
+
+            Assert.Single(results);
+
+            var user = results.First();
+
+            Assert.Equal("name.1", user.Name);
+            Assert.Equal("email.1", user.Email);
+            Assert.Equal("1", user.ExternalId);
+            Assert.Equal(1, user.DefaultGroupId);
+        }
+
+        [Fact]
         public async Task GetAllByGroupIdAsync_WhenNotFound_ShouldReturnNull()
         {
             var results = await _resource.GetAllByGroupIdAsync(int.MaxValue);
@@ -283,6 +312,22 @@ namespace ZendeskApi.Client.Tests.Resources
             var results = await _resource.GetAllByOrganizationIdAsync(1);
 
             Assert.Equal(1, results.Count);
+
+            var user = results.First();
+
+            Assert.Equal("name.1", user.Name);
+            Assert.Equal("email.1", user.Email);
+            Assert.Equal("1", user.ExternalId);
+            Assert.Equal(1, user.DefaultGroupId);
+            Assert.Equal(1, user.OrganizationId);
+        }
+
+        [Fact]
+        public async Task GetAllByOrganizationIdAsync_WhenCalledWithCursorPagination_ShouldGetAllUsers()
+        {
+            var results = await _resource.GetAllByOrganizationIdAsync(1, new CursorPager());
+
+            Assert.Single(results);
 
             var user = results.First();
 
@@ -324,7 +369,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAllAsync(
                 new long[] { 1, 2, 3 },
@@ -363,7 +408,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllByExternalIdsAsync_WhenCalledWithExternalIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task GetAllByExternalIdsAsync_WhenCalledWithExternalIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAllByExternalIdsAsync(
                 new string[] { "1", "2", "3" },

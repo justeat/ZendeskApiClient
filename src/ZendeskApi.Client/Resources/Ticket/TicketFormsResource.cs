@@ -21,7 +21,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<IPagination<TicketForm>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketFormsResponse>(
                 ResourceUri,
@@ -33,7 +33,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketForm> GetAsync(
             long ticketformId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<TicketFormResponse>(
                 $"{ResourceUri}/{ticketformId}",
@@ -45,11 +45,11 @@ namespace ZendeskApi.Client.Resources
             return response?
                 .TicketForm;
         }
-
+        
         public async Task<IPagination<TicketForm>> GetAllAsync(
             long[] ticketFormsIds, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var ids = ZendeskFormatter.ToCsv(ticketFormsIds);
 
@@ -63,7 +63,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketForm> CreateAsync(
             TicketForm ticketForm,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<TicketFormResponse, TicketFormCreateUpdateRequest>(
                 ResourceUri,
@@ -77,7 +77,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<TicketForm> UpdateAsync(
             TicketForm ticketForm,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateWithNotFoundCheckAsync<TicketFormResponse, TicketFormCreateUpdateRequest>(
                 $"{ResourceUri}/{ticketForm.Id}",
@@ -92,7 +92,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(
             long ticketFormId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 ResourceUri,

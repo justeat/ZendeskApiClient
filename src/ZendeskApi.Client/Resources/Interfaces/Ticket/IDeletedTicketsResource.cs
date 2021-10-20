@@ -10,40 +10,46 @@ namespace ZendeskApi.Client.Resources
 {
     public interface IDeletedTicketsResource
     {
-        [Obsolete("Use `GetAllAsync` instead.")]
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<DeletedTicketsListResponse> ListAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
-        [Obsolete("Use `GetAllAsync` instead.")]
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<DeletedTicketsListResponse> ListAsync(
             Action<IZendeskQuery> builder, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<DeletedTicketsListResponse> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
+        Task<DeletedTicketsListCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default);
+
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<DeletedTicketsListResponse> GetAllAsync(
             Action<IZendeskQuery> builder, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task RestoreAsync(
             long ticketId,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task RestoreAsync(
             IEnumerable<long> ticketIds,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task<JobStatusResponse> PurgeAsync(
             long ticketId,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task<JobStatusResponse> PurgeAsync(
             IEnumerable<long> ticketIds,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
     }
 }

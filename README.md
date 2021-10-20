@@ -8,6 +8,45 @@ A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 # Breaking Changes
 
+## 4.x.x
+This will allow for cursor pagination on some endpoints. We have kept the original offset pagination available so that this release is backward compatible, however due to Zendesk adding a variation of cursor pagination to this single [endpoint](https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination), we have modified the original `cursorPager` class to now be `cursorPagerVariant`. If you use the TicketAudits endpoint please update your code.
+
+Unfortunatly Zendesk has not adopted cursor pagination on all endpoints. A list of compatible endpoints used in this API are as follows:
+
+Users:
+- GET /api/v2/deleted_users
+- GET /api/v2/users
+- GET /api/v2/users/{user_id}/identities
+- GET /api/v2/user_fields
+- GET /api/v2/users/{user_id}/groups
+
+Groups:
+- GET /api/v2/groups
+- GET /api/v2/groups/{group_id}/users
+
+Help Center:
+- GET api/v2/help_center/articles
+- GET api/v2/help_center/categories
+
+Organization:
+- GET /api/v2/organization_fields
+- GET /api/v2/organization_memberships
+- GET /api/v2/organizations
+- GET /api/v2/organizations/{organization_id}/users
+- GET /api/v2/organizations/{organization_id}/tickets
+
+Tickets:
+- GET /api/v2/deleted_tickets
+- GET /api/v2/tickets
+- GET /api/v2/tickets/{ticketId}/comments
+- GET /api/v2/ticket_fields
+- GET /api/v2/ticket_audits - [Cursor Variant](https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination)
+
+Satisfaction ratings: 
+- GET /api/v2/satisfaction_ratings
+
+[Further reading on Zendesk Pagination changes](https://support.zendesk.com/hc/en-us/articles/4402610093338-Introducing-Pagination-Changes-Zendesk-API)
+
 ## 3.x.x
 This is a complete rewrite so expect breaking changes.
 
@@ -74,7 +113,7 @@ Querying and searching is limited by the searchable fields on the zendesk api
 In order to run integration tests against your own zendesk instance use the Cake script provided by:
 
 ```powershell
-.\build.ps1 -Target "Run-Integration-Tests" -ScriptArgs '-zendeskUrl="<your zendesk url>"', '-zendeskUsername="<your zendesk username>"', '-zendeskToken="<your zendesk token>"'
+.\build.ps1 --target=Run-Integration-Tests --zendeskUrl="<your zendesk url>" --zendeskUsername="<your zendesk username>" --zendeskToken="<your zendesk token>"
 ```
 
 # Contributing

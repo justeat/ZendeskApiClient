@@ -10,7 +10,6 @@ namespace ZendeskApi.Client.Responses
         [JsonProperty("deleted_tickets")]
         public IEnumerable<Ticket> Tickets { get; set; }
 
-
         protected override IEnumerable<Ticket> Enumerable => Tickets;
     }
 }

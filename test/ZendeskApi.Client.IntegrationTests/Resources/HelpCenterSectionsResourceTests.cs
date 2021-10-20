@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using ZendeskApi.Client.IntegrationTests.Factories;
+using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.IntegrationTests.Resources
 {
@@ -32,6 +33,19 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         }
 
         [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnSections()
+        {
+            var client = _clientFactory.GetClient();
+
+            var sections = await client
+                .HelpCenter
+                .Sections
+                .GetAllAsync(new CursorPager(), "en-gb");
+
+            Assert.NotEmpty(sections);
+        }
+
+        [Fact]
         public async Task GetAllAsync_WhenCalledWithCategory_ShouldReturnSections()
         {
             var client = _clientFactory.GetClient();
@@ -39,7 +53,20 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var sections = await client
                 .HelpCenter
                 .Sections
-                .GetAllAsync(360000599157, "en-gb");
+                .GetAllAsync(360003544498, "en-gb");
+
+            Assert.NotEmpty(sections);
+        }
+
+        [Fact]
+        public async Task GetAllByCategoryIdAsync_WhenCalledWithCategoryAndWithCursorPagination_ShouldReturnSections()
+        {
+            var client = _clientFactory.GetClient();
+
+            var sections = await client
+                .HelpCenter
+                .Sections
+                .GetAllByCategoryIdAsync(new CursorPager(), 360003544498, "en-gb");
 
             Assert.NotEmpty(sections);
         }
@@ -52,7 +79,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var section = await client
                 .HelpCenter
                 .Sections
-                .GetAsync(360001138437, "en-gb");
+                .GetAsync(360005462017, "en-gb");
 
             Assert.NotNull(section);
         }
