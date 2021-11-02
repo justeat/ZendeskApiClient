@@ -5,9 +5,9 @@ environment:
   ZendeskApi_Credentials_Url:
     secure: C2FCZYsQc4saCFZ4Uw6gkBqHoyXZPsKucJRXKGKBhYp9cBxCXxupzuo9jB0ftVah
   ZendeskApi_Credentials_Username: 
-    secure: whZ6DOkeg5NgmNdWKmiQnd0XBziOlelSNKmmWpHmEoZWD3uB4wE9GB0DXso/kuNu
+    secure: ft+ZIlhKYIHzQ+0Phrool1mjCK1QksYDv6hWtq/pPP0=
   ZendeskApi_Credentials_Token: 
-    secure: NwZv5U0/BQkKwlkroGsHK0jJSMY5Xy/sWFjRGZU4NLhcBZmOBpqawNS2yCpQ/JYL
+    secure: GRSdM9G3MmHr5PymLoHbtyU2sD7/pz/tv4FUlt2JY3zZm7OYBR1zFT6pmusYiRjx
 before_build:
   - dotnet restore
 build:
