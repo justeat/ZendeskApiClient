@@ -42,11 +42,6 @@ namespace ZendeskApi.Client
                 resource = resource + "/";
             }
 
-            if(_options.EndpointUri != null || !string.IsNullOrEmpty(_options.EndpointUri)){
-                Console.WriteLine("_options.EndpointUri "+ "all good");
-            }
-            Console.WriteLine("_options.EndpointUri "+ _options.EndpointUri);
-            Console.WriteLine("ENV VAR " + Environment.GetEnvironmentVariable("ZendeskApi_Credentials_Url"));
             var handler = _httpMessageHandlerFactory();
 
             var client = new HttpClient(handler)
