@@ -7,7 +7,7 @@ environment:
   ZendeskApi_Credentials_Username: 
     secure: ft+ZIlhKYIHzQ+0Phrool1mjCK1QksYDv6hWtq/pPP0=
   ZendeskApi_Credentials_Token: 
-    secure: GRSdM9G3MmHr5PymLoHbtyU2sD7/pz/tv4FUlt2JY3zZm7OYBR1zFT6pmusYiRjx
+    secure: W/xn4AIFUBR9MofQljIIEdHXu6ssl+ZMRADZaA3iTPwHcM12xFv4iNg+Y4yPHBRU
 before_build:
   - dotnet restore
 build:
