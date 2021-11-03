@@ -45,6 +45,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             Assert.NotEmpty(articles);
         }
 
+
         [Fact]
         public async Task GetAllAsync_WhenCalledWithCategory_ShouldReturnArticles()
         {

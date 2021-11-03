@@ -10,7 +10,6 @@ namespace ZendeskApi.Client.Responses
         [JsonProperty("identities")]
         public IEnumerable<UserIdentity> Identities { get; set; }
 
-
         protected override IEnumerable<UserIdentity> Enumerable => Identities;
     }
 }

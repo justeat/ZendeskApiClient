@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Xunit;
 using ZendeskApi.Client.IntegrationTests.Factories;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.IntegrationTests.Resources
 {
@@ -20,17 +21,25 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnUserIdentities()
         {
             var client = _clientFactory.GetClient();
-            await client.UserIdentities.CreateUserIdentityAsync(new UserIdentity(){
-                Type="twitter",
-                Value="handle"
-            }, 368420617118);
+            var results = new UserIdentitiesCursorResponse();
 
-            var results = await client
-                .UserIdentities.GetAllByUserIdAsync(368420617118, new CursorPager());
+            try
+            {
+                await client.UserIdentities.CreateUserIdentityAsync(new UserIdentity()
+                {
+                    Type = "twitter",
+                    Value = "handle"
+                }, 368420617118);
 
-            Assert.NotNull(results);
+                results = (UserIdentitiesCursorResponse)await client
+                    .UserIdentities.GetAllByUserIdAsync(368420617118, new CursorPager());
 
-            await client.UserIdentities.DeleteAsync(368420617118, (long)results.First().Id);
+                Assert.NotNull(results);
+            }
+            finally
+            {
+                await client.UserIdentities.DeleteAsync(368420617118, (long)results.First().Id);
+            }
         }
     }
 }
