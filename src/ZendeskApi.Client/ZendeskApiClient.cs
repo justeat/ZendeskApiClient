@@ -41,7 +41,8 @@ namespace ZendeskApi.Client
             {
                 resource = resource + "/";
             }
-
+            Console.WriteLine("_options.EndpointUri "+_options.EndpointUri);
+            Console.WriteLine("resource " + resource);
             var handler = _httpMessageHandlerFactory();
 
             var client = new HttpClient(handler)
