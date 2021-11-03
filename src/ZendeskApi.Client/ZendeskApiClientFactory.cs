@@ -31,7 +31,7 @@ namespace ZendeskApi.Client
             var client = _httpClientFactory
                 .CreateClient("zendeskApiClient");
 
-            client.BaseAddress = new Uri($"{_options.EndpointUri}/{formattedResource}");
+            client.BaseAddress = new Uri($"{new Uri(_options.EndpointUri)}/{new Uri(formattedResource, UriKind.Relative)}");
 
             var authorizationHeader = _options
                 .GetAuthorizationHeader();
