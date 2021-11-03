@@ -3,11 +3,11 @@ version: 4.0.0-alpha-{build}
 configuration: Release
 environment:
   ZendeskApi_Credentials_Url:
-    secure: C2FCZYsQc4saCFZ4Uw6gkBqHoyXZPsKucJRXKGKBhYpDnvMOQSxNBJ6e9hdJ6C4l
+    secure: C2FCZYsQc4saCFZ4Uw6gkBqHoyXZPsKucJRXKGKBhYp9cBxCXxupzuo9jB0ftVah
   ZendeskApi_Credentials_Username: 
     secure: ft+ZIlhKYIHzQ+0Phrool1mjCK1QksYDv6hWtq/pPP0=
   ZendeskApi_Credentials_Token: 
-    secure: W/xn4AIFUBR9MofQljIIEdHXu6ssl+ZMRADZaA3iTPwHcM12xFv4iNg+Y4yPHBRU
+    secure: GRSdM9G3MmHr5PymLoHbtyU2sD7/pz/tv4FUlt2JY3zZm7OYBR1zFT6pmusYiRjx
 before_build:
   - dotnet restore
 build:
