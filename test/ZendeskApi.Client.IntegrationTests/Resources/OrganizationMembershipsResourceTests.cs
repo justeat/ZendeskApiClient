@@ -52,7 +52,6 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                 .GetAllAsync(new CursorPager());
 
             Assert.NotEmpty(memberships);
-            Assert.Equal(100, memberships.Count());
 
             await TeardownAndDeleteMembership(client, setup);
         }

@@ -32,7 +32,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var client = _clientFactory.GetClient();
 
             var results = await client
-                .Users.GetAllByGroupIdAsync(28963465, new CursorPager());
+                .Users.GetAllByGroupIdAsync(360001444577, new CursorPager());
 
             Assert.NotNull(results);
         }
@@ -43,7 +43,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var client = _clientFactory.GetClient();
 
             var results = await client
-                .Users.GetAllByOrganizationIdAsync(360106870118, new CursorPager());
+                .Users.GetAllByOrganizationIdAsync(360195486037, new CursorPager());
 
             Assert.NotNull(results);
         }

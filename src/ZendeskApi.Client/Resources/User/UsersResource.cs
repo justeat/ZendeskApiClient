@@ -265,7 +265,7 @@ namespace ZendeskApi.Client.Resources
             var response = await UpdateWithNotFoundCheckAsync<SingleUserResponse, UserRequest<UserUpdateRequest>>(
                 $"{ResourceUri}/{user.Id}",
                 new UserRequest<UserUpdateRequest>(user),
-                "update-ticket",
+                "update-user",
                 $"Cannot update user as user {user.Id} cannot be found",
                 cancellationToken: cancellationToken);
 

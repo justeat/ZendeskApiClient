@@ -48,8 +48,12 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         {
             var client = _clientFactory.GetClient();
 
+            await client.Tickets.CreateAsync(new Requests.TicketCreateRequest(){
+                Comment = new TicketComment() {Body = "Printer is on fire"},
+                OrganisationId = 360195486037,
+            });
             var results = await client
-                .Tickets.GetAllByOrganizationIdAsync(360014155169, new CursorPager());
+                .Tickets.GetAllByOrganizationIdAsync(360195486037, new CursorPager());
 
             Assert.NotNull(results);
         }
