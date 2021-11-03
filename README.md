@@ -59,7 +59,7 @@ await client.Search.SearchAsync<Organization>(q =>
 );
 
 // All non closed tickets
-await client.Search.SearchAsync<Ticket>(q => 
+await client.Search.SearchAsync<Ticket>(q =>  
     q.WithFilter("status", "closed", FilterOperator.LessThan)
 );
 ```
