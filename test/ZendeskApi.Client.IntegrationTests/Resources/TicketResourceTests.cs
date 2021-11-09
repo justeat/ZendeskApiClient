@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Xunit;
 using ZendeskApi.Client.IntegrationTests.Factories;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.IntegrationTests.Resources
 {
@@ -47,11 +48,24 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         public async Task GetAllByOrganizationIdAsync_WhenCalledWithCursorPagination_ShouldReturnTickets()
         {
             var client = _clientFactory.GetClient();
+            TicketResponse createdTicket = null;
+            try
+            {
+                createdTicket = await client.Tickets.CreateAsync(new Requests.TicketCreateRequest()
+                {
+                    Comment = new TicketComment() { Body = "Printer is on fire" },
+                    OrganisationId = 360195486037,
+                });
+                var results = (TicketsListCursorResponse)await client
+                    .Tickets.GetAllByOrganizationIdAsync(360195486037, new CursorPager());
 
-            var results = await client
-                .Tickets.GetAllByOrganizationIdAsync(360014155169, new CursorPager());
-
-            Assert.NotNull(results);
+                Assert.NotNull(results);
+            }
+            finally
+            {
+                if (createdTicket != null)
+                    await client.Tickets.DeleteAsync(createdTicket.Ticket.Id);
+            }
         }
     }
 }

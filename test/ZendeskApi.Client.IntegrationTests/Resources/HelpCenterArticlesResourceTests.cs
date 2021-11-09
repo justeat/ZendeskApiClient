@@ -45,6 +45,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             Assert.NotEmpty(articles);
         }
 
+
         [Fact]
         public async Task GetAllAsync_WhenCalledWithCategory_ShouldReturnArticles()
         {
@@ -53,7 +54,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var articles = await client
                 .HelpCenter
                 .Articles
-                .GetAllByCategoryIdAsync(360003544498, "en-gb");
+                .GetAllByCategoryIdAsync(360000599157, "en-gb");
 
             Assert.NotEmpty(articles);
         }
@@ -66,7 +67,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var articles = await client
                 .HelpCenter
                 .Articles
-                .GetAllByCategoryIdAsync(360003544498, new CursorPager(), "en-gb");
+                .GetAllByCategoryIdAsync(360000599157, new CursorPager(), "en-gb");
 
             Assert.NotEmpty(articles);
         }
@@ -79,7 +80,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var articles = await client
                 .HelpCenter
                 .Articles
-                .GetAllBySectionIdAsync(360005462017, "en-gb");
+                .GetAllBySectionIdAsync(360001138437, "en-gb");
 
             Assert.NotEmpty(articles);
         }
@@ -92,33 +93,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var articles = await client
                 .HelpCenter
                 .Articles
-                .GetAllBySectionIdAsync(360005462017, new CursorPager(), "en-gb");
-
-            Assert.NotEmpty(articles);
-        }
-
-        [Fact]
-        public async Task GetAllAsync_WhenCalledWithUser_ShouldReturnArticles()
-        {
-            var client = _clientFactory.GetClient();
-
-            var articles = await client
-                .HelpCenter
-                .Articles
-                .GetAllByUserIdAsync(794337992);
-
-            Assert.NotEmpty(articles);
-        }
-
-        [Fact]
-        public async Task GetAllAsync_WhenCalledWithUserAndWithCursorPagination_ShouldReturnArticles()
-        {
-            var client = _clientFactory.GetClient();
-
-            var articles = await client
-                .HelpCenter
-                .Articles
-                .GetAllByUserIdAsync(794337992, new CursorPager());
+                .GetAllBySectionIdAsync(360001138437, new CursorPager(), "en-gb");
 
             Assert.NotEmpty(articles);
         }
@@ -131,7 +106,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var article = await client
                 .HelpCenter
                 .Articles
-                .GetAsync(4402330216721, "en-gb");
+                .GetAsync(360003979937, "en-gb");
 
             Assert.NotNull(article);
         }

@@ -31,10 +31,26 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         {
             var client = _clientFactory.GetClient();
 
-            var results = await client
-                .Groups.GetAllByUserIdAsync(489650852, new CursorPager());
+            try
+            {
+                var group = await client.Groups.CreateAsync(new Requests.GroupCreateRequest("Integration-tests-group"));
+                await client.Users.UpdateAsync(new Requests.UserUpdateRequest(368289929738)
+                {
+                    DefaultGroupId = group.Id
+                });
 
-            Assert.NotNull(results);
+                var results = await client
+                    .Groups.GetAllByUserIdAsync(368289929738, new CursorPager());
+
+                Assert.NotNull(results);
+            }
+            finally
+            {
+                await client.Users.UpdateAsync(new Requests.UserUpdateRequest(368289929738)
+                {
+                    DefaultGroupId = null
+                });
+            }
         }
 
         [Fact]
