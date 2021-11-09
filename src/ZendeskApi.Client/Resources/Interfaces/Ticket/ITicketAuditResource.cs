@@ -7,8 +7,8 @@ namespace ZendeskApi.Client.Resources
 {
     public interface ITicketAuditResource
     {
-        Task<TicketAuditResponse> GetAllAsync(CursorPager pager = null, CancellationToken cancellationToken = default(CancellationToken));
-        Task<TicketAuditResponse> GetAllByTicketAsync(long ticketId, CancellationToken cancellationToken = default(CancellationToken));
-        Task<SingleTicketAuditResponse> Get(int ticketId, int auditId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<TicketAuditResponse> GetAllAsync(CursorPagerVariant pager = null, CancellationToken cancellationToken = default);
+        Task<TicketAuditResponse> GetAllByTicketAsync(long ticketId, CancellationToken cancellationToken = default);
+        Task<SingleTicketAuditResponse> Get(int ticketId, int auditId, CancellationToken cancellationToken = default);
     }
 }

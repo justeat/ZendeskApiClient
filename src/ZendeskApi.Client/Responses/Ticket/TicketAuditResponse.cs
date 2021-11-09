@@ -5,7 +5,7 @@ using ZendeskApi.Client.Models;
 namespace ZendeskApi.Client.Responses
 {
     [JsonObject]
-    public class TicketAuditResponse : CursorPaginationResponse<TicketAudit>
+    public class TicketAuditResponse : CursorPaginationVariantResponse<TicketAudit>
     {
         [JsonProperty("audits")]
         public IEnumerable<TicketAudit> Audits { get; set; }

@@ -7,6 +7,7 @@ using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -36,10 +37,26 @@ namespace ZendeskApi.Client.Tests.Resources
                 Assert.Equal($"comment.{i}", item.Comment);
             }
         }
+        
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAll()
+        {
+
+            var results = await _resource.GetAllAsync(new CursorPager
+            {
+                Size = 5
+            });
+
+            var item = results.ElementAt(1);
+
+            Assert.Equal(2, item.Id);
+            Assert.Equal("comment.2", item.Comment);
+        }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAll()
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAll()
         {
+
             var results = await _resource.GetAllAsync(new PagerParameters
             {
                 Page = 2,

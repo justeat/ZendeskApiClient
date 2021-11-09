@@ -24,7 +24,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<UserIdentity>> GetAllForUserAsync(
             long userId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByUserIdAsync(
                 userId,
@@ -32,12 +32,26 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<UserIdentity>> GetAllByUserIdAsync(
             long userId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<UserIdentitiesResponse>(
+                string.Format(ResourceUriFormat, userId),
+                "list-identities",
+                $"GetAllByUserIdAsync({userId})",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
+        public async Task<ICursorPagination<UserIdentity>> GetAllByUserIdAsync(
+            long userId,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<UserIdentitiesCursorResponse>(
                 string.Format(ResourceUriFormat, userId),
                 "list-identities",
                 $"GetAllByUserIdAsync({userId})",
@@ -49,7 +63,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<UserIdentity> GetIdentityForUserAsync(
             long userId, 
             long identityId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetIdentityByUserIdAsync(
                 userId,
@@ -60,7 +74,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<UserIdentity> GetIdentityByUserIdAsync(
             long userId,
             long identityId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return (await GetWithNotFoundCheckAsync<UserIdentityResponse<UserIdentity>>(
                     $"{string.Format(ResourceUriFormat, userId)}/{identityId}",
@@ -74,7 +88,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<UserIdentity> CreateUserIdentityAsync(
             UserIdentity identity, 
             long userId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return (await CreateAsync<UserIdentityResponse<UserIdentity>, UserIdentityRequest<UserIdentity>>(
                     string.Format(ResourceUriFormat, userId),
@@ -88,7 +102,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<UserIdentity> CreateEndUserIdentityAsync(
             UserIdentity identity, 
             long endUserId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return (await CreateAsync<UserIdentityResponse<UserIdentity>, UserIdentityRequest<UserIdentity>>(
                     string.Format(EndUsersResourceUriFormat, endUserId),
@@ -101,7 +115,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<UserIdentity> UpdateAsync(
             UserIdentity identity,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return (await UpdateWithNotFoundCheckAsync<UserIdentityResponse<UserIdentity>, UserIdentityRequest<UserIdentity>>(
                     $"{string.Format(ResourceUriFormat, identity.UserId)}/{identity.Id}",
@@ -115,7 +129,7 @@ namespace ZendeskApi.Client.Resources
         public async Task DeleteAsync(
             long userId, 
             long identityId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 string.Format(ResourceUriFormat, userId),

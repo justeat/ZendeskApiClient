@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using ZendeskApi.Client.IntegrationTests.Factories;
+using ZendeskApi.Client.Models;
 
 namespace ZendeskApi.Client.IntegrationTests.Resources
 {
@@ -27,6 +28,19 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                 .HelpCenter
                 .Sections
                 .GetAllAsync("en-gb");
+
+            Assert.NotEmpty(sections);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldReturnSections()
+        {
+            var client = _clientFactory.GetClient();
+
+            var sections = await client
+                .HelpCenter
+                .Sections
+                .GetAllAsync(new CursorPager(), "en-gb");
 
             Assert.NotEmpty(sections);
         }

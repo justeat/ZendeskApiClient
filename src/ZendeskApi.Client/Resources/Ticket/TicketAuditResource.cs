@@ -17,10 +17,9 @@ namespace ZendeskApi.Client.Resources
         {
         }
 
-
-        public async Task<TicketAuditResponse> GetAllAsync(CursorPager pager = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TicketAuditResponse> GetAllAsync(CursorPagerVariant pager = null, CancellationToken cancellationToken = default)
         {
-            return await GetAsyncWithCursor<TicketAuditResponse>(
+            return await GetAsync<TicketAuditResponse>(
                 ResourceUri,
                 "list-all-ticket-audits",
                 "GetAllAsync",
@@ -28,23 +27,24 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
-        public async Task<TicketAuditResponse> GetAllByTicketAsync(long ticketId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TicketAuditResponse> GetAllByTicketAsync(long ticketId, CancellationToken cancellationToken = default)
         {
-            return await GetAsyncWithCursor<TicketAuditResponse>(
+            return await GetAsync<TicketAuditResponse>(
                 string.Format(TicketAuditsUri, ticketId),
                 "list-audits-for-a-ticket",
                 $"GetAllByTicketAsync({ticketId}",
+                new PagerParameters(),
                 null,
                 cancellationToken);
         }
 
-        public async Task<SingleTicketAuditResponse> Get(int ticketId, int auditId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<SingleTicketAuditResponse> Get(int ticketId, int auditId, CancellationToken cancellationToken = default)
         {
             return await GetAsync<SingleTicketAuditResponse>(
                 string.Format(SpecificTicketAuditUri, ticketId, auditId),
                 "show-audit",
                 $"Get({ticketId}, {auditId})",
-                null,
+                new PagerParameters(),
                 null,
                 cancellationToken);
         }

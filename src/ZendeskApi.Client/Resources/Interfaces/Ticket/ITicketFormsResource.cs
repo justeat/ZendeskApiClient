@@ -9,27 +9,27 @@ namespace ZendeskApi.Client.Resources
     {
         Task<IPagination<TicketForm>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task<TicketForm> GetAsync(
             long ticketformId,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task<IPagination<TicketForm>> GetAllAsync(
             long[] ticketFormsIds, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task<TicketForm> CreateAsync(
             TicketForm ticketForm,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task<TicketForm> UpdateAsync(
             TicketForm ticketForm,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
         Task DeleteAsync(
             long ticketFormId,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
     }
 }

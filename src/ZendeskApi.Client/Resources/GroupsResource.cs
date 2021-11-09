@@ -27,7 +27,7 @@ namespace ZendeskApi.Client.Resources
         [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<GroupListResponse> ListAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 pager,
@@ -38,7 +38,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<GroupListResponse> ListAsync(
             long userId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByUserIdAsync(
                 userId,
@@ -49,18 +49,31 @@ namespace ZendeskApi.Client.Resources
         [Obsolete("Use `GetAllByAssignableAsync` instead.")]
         public async Task<GroupListResponse> ListAssignableAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByAssignableAsync(
                 pager,
                 cancellationToken);
         }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<GroupListResponse> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<GroupListResponse>(
+                GroupsResourceUri,
+                "list-groups",
+                "ListAsync",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
+        public async Task<GroupListCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<GroupListCursorResponse>(
                 GroupsResourceUri,
                 "list-groups",
                 "ListAsync",
@@ -71,7 +84,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<GroupListResponse> GetAllByUserIdAsync(
             long userId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<GroupListResponse>(
                 string.Format(GroupsByUserResourceUriFormat, userId),
@@ -79,12 +92,27 @@ namespace ZendeskApi.Client.Resources
                 $"ListAsync({userId})",
                 $"UserResponse {userId} not found",
                 pager,
-                cancellationToken: cancellationToken);
+                cancellationToken);
         }
 
+        public async Task<GroupListCursorResponse> GetAllByUserIdAsync(
+            long userId,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetWithNotFoundCheckAsync<GroupListCursorResponse>(
+                string.Format(GroupsByUserResourceUriFormat, userId),
+                "list-groups",
+                $"ListAsync({userId})",
+                $"UserResponse {userId} not found",
+                pager,
+                cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllByAssignableAsync` with CursorPager parameter instead.")]
         public async Task<GroupListResponse> GetAllByAssignableAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<GroupListResponse>(
                 AssignableGroupUri,
@@ -94,9 +122,21 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<GroupListCursorResponse> GetAllByAssignableAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<GroupListCursorResponse>(
+                AssignableGroupUri,
+                "show-assignable-groups",
+                "ListAssignableAsync",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
         public async Task<Group> GetAsync(
             long groupId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<GroupResponse>(
                 $"{GroupsResourceUri}/{groupId}",
@@ -111,7 +151,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Group> CreateAsync(
             GroupCreateRequest group,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<GroupResponse, GroupRequest<GroupCreateRequest>>(
                 GroupsResourceUri,
@@ -126,7 +166,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Group> UpdateAsync(
             GroupUpdateRequest group,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateWithNotFoundCheckAsync<GroupResponse, GroupRequest<GroupUpdateRequest>>(
                 $"{GroupsResourceUri}/{group.Id}",
@@ -141,7 +181,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(
             long groupId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 GroupsResourceUri,

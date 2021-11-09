@@ -47,7 +47,25 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllTickets()
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAllTickets()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager()
+            {
+                Size = 3
+            });
+
+            var ticket = results.ElementAt(1);
+
+            Assert.Equal(2, ticket.Id);
+            Assert.Equal("My printer is on fire! 2", ticket.Subject);
+            Assert.Equal("2", ticket.ExternalId);
+            Assert.Equal(2, ticket.OrganisationId);
+            Assert.Equal(2, ticket.RequesterId);
+            Assert.Equal(2, ticket.AssigneeId);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAllTickets()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
             {
@@ -241,7 +259,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task ListAsync_WhenCalledWithPaging_ShouldGetAllTickets()
+        public async Task ListAsync_WhenCalledWithOffsetPagination_ShouldGetAllTickets()
         {
             var results = await _resource.ListAsync(new PagerParameters
             {
@@ -434,7 +452,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAsync_WhenCalledWithTicketIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task GetAsync_WhenCalledWithTicketIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAsync(
                 new long[] { 1, 2, 3 },
@@ -481,7 +499,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithTicketIdsAndWithPaging_ShouldGetAllUsers()
+        public async Task GetAllAsync_WhenCalledWithTicketIdsAndWithOffsetPagination_ShouldGetAllUsers()
         {
             var results = await _resource.GetAllAsync(
                 new long[] { 1, 2, 3 },

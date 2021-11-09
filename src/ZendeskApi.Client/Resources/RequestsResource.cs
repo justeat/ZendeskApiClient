@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -19,10 +20,11 @@ namespace ZendeskApi.Client.Resources
             ILogger logger)
             : base(apiClient, logger, "requests")
         { }
-        
+
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<IPagination<Request>> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<RequestsResponse>(
                 ResourceUri,
@@ -32,9 +34,10 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+
         public async Task<Request> GetAsync(
             long requestId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<RequestResponse>(
                 $"{ResourceUri}/{requestId}",
@@ -51,7 +54,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<IPagination<Request>> SearchAsync(
             IZendeskQuery query, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<RequestsResponse>(
                 $"{ResourceUri}/search?" /*+ query.WithTypeFilter<Request>().BuildQuery()*/,
@@ -61,10 +64,11 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        [Obsolete("Use `GetAllComments` with CursorPager parameter instead.")]
         public async Task<IPagination<TicketComment>> GetAllComments(
             long requestId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<TicketCommentsResponse>(
                 string.Format(CommentsResourceUri, requestId),
@@ -72,13 +76,13 @@ namespace ZendeskApi.Client.Resources
                 $"GetAllComments({requestId})",
                 $"Could not find any comments for request {requestId} as request was not found",
                 pager,
-                cancellationToken: cancellationToken);
+                cancellationToken);
         }
 
         public async Task<TicketComment> GetTicketCommentAsync(
             long requestId, 
             long commentId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<TicketComment>(
                 $"{string.Format(CommentsResourceUri, requestId)}/{commentId}",
@@ -90,7 +94,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Request> CreateAsync(
             Request request,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<RequestResponse, RequestCreateRequest>(
                 ResourceUri,
@@ -105,7 +109,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<Request> UpdateAsync(
             Request request,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateWithNotFoundCheckAsync<RequestResponse, RequestUpdateRequest>(
                 $"{ResourceUri}/{request.Id}",

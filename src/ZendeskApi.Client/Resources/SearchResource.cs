@@ -23,7 +23,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<SearchResponse<ISearchResult>> SearchAsync(
             Action<IZendeskQuery> builder,
             PagerParameters pager = null, 
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var query = new ZendeskQuery();
 
@@ -41,7 +41,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<SearchResponse<T>> SearchAsync<T>(
             Action<IZendeskQuery> builder, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken)) 
+            CancellationToken cancellationToken = default) 
             where T : ISearchResult
         {
             var query = new ZendeskQuery();

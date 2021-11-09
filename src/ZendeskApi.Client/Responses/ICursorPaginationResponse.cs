@@ -1,27 +1,19 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace ZendeskApi.Client.Responses
 {
-    public interface ICursorPaginationResponse<T> : IEnumerable<T>
+    public interface ICursorPagination<T> : IEnumerable<T>
     {
-        [JsonProperty("after_cursor")]
-        string AfterCursor { get; set; }
-        [JsonProperty("before_cursor")]
-        string BeforeCursor { get; set; }
+        Meta Meta { get; set; }
+        Links Links { get; set; }
     }
 
-    public abstract class CursorPaginationResponse<T> : ICursorPaginationResponse<T>
+    public abstract class CursorPaginationResponse<T> : ICursorPagination<T>
     {
-        [JsonProperty("after_cursor")]
-        public string AfterCursor { get; set; }
-        [JsonProperty("before_cursor")]
-        public string BeforeCursor { get; set; }
-        
         protected abstract IEnumerable<T> Enumerable { get; }
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             return Enumerable.GetEnumerator();
@@ -31,5 +23,26 @@ namespace ZendeskApi.Client.Responses
         {
             return Enumerable.GetEnumerator();
         }
+
+        public Meta Meta { get; set; }
+        public Links Links { get; set; }
+    }
+
+    public class Meta
+    {
+        [JsonProperty("has_more")]
+        public bool HasMore { get; set; }
+        [JsonProperty("after_cursor")]
+        public string AfterCursor { get; set; }
+        [JsonProperty("before_cursor")]
+        public string BeforeCursor { get; set; }
+    }
+
+    public class Links
+    {
+        [JsonProperty("prev")]
+        public string Prev { get; set; }
+        [JsonProperty("next")]
+        public string Next { get; set; }
     }
 }

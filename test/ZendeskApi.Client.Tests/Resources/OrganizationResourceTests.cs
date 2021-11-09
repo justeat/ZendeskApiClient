@@ -7,6 +7,7 @@ using ZendeskApi.Client.Exceptions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Resources;
 using ZendeskApi.Client.Tests.ResourcesSampleSites;
+#pragma warning disable 618
 
 namespace ZendeskApi.Client.Tests.Resources
 {
@@ -37,7 +38,23 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithPaging_ShouldGetAllOrganizations()
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllAsync(new CursorPager{Size = 100});
+
+            Assert.Equal(100, results.Count());
+
+            for (var i = 1; i <= 100; i++)
+            {
+                var org = results.ElementAt(i - 1);
+
+                Assert.Equal($"org.{i}", org.Name);
+                Assert.Equal(i.ToString(), org.ExternalId);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllAsync(new PagerParameters
             {
@@ -89,7 +106,20 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllByUserIdAsync_WhenCalledWithPaging_ShouldGetAllOrganizations()
+        public async Task GetAllByUserIdAsync_WhenCalledWithCursorPagination_ShouldGetAllOrganizations()
+        {
+            var results = await _resource.GetAllByUserIdAsync(
+                1,
+                new CursorPager
+                {
+                    Size = 1
+                });
+
+            Assert.Single(results);
+        }
+
+        [Fact]
+        public async Task GetAllByUserIdAsync_WhenCalledWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllByUserIdAsync(
                 1, 
@@ -119,7 +149,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithPaging_ShouldGetAllOrganizations()
+        public async Task GetAllAsync_WhenCalledWithOrganizationIdsAndWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllAsync(
                 new long[] { 1, 2, 3 },
@@ -158,7 +188,7 @@ namespace ZendeskApi.Client.Tests.Resources
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenCalledWithExternalIdsAndWithPaging_ShouldGetAllOrganizations()
+        public async Task GetAllAsync_WhenCalledWithExternalIdsAndWithOffsetPagination_ShouldGetAllOrganizations()
         {
             var results = await _resource.GetAllByExternalIdsAsync(
                 new string[] { "1", "2", "3" },

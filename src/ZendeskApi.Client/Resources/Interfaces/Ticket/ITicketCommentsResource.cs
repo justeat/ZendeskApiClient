@@ -12,16 +12,22 @@ namespace ZendeskApi.Client.Resources
         Task<TicketCommentsListResponse> ListAsync(
             long parentId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         Task<TicketCommentsListResponse> GetAllAsync(
             long parentId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
+
+        Task<TicketCommentsListCursorResponse> GetAllAsync(
+            long parentId,
+            CursorPager pager,
+            CancellationToken cancellationToken = default);
 
         Task AddComment(
             long ticketId, 
             TicketComment ticketComment,
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
     }
 }

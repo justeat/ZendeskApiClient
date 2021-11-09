@@ -31,10 +31,11 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "users")
         { }
 
+        #region List Users
         [Obsolete("Use `GetAllAsync` instead.")]
         public async Task<UsersListResponse> ListAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 pager,
@@ -45,7 +46,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<UsersListResponse> ListInGroupAsync(
             long groupId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByGroupIdAsync(
                 groupId,
@@ -57,7 +58,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<UsersListResponse> ListInOrganizationAsync(
             long organizationId, 
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByOrganizationIdAsync(
                 organizationId,
@@ -69,7 +70,7 @@ namespace ZendeskApi.Client.Resources
         public async Task<UsersListResponse> ListAsync(
             long[] userIds,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllAsync(
                 userIds,
@@ -81,17 +82,19 @@ namespace ZendeskApi.Client.Resources
         public async Task<UsersListResponse> ListByExternalIdsAsync(
             string[] externalIds,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAllByExternalIdsAsync(
                 externalIds,
                 pager,
                 cancellationToken);
         }
+        #endregion
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<UsersListResponse> GetAllAsync(
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetAsync<UsersListResponse>(
                 ResourceUri,
@@ -101,10 +104,23 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken: cancellationToken);
         }
 
+        public async Task<UsersListCursorResponse> GetAllAsync(
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<UsersListCursorResponse>(
+                ResourceUri,
+                "list-users",
+                "ListAsync",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+        
+        [Obsolete("Use `GetAllByGroupIdAsync` with CursorPager parameter instead.")]
         public async Task<UsersListResponse> GetAllByGroupIdAsync(
             long groupId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<UsersListResponse>(
                 string.Format(GroupUsersResourceUriFormat, groupId),
@@ -115,10 +131,25 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
+        public async Task<UsersListCursorResponse> GetAllByGroupIdAsync(
+            long groupId,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetWithNotFoundCheckAsync<UsersListCursorResponse>(
+                string.Format(GroupUsersResourceUriFormat, groupId),
+                "list-users",
+                $"ListInGroupAsync({groupId})",
+                $"Users in group {groupId} not found",
+                pager,
+                cancellationToken);
+        }
+        
+        [Obsolete("Use `GetAllByGroupIdAsync` with CursorPager parameter instead.")]
         public async Task<UsersListResponse> GetAllByOrganizationIdAsync(
             long organizationId,
             PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await GetWithNotFoundCheckAsync<UsersListResponse>(
                 string.Format(OrganizationsUsersResourceUriFormat, organizationId),
@@ -129,9 +160,36 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
+        public async Task<UsersListCursorResponse> GetAllByOrganizationIdAsync(
+            long organizationId,
+            CursorPager pager,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetWithNotFoundCheckAsync<UsersListCursorResponse>(
+                string.Format(OrganizationsUsersResourceUriFormat, organizationId),
+                "list-users",
+                $"ListInOrganizationAsync({organizationId})",
+                $"Users in organization {organizationId} not found",
+                pager,
+                cancellationToken);
+        }
+
+        public async Task<UsersListResponse> GetAllByExternalIdsAsync(
+            string[] externalIds,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<UsersListResponse>(
+                $"{ResourceUri}/show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}",
+                "show-many-users",
+                $"ListByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
         public async Task<UserResponse> GetAsync(
             long userId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<SingleUserResponse>(
                 $"{ResourceUri}/{userId}",
@@ -144,9 +202,22 @@ namespace ZendeskApi.Client.Resources
                 .UserResponse;
         }
 
+        public async Task<UsersListResponse> GetAllAsync(
+            long[] userIds,
+            PagerParameters pager = null,
+            CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<UsersListResponse>(
+                $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(userIds)}",
+                "show-many-users",
+                $"ListAsync({ZendeskFormatter.ToCsv(userIds)})",
+                pager,
+                cancellationToken: cancellationToken);
+        }
+
         public async Task<UserRelatedInformationResponse> GetRelatedInformationAsync(
             long userId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await GetWithNotFoundCheckAsync<SingleUserRelatedInformationResponse>(
                 $"{ResourceUri}/{userId}/related",
@@ -159,35 +230,9 @@ namespace ZendeskApi.Client.Resources
                 .UserRelatedInformationResponse;
         }
 
-        public async Task<UsersListResponse> GetAllAsync(
-            long[] userIds, 
-            PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await GetAsync<UsersListResponse>(
-                $"{ResourceUri}/show_many?ids={ZendeskFormatter.ToCsv(userIds)}",
-                "show-many-users",
-                $"ListAsync({ZendeskFormatter.ToCsv(userIds)})",
-                pager,
-                cancellationToken: cancellationToken);
-        }
-
-        public async Task<UsersListResponse> GetAllByExternalIdsAsync(
-            string[] externalIds, 
-            PagerParameters pager = null,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await GetAsync<UsersListResponse>(
-                $"{ResourceUri}/show_many?external_ids={ZendeskFormatter.ToCsv(externalIds)}",
-                "show-many-users",
-                $"ListByExternalIdsAsync({ZendeskFormatter.ToCsv(externalIds)})",
-                pager,
-                cancellationToken: cancellationToken);
-        }
-
         public async Task<IncrementalUsersResponse<UserResponse>> GetIncrementalExport(
             DateTime startTime,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var nextPage = Convert.ToInt64((startTime - epoch).TotalSeconds);
@@ -198,35 +243,10 @@ namespace ZendeskApi.Client.Resources
                 $"GetIncrementalExport",
                 cancellationToken: cancellationToken);
         }
-
-     /*   public async Task<UserResponse> ListRelatedUsersAsync(long userId)
-        {
-            using (_loggerScope(_logger, $"ListRelatedUsersAsync({userId})"))
-            using (var client = _apiClient.CreateClient(ResourceUri))
-            {
-                var response = await client.GetAsync($"{userId}/related").ConfigureAwait(false);
-
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    _logger.LogInformation("Related Users for user {0} not found", userId);
-                    return null;
-                }
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await new ZendeskRequestExceptionBuilder()
-                        .WithResponse(response)
-                        .WithHelpDocsLink("core/users#delete-user")
-                        .Build();
-                }
-
-                return await response.Content.ReadAsAsync<UserResponse>();
-            }
-        }*/
         
         public async Task<UserResponse> CreateAsync(
             UserCreateRequest user,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await CreateAsync<SingleUserResponse, UserRequest<UserCreateRequest>>(
                 ResourceUri,
@@ -240,12 +260,12 @@ namespace ZendeskApi.Client.Resources
         
         public async Task<UserResponse> UpdateAsync(
             UserUpdateRequest user,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateWithNotFoundCheckAsync<SingleUserResponse, UserRequest<UserUpdateRequest>>(
                 $"{ResourceUri}/{user.Id}",
                 new UserRequest<UserUpdateRequest>(user),
-                "update-ticket",
+                "update-user",
                 $"Cannot update user as user {user.Id} cannot be found",
                 cancellationToken: cancellationToken);
 
@@ -254,7 +274,7 @@ namespace ZendeskApi.Client.Resources
         }
 
         public async Task<JobStatusResponse> UpdateAsync(IEnumerable<UserUpdateRequest> users,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var response = await UpdateAsync<SingleJobStatusResponse, UserListRequest<UserUpdateRequest>>(
                 $"{ResourceUri}/update_many",
@@ -268,7 +288,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<UserResponse> CreateOrUpdateAsync(
             UserCreateRequest user,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         { 
            var response = await ExecuteRequest(async (client, token) => 
                        await client.PostAsJsonAsync(
@@ -289,7 +309,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task DeleteAsync(
             long userId,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             await DeleteAsync(
                 ResourceUri,
@@ -301,7 +321,7 @@ namespace ZendeskApi.Client.Resources
 
         public async Task<JobStatusResponse> DeleteAsync(
             IEnumerable<long> userIds,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             var ids = userIds
                 .ToList();
