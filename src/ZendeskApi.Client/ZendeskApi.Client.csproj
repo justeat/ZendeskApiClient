@@ -6,7 +6,6 @@
     <TargetFrameworks>netstandard2.0;netcoreapp2.1</TargetFrameworks>
     <Description>A Zendesk Api Client for use with the ZendeskApi v2</Description>
     <LangVersion>latest</LangVersion>
-    <PackageLicenseUrl />
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">

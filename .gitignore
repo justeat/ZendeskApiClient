@@ -113,4 +113,3 @@ UpgradeLog*.XML
 # Cake Packages
 tools/
 .DS_Store
-nupkgs/
