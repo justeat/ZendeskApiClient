@@ -25,7 +25,7 @@ namespace ZendeskApi.Client.Extensions
             return services;
         }
 
-        public static IServiceCollection AddZendeskClientWithHttpClientFactory(this IServiceCollection services,
+        public static IHttpClientBuilder AddZendeskClientWithHttpClientFactory(this IServiceCollection services,
             string endpointUri,
             string username,
             string token,
@@ -34,18 +34,16 @@ namespace ZendeskApi.Client.Extensions
             services.AddScoped<IZendeskClient, ZendeskClient>();
             services.AddScoped<IZendeskApiClient, ZendeskApiClientFactory>();
 
-            services.AddHttpClient("zendeskApiClient", c =>
-            {
-                configureClient?.Invoke(c);
-            });
-
             services.Configure<ZendeskOptions>(options => {
                 options.EndpointUri = endpointUri;
                 options.Username = username;
                 options.Token = token;
             });
 
-            return services;
+            return services.AddHttpClient<ZendeskClient>("zendeskApiClient", c =>
+            {
+                configureClient?.Invoke(c);
+            });
         }
 
         public static IServiceCollection AddZendeskClient(this IServiceCollection services,
