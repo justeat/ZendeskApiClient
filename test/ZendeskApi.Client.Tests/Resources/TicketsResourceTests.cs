@@ -535,11 +535,13 @@ namespace ZendeskApi.Client.Tests.Resources
                     Comment = new TicketComment
                     {
                         Body = "The smoke is very colorful."
-                    }
+                    },
+                    BrandId = 1
                 });
 
             Assert.NotEqual(0L, response.Ticket.Id);
             Assert.Equal("My printer is on fire!", response.Ticket.Subject);
+            Assert.Equal(1, response.Ticket.BrandId);
         }
 
         [Fact]
@@ -564,16 +566,19 @@ namespace ZendeskApi.Client.Tests.Resources
         {
             var ticket = (await CreateTickets(1)).First();
             
-            Assert.Equal("My printer is on fire! 0", ticket.Subject);
+            Assert.Equal("My printer is on fire! 0", ticket.Subject); 
+            Assert.Equal(1, ticket.BrandId);
 
             var updateTicketRequest = new TicketUpdateRequest(ticket.Id)
             {
-                Subject = "I COMMAND YOU TO UPDATE!!!"
+                Subject = "I COMMAND YOU TO UPDATE!!!",
+                BrandId = 2
             };
 
             ticket = (await _resource.UpdateAsync(updateTicketRequest)).Ticket;
 
             Assert.Equal("I COMMAND YOU TO UPDATE!!!", ticket.Subject);
+            Assert.Equal(2, ticket.BrandId);
         }
 
         [Fact]
@@ -694,7 +699,8 @@ namespace ZendeskApi.Client.Tests.Resources
                     Comment = new TicketComment
                     {
                         Body = "The smoke is very colorful. " + i
-                    }
+                    },
+                    BrandId = 1
                 };
 
                 tickets.Add(ticket);
