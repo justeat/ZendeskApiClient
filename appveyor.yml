@@ -1,5 +1,5 @@
 image: Visual Studio 2017
-version: 4.0.1-alpha-{build}
+version: 4.0.2-alpha-{build}
 configuration: Release
 environment:
   ZendeskApi_Credentials_Url:
@@ -24,7 +24,7 @@ artifacts:
 deploy:
 - provider: NuGet
   api_key:
-    secure: ZkYI4stkqiH2+3Y5u4kv6/WEbVpiyoQSSXp5is3ODPxlYu1uMdnkK1dDgfTSH4VG
+    secure: PcWxP95LtRyTyMXyJYXwIz24H5HRZljAxmpp0F42Pk4AuB0E7W5uMLOUQMoH8Kb/
   artifact: /.*nupkg/
   on:
     APPVEYOR_REPO_TAG: true

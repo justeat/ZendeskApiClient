@@ -95,5 +95,7 @@ namespace ZendeskApi.Client.Requests
         [JsonProperty("organization_id")]
         public long? OrganisationId { get; set; }
 
+        [JsonProperty("brand_id")]
+        public long? BrandId { get; set; }
     }
 }
