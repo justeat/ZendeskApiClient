@@ -1,10 +1,6 @@
 using System;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -61,33 +57,36 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Count = items.Count
                             });
                     })
-                    .MapPost("api/v2/users/{userId}/identities", (req, resp, routeData) =>
+                    .MapPost("api/v2/users/{userId}/identities", async (req, resp, routeData) =>
                     {
-                        return RequestHelper.Create<UserIdentityResponse<UserIdentity>, UserIdentity>(
+                        var request = await req.ReadAsync<UserIdentityRequest<UserIdentity>>();
+                        await RequestHelper.Create(
                             req,
                             resp,
                             routeData,
                             item => item.Id,
-                            req.Body.ReadAs<UserIdentityRequest<UserIdentity>>().Identity,
+                            request.Identity,
                             item => new UserIdentityResponse<UserIdentity> { Identity = item });
                     })
-                    .MapPost("api/v2/end_users/{userId}/identities", (req, resp, routeData) =>
+                    .MapPost("api/v2/end_users/{userId}/identities", async (req, resp, routeData) =>
                     {
-                        return RequestHelper.Create<UserIdentityResponse<UserIdentity>, UserIdentity>(
+                        var request = await req.ReadAsync<UserIdentityRequest<UserIdentity>>();
+                        await RequestHelper.Create(
                             req,
                             resp,
                             routeData,
                             item => item.Id,
-                            req.Body.ReadAs<UserIdentityRequest<UserIdentity>>().Identity,
+                            request.Identity,
                             item => new UserIdentityResponse<UserIdentity> { Identity = item });
                     })
-                    .MapPut("api/v2/users/{userId}/identities/{id}", (req, resp, routeData) =>
+                    .MapPut("api/v2/users/{userId}/identities/{id}", async (req, resp, routeData) =>
                     {
-                        return RequestHelper.Update<UserIdentityResponse<UserIdentity>, UserIdentity>(
+                        var request = await req.ReadAsync<UserIdentityRequest<UserIdentity>>();
+                        await RequestHelper.Update(
                             req,
                             resp,
                             routeData,
-                            req.Body.ReadAs<UserIdentityRequest<UserIdentity>>().Identity,
+                            request.Identity,
                             item => new UserIdentityResponse<UserIdentity> { Identity = item });
                     })
                     .MapDelete("api/v2/users/{userid}/identities/{id}", (req, resp, routeData) =>

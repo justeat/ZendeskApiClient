@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
@@ -72,12 +71,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Count = items.Count
                             });
                     })
-                    .MapPost("api/v2/ticket_forms", (req, resp, routeData) =>
+                    .MapPost("api/v2/ticket_forms", async (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<TicketFormCreateUpdateRequest>();
+                        var request = await req.ReadAsync<TicketFormCreateUpdateRequest>();
                         var membership = request.TicketForm;
 
-                        return RequestHelper.Create<TicketFormResponse, TicketForm>(
+                        await RequestHelper.Create(
                             req,
                             resp,
                             routeData,
@@ -88,15 +87,14 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 TicketForm = item
                             });
                     })
-                    .MapPut("api/v2/ticket_forms/{id}", (req, resp, routeData) =>
+                    .MapPut("api/v2/ticket_forms/{id}", async (req, resp, routeData) =>
                     {
-                        return RequestHelper.Update<TicketFormResponse, TicketForm>(
+                        var updateRequestModel = await req.ReadAsync<TicketFormCreateUpdateRequest>();
+                        await RequestHelper.Update<TicketFormResponse, TicketForm>(
                             req,
                             resp,
                             routeData,
-                            req.Body
-                                .ReadAs<TicketFormCreateUpdateRequest>()
-                                .TicketForm,
+                            updateRequestModel.TicketForm,
                             item => new TicketFormResponse
                             {
                                 TicketForm = item

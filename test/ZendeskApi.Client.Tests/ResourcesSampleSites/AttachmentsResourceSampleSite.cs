@@ -1,6 +1,5 @@
 using System;
-using System.Diagnostics;
-using System.Linq;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
@@ -46,14 +45,14 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             routeData,
                             item => item);
                     })
-                    .MapPost("api/v2/uploads", (req, resp, routeData) =>
+                    .MapPost("api/v2/uploads", async (req, resp, routeData) =>
                     {
                         var filename = req.Query["filename"];
 
                         if (string.IsNullOrWhiteSpace(filename))
                         {
                             resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
+                            return;
                         }
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
@@ -69,21 +68,19 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         {
                             ContentType = "text/plain",
                             ContentUrl = "https://company.zendesk.com/attachments/crash.log",
-                            Size = req.Body.Length,
+                            Size = await GetLengthAsync(req.Body),
                             FileName = req.Query["filename"],
                             Id = long.Parse(Rand.Next().ToString())
                         };
 
                         state.Items.Add(attachment.Id.Value, attachment);
 
-                        resp.WriteAsJson(new UploadResponse{
+                        await resp.WriteAsJson(new UploadResponse{
                             Upload = new Upload {
                                 Attachment = attachment,
                                 Token = "6bk3gql82em5nmf"
                             }
                         });
-
-                        return Task.CompletedTask;
                     })
                     .MapDelete("api/v2/uploads/{id}", (req, resp, routeData) =>
                     {
@@ -93,6 +90,17 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             routeData);
                     });
             }
+        }
+
+        /// <remarks>
+        /// Cannot simply use <see cref="Stream.Length"/> because some <see cref="Stream"/>s are not seekable.
+        /// Here we use a wrapper stream which is seekable to determine length.
+        /// </remarks>
+        private static async Task<long> GetLengthAsync(Stream stream)
+        {
+            var seekableStream = new MemoryStream();
+            await stream.CopyToAsync(seekableStream);
+            return seekableStream.Length;
         }
     }
 }
