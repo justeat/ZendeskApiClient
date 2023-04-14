@@ -1,9 +1,9 @@
 using System;
 using Microsoft.AspNetCore.Routing;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
@@ -79,22 +79,20 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Count = items.Count
                             });
                     })
-                    .MapPost("api/v2/groups", (req, resp, routeData) =>
+                    .MapPost("api/v2/groups", async (req, resp, routeData) =>
                     {
-                        var create = req.Body
-                            .ReadAs<GroupRequest<GroupCreateRequest>>()
-                            .Group;
+                        var create = await req.ReadAsync<GroupRequest<GroupCreateRequest>>();
 
-                        var id = string.IsNullOrWhiteSpace(create.Name) ? int.MinValue : long.Parse(Rand.Next().ToString());
+                        var id = string.IsNullOrWhiteSpace(create.Group.Name) ? int.MinValue : long.Parse(Rand.Next().ToString());
 
-                        return RequestHelper.Create<GroupResponse, Group>(
+                        await RequestHelper.Create(
                             req,
                             resp,
                             routeData,
                             item => item.Id,
                             new Group {
                                 Id = id,
-                                Name = create.Name,
+                                Name = create.Group.Name,
                                 Url = new Uri($"https://company.zendesk.com/api/v2/groups/{id}.json")
                             }, 
                             item => new GroupResponse
@@ -102,21 +100,19 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Group = item
                             });
                     })
-                    .MapPut("api/v2/groups/{id}", (req, resp, routeData) =>
+                    .MapPut("api/v2/groups/{id}", async (req, resp, routeData) =>
                     {
-                        var update = req.Body
-                            .ReadAs<GroupRequest<GroupUpdateRequest>>()
-                            .Group;
+                        var update = await req.ReadAsync<GroupRequest<GroupUpdateRequest>>();
 
-                        return RequestHelper.Update<GroupResponse, Group>(
+                        await RequestHelper.Update(
                             req,
                             resp,
                             routeData,
                             new Group
                             {
-                                Id = update.Id,
-                                Name = update.Name,
-                                Url = new Uri($"https://company.zendesk.com/api/v2/groups/{update.Id}.json")
+                                Id = update.Group.Id,
+                                Name = update.Group.Name,
+                                Url = new Uri($"https://company.zendesk.com/api/v2/groups/{update.Group.Id}.json")
                             },
                             item => new GroupResponse
                             {

@@ -21,9 +21,9 @@
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup>
-      <Major>4</Major>
+      <Major>5</Major>
       <Minor>0</Minor>
-      <Revision>1</Revision>
+      <Revision>0</Revision>
 
       <BuildNumber Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">$(APPVEYOR_BUILD_NUMBER)</BuildNumber>
       <BuildNumber Condition=" '$(BUILD_NUMBER)' != '' ">$(BUILD_NUMBER)</BuildNumber>

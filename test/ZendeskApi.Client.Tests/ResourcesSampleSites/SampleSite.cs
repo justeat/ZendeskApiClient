@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
         where TValue : class
     { }
 
-    internal abstract class SampleSite<TValue> : SampleSite<State<TValue>, long, TValue>, IDisposable
+    internal abstract class SampleSite<TValue> : SampleSite<State<TValue>, long, TValue>
         where TValue : class
     {
         protected SampleSite(
@@ -31,7 +31,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
         { }
     }
 
-    internal abstract class SampleSite<TState, TValue> : SampleSite<TState, long, TValue>, IDisposable
+    internal abstract class SampleSite<TState, TValue> : SampleSite<TState, long, TValue>
         where TState : State<TValue>, new()
         where TValue : class
     {
