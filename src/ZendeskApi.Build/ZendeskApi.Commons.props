@@ -7,9 +7,9 @@
     <Authors>Just Eat</Authors>
     <Company>Just Eat</Company>
     <Copyright>Copyright (c) Just Eat 2015-$([System.DateTime]::Now.ToString(yyyy))</Copyright>
-    <PackageIconUrl>https://avatars3.githubusercontent.com/u/1516790?s=200</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/justeat/ZendeskApiClient</PackageProjectUrl>
-    <PackageLicenseUrl>$(PackageProjectUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReleaseNotes>$(PackageProjectUrl)/releases</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 
@@ -40,4 +40,8 @@
       <InformationalVersion>$(Major).$(Minor).$(Revision)$(BuildSuffix)</InformationalVersion>
       <PackageVersion>$(Major).$(Minor).$(Revision)$(BuildSuffix)</PackageVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath=""/>
+    <None Include="License.md" Pack="true" PackagePath=""/>
+</ItemGroup>
 </Project>
