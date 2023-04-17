@@ -1,4 +1,4 @@
-image: Visual Studio 2022
+image: Visual Studio 2019
 version: 5.0.0-alpha-{build}
 configuration: Release
 environment:
