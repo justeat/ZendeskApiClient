@@ -9,7 +9,7 @@
     <Copyright>Copyright (c) Just Eat 2015-$([System.DateTime]::Now.ToString(yyyy))</Copyright>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/justeat/ZendeskApiClient</PackageProjectUrl>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageLicenseFile>License.md</PackageLicenseFile>
     <PackageReleaseNotes>$(PackageProjectUrl)/releases</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 
