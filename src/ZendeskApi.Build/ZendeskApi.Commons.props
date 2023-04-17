@@ -41,7 +41,7 @@
       <PackageVersion>$(Major).$(Minor).$(Revision)$(BuildSuffix)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath=""/>
-    <None Include="License.md" Pack="true" PackagePath=""/>
-</ItemGroup>
+    <None Include="..\..\icon.png" Pack="true" PackagePath=""/>
+    <None Include="..\..\License.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
 </Project>
