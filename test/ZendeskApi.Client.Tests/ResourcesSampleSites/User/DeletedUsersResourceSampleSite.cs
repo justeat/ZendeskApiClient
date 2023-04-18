@@ -1,13 +1,11 @@
 using System;
 using System.Net;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
-using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {

@@ -1,10 +1,5 @@
 using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
@@ -62,12 +57,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Count = items.Count
                             });
                     })
-                    .MapPost("api/v2/ticket_fields", (req, resp, routeData) =>
+                    .MapPost("api/v2/ticket_fields", async (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<TicketFieldCreateUpdateRequest>();
+                        var request = await req.ReadAsync<TicketFieldCreateUpdateRequest>();
                         var membership = request.TicketField;
 
-                        return RequestHelper.Create<TicketFieldResponse, TicketField>(
+                        await RequestHelper.Create(
                             req,
                             resp,
                             routeData,
@@ -78,15 +73,14 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 TicketField = item
                             });
                     })
-                    .MapPut("api/v2/ticket_fields/{id}", (req, resp, routeData) =>
+                    .MapPut("api/v2/ticket_fields/{id}", async (req, resp, routeData) =>
                     {
-                        return RequestHelper.Update<TicketFieldResponse, TicketField>(
+                        var updateRequestModel = await req.ReadAsync<TicketFieldCreateUpdateRequest>();
+                        await RequestHelper.Update(
                             req,
                             resp,
                             routeData,
-                            req.Body
-                                .ReadAs<TicketFieldCreateUpdateRequest>()
-                                .TicketField,
+                            updateRequestModel.TicketField,
                             item => new TicketFieldResponse
                             {
                                 TicketField = item

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -151,22 +150,22 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             NextPage = new Uri(new Uri("http://kung.fu"), nextPageUrl)
                         });
                     })
-                    .MapPost("api/v2/users", (req, resp, routeData) =>
+                    .MapPost("api/v2/users", async (req, resp, routeData) =>
                     {
-                        var user = req.Body.ReadAs<UserRequest<UserCreateRequest>>().User;
+                        var user = (await req.ReadAsync<UserRequest<UserCreateRequest>>()).User;
 
                         if (string.IsNullOrEmpty(user.Name))
                         {
                             resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
 
-                            return Task.CompletedTask;
+                            return;
                         }
 
                         if (user.Tags != null && user.Tags.Contains("error"))
                         {
                             resp.StatusCode = (int) HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
 
-                            return Task.CompletedTask;
+                            return;
                         }
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
@@ -181,19 +180,19 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Items.Add(userNew.Id, userNew);
 
                         resp.StatusCode = (int) HttpStatusCode.Created;
-                        return resp.WriteAsJson(new SingleUserResponse
+                        await resp.WriteAsJson(new SingleUserResponse
                         {
                             UserResponse = userNew
                         });
                     })
-                    .MapPost("api/v2/users/create_or_update", (req, resp, routeData) =>
+                    .MapPost("api/v2/users/create_or_update", async (req, resp, routeData) =>
                     {
-                        var user = req.Body.ReadAs<UserRequest<UserCreateRequest>>().User;
+                        var user = (await req.ReadAsync<UserRequest<UserCreateRequest>>()).User;
                         var id = user.ExternalId?.GetHashCode() ?? user.Email?.GetHashCode();
                         if (id == null)
                         {
                             resp.StatusCode = 422;
-                            return Task.CompletedTask;
+                            return;
                         }
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State<UserResponse>>();
@@ -219,14 +218,14 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         }
                         
                         
-                        return resp.WriteAsJson(new SingleUserResponse
+                        await resp.WriteAsJson(new SingleUserResponse
                         {
                             UserResponse = userNew
                         });
                     })
-                    .MapPut("api/v2/users/update_many", (req, resp, routeData) =>
+                    .MapPut("api/v2/users/update_many", async (req, resp, routeData) =>
                     {
-                        var users = req.Body.ReadAs<UserListRequest<UserUpdateRequest>>();
+                        var users = await req.ReadAsync<UserListRequest<UserUpdateRequest>>();
 
                         var ids = users.Users.Select(user => user.Id);
 
@@ -235,7 +234,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         if (ids.Any(id => id == long.MinValue))
                         {
                             resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
+                            return;
                         }
                         
                         var status = new SingleJobStatusResponse{JobStatus = new JobStatusResponse
@@ -244,11 +243,11 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         }};
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(status);
+                        await resp.WriteAsJson(status);
                     })
-                    .MapPut("api/v2/users/{id}", (req, resp, routeData) =>
+                    .MapPut("api/v2/users/{id}", async (req, resp, routeData) =>
                     {
-                        var user = req.Body.ReadAs<UserRequest<UserUpdateRequest>>().User;
+                        var user = (await req.ReadAsync<UserRequest<UserUpdateRequest>>()).User;
 
                         var id = long.Parse(routeData.Values["id"].ToString());
 
@@ -257,27 +256,27 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         if (id == int.MinValue)
                         {
                             resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
+                            return;
                         }
 
                         if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
+                            return;
                         }
 
                         if (user.Tags != null && user.Tags.Contains("error"))
                         {
                             resp.StatusCode = (int) HttpStatusCode.BadRequest;
 
-                            return Task.CompletedTask;
+                            return;
                         }
 
                         var mapper = req.HttpContext.RequestServices.GetRequiredService<IMapper>();
                         mapper.Map(user, state.Items[id]);
 
                         resp.StatusCode = (int) HttpStatusCode.Created;
-                        return resp.WriteAsJson(new
+                        await resp.WriteAsJson(new
                         {
                             user
                         });

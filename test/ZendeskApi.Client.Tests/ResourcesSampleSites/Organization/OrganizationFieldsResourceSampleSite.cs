@@ -1,9 +1,9 @@
 using System;
 using Microsoft.AspNetCore.Routing;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
@@ -56,12 +56,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Count = items.Count
                             });
                     })
-                    .MapPost("api/v2/organization_fields", (req, resp, routeData) =>
+                    .MapPost("api/v2/organization_fields", async (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationFieldCreateUpdateRequest>();
+                        var request = await req.ReadAsync<OrganizationFieldCreateUpdateRequest>();
                         var field = request.OrganizationField;
 
-                        return RequestHelper.Create<OrganizationFieldResponse, OrganizationField>(
+                        await RequestHelper.Create(
                             req,
                             resp,
                             routeData,
@@ -72,18 +72,18 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 OrganizationField = item
                             });
                     })
-                    .MapPut("api/v2/organization_fields/{id}", (req, resp, routeData) =>
+                    .MapPut("api/v2/organization_fields/{id}", async (req, resp, routeData) =>
                     {
-                        return RequestHelper.Update<OrganizationFieldResponse, OrganizationField>(
+                        var item = await req.ReadAsync<OrganizationFieldCreateUpdateRequest>();
+
+                        await RequestHelper.Update(
                             req,
                             resp,
                             routeData,
-                            req.Body
-                                .ReadAs<OrganizationFieldCreateUpdateRequest>()
-                                .OrganizationField,
-                            item => new OrganizationFieldResponse
+                            item.OrganizationField,
+                            i => new OrganizationFieldResponse
                             {
-                                OrganizationField = item
+                                OrganizationField = i
                             });
                     })
                     .MapDelete("api/v2/organization_fields/{id}", (req, resp, routeData) =>

@@ -5,6 +5,7 @@ using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
@@ -85,30 +86,28 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                     Count = items.Count
                                 });
                         })
-                        .MapPost("api/v2/requests", (req, resp, routeData) =>
+                        .MapPost("api/v2/requests", async (req, resp, routeData) =>
                         {
-                            return RequestHelper.Create<RequestResponse, Request>(
+                            var request = await req.ReadAsync<RequestCreateRequest>();
+                            await RequestHelper.Create(
                                 req,
                                 resp,
                                 routeData,
                                 item => item.Id,
-                                req.Body
-                                    .ReadAs<RequestCreateRequest>()
-                                    .Request,
+                                request.Request,
                                 item => new RequestResponse
                                 {
                                     Request = item
                                 });
                         })
-                        .MapPut("api/v2/requests/{id}", (req, resp, routeData) =>
+                        .MapPut("api/v2/requests/{id}", async (req, resp, routeData) =>
                         {
-                            return RequestHelper.Update<RequestResponse, Request>(
+                            var request = await req.ReadAsync<RequestUpdateRequest>();
+                            await RequestHelper.Update(
                                 req,
                                 resp,
                                 routeData,
-                                req.Body
-                                    .ReadAs<RequestUpdateRequest>()
-                                    .Request,
+                                request.Request,
                                 item => new RequestResponse
                                 {
                                     Request = item

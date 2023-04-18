@@ -1,9 +1,5 @@
 using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests.User;
@@ -61,12 +57,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Count = items.Count
                             });
                     })
-                    .MapPost("api/v2/user_fields", (req, resp, routeData) =>
+                    .MapPost("api/v2/user_fields", async (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<UserFieldCreateUpdateRequest>();
+                        var request = await req.ReadAsync<UserFieldCreateUpdateRequest>();
                         var field = request.UserField;
 
-                        return RequestHelper.Create<UserFieldResponse, UserField>(
+                        await RequestHelper.Create(
                             req,
                             resp,
                             routeData,
@@ -77,15 +73,14 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 UserField = item
                             });
                     })
-                    .MapPut("api/v2/user_fields/{id}", (req, resp, routeData) =>
+                    .MapPut("api/v2/user_fields/{id}", async (req, resp, routeData) =>
                     {
-                        return RequestHelper.Update<UserFieldResponse, UserField>(
+                        var request = await req.ReadAsync<UserFieldCreateUpdateRequest>();
+                        await RequestHelper.Update(
                             req,
                             resp,
                             routeData,
-                            req.Body
-                                .ReadAs<UserFieldCreateUpdateRequest>()
-                                .UserField,
+                            request.UserField,
                             item => new UserFieldResponse
                             {
                                 UserField = item

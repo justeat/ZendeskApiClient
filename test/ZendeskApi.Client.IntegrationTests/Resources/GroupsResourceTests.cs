@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Xunit;
 using ZendeskApi.Client.IntegrationTests.Factories;
 using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Requests;
 
 namespace ZendeskApi.Client.IntegrationTests.Resources
 {
@@ -30,26 +31,30 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         public async Task GetAllByUserIdAsync_WhenCalledWithCursorPagination_ShouldReturnGroups()
         {
             var client = _clientFactory.GetClient();
+            long? userId = null;
 
             try
             {
-                var group = await client.Groups.CreateAsync(new Requests.GroupCreateRequest("Integration-tests-group"));
-                await client.Users.UpdateAsync(new Requests.UserUpdateRequest(368289929738)
+                var user = await client.Users.CreateAsync(new UserCreateRequest($"{typeof(GroupsResourceTests).FullName}-user"));
+                userId = user.Id;
+
+                var group = await client.Groups.CreateAsync(new GroupCreateRequest($"{typeof(GroupsResourceTests).FullName}-group"));
+                await client.Users.UpdateAsync(new UserUpdateRequest(userId.Value)
                 {
                     DefaultGroupId = group.Id
                 });
 
                 var results = await client
-                    .Groups.GetAllByUserIdAsync(368289929738, new CursorPager());
+                    .Groups.GetAllByUserIdAsync(userId.Value, new CursorPager());
 
                 Assert.NotNull(results);
             }
             finally
             {
-                await client.Users.UpdateAsync(new Requests.UserUpdateRequest(368289929738)
+                if (userId.HasValue)
                 {
-                    DefaultGroupId = null
-                });
+                    await client.Users.DeleteAsync(userId.Value);
+                }
             }
         }
 
