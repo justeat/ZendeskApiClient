@@ -3,7 +3,7 @@ version: 4.0.2-alpha-{build}
 configuration: Release
 environment:
   ZendeskApi_Credentials_Url:
-    secure: C2FCZYsQc4saCFZ4Uw6gkBqHoyXZPsKucJRXKGKBhYp9cBxCXxupzuo9jB0ftVah
+    secure: Ta5xrVvSfws9ka/jq3gS68sprROymHRduAhf0FlrduGDqt3dU2i34Bbxa5FMWAOI
   ZendeskApi_Credentials_Username: 
     secure: ft+ZIlhKYIHzQ+0Phrool1mjCK1QksYDv6hWtq/pPP0=
   ZendeskApi_Credentials_Token: 
