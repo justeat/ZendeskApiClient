@@ -126,3 +126,4 @@ We aim to follow [Semantic Versioning](https://semver.org/) guidelines within th
 
 * [appveyor.yml](https://github.com/justeat/ZendeskApiClient/blob/master/appveyor.yml)
 * [ZendeskApi.Commons.props](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Build/ZendeskApi.Commons.props)
+* 
