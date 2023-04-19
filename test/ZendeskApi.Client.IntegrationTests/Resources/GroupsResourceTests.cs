@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Xunit;
 using ZendeskApi.Client.IntegrationTests.Factories;
@@ -34,12 +35,14 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             long? userId = null;
             long? groupId = null;
 
+            string TestName(string entity) => $"{typeof(GroupsResourceTests).FullName}-{entity}-{DateTime.UtcNow}";
+
             try
             {
-                var user = await client.Users.CreateAsync(new UserCreateRequest($"{typeof(GroupsResourceTests).FullName}-user"));
+                var user = await client.Users.CreateAsync(new UserCreateRequest(TestName("user")));
                 userId = user.Id;
 
-                var group = await client.Groups.CreateAsync(new GroupCreateRequest($"{typeof(GroupsResourceTests).FullName}-group"));
+                var group = await client.Groups.CreateAsync(new GroupCreateRequest(TestName("group")));
                 groupId = group.Id;
 
                 await client.Users.UpdateAsync(new UserUpdateRequest(userId.Value)
