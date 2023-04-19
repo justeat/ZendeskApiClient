@@ -32,6 +32,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         {
             var client = _clientFactory.GetClient();
             long? userId = null;
+            long? groupId = null;
 
             try
             {
@@ -39,6 +40,8 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                 userId = user.Id;
 
                 var group = await client.Groups.CreateAsync(new GroupCreateRequest($"{typeof(GroupsResourceTests).FullName}-group"));
+                groupId = group.Id;
+
                 await client.Users.UpdateAsync(new UserUpdateRequest(userId.Value)
                 {
                     DefaultGroupId = group.Id
@@ -54,6 +57,10 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                 if (userId.HasValue)
                 {
                     await client.Users.DeleteAsync(userId.Value);
+                }
+                if (groupId.HasValue)
+                {
+                    await client.Groups.DeleteAsync(groupId.Value);
                 }
             }
         }
