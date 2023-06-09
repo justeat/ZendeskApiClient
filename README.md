@@ -1,7 +1,6 @@
 # Zendesk Api Client
 [![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
-[![AppVeyor Build Status](https://img.shields.io/appveyor/ci/justeattech/zendeskapiclient/master.svg?style=flat-square)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
 [![Gitter](https://img.shields.io/gitter/room/justeat/ZendeskApiClient.svg?style=flat-square)](https://gitter.im/justeat/ZendeskApiClient)
 
 A .netstandard NuGet package for use with the  Zendesk v2 API.
@@ -119,10 +118,3 @@ In order to run integration tests against your own zendesk instance use the Cake
 # Contributing
 
 We are happy for anyone to contribute into this client, and help us evolve it over time.
-
-## Versioning
-
-We aim to follow [Semantic Versioning](https://semver.org/) guidelines within this library. When increasing the version there are multiple places that will need to be changed:
-
-* [appveyor.yml](https://github.com/justeat/ZendeskApiClient/blob/master/appveyor.yml)
-* [ZendeskApi.Commons.props](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Build/ZendeskApi.Commons.props)
