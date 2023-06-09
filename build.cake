@@ -95,6 +95,19 @@ Task("Run-Integration-Tests")
     }
 });
 
+Task("Package")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    var settings = new DotNetPackSettings
+    {
+        Configuration = "Release",
+        OutputDirectory = "./artifacts/"
+    };
+
+    DotNetPack("./src/ZendeskApi.Client/ZendeskApi.Client.csproj", settings);
+});
+
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
