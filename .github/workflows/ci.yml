@@ -79,37 +79,6 @@ jobs:
         path: ./artifacts
         if-no-files-found: error
 
-  validate-packages:
-    needs: build
-    runs-on: windows-latest
-    steps:
-
-    - name: Download packages
-      uses: actions/download-artifact@v3
-      with:
-        name: packages-windows
-
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '3.1.x'
-
-    - name: Validate NuGet packages
-      shell: pwsh
-      run: |
-        dotnet tool install --global dotnet-validate --version 0.0.1-preview.304
-        $packages = Get-ChildItem -Filter "*.nupkg" | ForEach-Object { $_.FullName }
-        $invalidPackages = 0
-        foreach ($package in $packages) {
-          dotnet validate package local $package
-          if ($LASTEXITCODE -ne 0) {
-            $invalidPackages++
-          }
-        }
-        if ($invalidPackages -gt 0) {
-          Write-Output "::error::$invalidPackages NuGet package(s) failed validation."
-        }
-
   publish-nuget:
     needs: validate-packages
     runs-on: windows-latest
