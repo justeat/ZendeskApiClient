@@ -55,7 +55,7 @@ jobs:
     - name: Publish NuGet package to Github actions cache
       uses: actions/upload-artifact@v3
       with:
-        name: packages-${{ matrix.os_name }}
+        name: packages-windows
         path: ./artifacts
         if-no-files-found: error
 
