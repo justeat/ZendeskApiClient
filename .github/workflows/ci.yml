@@ -58,7 +58,7 @@ jobs:
 
     - name: Run Integration tests
       shell: pwsh
-      run: ./build.ps1 --target=Run-Integration-Tests --zendeskUrl=$ZENDESK_URL --zendeskUsername=$ZENDESK_USERNAME --zendeskToken=$ZENDESK_TOKEN
+      run: ./build.ps1 --target=Run-Integration-Tests --zendeskUrl=${{ secrets.ZENDESK_URL }} --zendeskUsername=${{ secrets.ZENDESK_USERNAME }} --zendeskToken=${{ secrets.ZENDESK_TOKEN }}
 
     - name: Package
       shell: pwsh
