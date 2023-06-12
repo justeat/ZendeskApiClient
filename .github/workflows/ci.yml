@@ -59,8 +59,8 @@ jobs:
     needs: build
     runs-on: windows-latest
     if: |
-      github.event.repository.branch == "develop" &&
-      github.repository == "justeat/ZendeskApiClient"
+      github.event.repository.branch == 'develop' &&
+      github.repository == 'justeat/ZendeskApiClient'
 
     steps:
 
