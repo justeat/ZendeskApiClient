@@ -1,0 +1,81 @@
+name: ci
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ v* ]
+  pull_request:
+    branches: [ master, dotnet-vnext ]
+  workflow_dispatch:
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
+  NUGET_XMLDOC_MODE: skip
+  TERM: xterm
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: windows-latest
+    runs-on: windows-latest
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Setup NuGet cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: windows-latest-nuget-${{ hashFiles('**/*.csproj', '**/*.props') }}
+        restore-keys: windows-latest-nuget-
+
+    - name: Build & Unit tests
+      shell: pwsh
+      run: ./build.ps1 --target=Run-Unit-Tests
+
+    # - name: Run Integration tests
+    #   shell: pwsh
+    #   run: ./build.ps1 --target=Run-Integration-Tests --zendeskUrl=${{ secrets.ZENDESK_URL }} --zendeskUsername=${{ secrets.ZENDESK_USERNAME }} --zendeskToken=${{ secrets.ZENDESK_TOKEN }}
+
+    - name: Package
+      shell: pwsh
+      run: ./build.ps1 --target=Package
+      
+    - name: Publish NuGet package to Github actions cache
+      uses: actions/upload-artifact@v3
+      with:
+        name: packages-${{ matrix.os_name }}
+        path: ./artifacts
+        if-no-files-found: error
+
+  publish-nuget:
+    needs: build
+    runs-on: windows-latest
+    if: |
+      github.event.repository.fork == false &&
+      startsWith(github.ref, 'refs/tags/v')
+    steps:
+
+    - name: Download packages
+      uses: actions/download-artifact@v3
+      with:
+        name: packages-windows
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Push NuGet packages to NuGet.org
+      run: dotnet nuget push "*.nupkg" --api-key ${{ secrets.NUGET_TOKEN }} --skip-duplicate --source https://api.nuget.org/v3/index.json
