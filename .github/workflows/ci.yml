@@ -26,12 +26,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
+        os: [ windows-latest ]
         include:
-          - os: macos-latest
-            os_name: macos
-          - os: ubuntu-latest
-            os_name: linux
           - os: windows-latest
             os_name: windows
 
@@ -85,7 +81,7 @@ jobs:
 
   validate-packages:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
 
     - name: Download packages
@@ -116,7 +112,7 @@ jobs:
 
   publish-nuget:
     needs: validate-packages
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     if: |
       github.event.repository.fork == false &&
       startsWith(github.ref, 'refs/tags/v')
