@@ -58,10 +58,16 @@ jobs:
   run-integration-tests:
     needs: build
     runs-on: windows-latest
-    if: |
-      contains(github.ref_name, 'develop') &&
-      github.repository == 'justeat/ZendeskApiClient'
+    if: ${{ contains(github.ref, 'refs/heads/develop') && github.repository == 'justeat/ZendeskApiClient' }}
     steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '3.1.x'
 
     - name: Run Integration tests
       shell: pwsh
