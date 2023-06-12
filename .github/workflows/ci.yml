@@ -54,7 +54,7 @@ jobs:
 
     - name: Build & Unit tests
       shell: pwsh
-      run: ./build.ps1 --target=Default
+      run: ./build.ps1 --target=Run-Unit-Tests
 
     - name: Run Integration tests
       shell: pwsh
