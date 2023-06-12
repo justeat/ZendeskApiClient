@@ -99,13 +99,13 @@ Task("Package")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var settings = new DotNetPackSettings
+    var settings = new DotNetCorePackSettings
     {
         Configuration = "Release",
         OutputDirectory = "./artifacts/"
     };
 
-    DotNetPack("./src/ZendeskApi.Client/ZendeskApi.Client.csproj", settings);
+    DotNetCorePack("./src/ZendeskApi.Client/ZendeskApi.Client.csproj", settings);
 });
 
 //////////////////////////////////////////////////////////////////////
