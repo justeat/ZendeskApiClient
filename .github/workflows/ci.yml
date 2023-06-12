@@ -80,7 +80,7 @@ jobs:
         if-no-files-found: error
 
   publish-nuget:
-    needs: validate-packages
+    needs: build
     runs-on: windows-latest
     if: |
       github.event.repository.fork == false &&
