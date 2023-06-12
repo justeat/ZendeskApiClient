@@ -61,7 +61,6 @@ jobs:
     if: |
       contains(github.ref_name, 'develop') &&
       github.repository == 'justeat/ZendeskApiClient'
-
     steps:
 
     - name: Run Integration tests
