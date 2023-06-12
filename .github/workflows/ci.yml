@@ -20,16 +20,8 @@ permissions:
 
 jobs:
   build:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ windows-latest ]
-        include:
-          - os: windows-latest
-            os_name: windows
+    name: windows-latest
+    runs-on: windows-latest
 
     steps:
 
@@ -45,8 +37,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props') }}
-        restore-keys: ${{ runner.os }}-nuget-
+        key: windows-latest-nuget-${{ hashFiles('**/*.csproj', '**/*.props') }}
+        restore-keys: windows-latest-nuget-
 
     - name: Build & Unit tests
       shell: pwsh
