@@ -1,8 +1,6 @@
 # Zendesk Api Client
 [![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
-[![AppVeyor Build Status](https://img.shields.io/appveyor/ci/justeattech/zendeskapiclient/master.svg?style=flat-square)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
-[![Gitter](https://img.shields.io/gitter/room/justeat/ZendeskApiClient.svg?style=flat-square)](https://gitter.im/justeat/ZendeskApiClient)
 
 A .netstandard NuGet package for use with the  Zendesk v2 API.
 
@@ -11,7 +9,7 @@ A .netstandard NuGet package for use with the  Zendesk v2 API.
 ## 4.x.x
 This will allow for cursor pagination on some endpoints. We have kept the original offset pagination available so that this release is backward compatible, however due to Zendesk adding a variation of cursor pagination to this single [endpoint](https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination), we have modified the original `cursorPager` class to now be `cursorPagerVariant`. If you use the TicketAudits endpoint please update your code.
 
-Unfortunatly Zendesk has not adopted cursor pagination on all endpoints. A list of compatible endpoints used in this API are as follows:
+Unfortunately Zendesk has not adopted cursor pagination on all endpoints. A list of compatible endpoints used in this API are as follows:
 
 Users:
 - GET /api/v2/deleted_users
@@ -122,7 +120,4 @@ We are happy for anyone to contribute into this client, and help us evolve it ov
 
 ## Versioning
 
-We aim to follow [Semantic Versioning](https://semver.org/) guidelines within this library. When increasing the version there are multiple places that will need to be changed:
-
-* [appveyor.yml](https://github.com/justeat/ZendeskApiClient/blob/master/appveyor.yml)
-* [ZendeskApi.Commons.props](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Build/ZendeskApi.Commons.props)
+We aim to follow [Semantic Versioning](https://semver.org/) guidelines within this library. When increasing the version please increment [ZendeskApi.Commons.props](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Build/ZendeskApi.Commons.props).
