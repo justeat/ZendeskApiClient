@@ -58,7 +58,9 @@ jobs:
   run-integration-tests:
     needs: build
     runs-on: windows-latest
-    if: ${{ contains(github.ref, 'refs/heads/develop') && github.repository == 'justeat/ZendeskApiClient' }}
+    if: |
+      github.event.repository.fork == false &&
+      github.ref == 'refs/heads/develop'
     steps:
 
     - name: Checkout code
