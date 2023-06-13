@@ -5,7 +5,7 @@ on:
     branches: [ master ]
     tags: [ v* ]
   pull_request:
-    branches: [ master, dotnet-vnext ]
+    branches: [ master, develop ]
   workflow_dispatch:
 
 env:
@@ -44,10 +44,6 @@ jobs:
       shell: pwsh
       run: ./build.ps1 --target=Run-Unit-Tests
 
-    - name: Run Integration tests
-      shell: pwsh
-      run: ./build.ps1 --target=Run-Integration-Tests --zendeskUrl=${{ secrets.ZENDESK_URL }} --zendeskUsername=${{ secrets.ZENDESK_USERNAME }} --zendeskToken=${{ secrets.ZENDESK_TOKEN }}
-
     - name: Package
       shell: pwsh
       run: ./build.ps1 --target=Package
@@ -55,9 +51,28 @@ jobs:
     - name: Publish NuGet package to Github actions cache
       uses: actions/upload-artifact@v3
       with:
-        name: packages-${{ matrix.os_name }}
+        name: packages-windows
         path: ./artifacts
         if-no-files-found: error
+
+  run-integration-tests:
+    runs-on: windows-latest
+    if: |
+      github.event.repository.fork == false &&
+      github.event.pull_request.head.ref == 'develop'
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Run Integration tests
+      shell: pwsh
+      run: ./build.ps1 --target=Run-Integration-Tests --zendeskUrl=${{ secrets.ZENDESK_URL }} --zendeskUsername=${{ secrets.ZENDESK_USERNAME }} --zendeskToken=${{ secrets.ZENDESK_TOKEN }}
 
   publish-nuget:
     needs: build
