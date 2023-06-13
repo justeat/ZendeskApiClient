@@ -56,7 +56,6 @@ jobs:
         if-no-files-found: error
 
   run-integration-tests:
-    needs: build
     runs-on: windows-latest
     if: |
       github.event.repository.fork == false &&
