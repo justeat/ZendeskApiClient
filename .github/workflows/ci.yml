@@ -57,7 +57,9 @@ jobs:
 
   run-integration-tests:
     runs-on: windows-latest
-    if: github.event.repository.fork == false
+    if: |
+      github.event.repository.fork == false &&
+      github.event.pull_request.head.ref == 'develop'
     steps:
 
     - name: Checkout code
