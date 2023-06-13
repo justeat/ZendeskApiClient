@@ -39,18 +39,12 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
-    if(IsRunningOnWindows())
+    var buildSettings = new DotNetCoreBuildSettings()
     {
-      // Use MSBuild
-      MSBuild("./ZendeskApiClient.sln", settings =>
-        settings.SetConfiguration(configuration));
-    }
-    else
-    {
-      // Use XBuild
-      XBuild("./ZendeskApiClient.sln", settings =>
-        settings.SetConfiguration(configuration));
-    }
+        Configuration = configuration,
+        Verbosity = DotNetCoreVerbosity.Normal
+    };
+    DotNetCoreBuild("./ZendeskApiClient.sln", buildSettings);
 });
 
 Task("Run-Unit-Tests")
