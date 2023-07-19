@@ -106,6 +106,8 @@ await client.Search.SearchAsync<Ticket>(q =>
 The zendesk api documentation is available at http://developer.zendesk.com/documentation/rest_api/introduction.html
 Querying and searching is limited by the searchable fields on the zendesk api
 
+> Please note that starting from August 15, 2023, if you make offset-based pagination (OBP) requests beyond the first 100 pages (10,000 records), you will receive an error message: "400 Bad Request." To retrieve data sets larger than 10,000 records, customers must transition to cursor-based pagination (CBP). You can find more information on the transition [here](https://developer.zendesk.com/documentation/api-basics/pagination/paginating-through-lists-using-cursor-pagination/). This library designates the OBP endpoints as `Obsolete` and introduces the new CBP endpoints in version 4.x.x. Therefore, users who wish to make the transition will need to upgrade.
+
 ## Integration Tests
 
 In order to run integration tests against your own zendesk instance use the Cake script provided by:
