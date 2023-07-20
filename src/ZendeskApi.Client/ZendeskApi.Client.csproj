@@ -3,7 +3,7 @@
   <Import Project=".\..\ZendeskApi.Build\ZendeskApi.Commons.props" />
   
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <Description>A Zendesk Api Client for use with the ZendeskApi v2</Description>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
