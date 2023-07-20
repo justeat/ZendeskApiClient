@@ -1,10 +1,16 @@
 # Zendesk Api Client
 [![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
+[![ci](https://github.com/justeat/ZendeskApiClient/actions/workflows/ci.yml/badge.svg)](https://github.com/justeat/ZendeskApiClient/actions/workflows/ci.yml)
 
 A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 # Breaking Changes
+
+## 6.x.x
+#### Added support for .NET 6
+
+ZendeskApiClient now targets both .NET Standard 2.0 and .NET 6, enabling users to leverage the latest runtime features and performance optimizations for their projects. Please note that with this update, support for .NET Core 3.1 is no longer targeted.
 
 ## 4.x.x
 This will allow for cursor pagination on some endpoints. We have kept the original offset pagination available so that this release is backward compatible, however due to Zendesk adding a variation of cursor pagination to this single [endpoint](https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination), we have modified the original `cursorPager` class to now be `cursorPagerVariant`. If you use the TicketAudits endpoint please update your code.
