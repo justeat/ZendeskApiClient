@@ -1,6 +1,7 @@
 # Zendesk Api Client
 [![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
+[![ci](https://github.com/justeat/ZendeskApiClient/actions/workflows/ci.yml/badge.svg)](https://github.com/justeat/ZendeskApiClient/actions/workflows/ci.yml)
 
 A .netstandard NuGet package for use with the  Zendesk v2 API.
 
