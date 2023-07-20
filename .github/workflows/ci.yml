@@ -30,8 +30,6 @@ jobs:
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '3.1.x'
 
     - name: Setup NuGet cache
       uses: actions/cache@v3
@@ -67,8 +65,6 @@ jobs:
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '3.1.x'
 
     - name: Run Integration tests
       shell: pwsh
@@ -89,8 +85,6 @@ jobs:
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '3.1.x'
 
     - name: Push NuGet packages to NuGet.org
       run: dotnet nuget push "*.nupkg" --api-key ${{ secrets.NUGET_TOKEN }} --skip-duplicate --source https://api.nuget.org/v3/index.json
