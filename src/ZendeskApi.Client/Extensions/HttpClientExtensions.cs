@@ -8,7 +8,7 @@ namespace ZendeskApi.Client.Extensions
 {
     public static class HttpClientExtensions
     {
-        public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, PagerParameters parameters = null, 
+        public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, PagerParameters parameters = null,
             CancellationToken cancellationToken = default)
         {
             var pager = new Pager(parameters?.Page, parameters?.PageSize, 100);
@@ -30,10 +30,10 @@ namespace ZendeskApi.Client.Extensions
         /// https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination
         public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, CursorPagerVariant pager,
             CancellationToken cancellationToken = default)
-        {   
+        {
             if (pager == null)
                 pager = new CursorPagerVariant();
-            
+
             if (!string.IsNullOrEmpty(pager.Cursor))
             {
                 var encodedCursor = Uri.EscapeDataString(pager.Cursor);
@@ -56,13 +56,20 @@ namespace ZendeskApi.Client.Extensions
         public static Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, CursorPager pager,
             CancellationToken cancellationToken = default)
         {
-            if (pager == null)
-                pager = new CursorPager();
+            if (pager == null) pager = new CursorPager();
 
             if (requestUri.Contains("?"))
+            {
                 requestUri += $"&page[size]={pager.Size}";
+            }
             else
+            {
                 requestUri += $"?page[size]={pager.Size}";
+            }
+
+            if (!string.IsNullOrEmpty(pager.AfterCursor)) requestUri += $"&page[after]={pager.AfterCursor}";
+
+            if (!string.IsNullOrEmpty(pager.BeforeCursor)) requestUri += $"&page[before]={pager.BeforeCursor}";
 
             return client.GetAsync(requestUri, cancellationToken);
         }
