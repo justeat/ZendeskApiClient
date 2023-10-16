@@ -124,7 +124,7 @@ In order to run integration tests against your own zendesk instance use the Cake
 
 # Contributing
 
-We are happy for anyone to contribute into this client, and help us evolve it over time.
+[CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Versioning
 
