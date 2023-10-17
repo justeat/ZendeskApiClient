@@ -46,7 +46,7 @@ Tickets:
 - GET /api/v2/ticket_fields
 - GET /api/v2/ticket_audits - [Cursor Variant](https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination)
 
-Satisfaction ratings: 
+Satisfaction ratings:
 - GET /api/v2/satisfaction_ratings
 
 [Further reading on Zendesk Pagination changes](https://support.zendesk.com/hc/en-us/articles/4402610093338-Introducing-Pagination-Changes-Zendesk-API)
@@ -85,7 +85,7 @@ var client = new ZendeskClient(new ZendeskApiClient(zendeskOptionsWrapper), logg
 ## Example methods
 ```c#
 var ticket = await client.Tickets.GetAsync(1234L); // Get ticket by Id
-var tickets = await client.Tickets.GetAllAsync(new [] { 1234L, 4321L }); // 
+var tickets = await client.Tickets.GetAllAsync(new [] { 1234L, 4321L }); //
 var ticket = await client.Tickets.UpdateAsync(ticket);
 var ticket = await client.Tickets.CreateAsync(ticket);
 await client.Tickets.DeleteAsync(1234L);
@@ -93,16 +93,16 @@ await client.Tickets.DeleteAsync(1234L);
 
 ## Searching and filtering
 ```c#
-await client.Search.SearchAsync<User>(q => 
+await client.Search.SearchAsync<User>(q =>
     q.WithFilter("email", "jazzy.b@just-eat.com")
 );
 
-await client.Search.SearchAsync<Organization>(q => 
+await client.Search.SearchAsync<Organization>(q =>
     q.WithFilter("name", "Cupcake Cafe")
 );
 
 // All non closed tickets
-await client.Search.SearchAsync<Ticket>(q => 
+await client.Search.SearchAsync<Ticket>(q =>
     q.WithFilter("status", "closed", FilterOperator.LessThan)
 );
 ```
@@ -122,9 +122,20 @@ In order to run integration tests against your own zendesk instance use the Cake
 .\build.ps1 --target=Run-Integration-Tests --zendeskUrl="<your zendesk url>" --zendeskUsername="<your zendesk username>" --zendeskToken="<your zendesk token>"
 ```
 
+### Running integration tests on Visual Studio for Mac
+
+In Visual Studio, open the root folder of this project and open the `test` view (has a little lightening bolt icon).
+You should see a structure that looks like:
+    * ZendeskApiClient
+        * test
+            * ZendeskApi.Client.IntegrationTests
+            * ZendeskApi.Client.Tests
+To run the integration tests, right click on it and select `Run Test With` ==> `Custom Parameters` - make sure you add the following variables: `ZendeskApi_Credentials_Url, ZendeskApi_Credentials_Username, ZendeskApi_Credentials_Token`
+You can save this configuration and give it a name, in order to run it multiple times.
+
 # Contributing
 
-We are happy for anyone to contribute into this client, and help us evolve it over time.
+[CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Versioning
 
