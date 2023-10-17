@@ -135,7 +135,7 @@ You can save this configuration and give it a name, in order to run it multiple 
 
 # Contributing
 
-We are happy for anyone to contribute into this client, and help us evolve it over time.
+[CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Versioning
 
