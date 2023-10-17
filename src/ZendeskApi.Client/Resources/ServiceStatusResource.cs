@@ -32,12 +32,10 @@ namespace ZendeskApi.Client.Resources
                 ? "/api/incidents/active"
                 : $"/api/incidents/active?subdomain={subdomain}";
 
-            var response = await ExecuteRequest(async (client, token) =>
+            return await ExecuteRequest(async (client, token) =>
                         await client.GetAsync(requestUri, token).ConfigureAwait(false),
                     "ListActiveIncidents",
-                    cancellationToken);
-
-            return await response
+                    cancellationToken)
                 .ThrowIfUnsuccessful("status_api#list-active-incidents", helpDocLinkPrefix: "status-api")
                 .ReadContentAsAsync<ListIncidentsResponse>();
         }
@@ -48,12 +46,10 @@ namespace ZendeskApi.Client.Resources
         {
             var requestUri = $"/api/incidents/{incidentId}";
 
-            var response = await ExecuteRequest(async (client, token) =>
+            return await ExecuteRequest(async (client, token) =>
                         await client.GetAsync(requestUri, token).ConfigureAwait(false),
                     "GetActiveIncident",
-                    cancellationToken);
-
-            return await response
+                    cancellationToken)
                 .ThrowIfUnsuccessful("status_api#show-active-incident", helpDocLinkPrefix: "status-api")
                 .ReadContentAsAsync<IncidentResponse>();
         }
