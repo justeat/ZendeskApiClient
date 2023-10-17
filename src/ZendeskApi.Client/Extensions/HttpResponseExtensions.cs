@@ -47,6 +47,8 @@ namespace ZendeskApi.Client.Extensions
             if (unwrappedResponse == null)
                 return null;
 
+            var x= await unwrappedResponse.Content.ReadAsStringAsync();
+
             if (converter == null)
             {
                 return await unwrappedResponse

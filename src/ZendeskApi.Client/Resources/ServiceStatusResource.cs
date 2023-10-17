@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ZendeskApi.Client.Extensions;
-using ZendeskApi.Client.Models;
+using ZendeskApi.Client.Models.Status.Response;
 using ZendeskApi.Client.Resources.Interfaces;
 
 namespace ZendeskApi.Client.Resources
@@ -15,7 +14,7 @@ namespace ZendeskApi.Client.Resources
         private readonly IZendeskApiClient _httpClientFactory;
         private readonly ILogger _logger;
 
-        private readonly Func<ILogger, string, IDisposable> _loggerScope = LoggerMessage.DefineScope<string>(typeof(ServiceStatusResource).Name + ": {0}");
+        private readonly Func<ILogger, string, IDisposable> _loggerScope = LoggerMessage.DefineScope<string>(nameof(ServiceStatusResource) + ": {0}");
 
         public ServiceStatusResource(
             IZendeskApiClient httpClientFactory,
@@ -25,66 +24,60 @@ namespace ZendeskApi.Client.Resources
             _logger = logger;
         }
 
-        public async Task<IReadOnlyList<Component>> ListComponents(
-            string subdomain,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ListIncidentsResponse> ListActiveIncidents(
+            string subdomain = null, 
+            CancellationToken cancellationToken = default)
         {
+            var requestUri = string.IsNullOrWhiteSpace(subdomain)
+                ? "/api/incidents/active"
+                : $"/api/incidents/active?subdomain={subdomain}";
+
             var response = await ExecuteRequest(async (client, token) =>
-                        await client.GetAsync($"/api/components?domain={subdomain}.zendesk.com", token).ConfigureAwait(false),
-                    "ListComponents",
-                    cancellationToken)
-                .ThrowIfUnsuccessful("status_api#list-components", helpDocLinkPrefix: "status-api")
-                .ReadContentAsAsync<ComponentResponse>();
+                        await client.GetAsync(requestUri, token).ConfigureAwait(false),
+                    "ListActiveIncidents",
+                    cancellationToken);
 
-            return response.Components;
+            return await response
+                .ThrowIfUnsuccessful("status_api#list-active-incidents", helpDocLinkPrefix: "status-api")
+                .ReadContentAsAsync<ListIncidentsResponse>();
         }
 
-        public async Task<IReadOnlyList<SubComponent>> ListSubComponents(
-            string componentIdOrTag, 
-            string subdomain,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IncidentResponse> GetActiveIncident(
+            string incidentId, 
+            CancellationToken cancellationToken = default)
         {
+            var requestUri = $"/api/incidents/{incidentId}";
+
             var response = await ExecuteRequest(async (client, token) =>
-                        await client.GetAsync($"/api/components/{componentIdOrTag}/subcomponents?domain={subdomain}.zendesk.com", token).ConfigureAwait(false),
-                    "ListSubComponents",
-                    cancellationToken)
-                .ThrowIfUnsuccessful("status_api#list-subcomponents", helpDocLinkPrefix: "status-api")
-                .ReadContentAsAsync<SubComponentResponse>();
+                        await client.GetAsync(requestUri, token).ConfigureAwait(false),
+                    "GetActiveIncident",
+                    cancellationToken);
 
-            return response.SubComponents;
+            return await response
+                .ThrowIfUnsuccessful("status_api#show-active-incident", helpDocLinkPrefix: "status-api")
+                .ReadContentAsAsync<IncidentResponse>();
         }
 
-        public async Task<ServiceStatus> GetComponentStatus(
-            string componentIdOrTag, 
-            string subdomain,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ListMaintenanceIncidentsResponse> ListMaintenanceIncidents(
+            string subdomain = null, 
+            CancellationToken cancellationToken = default)
         {
-            return await ExecuteRequest(async (client, token) =>
-                        await client.GetAsync($"/api/components/{componentIdOrTag}?domain={subdomain}.zendesk.com", token).ConfigureAwait(false),
-                    "GetComponentStatus",
-                    cancellationToken)
-                .ThrowIfUnsuccessful("status_api#show-status-of-a-component", helpDocLinkPrefix: "status-api")
-                .ReadContentAsAsync<ServiceStatus>();
-        }
+            var requestUri = string.IsNullOrWhiteSpace(subdomain)
+                ? "/api/incidents/maintenance"
+                : $"/api/incidents/maintenance?subdomain={subdomain}";
 
-        public async Task<ServiceStatus> GetSubComponentStatus(
-            string componentIdOrTag, 
-            string subComponentIdOrTag, 
-            string subdomain,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
             return await ExecuteRequest(async (client, token) =>
-                        await client.GetAsync($"/api/components/{componentIdOrTag}/subcomponents/{subComponentIdOrTag}?domain={subdomain}.zendesk.com", token).ConfigureAwait(false),
-                    "GetSubComponentStatus",
+                        await client.GetAsync(requestUri, token).ConfigureAwait(false),
+                    "ListMaintenanceIncidents",
                     cancellationToken)
-                .ThrowIfUnsuccessful("status_api#show-status-of-a-subcomponent", helpDocLinkPrefix: "status-api")
-                .ReadContentAsAsync<ServiceStatus>();
+                .ThrowIfUnsuccessful("status_api#list-maintenance-incidents", helpDocLinkPrefix: "status-api")
+                .ReadContentAsAsync<ListMaintenanceIncidentsResponse>();
         }
 
         private async Task<HttpResponseMessage> ExecuteRequest(
             Func<HttpClient, CancellationToken, Task<HttpResponseMessage>> requestBodyAccessor,
             string scope,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             using (_loggerScope(_logger, scope))
             using (var client = _httpClientFactory.CreateServiceStatusClient())
