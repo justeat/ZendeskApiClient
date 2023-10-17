@@ -7,6 +7,25 @@ A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 # Breaking Changes
 
+## 7.x.x
+
+#### The deprecation and replacement of Status API endpoints
+
+More detailed information on the exact changes and motivation can be found [here](https://support.zendesk.com/hc/en-us/articles/5414949730842). 
+
+For the sake of this library, it means the following methods have been removed:
+
+- `IZendeskClient.ServiceStatus.ListComponents(...)`
+- `IZendeskClient.ServiceStatus.ListSubComponents(...)`
+- `IZendeskClient.ServiceStatus.GetComponentStatus(...)`
+- `IZendeskClient.ServiceStatus.GetSubComponentStatus(...)`
+
+In favour of the following:
+
+- `IZendeskClient.ServiceStatus.ListActiveIncidents(...)`
+- `IZendeskClient.ServiceStatus.GetActiveIncident(...)`
+- `IZendeskClient.ServiceStatus.ListMaintenanceIncidents(...)`
+
 ## 6.x.x
 #### Added support for .NET 6
 
