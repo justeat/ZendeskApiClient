@@ -1,71 +1,50 @@
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 using ZendeskApi.Client.IntegrationTests.Factories;
 
 namespace ZendeskApi.Client.IntegrationTests.Resources
 {
     public class ServiceStatusResourceTests : IClassFixture<ZendeskClientFactory>
     {
-        private readonly ITestOutputHelper _output;
         private readonly ZendeskClientFactory _clientFactory;
 
         private const string Subdomain = "d3v-just-eat";
 
-        public ServiceStatusResourceTests(
-            ITestOutputHelper output,
-            ZendeskClientFactory clientFactory)
+        public ServiceStatusResourceTests(ZendeskClientFactory clientFactory)
         {
-            _output = output;
             _clientFactory = clientFactory;
         }
-
-        [Fact]
-        public async Task ListComponents_WhenCalled_ShouldReturnComponents()
+        
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(Subdomain)]
+        public async Task ListActiveIncidents_WhenCalled_ShouldReturnIncidents(string subdomain)
         {
             var client = _clientFactory.GetClient();
 
-            var components = await client
+            var activeIncidents = await client
                 .ServiceStatus
-                .ListComponents(Subdomain);
+                .ListActiveIncidents(subdomain);
 
-            Assert.NotEmpty(components);
+            Assert.NotNull(activeIncidents.Data);
         }
 
-        [Fact]
-        public async Task ListSubComponents_WhenCalled_ShouldReturnSubComponents()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(Subdomain)]
+        public async Task ListMaintenanceIncidents_WhenCalled_ShouldReturnIncidents(string subdomain)
         {
             var client = _clientFactory.GetClient();
 
-            var components = await client
+            var maintenanceIncidents = await client
                 .ServiceStatus
-                .ListSubComponents("support", Subdomain);
+                .ListMaintenanceIncidents(subdomain);
 
-            Assert.NotEmpty(components);
-        }
-
-        [Fact]
-        public async Task GetComponentStatus_WhenCalled_ShouldReturnStatus()
-        {
-            var client = _clientFactory.GetClient();
-
-            var status = await client
-                .ServiceStatus
-                .GetComponentStatus("support", Subdomain);
-
-            Assert.NotNull(status);
-        }
-
-        [Fact]
-        public async Task GetSubComponentStatus_WhenCalled_ShouldReturnStatus()
-        {
-            var client = _clientFactory.GetClient();
-
-            var status = await client
-                .ServiceStatus
-                .GetSubComponentStatus("support", "ticketing", Subdomain);
-
-            Assert.NotNull(status);
+            Assert.NotNull(maintenanceIncidents.Data);
         }
     }
 }
