@@ -7,9 +7,9 @@
     <Authors>Just Eat</Authors>
     <Company>Just Eat</Company>
     <Copyright>Copyright (c) Just Eat 2015-$([System.DateTime]::Now.ToString(yyyy))</Copyright>
-    <PackageIconUrl>https://avatars3.githubusercontent.com/u/1516790?s=200</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/justeat/ZendeskApiClient</PackageProjectUrl>
-    <PackageLicenseUrl>$(PackageProjectUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseFile>License.md</PackageLicenseFile>
     <PackageReleaseNotes>$(PackageProjectUrl)/releases</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 
@@ -21,23 +21,13 @@
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup>
-      <Major>4</Major>
+      <Major>6</Major>
       <Minor>0</Minor>
-      <Revision>1</Revision>
-
-      <BuildNumber Condition=" '$(APPVEYOR_BUILD_NUMBER)' != '' ">$(APPVEYOR_BUILD_NUMBER)</BuildNumber>
-      <BuildNumber Condition=" '$(BUILD_NUMBER)' != '' ">$(BUILD_NUMBER)</BuildNumber>
-      <BuildNumber Condition=" '$(BuildNumber)' == '' ">0</BuildNumber>
-
-      <!-- Remove for release -->
-      <PrereleaseLabel>-alpha</PrereleaseLabel>
-
-      <BuildSuffix Condition=" '$(PrereleaseLabel)' != '' ">$(PrereleaseLabel)-$(BuildNumber)</BuildSuffix>
-      <BuildSuffix Condition=" '$(BuildSuffix)' == '' "></BuildSuffix>
-
-      <AssemblyVersion>$(Major).0.0.0</AssemblyVersion>
-      <AssemblyFileVersion>$(Major).$(Minor).$(Revision).$(BuildNumber)</AssemblyFileVersion>
-      <InformationalVersion>$(Major).$(Minor).$(Revision)$(BuildSuffix)</InformationalVersion>
-      <PackageVersion>$(Major).$(Minor).$(Revision)$(BuildSuffix)</PackageVersion>
+      <Revision>0</Revision>
+      <PackageVersion>$(Major).$(Minor).$(Revision)</PackageVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.png" Pack="true" PackagePath=""/>
+    <None Include="..\..\License.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
 </Project>

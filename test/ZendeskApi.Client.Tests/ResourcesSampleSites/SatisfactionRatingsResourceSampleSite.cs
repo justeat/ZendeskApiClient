@@ -1,8 +1,8 @@
 using System;
 using Microsoft.AspNetCore.Routing;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Responses;
+using ZendeskApi.Client.Tests.Extensions;
 
 namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 {
@@ -55,14 +55,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Count = items.Count
                             });
                     })
-                    .MapPost("api/v2/tickets/{ticketId}/satisfaction_rating", (req, resp, routeData) =>
+                    .MapPost("api/v2/tickets/{ticketId}/satisfaction_rating", async (req, resp, routeData) =>
                     {
-                        return RequestHelper.Create<SatisfactionRating, SatisfactionRating>(
+                        var rating = await req.ReadAsync<SatisfactionRating>();
+                        await RequestHelper.Create<SatisfactionRating, SatisfactionRating>(
                             req,
                             resp,
                             routeData,
                             item => item.Id,
-                            req.Body.ReadAs<SatisfactionRating>(),
+                            rating,
                             item => item);
                     })
                     ;

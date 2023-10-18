@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -120,12 +118,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                             OrganizationMembership = item
                         });
                     })
-                    .MapPost("api/v2/organization_memberships", (req, resp, routeData) =>
+                    .MapPost("api/v2/organization_memberships", async (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationMembershipCreateRequest>();
+                        var request = await req.ReadAsync<OrganizationMembershipCreateRequest>();
                         var membership = request.OrganizationMembership;
 
-                        return RequestHelper.Create<OrganizationMembershipResponse, OrganizationMembership>(
+                        await RequestHelper.Create(
                             req,
                             resp,
                             routeData,
@@ -136,12 +134,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 OrganizationMembership = item
                             });
                     })
-                    .MapPost("api/v2/users/{userId}/organization_memberships", (req, resp, routeData) =>
+                    .MapPost("api/v2/users/{userId}/organization_memberships", async (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationMembershipCreateRequest>();
+                        var request = await req.ReadAsync<OrganizationMembershipCreateRequest>();
                         var membership = request.OrganizationMembership;
 
-                        return RequestHelper.Create<OrganizationMembershipResponse, OrganizationMembership>(
+                        await RequestHelper.Create(
                             req,
                             resp,
                             routeData,
@@ -152,12 +150,12 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 OrganizationMembership = item
                             });
                     })
-                    .MapPost("api/v2/organization_memberships/create_many", (req, resp, routeData) =>
+                    .MapPost("api/v2/organization_memberships/create_many", async (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationMembershipsRequest>();
+                        var request = await req.ReadAsync<OrganizationMembershipsRequest>();
                         var memberships = request.Item;
 
-                        return RequestHelper.CreateMany<JobStatusResponse, OrganizationMembership>(
+                        await RequestHelper.CreateMany(
                             req,
                             resp,
                             routeData,

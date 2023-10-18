@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -94,16 +92,15 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Organization = item
                             });
                     })
-                    .MapPost("api/v2/organizations", (req, resp, routeData) =>
+                    .MapPost("api/v2/organizations", async (req, resp, routeData) =>
                     {
-                        var request = req.Body.ReadAs<OrganizationCreateRequest>();
+                        var request = await req.ReadAsync<OrganizationCreateRequest>();
                         var org = request.Organization;
 
                         if (string.IsNullOrEmpty(org.Name))
                         {
-                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesnt matter as long as not 201
-
-                            return Task.CompletedTask;
+                            resp.StatusCode = (int)HttpStatusCode.PaymentRequired; // It doesn't matter as long as not 201
+                            return;
                         }
 
                         var state = req.HttpContext.RequestServices.GetRequiredService<State<Organization>>();
@@ -113,21 +110,21 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Items.Add(org.Id, org);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(new OrganizationResponse
+                        await resp.WriteAsJson(new OrganizationResponse
                         {
                             Organization = org
                         });
                     })
-                    .MapPut("api/v2/organizations/update_many", (req, resp, routeData) =>
+                    .MapPut("api/v2/organizations/update_many", async (req, resp, routeData) =>
                     {
-                        var orgs = req.Body.ReadAs<OrganizationListRequest<Organization>>();
+                        var orgs = await req.ReadAsync<OrganizationListRequest<Organization>>();
 
                         var ids = orgs.Organizations.Select(org => org.Id);
 
                         if (ids.Any(id => id == long.MinValue))
                         {
                             resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
+                            return;
                         }
                         
                         var status = new SingleJobStatusResponse{JobStatus = new JobStatusResponse
@@ -136,17 +133,17 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         }};
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(status);
+                        await resp.WriteAsJson(status);
                     })
-                    .MapPut("api/v2/organizations/{id}", (req, resp, routeData) =>
+                    .MapPut("api/v2/organizations/{id}", async (req, resp, routeData) =>
                     {
-                        return RequestHelper.Update<OrganizationResponse, Organization>(
+                        var orgs = await req.ReadAsync<OrganizationUpdateRequest>();
+
+                        await RequestHelper.Update(
                             req,
                             resp,
                             routeData,
-                            req.Body
-                                .ReadAs<OrganizationUpdateRequest>()
-                                .Organization,
+                            orgs.Organization,
                             item => new OrganizationResponse
                             {
                                 Organization = item

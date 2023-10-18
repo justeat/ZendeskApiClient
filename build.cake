@@ -39,18 +39,12 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
-    if(IsRunningOnWindows())
+    var buildSettings = new DotNetCoreBuildSettings()
     {
-      // Use MSBuild
-      MSBuild("./ZendeskApiClient.sln", settings =>
-        settings.SetConfiguration(configuration));
-    }
-    else
-    {
-      // Use XBuild
-      XBuild("./ZendeskApiClient.sln", settings =>
-        settings.SetConfiguration(configuration));
-    }
+        Configuration = configuration,
+        Verbosity = DotNetCoreVerbosity.Normal
+    };
+    DotNetCoreBuild("./ZendeskApiClient.sln", buildSettings);
 });
 
 Task("Run-Unit-Tests")
@@ -93,6 +87,19 @@ Task("Run-Integration-Tests")
             }
         );
     }
+});
+
+Task("Package")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    var settings = new DotNetCorePackSettings
+    {
+        Configuration = "Release",
+        OutputDirectory = "./artifacts/"
+    };
+
+    DotNetCorePack("./src/ZendeskApi.Client/ZendeskApi.Client.csproj", settings);
 });
 
 //////////////////////////////////////////////////////////////////////

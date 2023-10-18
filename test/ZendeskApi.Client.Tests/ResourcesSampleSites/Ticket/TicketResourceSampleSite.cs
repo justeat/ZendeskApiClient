@@ -7,7 +7,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using ZendeskApi.Client.Extensions;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Requests;
 using ZendeskApi.Client.Responses;
@@ -185,15 +184,16 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                                 Count = items.Count
                             });
                     })
-                    .MapPost("api/v2/tickets", (req, resp, routeData) =>
+                    .MapPost("api/v2/tickets", async (req, resp, routeData) =>
                     {
-                        var ticketRequest = req.Body.ReadAs<TicketRequest<TicketCreateRequest>>();
+                        var ticketRequest = await req.ReadAsync<TicketRequest<TicketCreateRequest>>();
                         var ticket = ticketRequest.Ticket;
 
                         if (ticket.Tags?.Contains("error") ?? false)
                         {
                             resp.StatusCode = (int)HttpStatusCode.BadRequest;
-                            return resp.WriteAsJson(new object());
+                            await resp.WriteAsJson(new object());
+                            return;
                         }
 
                         var mapper = req.HttpContext.RequestServices.GetRequiredService<IMapper>();
@@ -209,9 +209,9 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         state.Items.Add(ticketResponse.Ticket.Id, ticketResponse.Ticket);
 
                         resp.StatusCode = (int)HttpStatusCode.Created;
-                        return resp.WriteAsJson(ticketResponse);
+                        await resp.WriteAsJson(ticketResponse);
                     })
-                    .MapPut("api/v2/tickets/update_many.json", (req, resp, routeData) =>
+                    .MapPut("api/v2/tickets/update_many.json", async (req, resp, routeData) =>
                     {
                         var theIds = req.Query["ids"]
                             .SelectMany(q => q.Split(','))
@@ -221,7 +221,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         
                         if (theIds.Any())
                         {
-                            var ticketRequestWrappers = req.Body.ReadAs<TicketRequest<TicketTagListsUpdateRequest>>();
+                            var ticketRequestWrappers = await req.ReadAsync<TicketRequest<TicketTagListsUpdateRequest>>();
 
                             if (ticketRequestWrappers?.Ticket != null && (ticketRequestWrappers.Ticket.AdditionalTags.Any() || ticketRequestWrappers.Ticket.RemoveTags.Any()) )
                             {
@@ -250,21 +250,22 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
 
                                 resp.StatusCode = (int)HttpStatusCode.OK;
 
-                                return resp.WriteAsJson(new JobStatusResult
+                                await resp.WriteAsJson(new JobStatusResult
                                 {
                                     Id = Rand.Next()
                                 });
+                                return;
                             }
                         }
 
-                        var ticketRequestWrapper = req.Body.ReadAs<TicketListRequest<TicketUpdateRequest>>();
+                        var ticketRequestWrapper = await req.ReadAsync<TicketListRequest<TicketUpdateRequest>>();
 
                         var ticketsById = ticketRequestWrapper.Tickets.ToDictionary(t => t.Id, t => t);
 
                         if (ticketRequestWrapper.Tickets.Any(t => t.Id == int.MinValue))
                         {
                             resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
+                            return;
                         }
 
                         foreach (var id in theIds.Where(id => ticketsById.ContainsKey(id)))
@@ -279,9 +280,9 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         };
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(status);
+                        await resp.WriteAsJson(status);
                     })
-                    .MapPut("api/v2/tickets/{id}", (req, resp, routeData) =>
+                    .MapPut("api/v2/tickets/{id}", async (req, resp, routeData) =>
                     {
                         var id = long.Parse(routeData.Values["id"].ToString());
 
@@ -290,16 +291,16 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         if (id == int.MinValue)
                         {
                             resp.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                            return Task.FromResult(resp);
+                            return;
                         }
 
                         if (!state.Items.ContainsKey(id))
                         {
                             resp.StatusCode = (int)HttpStatusCode.NotFound;
-                            return Task.CompletedTask;
+                            return;
                         }
 
-                        var ticketRequestWrapper = req.Body.ReadAs<TicketRequest<TicketUpdateRequest>>();
+                        var ticketRequestWrapper = await req.ReadAsync<TicketRequest<TicketUpdateRequest>>();
                         var ticketRequest = ticketRequestWrapper.Ticket;
 
                         HandleTicketComment(ticketRequest.Comment, state, ticketRequest.Id);
@@ -309,7 +310,7 @@ namespace ZendeskApi.Client.Tests.ResourcesSampleSites
                         mapper.Map(ticketRequest, ticketResponse);
 
                         resp.StatusCode = (int) HttpStatusCode.OK;
-                        return resp.WriteAsJson(ticketResponse);
+                        await resp.WriteAsJson(ticketResponse);
                     })
                     .MapDelete("api/v2/tickets/destroy_many.json", (req, resp, routeData) =>
                     {

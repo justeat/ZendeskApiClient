@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Web;
 using Newtonsoft.Json;
 using ZendeskApi.Client.Models;
 
@@ -35,7 +36,7 @@ namespace ZendeskApi.Client.Responses
                     return new Pager(null, Count, 100);
                 }
 
-                var next = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(NextPage.Query);
+                var next = HttpUtility.ParseQueryString(NextPage.Query);
                 var page = int.Parse(next["page"]);
 
                 return new Pager(new PagerParameters { Page = page, PageSize = Count }, 100);

@@ -1,17 +1,21 @@
 # Zendesk Api Client
 [![NuGet Version](https://img.shields.io/nuget/vpre/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/ZendeskApi.Client.svg?style=flat-square)](https://www.nuget.org/packages/ZendeskApi.Client)
-[![AppVeyor Build Status](https://img.shields.io/appveyor/ci/justeattech/zendeskapiclient/master.svg?style=flat-square)](https://ci.appveyor.com/project/justeattech/zendeskapiclient)
-[![Gitter](https://img.shields.io/gitter/room/justeat/ZendeskApiClient.svg?style=flat-square)](https://gitter.im/justeat/ZendeskApiClient)
+[![ci](https://github.com/justeat/ZendeskApiClient/actions/workflows/ci.yml/badge.svg)](https://github.com/justeat/ZendeskApiClient/actions/workflows/ci.yml)
 
 A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 # Breaking Changes
 
+## 6.x.x
+#### Added support for .NET 6
+
+ZendeskApiClient now targets both .NET Standard 2.0 and .NET 6, enabling users to leverage the latest runtime features and performance optimizations for their projects. Please note that with this update, support for .NET Core 3.1 is no longer targeted.
+
 ## 4.x.x
 This will allow for cursor pagination on some endpoints. We have kept the original offset pagination available so that this release is backward compatible, however due to Zendesk adding a variation of cursor pagination to this single [endpoint](https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination), we have modified the original `cursorPager` class to now be `cursorPagerVariant`. If you use the TicketAudits endpoint please update your code.
 
-Unfortunatly Zendesk has not adopted cursor pagination on all endpoints. A list of compatible endpoints used in this API are as follows:
+Unfortunately Zendesk has not adopted cursor pagination on all endpoints. A list of compatible endpoints used in this API are as follows:
 
 Users:
 - GET /api/v2/deleted_users
@@ -108,6 +112,8 @@ await client.Search.SearchAsync<Ticket>(q =>
 The zendesk api documentation is available at http://developer.zendesk.com/documentation/rest_api/introduction.html
 Querying and searching is limited by the searchable fields on the zendesk api
 
+> Please note that starting from August 15, 2023, if you make offset-based pagination (OBP) requests beyond the first 100 pages (10,000 records), you will receive an error message: "400 Bad Request." To retrieve data sets larger than 10,000 records, customers must transition to cursor-based pagination (CBP). You can find more information on the transition [here](https://developer.zendesk.com/documentation/api-basics/pagination/paginating-through-lists-using-cursor-pagination/). This library designates the OBP endpoints as `Obsolete` and introduces the new CBP endpoints in version 4.x.x. Therefore, users who wish to make the transition will need to upgrade.
+
 ## Integration Tests
 
 In order to run integration tests against your own zendesk instance use the Cake script provided by:
@@ -122,7 +128,4 @@ We are happy for anyone to contribute into this client, and help us evolve it ov
 
 ## Versioning
 
-We aim to follow [Semantic Versioning](https://semver.org/) guidelines within this library. When increasing the version there are multiple places that will need to be changed:
-
-* [appveyor.yml](https://github.com/justeat/ZendeskApiClient/blob/master/appveyor.yml)
-* [ZendeskApi.Commons.props](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Build/ZendeskApi.Commons.props)
+We aim to follow [Semantic Versioning](https://semver.org/) guidelines within this library. When increasing the version please increment [ZendeskApi.Commons.props](https://github.com/justeat/ZendeskApiClient/blob/master/src/ZendeskApi.Build/ZendeskApi.Commons.props).
