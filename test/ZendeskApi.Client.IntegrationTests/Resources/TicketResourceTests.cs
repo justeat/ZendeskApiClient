@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -37,7 +38,7 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             var results = await client
                 .Tickets.GetAllAsync(new CursorPager()
                 {
-                    Size=10
+                    Size = 10
                 });
 
             Assert.NotNull(results);
@@ -66,6 +67,30 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                 if (createdTicket != null)
                     await client.Tickets.DeleteAsync(createdTicket.Ticket.Id);
             }
+        }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldBePaginatable()
+        {
+            var client = _clientFactory.GetClient();
+
+            var cursorPager = new CursorPager { Size = 5 };
+            var ticketsPageOne = await client
+                .Tickets.GetAllAsync(cursorPager);
+
+            Assert.NotNull(ticketsPageOne);
+            Assert.Equal(5, ticketsPageOne.Count());
+            Assert.True(ticketsPageOne.Meta.HasMore);
+
+            cursorPager.AfterCursor = ticketsPageOne.Meta.AfterCursor;
+
+            var ticketsPageTwo = await client.Tickets.GetAllAsync(cursorPager);
+            Assert.NotNull(ticketsPageTwo);
+            Assert.Equal(5, ticketsPageTwo.Count());
+
+            var ticketIdsPageOne = ticketsPageOne.Select(ticket => ticket.Id).ToList();
+            var ticketIdsPageTwo = ticketsPageTwo.Select(ticket => ticket.Id).ToList();
+            Assert.NotEqual(ticketIdsPageOne, ticketIdsPageTwo);
         }
     }
 }
