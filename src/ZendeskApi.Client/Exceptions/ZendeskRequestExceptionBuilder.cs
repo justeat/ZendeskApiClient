@@ -63,7 +63,8 @@ namespace ZendeskApi.Client.Exceptions
 
                 if (error?.Error != null && error.Description != null)
                 {
-                    message.AppendLine($"{error.Error}: {error.Description}.");
+                    var detail = Environment.NewLine + JsonConvert.SerializeObject(error.Details, Formatting.Indented);
+                    message.AppendLine($"{error.Error}: {error.Description}. {detail}");
                 }
             }
 

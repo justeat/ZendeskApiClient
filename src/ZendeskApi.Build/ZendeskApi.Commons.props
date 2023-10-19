@@ -21,7 +21,7 @@
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup>
-      <Major>6</Major>
+      <Major>7</Major>
       <Minor>0</Minor>
       <Revision>1</Revision>
       <PackageVersion>$(Major).$(Minor).$(Revision)</PackageVersion>
