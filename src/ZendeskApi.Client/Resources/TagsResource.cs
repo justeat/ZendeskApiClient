@@ -14,7 +14,7 @@ namespace ZendeskApi.Client.Resources
         {
         }
 
-        public async Task<TagResponse> GetAllAsync(CursorPager cursor = null, CancellationToken cancellationToken = default)
+        public async Task<ICursorPagination<Tag>> GetAllAsync(CursorPager cursor, CancellationToken cancellationToken = default)
         {
             return await GetAsync<TagResponse>(
                ResourceUri,

@@ -11,8 +11,8 @@ namespace ZendeskApi.Client.Resources.Interfaces
         /// <summary>
         /// Lists all tags. This request is paginated.
         /// </summary>
-        Task<TagResponse> GetAllAsync(
-            CursorPager cursor = null,
+        Task<ICursorPagination<Tag>> GetAllAsync(
+            CursorPager cursor,
             CancellationToken cancellationToken = default(CancellationToken));
 
         #endregion
