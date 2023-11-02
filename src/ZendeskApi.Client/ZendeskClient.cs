@@ -86,5 +86,8 @@ namespace ZendeskApi.Client
         private Lazy<ILocaleResource> LocalesLazy =>
             new Lazy<ILocaleResource>(() => new LocaleResource(_apiClient, _logger));
         public ILocaleResource Locales => LocalesLazy.Value;
+
+        private Lazy<ITagsResource> TagsLazy => new Lazy<ITagsResource>(() => new TagsResource(_apiClient, _logger));
+        public ITagsResource Tags => TagsLazy.Value;
     }
 }
