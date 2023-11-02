@@ -149,5 +149,11 @@ namespace ZendeskApi.Client.Requests
 
         [JsonProperty("brand_id")]
         public long? BrandId { get; set; }
+        
+        /// <summary>
+        /// The id of the ticket form to use. Only applicable for enterprise accounts
+        /// </summary>
+        [JsonProperty("ticket_form_id")]
+        public long? FormId { get; set; }
     }
 }
