@@ -72,6 +72,9 @@ Satisfaction ratings:
 Requests
 - GET /api/v2/requests
 
+Job Statuses
+- GET /api/v2/job_statuses
+
 [Further reading on Zendesk Pagination changes](https://support.zendesk.com/hc/en-us/articles/4402610093338-Introducing-Pagination-Changes-Zendesk-API)
 
 ## 3.x.x
