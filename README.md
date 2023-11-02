@@ -65,12 +65,14 @@ Tickets:
 - GET /api/v2/tickets/{ticketId}/comments
 - GET /api/v2/ticket_fields
 - GET /api/v2/ticket_audits
+- GET
 
 Satisfaction ratings:
 - GET /api/v2/satisfaction_ratings
 
 Requests
 - GET /api/v2/requests
+- GET /api/v2/requests/{requestId}/comments
 
 Job Statuses
 - GET /api/v2/job_statuses

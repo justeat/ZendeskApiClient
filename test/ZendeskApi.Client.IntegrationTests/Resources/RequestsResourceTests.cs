@@ -244,5 +244,25 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
                 comments,
                 comment => comment.Body.Contains($"ZendeskApi.Client.IntegrationTests {updatedId}"));
         }
+
+        [Fact]
+        public async Task GetAllAsync_And_GetAllComments_ShouldBePaginatable()
+        {
+            var client = _clientFactory.GetClient();
+            var cursor = new CursorPager { Size = 1 };
+            var requestsResponse = await client.Requests.GetAllAsync(cursor);
+
+            var requestsIterator = new CursorPaginatedIterator<Request>(requestsResponse, client);
+            Assert.Equal(1, requestsIterator.Count());
+
+            var commentsResponse = await client.Requests.GetAllComments((long)requestsIterator.First().Id, cursor);
+            Assert.Equal(1, commentsResponse.Count());
+
+            await requestsIterator.NextPage();
+            Assert.Equal(1, requestsIterator.Count());
+            commentsResponse = await client.Requests.GetAllComments((long)requestsIterator.First().Id, cursor);
+            Assert.Equal(1, commentsResponse.Count());
+        }
+
     }
 }
