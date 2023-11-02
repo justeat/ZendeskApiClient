@@ -27,5 +27,6 @@ namespace ZendeskApi.Client
         IServiceStatusResource ServiceStatus { get; }
         IHelpCenterResource HelpCenter { get; }
         ILocaleResource Locales { get; }
+        ITagsResource Tags { get; }
     }
 }
