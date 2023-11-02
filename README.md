@@ -11,7 +11,7 @@ A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 #### The deprecation and replacement of Status API endpoints
 
-More detailed information on the exact changes and motivation can be found [here](https://support.zendesk.com/hc/en-us/articles/5414949730842). 
+More detailed information on the exact changes and motivation can be found [here](https://support.zendesk.com/hc/en-us/articles/5414949730842).
 
 For the sake of this library, it means the following methods have been removed:
 
@@ -50,6 +50,7 @@ Groups:
 Help Center:
 - GET api/v2/help_center/articles
 - GET api/v2/help_center/categories
+- GET api/v2/help_center/sections
 
 Organization:
 - GET /api/v2/organization_fields
@@ -63,10 +64,13 @@ Tickets:
 - GET /api/v2/tickets
 - GET /api/v2/tickets/{ticketId}/comments
 - GET /api/v2/ticket_fields
-- GET /api/v2/ticket_audits - [Cursor Variant](https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination)
+- GET /api/v2/ticket_audits
 
 Satisfaction ratings:
 - GET /api/v2/satisfaction_ratings
+
+Requests
+- GET /api/v2/requests
 
 [Further reading on Zendesk Pagination changes](https://support.zendesk.com/hc/en-us/articles/4402610093338-Introducing-Pagination-Changes-Zendesk-API)
 
