@@ -89,5 +89,8 @@ namespace ZendeskApi.Client
 
         private Lazy<ITagsResource> TagsLazy => new Lazy<ITagsResource>(() => new TagsResource(_apiClient, _logger));
         public ITagsResource Tags => TagsLazy.Value;
+
+        private Lazy<IPaginatedResource> PaginatedResourceLazy => new Lazy<IPaginatedResource>(() => new PaginatedResource(_apiClient, _logger));
+        public IPaginatedResource PaginatedResource => PaginatedResourceLazy.Value;
     }
 }

@@ -73,5 +73,11 @@ namespace ZendeskApi.Client.Extensions
 
             return client.GetAsync(requestUri, cancellationToken);
         }
+
+        // to be used within the PaginatedResource, where the next page is a complete URL with cursors already predefined in the query string.
+        public static Task<HttpResponseMessage> GetPageAsync(this HttpClient client, string requestUri, CancellationToken cancellationToken = default)
+        {
+            return client.GetAsync(requestUri, cancellationToken);
+        }
     }
 }
