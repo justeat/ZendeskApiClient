@@ -23,7 +23,7 @@
   <PropertyGroup>
       <Major>7</Major>
       <Minor>0</Minor>
-      <Revision>4</Revision>
+      <Revision>5</Revision>
       <PackageVersion>$(Major).$(Minor).$(Revision)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
