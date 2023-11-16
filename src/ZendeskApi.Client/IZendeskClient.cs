@@ -28,6 +28,5 @@ namespace ZendeskApi.Client
         IHelpCenterResource HelpCenter { get; }
         ILocaleResource Locales { get; }
         ITagsResource Tags { get; }
-        IPaginatedResource PaginatedResource { get; }
     }
 }

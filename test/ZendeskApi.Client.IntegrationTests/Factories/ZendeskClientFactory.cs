@@ -7,20 +7,26 @@ namespace ZendeskApi.Client.IntegrationTests.Factories
 {
     public class ZendeskClientFactory
     {
+        public static IZendeskClient zendeskClient;
         public IZendeskClient GetClient()
         {
-            var settings = new ZendeskSettings();
+            zendeskClient ??= new ZendeskClient(GetApiClient());
+            return zendeskClient;
+        }
 
-            return new ZendeskClient(
-                new ZendeskApiClient(
+        public static ZendeskApiClient apiClient;
+        public ZendeskApiClient GetApiClient()
+        {
+            var settings = new ZendeskSettings();
+            apiClient ??= new ZendeskApiClient(
                     new OptionsWrapper<ZendeskOptions>(new ZendeskOptions
                     {
                         EndpointUri = settings.Url,
                         Username = settings.Username,
                         Token = settings.Token
                     })
-                )
-            );
+             );
+            return apiClient;
         }
     }
 }

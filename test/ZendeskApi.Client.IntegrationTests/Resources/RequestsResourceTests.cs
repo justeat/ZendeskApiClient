@@ -249,10 +249,11 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         public async Task GetAllAsync_And_GetAllComments_ShouldBePaginatable()
         {
             var client = _clientFactory.GetClient();
+            var apiClient = _clientFactory.GetApiClient();
             var cursor = new CursorPager { Size = 1 };
             var requestsResponse = await client.Requests.GetAllAsync(cursor);
 
-            var requestsIterator = new CursorPaginatedIterator<Request>(requestsResponse, client);
+            var requestsIterator = new CursorPaginatedIterator<Request>(requestsResponse, apiClient);
             Assert.Equal(1, requestsIterator.Count());
 
             var commentsResponse = await client.Requests.GetAllComments((long)requestsIterator.First().Id, cursor);

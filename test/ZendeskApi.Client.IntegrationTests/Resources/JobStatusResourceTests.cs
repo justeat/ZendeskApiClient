@@ -23,13 +23,14 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
         public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldBePaginatable()
         {
             var client = _clientFactory.GetClient();
+            var apiClient = _clientFactory.GetApiClient();
 
             var results = await client
                 .JobStatuses.GetAllAsync(new CursorPager()
                 {
                     Size = 2
                 });
-            var iterator = new CursorPaginatedIterator<JobStatusResponse>(results, client);
+            var iterator = new CursorPaginatedIterator<JobStatusResponse>(results, apiClient);
 
             Assert.NotNull(results);
             Assert.Equal(2, iterator.Count());

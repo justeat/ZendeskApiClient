@@ -12,12 +12,12 @@ public class CursorPaginatedIterator<T> : IEnumerable<T>
 
     public ICursorPagination<T> Response { get; set; }
 
-    private IZendeskClient client;
+    private IZendeskApiClient client;
 
 
     private string ResponseType { get; }
 
-    public CursorPaginatedIterator(ICursorPagination<T> response, IZendeskClient client)
+    public CursorPaginatedIterator(ICursorPagination<T> response, IZendeskApiClient client)
     {
         Response = response;
         this.client = client;
@@ -39,7 +39,6 @@ public class CursorPaginatedIterator<T> : IEnumerable<T>
 
     public async Task NextPage()
     {
-        Console.WriteLine("fetching the next page... ");
         await ExecuteRequest(Response.Links.Next);
     }
 
@@ -61,13 +60,13 @@ public class CursorPaginatedIterator<T> : IEnumerable<T>
             {
                 yield return item;
             }
-        } 
+        }
         yield break;
     }
 
     private async Task ExecuteRequest(string requestUrl)
     {
-        var httpResponseMessage = await client.PaginatedResource.GetPage(requestUrl);
+        var httpResponseMessage = await client.CreateClient().GetAsync(requestUrl);
         var responseBody = await httpResponseMessage.Content.ReadAsStringAsync();
         Response = (ICursorPagination<T>)JsonConvert.DeserializeObject(responseBody, Type.GetType(ResponseType));
     }

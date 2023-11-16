@@ -44,12 +44,13 @@ namespace ZendeskApi.Client.IntegrationTests.CBPSupport
         public async Task CursorPaginatedIterator_ShouldBePaginatableByCallingNextPage()
         {
             var client = _clientFactory.GetClient();
+            var apiClient = _clientFactory.GetApiClient();
 
             var cursorPager = new CursorPager { Size = 2 };
             var ticketsResponse = await client
                 .Tickets.GetAllAsync(cursorPager);
 
-            var iterator = new CursorPaginatedIterator<Ticket>(ticketsResponse, client);
+            var iterator = new CursorPaginatedIterator<Ticket>(ticketsResponse, apiClient);
             Assert.True(iterator.HasMore());
             Assert.Equal(2, iterator.Count());
             var ticketIdsPageOne = iterator.Select(ticket => ticket.Id).ToList();
