@@ -38,8 +38,9 @@ namespace ZendeskApi.Client
 
             client.DefaultRequestHeaders
                 .Add(
-                    "Authorization", 
+                    "Authorization",
                     authorizationHeader);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("justeat.zendesk-api-client-csharp");
 
             client.DefaultRequestHeaders
                 .Accept
@@ -57,7 +58,7 @@ namespace ZendeskApi.Client
                 .CreateClient();
 
             client.BaseAddress = new Uri("https://status.zendesk.com");
-
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("justeat.zendesk-api-client-csharp");
             client.DefaultRequestHeaders
                 .Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
