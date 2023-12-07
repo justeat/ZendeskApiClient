@@ -4,18 +4,23 @@ using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Models
 {
-    public class CursorPaginatedIteratorFactory<T>
+    public interface ICursorPaginatedIteratorFactory
     {
-        private static IZendeskApiClient ApiClient;
+        CursorPaginatedIterator<T> Create<T>(ICursorPagination<T> response);
+    }
 
-        public CursorPaginatedIteratorFactory(IZendeskApiClient apiClient)
+    public class CursorPaginatedIteratorFactory : ICursorPaginatedIteratorFactory
+    {
+        private static IServiceProvider serviceProvider;
+
+        public CursorPaginatedIteratorFactory(IServiceProvider _serviceProvider)
         {
-            ApiClient = apiClient;
+            serviceProvider = _serviceProvider;
         }
 
-        public static CursorPaginatedIterator<T> GetPaginatedIterator(ICursorPagination<T> response)
+        public CursorPaginatedIterator<T> Create<T>(ICursorPagination<T> response)
         {
-            return new CursorPaginatedIterator<T>(response, ApiClient);
+            return new CursorPaginatedIterator<T>(response, serviceProvider.GetRequiredService<IZendeskApiClient>());
         }
     }
 }

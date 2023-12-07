@@ -135,6 +135,43 @@ await client.Search.SearchAsync<Ticket>(q =>
 );
 ```
 
+## Using Cursor Based Pagination
+You can use the `CursorPaginatedIterator` to loop through multiple pages as shown below:
+```c#
+
+var services = new ServiceCollection();
+services.AddZendeskClientWithHttpClientFactory("https://yoursubomain.zendesk.com", "your@email.com", "your_token_");
+var serviceProvider = services.BuildServiceProvider();
+var client = serviceProvider.GetRequiredService<IZendeskClient>();
+
+var ticketCursorResponse = await client.Tickets.GetAllAsync(new CursorPager { Size = 5 }); // low page number to force pagination
+
+var iteratorFactory = serviceProvider.GetRequiredService<ICursorPaginatedIteratorFactory>();
+// creates the iterator with the response object of the first  request
+var iterator = iteratorFactory.Create<Ticket>(ticketCursorResponse);
+
+foreach (var ticket in iterator)
+{
+    Console.WriteLine("the id of this ticket is:" + ticket.Id);
+} // this loop will stop at the first page
+
+while (iterator.HasMore()) // to loop through all pages
+{
+    await iterator.NextPage();
+    foreach (var ticket in iterator)
+    {
+        Console.WriteLine("the id of this ticket is:" + ticket.Id);
+    }
+}
+
+// alternatively you can use .All() from the iterator
+await foreach (var ticket in iterator.All())
+{
+    Console.WriteLine("the id of this ticket is:" + ticket.Id);
+}
+
+```
+
 ## The Zendesk API
 
 The zendesk api documentation is available at http://developer.zendesk.com/documentation/rest_api/introduction.html
