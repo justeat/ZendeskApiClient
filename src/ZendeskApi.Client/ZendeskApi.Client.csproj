@@ -17,4 +17,10 @@
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Pagination\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pagination\" />
+  </ItemGroup>
 </Project>

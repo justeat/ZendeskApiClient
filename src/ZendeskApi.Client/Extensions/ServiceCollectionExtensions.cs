@@ -3,6 +3,7 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Options;
+using ZendeskApi.Client.Pagination;
 #pragma warning disable 618
 
 namespace ZendeskApi.Client.Extensions

@@ -2,7 +2,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Responses;
 
-namespace ZendeskApi.Client.Models
+namespace ZendeskApi.Client.Pagination
 {
     public interface ICursorPaginatedIteratorFactory
     {
@@ -11,16 +11,16 @@ namespace ZendeskApi.Client.Models
 
     public class CursorPaginatedIteratorFactory : ICursorPaginatedIteratorFactory
     {
-        private static IServiceProvider serviceProvider;
+        private readonly IZendeskApiClient zendeskApiClient;
 
-        public CursorPaginatedIteratorFactory(IServiceProvider _serviceProvider)
+        public CursorPaginatedIteratorFactory(IZendeskApiClient _zendeskApiClient)
         {
-            serviceProvider = _serviceProvider;
+            zendeskApiClient = _zendeskApiClient;
         }
 
         public CursorPaginatedIterator<T> Create<T>(ICursorPagination<T> response)
         {
-            return new CursorPaginatedIterator<T>(response, serviceProvider.GetRequiredService<IZendeskApiClient>());
+            return new CursorPaginatedIterator<T>(response, zendeskApiClient);
         }
     }
 }
