@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ZendeskApi.Client;
 using ZendeskApi.Client.Responses;
 
+namespace ZendeskApi.Client.Pagination;
 public class CursorPaginatedIterator<T> : IEnumerable<T>
 {
 

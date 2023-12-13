@@ -1,5 +1,3 @@
-using System;
-using Microsoft.Extensions.DependencyInjection;
 using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.Pagination

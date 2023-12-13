@@ -3,23 +3,26 @@ using System.Threading.Tasks;
 using Xunit;
 using ZendeskApi.Client.IntegrationTests.Factories;
 using ZendeskApi.Client.Models;
+using CursorPaginatedIteratorFactory = ZendeskApi.Client.IntegrationTests.Factories.CursorPaginatedIteratorFactory;
 
 namespace ZendeskApi.Client.IntegrationTests.CBPSupport
 {
     public class CBPSupportTests : IClassFixture<ZendeskClientFactory>
     {
-        private readonly ZendeskClientFactory _clientFactory;
+        private readonly ZendeskClientFactory clientFactory;
+        private readonly CursorPaginatedIteratorFactory cursorPaginatedIteratorFactory;
 
         public CBPSupportTests(
-            ZendeskClientFactory clientFactory)
+            ZendeskClientFactory _clientFactory)
         {
-            _clientFactory = clientFactory;
+            clientFactory = _clientFactory;
+            cursorPaginatedIteratorFactory = new Factories.CursorPaginatedIteratorFactory(clientFactory);
         }
 
         [Fact]
         public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldBePaginatableByReplacingTheCursor()
         {
-            var client = _clientFactory.GetClient();
+            var client = clientFactory.GetClient();
 
             var cursorPager = new CursorPager { Size = 5 };
             var ticketsPageOne = await client
@@ -43,14 +46,13 @@ namespace ZendeskApi.Client.IntegrationTests.CBPSupport
         [Fact]
         public async Task CursorPaginatedIterator_ShouldBePaginatableByCallingNextPage()
         {
-            var client = _clientFactory.GetClient();
-            var apiClient = _clientFactory.GetApiClient();
-
+            var client = clientFactory.GetClient();
+           
             var cursorPager = new CursorPager { Size = 2 };
             var ticketsResponse = await client
                 .Tickets.GetAllAsync(cursorPager);
 
-            var iterator = new CursorPaginatedIterator<Ticket>(ticketsResponse, apiClient);
+            var iterator = cursorPaginatedIteratorFactory.Create<Ticket>(ticketsResponse);
             Assert.True(iterator.HasMore());
             Assert.Equal(2, iterator.Count());
             var ticketIdsPageOne = iterator.Select(ticket => ticket.Id).ToList();

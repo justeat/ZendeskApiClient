@@ -1,36 +1,34 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using ZendeskApi.Client.IntegrationTests.Factories;
 using ZendeskApi.Client.Models;
-using ZendeskApi.Client.Responses;
 
 namespace ZendeskApi.Client.IntegrationTests.Resources
 {
     public class JobStatusResourceTests : IClassFixture<ZendeskClientFactory>
     {
-        private readonly ZendeskClientFactory _clientFactory;
-
+        private readonly ZendeskClientFactory clientFactory;
+        private readonly CursorPaginatedIteratorFactory cursorPaginatedIteratorFactory;
         public JobStatusResourceTests(
-            ZendeskClientFactory clientFactory)
+            ZendeskClientFactory _clientFactory)
         {
-            _clientFactory = clientFactory;
+            clientFactory = _clientFactory;
+            cursorPaginatedIteratorFactory = new CursorPaginatedIteratorFactory(clientFactory);
         }
 
 
         [Fact]
         public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldBePaginatable()
         {
-            var client = _clientFactory.GetClient();
-            var apiClient = _clientFactory.GetApiClient();
+            var client = clientFactory.GetClient();
 
             var results = await client
                 .JobStatuses.GetAllAsync(new CursorPager()
                 {
                     Size = 2
                 });
-            var iterator = new CursorPaginatedIterator<JobStatusResponse>(results, apiClient);
+            var iterator = cursorPaginatedIteratorFactory.Create<JobStatusResponse>(results);
 
             Assert.NotNull(results);
             Assert.Equal(2, iterator.Count());
