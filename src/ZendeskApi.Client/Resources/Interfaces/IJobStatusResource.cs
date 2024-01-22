@@ -13,7 +13,7 @@ namespace ZendeskApi.Client.Resources
         /// <summary>
         /// Shows the current statuses for background jobs running.
         /// </summary>
-        [Obsolete("Use `GetAllAsync` instead.")]
+        [Obsolete("Use `GetAllAsync` with CursorPager instead.")]
         Task<IPagination<JobStatusResponse>> ListAsync(
             PagerParameters pagerParameters = null,
             CancellationToken cancellationToken = default(CancellationToken));
@@ -21,10 +21,14 @@ namespace ZendeskApi.Client.Resources
         /// <summary>
         /// Shows the current statuses for background jobs running.
         /// </summary>
+        [Obsolete("Use `GetAllAsync` with CursorPager instead.")]
         Task<IPagination<JobStatusResponse>> GetAllAsync(
             PagerParameters pagerParameters = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        Task<ICursorPagination<JobStatusResponse>> GetAllAsync(
+        CursorPager pagerParameters = null,
+        CancellationToken cancellationToken = default(CancellationToken));
         #endregion
 
         #region Show

@@ -11,7 +11,7 @@ A .netstandard NuGet package for use with the  Zendesk v2 API.
 
 #### The deprecation and replacement of Status API endpoints
 
-More detailed information on the exact changes and motivation can be found [here](https://support.zendesk.com/hc/en-us/articles/5414949730842). 
+More detailed information on the exact changes and motivation can be found [here](https://support.zendesk.com/hc/en-us/articles/5414949730842).
 
 For the sake of this library, it means the following methods have been removed:
 
@@ -50,6 +50,7 @@ Groups:
 Help Center:
 - GET api/v2/help_center/articles
 - GET api/v2/help_center/categories
+- GET api/v2/help_center/sections
 
 Organization:
 - GET /api/v2/organization_fields
@@ -63,10 +64,18 @@ Tickets:
 - GET /api/v2/tickets
 - GET /api/v2/tickets/{ticketId}/comments
 - GET /api/v2/ticket_fields
-- GET /api/v2/ticket_audits - [Cursor Variant](https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#pagination)
+- GET /api/v2/ticket_audits
+- GET
 
 Satisfaction ratings:
 - GET /api/v2/satisfaction_ratings
+
+Requests
+- GET /api/v2/requests
+- GET /api/v2/requests/{requestId}/comments
+
+Job Statuses
+- GET /api/v2/job_statuses
 
 [Further reading on Zendesk Pagination changes](https://support.zendesk.com/hc/en-us/articles/4402610093338-Introducing-Pagination-Changes-Zendesk-API)
 
@@ -124,6 +133,43 @@ await client.Search.SearchAsync<Organization>(q =>
 await client.Search.SearchAsync<Ticket>(q =>
     q.WithFilter("status", "closed", FilterOperator.LessThan)
 );
+```
+
+## Using Cursor Based Pagination
+You can use the `CursorPaginatedIterator` to loop through multiple pages as shown below:
+```c#
+
+var services = new ServiceCollection();
+services.AddZendeskClientWithHttpClientFactory("https://yoursubomain.zendesk.com", "your@email.com", "your_token_");
+var serviceProvider = services.BuildServiceProvider();
+var client = serviceProvider.GetRequiredService<IZendeskClient>();
+
+var ticketCursorResponse = await client.Tickets.GetAllAsync(new CursorPager { Size = 5 }); // low page number to force pagination
+
+var iteratorFactory = serviceProvider.GetRequiredService<ICursorPaginatedIteratorFactory>();
+// creates the iterator with the response object of the first  request
+var iterator = iteratorFactory.Create<Ticket>(ticketCursorResponse);
+
+foreach (var ticket in iterator)
+{
+    Console.WriteLine("the id of this ticket is:" + ticket.Id);
+} // this loop will stop at the first page
+
+while (iterator.HasMore()) // to loop through all pages
+{
+    await iterator.NextPage();
+    foreach (var ticket in iterator)
+    {
+        Console.WriteLine("the id of this ticket is:" + ticket.Id);
+    }
+}
+
+// alternatively you can use .All() from the iterator
+await foreach (var ticket in iterator.All())
+{
+    Console.WriteLine("the id of this ticket is:" + ticket.Id);
+}
+
 ```
 
 ## The Zendesk API
