@@ -1,7 +1,9 @@
 using System;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
+using ZendeskApi.Client.Models;
 using ZendeskApi.Client.Options;
+using ZendeskApi.Client.Pagination;
 #pragma warning disable 618
 
 namespace ZendeskApi.Client.Extensions
@@ -33,6 +35,7 @@ namespace ZendeskApi.Client.Extensions
         {
             services.AddScoped<IZendeskClient, ZendeskClient>();
             services.AddScoped<IZendeskApiClient, ZendeskApiClientFactory>();
+            services.AddScoped<ICursorPaginatedIteratorFactory, CursorPaginatedIteratorFactory>();
 
             services.AddHttpClient("zendeskApiClient", c =>
             {

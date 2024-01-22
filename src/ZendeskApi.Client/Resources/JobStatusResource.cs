@@ -19,7 +19,7 @@ namespace ZendeskApi.Client.Resources
             : base(apiClient, logger, "job_statuses")
         { }
 
-        [Obsolete("Use `GetAllAsync` instead.")]
+        [Obsolete("Use `GetAllAsync` with CursorPager instead.")]
         public async Task<IPagination<JobStatusResponse>> ListAsync(
             PagerParameters pagerParameters = null,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -29,6 +29,18 @@ namespace ZendeskApi.Client.Resources
                 cancellationToken);
         }
 
+        public async Task<ICursorPagination<JobStatusResponse>> GetAllAsync(CursorPager pagerParameters, CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<JobStatusListCursorResponse>(
+                ResourceUri,
+                "list-job-statuses",
+                "ListAsync",
+                pagerParameters,
+                null,
+                cancellationToken: cancellationToken);
+        }
+
+        [Obsolete("Use `GetAllAsync` with CursorPager instead.")]
         public async Task<IPagination<JobStatusResponse>> GetAllAsync(
             PagerParameters pagerParameters = null,
             CancellationToken cancellationToken = default(CancellationToken))

@@ -27,5 +27,29 @@ namespace ZendeskApi.Client.IntegrationTests.Resources
             Assert.NotNull(results);
             Assert.Equal(100, results.Count());
         }
+
+        [Fact]
+        public async Task GetAllAsync_WhenCalledWithCursorPagination_ShouldBePaginatable()
+        {
+            var client = _clientFactory.GetClient();
+
+            var cursorPager = new CursorPager { Size = 2 };
+            var auditsPageOne = await client
+                .TicketAudits.GetAllAsync(cursorPager);
+
+            Assert.NotNull(auditsPageOne);
+            Assert.Equal(2, auditsPageOne.Count());
+            Assert.True(auditsPageOne.Meta.HasMore);
+
+            cursorPager.AfterCursor = auditsPageOne.Meta.AfterCursor;
+
+            var auditsPageTwo = await client.TicketAudits.GetAllAsync(cursorPager);
+            Assert.NotNull(auditsPageTwo);
+            Assert.Equal(2, auditsPageTwo.Count());
+
+            var auditIdsPageOne = auditsPageOne.Select(tag => tag.Id).ToList();
+            var auditIdsPageTwo = auditsPageTwo.Select(tag => tag.Id).ToList();
+            Assert.NotEqual(auditIdsPageOne, auditIdsPageTwo);
+        }
     }
 }

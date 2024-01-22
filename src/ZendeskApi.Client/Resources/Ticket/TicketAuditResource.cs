@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ namespace ZendeskApi.Client.Resources
         {
         }
 
+        [Obsolete("Use `GetAllAsync` with CursorPager parameter instead.")]
         public async Task<TicketAuditResponse> GetAllAsync(CursorPagerVariant pager = null, CancellationToken cancellationToken = default)
         {
             return await GetAsync<TicketAuditResponse>(
@@ -24,6 +26,17 @@ namespace ZendeskApi.Client.Resources
                 "list-all-ticket-audits",
                 "GetAllAsync",
                 pager,
+                cancellationToken);
+        }
+
+        public async Task<TicketAuditCursorResponse> GetAllAsync(CursorPager pager, CancellationToken cancellationToken = default)
+        {
+            return await GetAsync<TicketAuditCursorResponse>(
+                ResourceUri,
+                "list-all-ticket-audits",
+                "GetAllAsync",
+                pager,
+                null,
                 cancellationToken);
         }
 
