@@ -183,7 +183,7 @@ namespace ZendeskApi.Client.Responses
         /// If two factor authentication is enabled.
         /// </summary>
         [JsonProperty("two_factor_auth_enabled")]
-        public bool TwoFactorAuthEnabled { get; set; }
+        public bool? TwoFactorAuthEnabled { get; set; }
 
         /// <summary>
         /// The time the user was last updated
